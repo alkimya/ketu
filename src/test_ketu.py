@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from ketu import body_name, local_to_utc, utc_to_julian, body_sign, \
-    body_speed, body_position, distance, get_orb, is_retrograde, \
+    body_speed, body_longitude, distance, get_orb, is_retrograde, \
     get_aspect, signs
 
 date = utc_to_julian(2020, 12, 30, 3, 0, 0)
@@ -15,7 +15,7 @@ class KetuTest(TestCase):
         self.assertEqual('Sun', body_name(0))
 
     def test_get_body_position(self):
-        self.assertAlmostEqual(body_position(date, 0), 280, delta=2)
+        self.assertAlmostEqual(body_longitude(date, 0), 280, delta=2)
 
     def test_local_to_utc(self):
         self.assertAlmostEqual(local_to_utc(1975, 6, 6, 15, 10, 0, 1)[-1] % -60,
@@ -35,12 +35,12 @@ class KetuTest(TestCase):
 
     def test_distance_is_reflexive(self):
         self.assertEqual(
-            distance(body_position(date, 0), body_position(date, 1)),
-            distance(body_position(date, 1), body_position(date, 0)))
+            distance(body_longitude(date, 0), body_longitude(date, 1)),
+            distance(body_longitude(date, 1), body_longitude(date, 0)))
 
     def test_distance(self):
-        self.assertAlmostEqual(distance(body_position(date, 0),
-                                        body_position(date, 1)),
+        self.assertAlmostEqual(distance(body_longitude(date, 0),
+                                        body_longitude(date, 1)),
                                180, delta=1)
 
     def test_is_retrograde(self):

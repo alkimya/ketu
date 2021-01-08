@@ -21,25 +21,30 @@ swe.set_ephe_path(path='/home/loc/workspace/ketu/ephe')
 
 
 def local_to_utc(year, month, day, hour, minute, second, offset):
+    """Return UTC time from local time"""
     return swe.utc_time_zone(year, month, day, hour, minute, second, offset)
 
 
 def utc_to_julian(year, month, day, hour, minute, second):
+    """Return Julian date from UTC time"""
     return swe.utc_to_jd(year, month, day, hour, minute, second, 1)[1]
 
 
 def dd_to_dms(dd):
+    """Return degrees, minutes, seconds from decimal longitude"""
     minutes, seconds = divmod(dd * 3600, 60)
     degrees, minutes = divmod(minutes, 60)
     return tuple(map(int, (degrees, minutes, seconds)))
 
 
 def distance(pos1, pos2):
+    """Return the angular distance from two bodies positions"""
     angle = abs(pos2 - pos1)
     return angle if angle <= 180 else 360 - angle
 
 
 def get_orb(body1, body2, aspect):
+    """Calculate the orb for two bodies and aspect"""
     return ((body_orbs[body1] + body_orbs[body2]) / 2) * aspects_coeff[aspect]
 
 
@@ -53,31 +58,40 @@ aspect_dict = {
 
 
 def body_name(body):
+    """Return the body name"""
     return swe.get_planet_name(body)
 
 
-def body_position(jdate, body):
+def body_longitude(jdate, body):
+    """Return the body longitude"""
     return swe.calc_ut(jdate, body)[0][0]
 
 
 def body_speed(jdate, body):
+    """Return the body longitude speed"""
     return swe.calc_ut(jdate, body)[0][3]
 
 
 def is_retrograde(jdate, body):
+    """Return True if a body is retrograde"""
     return body_speed(jdate, body) < 0
 
 
 def body_sign(jdate, body):
-    position = body_position(jdate, body)
+    """Return the body position in sign"""
+    position = body_longitude(jdate, body)
     dms = dd_to_dms(position)
     sign, degrees = divmod(dms[0], 30)
     return sign, degrees, dms[1], dms[2]
 
 
 def get_aspect(jdate, body1, body2):
-    dist = distance(body_position(jdate, body1),
-                    body_position(jdate, body2))
+    """
+    Return the aspect and orb between two bodies for a certain date
+    Return None and distance betwwee the two bodies if there's no aspect
+    """
+    dist = distance(body_longitude(jdate, body1),
+                    body_longitude(jdate, body2))
     dist = round(dist, 2)
     for i, n in enumerate(aspect_dict[frozenset([body1, body2])]):
         orb = round(get_orb(body1, body2, i), 2)
@@ -89,6 +103,7 @@ def get_aspect(jdate, body1, body2):
 
 
 def print_positions(jdate):
+    """Function to format and print positions of the bodies for a date"""
     print('\n')
     print('-------- Bodies Positions --------')
     for i in range(len(body_orbs)):
@@ -99,6 +114,7 @@ def print_positions(jdate):
 
 
 def print_aspects(jdate):
+    """Function to format and print aspects between the bodies for a date"""
     print('\n')
     print('-------- Bodies Aspects ---------')
     for key in aspect_dict.keys():
