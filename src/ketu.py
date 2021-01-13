@@ -1,8 +1,33 @@
 """This modules is in pre-version"""
 
-from itertools import combinations
+#  MIT License
+#
+#  Copyright (c) 2020 loc
+#
+#  Permission is hereby granted, free of charge, to any person obtaining a copy
+#  of this software and associated documentation files (the "Software"), to deal
+#  in the Software without restriction, including without limitation the rights
+#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+#  copies of the Software, and to permit persons to whom the Software is
+#  furnished to do so, subject to the following conditions:
+#
+#  The above copyright notice and this permission notice shall be included in all
+#  copies or substantial portions of the Software.
+#
+#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+#  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+#  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+#  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+#  SOFTWARE.
+#
 
+from itertools import combinations_with_replacement as combs
+
+# from datetime import date, time, timedelta, timezone, datetime
 import numpy as np
+import pandas as pd
 import swisseph as swe
 
 body_orbs = np.array([12, 12, 8, 8, 8, 10, 10, 6, 6, 4])
@@ -20,11 +45,13 @@ signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra',
 swe.set_ephe_path(path='/home/loc/workspace/ketu/ephe')
 
 
+# TODO: Refactor with datetime and timezone object
 def local_to_utc(year, month, day, hour, minute, second, offset):
     """Return UTC time from local time"""
     return swe.utc_time_zone(year, month, day, hour, minute, second, offset)
 
 
+# TODO: Refactor with datetime object
 def utc_to_julian(year, month, day, hour, minute, second):
     """Return Julian date from UTC time"""
     return swe.utc_to_jd(year, month, day, hour, minute, second, 1)[1]
@@ -53,13 +80,25 @@ def get_orb(body1, body2, aspect):
 # and a numpy array of the orbs, indexed by aspect as value
 # We build the dictionnary by comprehension
 aspect_dict = {
-    frozenset(comb): np.array([get_orb(*comb, n) for n in range(len(aspects))])
-    for comb in combinations([i for i in range(len(body_orbs))], 2)}
+    comb: np.array([get_orb(*comb, n) for n in range(len(aspects))])
+    for comb in combs([i for i in range(len(body_orbs))], 2)}
+
+# Test with a Pandas DataFrame
+# TODO: Change the data structure for the pandas DataFrame?
+aspect_df = pd.DataFrame.from_dict(aspect_dict, 'index', columns=aspects_name)
 
 
+# --------- interface functions with pyswisseph ---------
+# TODO: move swisseph functions to a module
 def body_name(body):
     """Return the body name"""
+    if swe.get_planet_name(body) == 'mean Node':
+        return 'Rahu'
     return swe.get_planet_name(body)
+
+
+def body_properties(jdate, body):
+    pass
 
 
 def body_longitude(jdate, body):
@@ -70,6 +109,9 @@ def body_longitude(jdate, body):
 def body_speed(jdate, body):
     """Return the body longitude speed"""
     return swe.calc_ut(jdate, body)[0][3]
+
+
+# --------------------------------------------------------
 
 
 def is_retrograde(jdate, body):
@@ -88,7 +130,7 @@ def body_sign(jdate, body):
 def get_aspect(jdate, body1, body2):
     """
     Return the aspect and orb between two bodies for a certain date
-    Return None and distance betwwee the two bodies if there's no aspect
+    Return None and distance betwween the two bodies if there's no aspect
     """
     dist = distance(body_longitude(jdate, body1),
                     body_longitude(jdate, body2))
@@ -118,22 +160,27 @@ def print_aspects(jdate):
     print('\n')
     print('-------- Bodies Aspects ---------')
     for key in aspect_dict.keys():
-        aspect = get_aspect(jdate, *key)
-        if aspect[0] is not None and aspect[0] != 30 and aspect[0] != 150:
-            body1, body2 = key
-            d, m, s = dd_to_dms(aspect[1])
-            print(body_name(body1) + '-' + body_name(body2) + ': ' +
-                  aspects_name[np.where(aspects == aspect[0])[
-                      0].item()] + ', orb = ' + str(d) +
-                  'º' + str(m) + "'" + str(s) + '", ')
+        if len(key) == 2:
+            aspect = get_aspect(jdate, *key)
+            if aspect[0] is not None and aspect[0] != 30 and aspect[0] != 150:
+                body1, body2 = key
+                d, m, s = dd_to_dms(aspect[1])
+                print(body_name(body1) + '-' + body_name(body2) + ': ' +
+                      aspects_name[np.where(aspects == aspect[0])[
+                          0].item()] + ', orb = ' + str(d) +
+                      'º' + str(m) + "'" + str(s) + '", ')
 
 
 if __name__ == '__main__':
-    year, month, day = map(int, input(
+    """year, month, day = map(int, input(
         'Give a date with iso format, ex: 2020-12-21\n').split('-'))
     hour, minute = map(int, input(
         'Give a time (hour, minute), with iso format, ex: 15:10\n').split(':'))
     tz = int(input('Give the offset with UTC, ex: 1 for France\n'))
     jday = utc_to_julian(*local_to_utc(year, month, day, hour, minute, 0, tz))
     print_positions(jday)
-    print_aspects(jday)
+    print_aspects(jday)"""
+
+    for i, row in aspect_df.iterrows():
+        if i == (0, 0):
+            print(row)
