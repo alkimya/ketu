@@ -1,28 +1,5 @@
 """This modules is in pre-version"""
 
-#  MIT License
-#
-#  Copyright (c) 2020 loc
-#
-#  Permission is hereby granted, free of charge, to any person obtaining a copy
-#  of this software and associated documentation files (the "Software"), to deal
-#  in the Software without restriction, including without limitation the rights
-#  to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-#  copies of the Software, and to permit persons to whom the Software is
-#  furnished to do so, subject to the following conditions:
-#
-#  The above copyright notice and this permission notice shall be included in all
-#  copies or substantial portions of the Software.
-#
-#  THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-#  IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-#  FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-#  AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-#  LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-#  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-#  SOFTWARE.
-#
-
 from itertools import combinations_with_replacement as combs
 
 # from datetime import date, time, timedelta, timezone, datetime
@@ -30,7 +7,9 @@ import numpy as np
 import pandas as pd
 import swisseph as swe
 
-body_orbs = np.array([12, 12, 8, 8, 8, 10, 10, 6, 6, 4])
+from profile import time_it
+
+body_orbs = np.array([12, 12, 8, 8, 8, 10, 10, 6, 6, 4, 0])
 
 aspects = np.array([0, 30, 60, 90, 120, 150, 180])
 
@@ -80,8 +59,10 @@ def get_orb(body1, body2, aspect):
 # and a numpy array of the orbs, indexed by aspect as value
 # We build the dictionnary by comprehension
 aspect_dict = {
-    comb: np.array([get_orb(*comb, n) for n in range(len(aspects))])
-    for comb in combs([i for i in range(len(body_orbs))], 2)}
+    frozenset(comb):
+        np.array([get_orb(*comb, n) for n in range(len(aspects))])
+    for comb in combs([i for i in range(len(body_orbs))], 2)
+}
 
 # Test with a Pandas DataFrame
 # TODO: Change the data structure for the pandas DataFrame?
@@ -144,6 +125,7 @@ def get_aspect(jdate, body1, body2):
     return None, dist
 
 
+@time_it
 def print_positions(jdate):
     """Function to format and print positions of the bodies for a date"""
     print('\n')
@@ -155,6 +137,7 @@ def print_positions(jdate):
               'º' + str(m) + "'" + str(s) + '", ' + retro)
 
 
+@time_it
 def print_aspects(jdate):
     """Function to format and print aspects between the bodies for a date"""
     print('\n')
@@ -172,15 +155,11 @@ def print_aspects(jdate):
 
 
 if __name__ == '__main__':
-    """year, month, day = map(int, input(
+    year, month, day = map(int, input(
         'Give a date with iso format, ex: 2020-12-21\n').split('-'))
     hour, minute = map(int, input(
         'Give a time (hour, minute), with iso format, ex: 15:10\n').split(':'))
     tz = int(input('Give the offset with UTC, ex: 1 for France\n'))
     jday = utc_to_julian(*local_to_utc(year, month, day, hour, minute, 0, tz))
     print_positions(jday)
-    print_aspects(jday)"""
-
-    for i, row in aspect_df.iterrows():
-        if i == (0, 0):
-            print(row)
+    print_aspects(jday)
