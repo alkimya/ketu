@@ -1,6 +1,6 @@
 # ketu
 
-Little library to compute positions of astronomical bodies (Sun, Moon, planets and mean Node aka Rahu) generate time series and calendars based on planetaries aspects.
+Little library to compute positions of astronomical bodies (Sun, Moon, planets and mean Node aka Rahu), generate time series and calendars based on planetaries aspects.
 
 Need pyswisseph: `pip install pyswisseph` and numpy: `pip install numpy`
 
