@@ -124,8 +124,8 @@ def print_positions(jdate):
     print('------------- Bodies Positions -------------')
     for i in range(len(body_orbs)):
         sign, d, m, s = body_sign(jdate, i)
-        retro = 'R' if is_retrograde(jdate, i) else ''
-        print(f"{body_name(i):10}: {signs[sign]:12}{d}º{m}'{s}\", {retro}")
+        retro = ', R' if is_retrograde(jdate, i) else ''
+        print(f"{body_name(i):10}: {signs[sign]:12}{d}º{m}'{s}\"{retro}")
 
 
 @time_it
@@ -139,8 +139,9 @@ def print_aspects(jdate):
             if aspect[0] is not None and aspect[0] != 30 and aspect[0] != 150:
                 body1, body2 = key
                 d, m, s = dd_to_dms(aspect[1])
+                index = np.where(aspects == aspect[0])[0].item()
                 print(f"{body_name(body1):7} - {body_name(body2):10}: "
-                      f"{aspects_name[np.where(aspects == aspect[0])[0].item()]:12} {d}º{m}'{s}\"")
+                      f"{aspects_name[index]:12} {d}º{m}'{s}\"")
 
 
 if __name__ == '__main__':
