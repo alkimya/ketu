@@ -1,13 +1,12 @@
-"""This modules is in pre-version"""
+"""Ketu is a python library to generate time series and calendars based on
+planetaries aspects"""
 
 from itertools import combinations_with_replacement as combs
 
-# from datetime import date, time, timedelta, timezone, datetime
 import numpy as np
-import pandas as pd
 import swisseph as swe
 
-from profile import time_it
+from profiling import time_it
 
 body_orbs = np.array([12, 12, 8, 8, 8, 10, 10, 6, 6, 4, 0])
 
@@ -20,8 +19,6 @@ aspects_name = ['Conjunction', 'Semisextile', 'Sextile',
 
 signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra',
          'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']
-
-swe.set_ephe_path(path='/home/loc/workspace/ketu/ephe')
 
 
 # TODO: Refactor with datetime and timezone object
@@ -57,20 +54,15 @@ def get_orb(body1, body2, aspect):
 # Data Structure for the list of orbs, by couple of bodies and aspect
 # We first use a dictionnary, with a frozenset of couple of bodies as key,
 # and a numpy array of the orbs, indexed by aspect as value
-# We build the dictionnary by comprehension
+# We build the dictionnary by comprehension and use it to filter the aspects
 aspect_dict = {
-    frozenset(comb):
-        np.array([get_orb(*comb, n) for n in range(len(aspects))])
+    frozenset(comb): np.array([get_orb(*comb, n) for n in range(len(aspects))])
     for comb in combs([i for i in range(len(body_orbs))], 2)
 }
 
-# Test with a Pandas DataFrame
-# TODO: Change the data structure for the pandas DataFrame?
-aspect_df = pd.DataFrame.from_dict(aspect_dict, 'index', columns=aspects_name)
-
 
 # --------- interface functions with pyswisseph ---------
-# TODO: move swisseph functions to a module
+
 def body_name(body):
     """Return the body name"""
     if swe.get_planet_name(body) == 'mean Node':
@@ -91,7 +83,6 @@ def body_speed(jdate, body):
     """Return the body longitude speed"""
     return swe.calc_ut(jdate, body)[0][3]
 
-
 # --------------------------------------------------------
 
 
@@ -111,7 +102,7 @@ def body_sign(jdate, body):
 def get_aspect(jdate, body1, body2):
     """
     Return the aspect and orb between two bodies for a certain date
-    Return None and distance betwween the two bodies if there's no aspect
+    Return None and distance between the two bodies if there's no aspect
     """
     dist = distance(body_longitude(jdate, body1),
                     body_longitude(jdate, body2))
@@ -149,9 +140,8 @@ def print_aspects(jdate):
                 body1, body2 = key
                 d, m, s = dd_to_dms(aspect[1])
                 print(body_name(body1) + '-' + body_name(body2) + ': ' +
-                      aspects_name[np.where(aspects == aspect[0])[
-                          0].item()] + ', orb = ' + str(d) +
-                      'º' + str(m) + "'" + str(s) + '", ')
+                      aspects_name[np.where(aspects == aspect[0])[0].item()] +
+                      ', orb = ' + str(d) + 'º' + str(m) + "'" + str(s) + '", ')
 
 
 if __name__ == '__main__':
