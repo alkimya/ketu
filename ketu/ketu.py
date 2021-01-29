@@ -1,5 +1,5 @@
 """Ketu is a python library to generate time series and calendars based on
-planetaries aspects"""
+planetary aspects"""
 
 from itertools import combinations_with_replacement as combs
 
