@@ -83,6 +83,7 @@ def body_speed(jdate, body):
     """Return the body longitude speed"""
     return swe.calc_ut(jdate, body)[0][3]
 
+
 # --------------------------------------------------------
 
 
@@ -120,28 +121,26 @@ def get_aspect(jdate, body1, body2):
 def print_positions(jdate):
     """Function to format and print positions of the bodies for a date"""
     print('\n')
-    print('-------- Bodies Positions --------')
+    print('------------- Bodies Positions -------------')
     for i in range(len(body_orbs)):
         sign, d, m, s = body_sign(jdate, i)
         retro = 'R' if is_retrograde(jdate, i) else ''
-        print(body_name(i) + ': ' + signs[sign] + ', ' + str(d) +
-              'º' + str(m) + "'" + str(s) + '", ' + retro)
+        print(f"{body_name(i):10}: {signs[sign]:12}{d}º{m}'{s}\", {retro}")
 
 
 @time_it
 def print_aspects(jdate):
     """Function to format and print aspects between the bodies for a date"""
     print('\n')
-    print('-------- Bodies Aspects ---------')
+    print('------------- Bodies Aspects -------------')
     for key in aspect_dict.keys():
         if len(key) == 2:
             aspect = get_aspect(jdate, *key)
             if aspect[0] is not None and aspect[0] != 30 and aspect[0] != 150:
                 body1, body2 = key
                 d, m, s = dd_to_dms(aspect[1])
-                print(body_name(body1) + '-' + body_name(body2) + ': ' +
-                      aspects_name[np.where(aspects == aspect[0])[0].item()] +
-                      ', orb = ' + str(d) + 'º' + str(m) + "'" + str(s) + '", ')
+                print(f"{body_name(body1):7} - {body_name(body2):10}: "
+                      f"{aspects_name[np.where(aspects == aspect[0])[0].item()]:12} {d}º{m}'{s}\"")
 
 
 if __name__ == '__main__':
