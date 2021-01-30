@@ -6,7 +6,6 @@ from itertools import combinations_with_replacement as combs
 import numpy as np
 import swisseph as swe
 
-from profiling import time_it
 
 body_orbs = np.array([12, 12, 8, 8, 8, 10, 10, 6, 6, 4, 0])
 
@@ -117,7 +116,6 @@ def get_aspect(jdate, body1, body2):
     return None, dist
 
 
-@time_it
 def print_positions(jdate):
     """Function to format and print positions of the bodies for a date"""
     print('\n')
@@ -128,7 +126,6 @@ def print_positions(jdate):
         print(f"{body_name(i):10}: {signs[sign]:12}{d}º{m}'{s}\"{retro}")
 
 
-@time_it
 def print_aspects(jdate):
     """Function to format and print aspects between the bodies for a date"""
     print('\n')
