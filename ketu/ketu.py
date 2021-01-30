@@ -7,11 +7,11 @@ import numpy as np
 import swisseph as swe
 
 
-body_orbs = np.array([12, 12, 8, 8, 8, 10, 10, 6, 6, 4, 0])
+body_orbs = np.array([12, 12, 10, 10, 10, 8, 8, 6, 6, 4, 0])
 
 aspects = np.array([0, 30, 60, 90, 120, 150, 180])
 
-aspects_coeff = np.array([1, 1 / 6, 1 / 3, 1 / 2, 2 / 3, 5 / 6, 1])
+aspects_coeff = np.array([1, 1/6, 1/3, 1/2, 2/3, 5/6, 1])
 
 aspects_name = ['Conjunction', 'Semisextile', 'Sextile',
                 'Square', 'Trine', 'Quincunx', 'Opposition']
