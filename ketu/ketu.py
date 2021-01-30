@@ -144,12 +144,16 @@ def print_aspects(jdate):
                       f"{aspects_name[index]:12} {d}º{m}'{s}\"")
 
 
-if __name__ == '__main__':
+def main():
     year, month, day = map(int, input(
         'Give a date with iso format, ex: 2020-12-21\n').split('-'))
     hour, minute = map(int, input(
         'Give a time (hour, minute), with iso format, ex: 15:10\n').split(':'))
-    tz = int(input('Give the offset with UTC, ex: 1 for France\n'))
+    tz = float(input('Give the offset with UTC, ex: 1 for France\n'))
     jday = utc_to_julian(*local_to_utc(year, month, day, hour, minute, 0, tz))
     print_positions(jday)
     print_aspects(jday)
+
+
+if __name__ == '__main__':
+    main()
