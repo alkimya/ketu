@@ -6,8 +6,10 @@ from itertools import combinations_with_replacement as combs
 import numpy as np
 import swisseph as swe
 
-
-body_orbs = np.array([12, 12, 10, 10, 10, 8, 8, 6, 6, 4, 0])
+# Orbs of influence by body: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn,
+# Uranus, Neptune, Pluto and mean Node aka Rahu
+# Inspired by Abu Ma’shar (787-886) and Al-Biruni (973-1050)
+body_orbs = np.array([12, 12, 8, 8, 8, 10, 10, 6, 6, 4, 0])
 
 aspects = np.array([0, 30, 60, 90, 120, 150, 180])
 
