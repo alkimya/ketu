@@ -2,22 +2,24 @@
 planetary aspects"""
 
 from itertools import combinations_with_replacement as combs
-
+from functools import lru_cache
 import numpy as np
 import swisseph as swe
+
 
 # Orbs of influence by body: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn,
 # Uranus, Neptune, Pluto and mean Node aka Rahu
 # Inspired by Abu Ma’shar (787-886) and Al-Biruni (973-1050)
 body_orbs = np.array([12, 12, 8, 8, 8, 10, 10, 6, 6, 4, 0])
 
-aspects = np.array([0, 30, 60, 90, 120, 150, 180])
+# List of major aspects (harmonics 2 and 3)
+aspects = np.array([0, 60, 90, 120, 180])
+# And their coefficient for calculation of the orb
+aspects_coeff = np.array([1, 1/3, 1/2, 2/3, 1])
+# Corresponding names of the aspects
+aspects_name = ['Conjunction', 'Sextile', 'Square', 'Trine', 'Opposition']
 
-aspects_coeff = np.array([1, 1/6, 1/3, 1/2, 2/3, 5/6, 1])
-
-aspects_name = ['Conjunction', 'Semisextile', 'Sextile',
-                'Square', 'Trine', 'Quincunx', 'Opposition']
-
+# List of signs for body position
 signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra',
          'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']
 
@@ -58,7 +60,7 @@ def get_orb(body1, body2, aspect):
 # We build the dictionnary by comprehension and use it to filter the aspects
 aspect_dict = {
     frozenset(comb): np.array([get_orb(*comb, n) for n in range(len(aspects))])
-    for comb in combs([i for i in range(len(body_orbs))], 2)
+    for comb in combs(list(range(len(body_orbs))), 2)
 }
 
 
@@ -71,18 +73,20 @@ def body_name(body):
     return swe.get_planet_name(body)
 
 
+@lru_cache()
 def body_properties(jdate, body):
-    pass
+    """Return the body properties as a tuple"""
+    return swe.calc_ut(jdate, body)[0]
 
 
 def body_longitude(jdate, body):
     """Return the body longitude"""
-    return swe.calc_ut(jdate, body)[0][0]
+    return body_properties(jdate, body)[0]
 
 
 def body_speed(jdate, body):
     """Return the body longitude speed"""
-    return swe.calc_ut(jdate, body)[0][3]
+    return body_properties(jdate, body)[3]
 
 
 # --------------------------------------------------------
@@ -135,7 +139,7 @@ def print_aspects(jdate):
     for key in aspect_dict.keys():
         if len(key) == 2:
             aspect = get_aspect(jdate, *key)
-            if aspect[0] is not None and aspect[0] != 30 and aspect[0] != 150:
+            if aspect[0] is not None:
                 body1, body2 = key
                 d, m, s = dd_to_dms(aspect[1])
                 index = np.where(aspects == aspect[0])[0].item()
@@ -144,6 +148,7 @@ def print_aspects(jdate):
 
 
 def main():
+    """Entry point of the programm"""
     year, month, day = map(int, input(
         'Give a date with iso format, ex: 2020-12-21\n').split('-'))
     hour, minute = map(int, input(

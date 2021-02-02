@@ -1,8 +1,6 @@
 from unittest import TestCase
 
-from ketu import body_name, local_to_utc, utc_to_julian, body_sign, \
-    body_speed, body_longitude, distance, get_orb, is_retrograde, \
-    get_aspect, dd_to_dms, signs
+from ketu import *
 
 date = utc_to_julian(2020, 12, 30, 3, 0, 0)
 jday = utc_to_julian(*local_to_utc(1989, 1, 3, 21, 0, 0, 2))
@@ -31,7 +29,7 @@ class KetuTest(TestCase):
                                180, delta=1)
 
     def test_get_orb(self):
-        self.assertEqual(get_orb(0, 1, 4), 8)
+        self.assertEqual(get_orb(0, 1, 3), 8)
 
     def test_body_name(self):
         self.assertEqual('Sun', body_name(0))
