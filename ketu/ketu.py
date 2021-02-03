@@ -60,7 +60,7 @@ def get_orb(body1, body2, aspect):
 # We build the dictionnary by comprehension and use it to filter the aspects
 aspect_dict = {
     frozenset(comb): np.array([get_orb(*comb, n) for n in range(len(aspects))])
-    for comb in combs(list(range(len(body_orbs))), 2)
+    for comb in combs(range(len(body_orbs)), 2)
 }
 
 
