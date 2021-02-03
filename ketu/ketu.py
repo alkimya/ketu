@@ -1,11 +1,11 @@
 """Ketu is a python library to generate time series and calendars based on
 planetary aspects"""
 
-from itertools import combinations_with_replacement as combs
 from functools import lru_cache
+from itertools import combinations_with_replacement as combs
+
 import numpy as np
 import swisseph as swe
-
 
 # Orbs of influence by body: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn,
 # Uranus, Neptune, Pluto and mean Node aka Rahu

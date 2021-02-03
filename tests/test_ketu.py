@@ -1,6 +1,6 @@
 from unittest import TestCase
 
-from ketu import *
+from ketu.ketu import *
 
 date = utc_to_julian(2020, 12, 30, 3, 0, 0)
 jday = utc_to_julian(*local_to_utc(1989, 1, 3, 21, 0, 0, 2))
