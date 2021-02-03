@@ -1,8 +1,8 @@
 # ketu
 
 Little library to compute positions of astronomical bodies (Sun, Moon, planets
-and mean Node aka Rahu), generate time series and calendars based on planetary
-aspects.
+and mean Node aka Rahu) and aspects between them, generate time series and 
+calendars based on planetary aspects.
 
 Need pyswisseph: `pip install pyswisseph` and numpy: `pip install numpy`
 
@@ -12,4 +12,6 @@ Move to ketu directory, run `python ketu.py` and answer the questions.
 
 ![Terminal screen](https://github.com/alkimya/ketu/blob/master/res/screen.png)
 
-**TODO:** find datetimes for beginning, end and exact aspect and find all aspects between two dates.
+#### TODO:
+ + find datetimes for beginning, end and exact aspect 
+ * find all aspects between two dates
