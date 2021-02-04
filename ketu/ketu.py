@@ -139,17 +139,15 @@ def get_aspects(jdate, bodies):
     """
     d_aspects = {}
     for comb in combs(bodies, 2):
-        body1, body2 = comb
-        dist = distance(body_long(jdate, body1),
-                        body_long(jdate, body2))
+        dist = distance(body_long(jdate, comb[0]),
+                        body_long(jdate, comb[1]))
         dist = round(dist, 2)
-        for i, n in enumerate(aspect_dict[frozenset([body1, body2])]):
-            orb = round(get_orb(body1, body2, i), 2)
+        for i, n in enumerate(aspect_dict[frozenset(*comb)]):
+            orb = round(get_orb(*comb, i), 2)
             if i == 0 and dist <= n:
-                d_aspects[frozenset([body1, body2])] = aspects[i], dist
+                d_aspects[frozenset(*comb)] = aspects[i], dist
             elif aspects[i] - orb <= dist <= aspects[i] + orb:
-                d_aspects[frozenset([body1, body2])] = aspects[i], \
-                                                       abs(aspects[i] - dist)
+                d_aspects[frozenset(*comb)] = aspects[i], abs(aspects[i] - dist)
     return d_aspects if d_aspects else None
 
 
