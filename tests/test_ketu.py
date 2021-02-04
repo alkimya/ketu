@@ -58,6 +58,9 @@ class KetuTest(TestCase):
         self.assertTrue(is_retrograde(jday, 7))
         self.assertTrue(is_retrograde(jday, 10))
 
+    def test_is_ascending(self):
+        self.assertFalse(is_ascending(jday, 1))
+
     def test_body_sign(self):
         self.assertEqual(signs[body_sign(jday, 0)[0]], 'Gemini')
 
