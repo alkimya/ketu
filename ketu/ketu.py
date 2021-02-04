@@ -11,7 +11,7 @@ import swisseph as swe
 # Orbs of influence by body: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn,
 # Uranus, Neptune, Pluto and mean Node aka Rahu
 # Inspired by Abu Ma’shar (787-886) and Al-Biruni (973-1050)
-body_orbs = np.array([12, 12, 8, 8, 8, 10, 10, 6, 6, 4, 0])
+body_orbs = np.array([12, 12, 8, 8, 10, 10, 10, 6, 6, 4, 0])
 
 # List of major aspects (harmonics 2 and 3)
 aspects = np.array([0, 60, 90, 120, 180])
