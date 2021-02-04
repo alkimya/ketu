@@ -1,7 +1,6 @@
 """Ketu is a python library to generate time series and calendars based on
 planetary aspects"""
 
-from datetime import datetime
 from functools import lru_cache
 from itertools import combinations_with_replacement as combs
 
@@ -23,18 +22,6 @@ aspects_name = ['Conjunction', 'Sextile', 'Square', 'Trine', 'Opposition']
 # List of signs for body position
 signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra',
          'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']
-
-
-# TODO: Refactor with datetime and timezone object
-def local_to_utc(year, month, day, hour, minute, second, offset):
-    """Return UTC time from local time"""
-    return swe.utc_time_zone(year, month, day, hour, minute, second, offset)
-
-
-# TODO: Refactor with datetime object
-def utc_to_julian(year, month, day, hour, minute, second):
-    """Return Julian date from UTC time"""
-    return swe.utc_to_jd(year, month, day, hour, minute, second, 1)[1]
 
 
 def dd_to_dms(dd):
@@ -67,6 +54,18 @@ aspect_dict = {
 
 # --------- interface functions with pyswisseph ---------
 
+# TODO: Refactor with datetime and timezone object
+def local_to_utc(year, month, day, hour, minute, second, offset):
+    """Return UTC time from local time"""
+    return swe.utc_time_zone(year, month, day, hour, minute, second, offset)
+
+
+# TODO: Refactor with datetime object
+def utc_to_julian(year, month, day, hour, minute, second):
+    """Return Julian date from UTC time"""
+    return swe.utc_to_jd(year, month, day, hour, minute, second, 1)[1]
+
+
 def body_name(body):
     """Return the body name"""
     if swe.get_planet_name(body) == 'mean Node':
@@ -76,8 +75,13 @@ def body_name(body):
 
 @lru_cache()
 def body_properties(jdate, body):
-    """Return the body properties as a tuple"""
-    return swe.calc_ut(jdate, body)[0]
+    """
+    Return the body properties ( longitude, latitude, distance to Earth in AU,
+    longitude speed, latitude speed, distance speed ) as a Numpy array
+    """
+    return np.array(swe.calc_ut(jdate, body)[0])
+
+# --------------------------------------------------------
 
 
 def body_long(jdate, body):
@@ -106,16 +110,18 @@ def body_vlat(jdate, body):
 
 
 def body_vdistance(jdate, body):
-    """Return the body distance speed of the body to Earth"""
+    """Return the distance speed of the body"""
     return body_properties(jdate, body)[5]
-
-
-# --------------------------------------------------------
 
 
 def is_retrograde(jdate, body):
     """Return True if a body is retrograde"""
     return body_vlong(jdate, body) < 0
+
+
+def is_ascending(jdate, body):
+    """Return True if a body latitude is rising"""
+    return body_vlat(jdate, body) > 0
 
 
 def body_sign(jdate, body):
