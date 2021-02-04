@@ -85,9 +85,29 @@ def body_long(jdate, body):
     return body_properties(jdate, body)[0]
 
 
-def body_speed(jdate, body):
+def body_lat(jdate, body):
+    """Return the body latitude"""
+    return body_properties(jdate, body)[1]
+
+
+def body_distance(jdate, body):
+    """Return distance of the body to Earth in AU"""
+    return body_properties(jdate, body)[2]
+
+
+def body_vlong(jdate, body):
     """Return the body longitude speed"""
     return body_properties(jdate, body)[3]
+
+
+def body_vlat(jdate, body):
+    """Return the body latitude speed"""
+    return body_properties(jdate, body)[4]
+
+
+def body_vdistance(jdate, body):
+    """Return the body distance speed of the body to Earth"""
+    return body_properties(jdate, body)[5]
 
 
 # --------------------------------------------------------
@@ -95,7 +115,7 @@ def body_speed(jdate, body):
 
 def is_retrograde(jdate, body):
     """Return True if a body is retrograde"""
-    return body_speed(jdate, body) < 0
+    return body_vlong(jdate, body) < 0
 
 
 def body_sign(jdate, body):
