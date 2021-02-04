@@ -36,14 +36,27 @@ class KetuTest(TestCase):
     def test_body_properties(self):
         self.assertAlmostEqual(body_properties(jday, 0)[0], 75, delta=1)
 
-    def test_body_longitude(self):
+    def test_body_long(self):
         self.assertAlmostEqual(body_long(jday, 0), 75, delta=1)
 
-    def test_body_speed(self):
-        self.assertAlmostEqual(body_speed(jday, 0), 1, delta=0.05)
+    def test_body_lat(self):
+        self.assertAlmostEqual(body_lat(jday, 1), 2, delta=0.2)
+
+    def test_body_distance(self):
+        self.assertAlmostEqual(body_distance(jday, 4), 1.5, delta=0.1)
+
+    def test_body_vlong(self):
+        self.assertAlmostEqual(body_vlong(jday, 0), 1, delta=0.05)
+
+    def test_body_vlat(self):
+        self.assertAlmostEqual(body_vlat(jday, 1), -1, delta=0.1)
+
+    def test_body_vdistance(self):
+        self.assertAlmostEqual(body_vdistance(jday, 0), 0, delta=0.1)
 
     def test_is_retrograde(self):
         self.assertTrue(is_retrograde(jday, 7))
+        self.assertTrue(is_retrograde(jday, 10))
 
     def test_body_sign(self):
         self.assertEqual(signs[body_sign(jday, 0)[0]], 'Gemini')
