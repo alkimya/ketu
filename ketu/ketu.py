@@ -1,6 +1,7 @@
 """Ketu is a python library to generate time series and calendars based on
 planetary aspects"""
 
+from datetime import datetime
 from functools import lru_cache
 from itertools import combinations_with_replacement as combs
 
@@ -79,7 +80,7 @@ def body_properties(jdate, body):
     return swe.calc_ut(jdate, body)[0]
 
 
-def body_longitude(jdate, body):
+def body_long(jdate, body):
     """Return the body longitude"""
     return body_properties(jdate, body)[0]
 
@@ -99,7 +100,7 @@ def is_retrograde(jdate, body):
 
 def body_sign(jdate, body):
     """Return the body position in sign"""
-    position = body_longitude(jdate, body)
+    position = body_long(jdate, body)
     dms = dd_to_dms(position)
     sign, degrees = divmod(dms[0], 30)
     return sign, degrees, dms[1], dms[2]
@@ -110,8 +111,8 @@ def get_aspect(jdate, body1, body2):
     Return the aspect and orb between two bodies for a certain date
     Return None and distance between the two bodies if there's no aspect
     """
-    dist = distance(body_longitude(jdate, body1),
-                    body_longitude(jdate, body2))
+    dist = distance(body_long(jdate, body1),
+                    body_long(jdate, body2))
     dist = round(dist, 2)
     for i, n in enumerate(aspect_dict[frozenset([body1, body2])]):
         orb = round(get_orb(body1, body2, i), 2)
