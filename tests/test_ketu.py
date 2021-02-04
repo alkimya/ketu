@@ -64,8 +64,10 @@ class KetuTest(TestCase):
     def test_body_sign(self):
         self.assertEqual(signs[body_sign(jday, 0)[0]], 'Gemini')
 
-    def test_get_aspect(self):
-        aspect, orb = get_aspect(jday, 3, 10)
+    def test_get_aspects(self):
+        bodies = np.arange(11)
+        d_aspects = get_aspects(jday, bodies)
+        aspect, orb = d_aspects[frozenset([3, 10])]
         self.assertEqual(aspect, 120)
         self.assertAlmostEqual(orb, 0, delta=1)
 

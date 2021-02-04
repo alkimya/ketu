@@ -2,7 +2,7 @@
 planetary aspects"""
 
 from functools import lru_cache
-from itertools import combinations_with_replacement as combs
+from itertools import combinations as combs, combinations_with_replacement as rcombs
 
 import numpy as np
 import swisseph as swe
@@ -48,7 +48,7 @@ def get_orb(body1, body2, aspect):
 # We build the dictionnary by comprehension and use it to filter the aspects
 aspect_dict = {
     frozenset(comb): np.array([get_orb(*comb, n) for n in range(len(aspects))])
-    for comb in combs(range(len(body_orbs)), 2)
+    for comb in rcombs(range(len(body_orbs)), 2)
 }
 
 
@@ -132,21 +132,25 @@ def body_sign(jdate, body):
     return sign, degrees, dms[1], dms[2]
 
 
-def get_aspect(jdate, body1, body2):
+def get_aspects(jdate, bodies):
     """
-    Return the aspect and orb between two bodies for a certain date
-    Return None and distance between the two bodies if there's no aspect
+    Return a dictionnary of aspects and orb between bodies for a certain date
+    Return None if there's no aspect
     """
-    dist = distance(body_long(jdate, body1),
-                    body_long(jdate, body2))
-    dist = round(dist, 2)
-    for i, n in enumerate(aspect_dict[frozenset([body1, body2])]):
-        orb = round(get_orb(body1, body2, i), 2)
-        if i == 0 and dist <= n:
-            return aspects[i], dist
-        elif aspects[i] - orb <= dist <= aspects[i] + orb:
-            return aspects[i], abs(aspects[i] - dist)
-    return None, dist
+    d_aspects = {}
+    for comb in combs(bodies, 2):
+        body1, body2 = comb
+        dist = distance(body_long(jdate, body1),
+                        body_long(jdate, body2))
+        dist = round(dist, 2)
+        for i, n in enumerate(aspect_dict[frozenset([body1, body2])]):
+            orb = round(get_orb(body1, body2, i), 2)
+            if i == 0 and dist <= n:
+                d_aspects[frozenset([body1, body2])] = aspects[i], dist
+            elif aspects[i] - orb <= dist <= aspects[i] + orb:
+                d_aspects[frozenset([body1, body2])] = aspects[i], \
+                                                       abs(aspects[i] - dist)
+    return d_aspects if d_aspects else None
 
 
 def print_positions(jdate):
@@ -163,15 +167,13 @@ def print_aspects(jdate):
     """Function to format and print aspects between the bodies for a date"""
     print('\n')
     print('------------- Bodies Aspects -------------')
-    for key in aspect_dict.keys():
-        if len(key) == 2:
-            aspect = get_aspect(jdate, *key)
-            if aspect[0] is not None:
-                body1, body2 = key
-                d, m, s = dd_to_dms(aspect[1])
-                index = np.where(aspects == aspect[0])[0].item()
-                print(f"{body_name(body1):7} - {body_name(body2):10}: "
-                      f"{aspects_name[index]:12} {d}º{m}'{s}\"")
+    bodies = np.arange(11)
+    for key, item in get_aspects(jdate, bodies).items():
+        body1, body2 = key
+        d, m, s = dd_to_dms(item[1])
+        index = np.where(aspects == item[0])[0][0]
+        print(f"{body_name(body1):7} - {body_name(body2):10}: "
+              f"{aspects_name[index]:12} {d}º{m}'{s}\"")
 
 
 def main():
