@@ -2,7 +2,8 @@
 planetary aspects"""
 
 from functools import lru_cache
-from itertools import combinations as combs, combinations_with_replacement as rcombs
+from itertools import combinations as combs, \
+    combinations_with_replacement as rcombs
 
 import numpy as np
 import swisseph as swe
@@ -15,7 +16,7 @@ body_orbs = np.array([12, 12, 8, 8, 10, 10, 10, 6, 6, 4, 0])
 # List of major aspects (harmonics 2 and 3)
 aspects = np.array([0, 60, 90, 120, 180])
 # And their coefficient for calculation of the orb
-aspects_coeff = np.array([1, 1/3, 1/2, 2/3, 1])
+aspects_coeff = np.array([1, 1 / 3, 1 / 2, 2 / 3, 1])
 # Corresponding names of the aspects
 aspects_name = ['Conjunction', 'Sextile', 'Square', 'Trine', 'Opposition']
 
@@ -39,17 +40,8 @@ def distance(pos1, pos2):
 
 def get_orb(body1, body2, aspect):
     """Calculate the orb for two bodies and aspect"""
-    return ((body_orbs[body1] + body_orbs[body2]) / 2) * aspects_coeff[aspect]
-
-
-# Data Structure for the list of orbs, by couple of bodies and aspect
-# We first use a dictionnary, with a frozenset of couple of bodies as key,
-# and a numpy array of the orbs, indexed by aspect as value
-# We build the dictionnary by comprehension and use it to filter the aspects
-aspect_dict = {
-    frozenset(comb): np.array([get_orb(*comb, n) for n in range(len(aspects))])
-    for comb in rcombs(range(len(body_orbs)), 2)
-}
+    return ((body_orbs[body1] + body_orbs[body2]) / 2) * \
+           aspects_coeff[np.where(aspects == aspect)][0]
 
 
 # --------- interface functions with pyswisseph ---------
@@ -80,6 +72,7 @@ def body_properties(jdate, body):
     longitude speed, latitude speed, distance speed ) as a Numpy array
     """
     return np.array(swe.calc_ut(jdate, body)[0])
+
 
 # --------------------------------------------------------
 
@@ -142,12 +135,12 @@ def get_aspects(jdate, bodies):
         dist = distance(body_long(jdate, comb[0]),
                         body_long(jdate, comb[1]))
         dist = round(dist, 2)
-        for i, n in enumerate(aspect_dict[frozenset(*comb)]):
-            orb = round(get_orb(*comb, i), 2)
-            if i == 0 and dist <= n:
-                d_aspects[frozenset(*comb)] = aspects[i], dist
-            elif aspects[i] - orb <= dist <= aspects[i] + orb:
-                d_aspects[frozenset(*comb)] = aspects[i], abs(aspects[i] - dist)
+        for aspect in aspects:
+            orb = get_orb(*comb, aspect)
+            if aspect == 0 and dist <= orb:
+                d_aspects[frozenset(comb)] = aspect, dist
+            elif aspect - orb <= dist <= aspect + orb:
+                d_aspects[frozenset(comb)] = aspect, abs(aspect - dist)
     return d_aspects if d_aspects else None
 
 

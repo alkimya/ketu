@@ -28,7 +28,7 @@ class KetuTest(TestCase):
                                120, delta=1)
 
     def test_get_orb(self):
-        self.assertEqual(get_orb(0, 1, 3), 8)
+        self.assertEqual(get_orb(0, 1, 120), 8)
 
     def test_body_name(self):
         self.assertEqual('Sun', body_name(0))
