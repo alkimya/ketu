@@ -137,7 +137,6 @@ def get_aspects(jdate, bodies):
     for comb in combs(bodies, 2):
         dist = distance(body_long(jdate, comb[0]),
                         body_long(jdate, comb[1]))
-        dist = round(dist, 2)
         for aspect in aspects['value']:
             orb = get_orb(*comb, aspect)
             if aspect == 0 and dist <= orb:
