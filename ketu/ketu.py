@@ -12,12 +12,12 @@ import swisseph as swe
 # Inspired by Abu Ma’shar (787-886) and Al-Biruni (973-1050)
 body_orbs = np.array([12, 12, 8, 8, 10, 10, 10, 6, 6, 4, 0])
 
-# List of major aspects (harmonics 2 and 3)
-aspects = np.array([0, 60, 90, 120, 180])
-# And their coefficient for calculation of the orb
-aspects_coeff = np.array([1, 1 / 3, 1 / 2, 2 / 3, 1])
-# Corresponding names of the aspects
-aspects_name = ['Conjunction', 'Sextile', 'Square', 'Trine', 'Opposition']
+# List of major aspects (harmonics 2 and 3) and their coefficient for
+# calculation of the orb
+aspects = np.array([('Conjunction', 0, 1), ('Sextile', 60, 1/3),
+                    ('Square', 90, 1/2), ('Trine', 120, 2/3),
+                    ('Opposition', 180, 1)],
+                   dtype=[('name', 'S12'), ('value', 'f4'), ('coef', 'f4')])
 
 # List of signs for body position
 signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra',
@@ -39,8 +39,8 @@ def distance(pos1, pos2):
 
 def get_orb(body1, body2, aspect):
     """Calculate the orb for two bodies and aspect"""
-    return ((body_orbs[body1] + body_orbs[body2]) / 2) * \
-        aspects_coeff[np.searchsorted(aspects, aspect)]
+    return (((body_orbs[body1] + body_orbs[body2]) / 2) *
+            aspects['coef'][np.where(aspects['value'] == aspect)])[0]
 
 
 # --------- interface functions with pyswisseph ---------
@@ -134,7 +134,7 @@ def get_aspects(jdate, bodies):
         dist = distance(body_long(jdate, comb[0]),
                         body_long(jdate, comb[1]))
         dist = round(dist, 2)
-        for aspect in aspects:
+        for aspect in aspects['value']:
             orb = get_orb(*comb, aspect)
             if aspect == 0 and dist <= orb:
                 d_aspects[frozenset(comb)] = np.array([aspect, dist])
@@ -160,10 +160,10 @@ def print_aspects(jdate):
     bodies = np.arange(11)
     for key, item in get_aspects(jdate, bodies).items():
         body1, body2 = key
-        index = np.searchsorted(aspects, item[0])
+        index = np.searchsorted(aspects['value'], item[0])
         d, m, s = dd_to_dms(item[1])
         print(f"{body_name(body1):7} - {body_name(body2):10}: "
-              f"{aspects_name[index]:12} {d}º{m}'{s}\"")
+              f"{aspects['name'][index]:12} {d}º{m}'{s}\"")
 
 
 def main():
