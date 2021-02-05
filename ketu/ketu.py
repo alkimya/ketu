@@ -24,11 +24,11 @@ signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra',
          'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']
 
 
-def dd_to_dms(dd):
-    """Return degrees, minutes, seconds from decimal longitude"""
-    minutes, seconds = divmod(dd * 3600, 60)
-    degrees, minutes = divmod(minutes, 60)
-    return tuple(map(int, (degrees, minutes, seconds)))
+def dd_to_dms(deg):
+    """Return degrees, minutes, seconds from degrees decimal"""
+    mins, secs = divmod(deg * 3600, 60)
+    degs, mins = divmod(mins, 60)
+    return np.array((degs, mins, secs), dtype='i4')
 
 
 def distance(pos1, pos2):
@@ -115,12 +115,17 @@ def is_ascending(jdate, body):
     return body_vlat(jdate, body) > 0
 
 
-def body_sign(jdate, body):
+def body_sign(long):
     """Return the body position in sign"""
-    position = body_long(jdate, body)
-    dms = dd_to_dms(position)
-    sign, degrees = divmod(dms[0], 30)
-    return np.array([sign, degrees, dms[1], dms[2]])
+    dms = dd_to_dms(long)
+    sign, degs = divmod(dms[0], 30)
+    mins, secs = dms[1], dms[2]
+    return np.array((sign, degs, mins, secs))
+
+
+def positions(jdate, bodies):
+    """Return array of bodies longitude"""
+    return np.array([body_long(jdate, int(body)) for body in np.nditer(bodies)])
 
 
 def get_aspects(jdate, bodies):
@@ -146,10 +151,12 @@ def print_positions(jdate):
     """Function to format and print positions of the bodies for a date"""
     print('\n')
     print('------------- Bodies Positions -------------')
-    for i in range(len(body_orbs)):
-        sign, d, m, s = body_sign(jdate, i)
-        r = ', R' if is_retrograde(jdate, i) else ''
-        print(f"{body_name(i):10}: {signs[sign]:15}{d:>2}º{m:>2}'{s:>2}\"{r}")
+    pos_it = np.nditer(positions(jdate, np.arange(11)), flags=['f_index'])
+    for pos in pos_it:
+        sign, degs, mins, secs = body_sign(float(pos))
+        retro = ', R' if is_retrograde(jdate, pos_it.index) else ''
+        print(f"{body_name(pos_it.index):10}: "
+              f"{signs[sign]:15}{degs:>2}º{mins:>2}'{secs:>2}\"{retro}")
 
 
 def print_aspects(jdate):
@@ -160,19 +167,20 @@ def print_aspects(jdate):
     for key, item in get_aspects(jdate, bodies).items():
         body1, body2 = key
         index = np.searchsorted(aspects['value'], item[0])
-        d, m, s = dd_to_dms(item[1])
+        degs, mins, secs = dd_to_dms(item[1])
         print(f"{body_name(body1):7} - {body_name(body2):8}: "
-              f"{aspects['name'][index].decode():12} {d:>2}º{m:>2}'{s:>2}\"")
+              f"{aspects['name'][index].decode():12} "
+              f"{degs:>2}º{mins:>2}'{secs:>2}\"")
 
 
 def main():
     """Entry point of the programm"""
     year, month, day = map(int, input(
         'Give a date with iso format, ex: 2020-12-21\n').split('-'))
-    hour, minute = map(int, input(
+    hour, mins = map(int, input(
         'Give a time (hour, minute), with iso format, ex: 18:30\n').split(':'))
-    tz = float(input('Give the offset with UTC, ex: 1 for France\n'))
-    jday = utc_to_julian(*local_to_utc(year, month, day, hour, minute, 0, tz))
+    offset = float(input('Give the offset with UTC, ex: 1 for France\n'))
+    jday = utc_to_julian(*local_to_utc(year, month, day, hour, mins, 0, offset))
     print_positions(jday)
     print_aspects(jday)
 
