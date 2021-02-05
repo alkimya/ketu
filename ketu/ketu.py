@@ -72,7 +72,6 @@ def body_properties(jdate, body):
     """
     return np.array(swe.calc_ut(jdate, body)[0])
 
-
 # --------------------------------------------------------
 
 
@@ -149,8 +148,8 @@ def print_positions(jdate):
     print('------------- Bodies Positions -------------')
     for i in range(len(body_orbs)):
         sign, d, m, s = body_sign(jdate, i)
-        retro = ', R' if is_retrograde(jdate, i) else ''
-        print(f"{body_name(i):10}: {signs[sign]:12}{d}º{m}'{s}\"{retro}")
+        r = ', R' if is_retrograde(jdate, i) else ''
+        print(f"{body_name(i):10}: {signs[sign]:15}{d:>2}º{m:>2}'{s:>2}\"{r}")
 
 
 def print_aspects(jdate):
@@ -162,8 +161,8 @@ def print_aspects(jdate):
         body1, body2 = key
         index = np.searchsorted(aspects['value'], item[0])
         d, m, s = dd_to_dms(item[1])
-        print(f"{body_name(body1):7} - {body_name(body2):10}: "
-              f"{aspects['name'][index]:12} {d}º{m}'{s}\"")
+        print(f"{body_name(body1):7} - {body_name(body2):8}: "
+              f"{aspects['name'][index].decode():12} {d:>2}º{m:>2}'{s:>2}\"")
 
 
 def main():
@@ -171,7 +170,7 @@ def main():
     year, month, day = map(int, input(
         'Give a date with iso format, ex: 2020-12-21\n').split('-'))
     hour, minute = map(int, input(
-        'Give a time (hour, minute), with iso format, ex: 15:10\n').split(':'))
+        'Give a time (hour, minute), with iso format, ex: 18:30\n').split(':'))
     tz = float(input('Give the offset with UTC, ex: 1 for France\n'))
     jday = utc_to_julian(*local_to_utc(year, month, day, hour, minute, 0, tz))
     print_positions(jday)
