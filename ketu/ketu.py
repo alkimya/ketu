@@ -2,8 +2,7 @@
 planetary aspects"""
 
 from functools import lru_cache
-from itertools import combinations as combs, \
-    combinations_with_replacement as rcombs
+from itertools import combinations as combs
 
 import numpy as np
 import swisseph as swe
@@ -41,7 +40,7 @@ def distance(pos1, pos2):
 def get_orb(body1, body2, aspect):
     """Calculate the orb for two bodies and aspect"""
     return ((body_orbs[body1] + body_orbs[body2]) / 2) * \
-           aspects_coeff[np.where(aspects == aspect)][0]
+        aspects_coeff[np.searchsorted(aspects, aspect)]
 
 
 # --------- interface functions with pyswisseph ---------
@@ -122,7 +121,7 @@ def body_sign(jdate, body):
     position = body_long(jdate, body)
     dms = dd_to_dms(position)
     sign, degrees = divmod(dms[0], 30)
-    return sign, degrees, dms[1], dms[2]
+    return np.array([sign, degrees, dms[1], dms[2]])
 
 
 def get_aspects(jdate, bodies):
@@ -138,9 +137,9 @@ def get_aspects(jdate, bodies):
         for aspect in aspects:
             orb = get_orb(*comb, aspect)
             if aspect == 0 and dist <= orb:
-                d_aspects[frozenset(comb)] = aspect, dist
+                d_aspects[frozenset(comb)] = np.array([aspect, dist])
             elif aspect - orb <= dist <= aspect + orb:
-                d_aspects[frozenset(comb)] = aspect, abs(aspect - dist)
+                d_aspects[frozenset(comb)] = np.array([aspect, aspect - dist])
     return d_aspects if d_aspects else None
 
 
@@ -161,8 +160,8 @@ def print_aspects(jdate):
     bodies = np.arange(11)
     for key, item in get_aspects(jdate, bodies).items():
         body1, body2 = key
+        index = np.searchsorted(aspects, item[0])
         d, m, s = dd_to_dms(item[1])
-        index = np.where(aspects == item[0])[0][0]
         print(f"{body_name(body1):7} - {body_name(body2):10}: "
               f"{aspects_name[index]:12} {d}º{m}'{s}\"")
 
