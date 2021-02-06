@@ -7,7 +7,7 @@ from itertools import combinations as combs
 import numpy as np
 import swisseph as swe
 
-# Structured array of astronimical bodies: Sun, Moon, Mercury, Venus, Mars,
+# Structured array of astronomical bodies: Sun, Moon, Mercury, Venus, Mars,
 # Jupiter, Saturn, Uranus, Neptune, Pluto and mean Node aka Rahu,
 # their id's and their orb of influence.
 # Inspired by Abu Ma’shar (787-886) and Al-Biruni (973-1050)
@@ -63,20 +63,20 @@ def utc_to_julian(year, month, day, hour, minute, second):
     return swe.utc_to_jd(year, month, day, hour, minute, second, 1)[1]
 
 
-def body_name(b_id):
+def body_name(body):
     """Return the body name"""
-    if swe.get_planet_name(b_id) == 'mean Node':
+    if swe.get_planet_name(body) == 'mean Node':
         return 'Rahu'
-    return swe.get_planet_name(b_id)
+    return swe.get_planet_name(body)
 
 
 @lru_cache()
-def body_properties(jdate, b_id):
+def body_properties(jdate, body):
     """
     Return the body properties (longitude, latitude, distance to Earth in AU,
     longitude speed, latitude speed, distance speed) as a Numpy array
     """
-    return np.array(swe.calc_ut(jdate, b_id)[0])
+    return np.array(swe.calc_ut(jdate, body)[0])
 
 # --------------------------------------------------------
 
@@ -134,39 +134,49 @@ def body_sign(long):
     return np.array((sign, degs, mins, secs))
 
 
-def positions(jdate, bodies_id):
+def positions(jdate, bodies_id=bodies['id']):
     """Return an array of bodies longitude"""
     return np.array([body_long(jdate, int(body))
                      for body in np.nditer(bodies_id)])
 
 
-def get_aspects(jdate, bodies_id):
+def get_aspect(jdate, body1, body2):
+    """
+    Return the aspect and orb between two bodies for a certain date
+    Return None if there's no aspect
+    """
+    if body1 > body2:
+        body1, body2 = body2, body1
+    dist = distance(body_long(jdate, body1),
+                    body_long(jdate, body2))
+    for aspect in aspects['value']:
+        orb = get_orb(body1, body2, aspect)
+        if aspect == 0 and dist <= orb:
+            return body1, body2, aspect, dist
+        elif aspect - orb <= dist <= aspect + orb:
+            return body1, body2, aspect, aspect - dist
+    return None
+
+
+def get_aspects(jdate, bodies_id=bodies['id']):
     """
     Return a dictionnary of aspects and orb between bodies for a certain date
     Return None if there's no aspect
     """
-    d_aspects = {}
-    for comb in combs(bodies_id, 2):
-        dist = distance(body_long(jdate, comb[0]),
-                        body_long(jdate, comb[1]))
-        for aspect in aspects['value']:
-            orb = get_orb(*comb, aspect)
-            if aspect == 0 and dist <= orb:
-                d_aspects[frozenset(comb)] = np.array([aspect, dist])
-            elif aspect - orb <= dist <= aspect + orb:
-                d_aspects[frozenset(comb)] = np.array([aspect, aspect - dist])
-    return d_aspects if d_aspects else None
+    return np.array([get_aspect(jdate, *comb) for comb in combs(bodies_id, 2)
+                     if get_aspect(jdate, *comb) is not None],
+                    dtype=[('body1', 'i4'), ('body2', 'i4'),
+                           ('aspect', 'f4'), ('orb', 'f4')])
 
 
 def print_positions(jdate):
     """Function to format and print positions of the bodies for a date"""
     print('\n')
     print('------------- Bodies Positions -------------')
-    pos_it = np.nditer(positions(jdate, bodies['id']), flags=['f_index'])
-    for pos in pos_it:
-        sign, degs, mins, secs = body_sign(float(pos))
-        retro = ', R' if is_retrograde(jdate, pos_it.index) else ''
-        print(f"{body_name(pos_it.index):10}: "
+    for index, pos in np.ndenumerate(positions(jdate)):
+        sign, degs, mins, secs = body_sign(pos)
+        retro = ', R' if is_retrograde(jdate, *index) else ''
+        print(f"{body_name(*index):10}: "
               f"{signs[sign]:15}{degs:>2}º{mins:>2}'{secs:>2}\"{retro}")
 
 
@@ -174,10 +184,10 @@ def print_aspects(jdate):
     """Function to format and print aspects between the bodies for a date"""
     print('\n')
     print('------------- Bodies Aspects -------------')
-    for key, item in get_aspects(jdate, bodies['id']).items():
-        body1, body2 = key
-        index = np.searchsorted(aspects['value'], item[0])
-        degs, mins, secs = dd_to_dms(item[1])
+    for asp in get_aspects(jdate):
+        body1, body2, aspect, orb = asp
+        index = np.searchsorted(aspects['value'], aspect)
+        degs, mins, secs = dd_to_dms(orb)
         print(f"{body_name(body1):7} - {body_name(body2):8}: "
               f"{aspects['name'][index].decode():12} "
               f"{degs:>2}º{mins:>2}'{secs:>2}\"")

@@ -68,11 +68,19 @@ class KetuTest(TestCase):
     def test_body_sign(self):
         self.assertEqual(signs[body_sign(body_long(jday, 0))[0]], 'Capricorn')
 
+    def test_get_aspect(self):
+        self.assertEqual(get_aspect(jday, 5, 6)[2], 0)
+        self.assertAlmostEqual(get_aspect(jday, 5, 6)[3], 0, delta=0.1)
+
     def test_get_aspects(self):
-        d_aspects = get_aspects(jday, bodies)
-        aspect, orb = d_aspects[frozenset({5, 6})]
+        asps = get_aspects(jday, bodies)
+        asps2 = asps[np.where(asps['body1'] == 5)]
+        body1, body2, aspect, orb = asps2[np.where(asps2['body2'] == 6)][0]
         self.assertEqual(aspect, 0)
         self.assertAlmostEqual(orb, 0, delta=1)
+
+    def test_is_applicative(self):
+        pass
 
     def test_bodies_positions(self):
         sign = body_sign(positions(jday, bodies)[0])[0]
