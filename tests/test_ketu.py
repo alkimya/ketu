@@ -36,6 +36,10 @@ class KetuTest(TestCase):
     def test_body_properties(self):
         self.assertAlmostEqual(body_properties(jday, 0)[0], 270, delta=1)
 
+    def test_body_id(self):
+        self.assertEqual(body_id('Moon'), 1)
+        self.assertEqual(body_id('Rahu'), 10)
+
     def test_body_long(self):
         self.assertAlmostEqual(body_long(jday, 0), 270, delta=1)
 

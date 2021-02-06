@@ -7,13 +7,18 @@ from itertools import combinations as combs
 import numpy as np
 import swisseph as swe
 
-# Orbs of influence by body: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn,
-# Uranus, Neptune, Pluto and mean Node aka Rahu
+# Structured array of astronimical bodies: Sun, Moon, Mercury, Venus, Mars,
+# Jupiter, Saturn, Uranus, Neptune, Pluto and mean Node aka Rahu,
+# their id's and their orb of influence.
 # Inspired by Abu Ma’shar (787-886) and Al-Biruni (973-1050)
-body_orbs = np.array([12, 12, 8, 8, 10, 10, 10, 6, 6, 4, 0])
+bodies = np.array([('Sun', 0, 12), ('Moon', 1, 12), ('Mercury', 2, 8),
+                   ('Venus', 3, 8), ('Mars', 4, 10), ('Jupiter', 5, 10),
+                   ('Saturn', 6, 10), ('Uranus', 7, 6), ('Neptune', 8, 6),
+                   ('Pluto', 9, 4), ('Rahu', 10, 0)],
+                  dtype=[('name', 'S12'), ('id', 'i4'), ('orb', 'f4')])
 
-# List of major aspects (harmonics 2 and 3) and their coefficient for
-# calculation of the orb
+# Structured array of major aspects (harmonics 2 and 3) and their coefficient
+# for calculation of the orb
 aspects = np.array([('Conjunction', 0, 1), ('Sextile', 60, 1/3),
                     ('Square', 90, 1/2), ('Trine', 120, 2/3),
                     ('Opposition', 180, 1)],
@@ -37,9 +42,10 @@ def distance(pos1, pos2):
     return angle if angle <= 180 else 360 - angle
 
 
+@lru_cache()
 def get_orb(body1, body2, aspect):
     """Calculate the orb for two bodies and aspect"""
-    return (((body_orbs[body1] + body_orbs[body2]) / 2) *
+    return ((bodies['orb'][body1] + bodies['orb'][body2])/2 *
             aspects['coef'][np.where(aspects['value'] == aspect)])[0]
 
 
@@ -47,32 +53,37 @@ def get_orb(body1, body2, aspect):
 
 # TODO: Refactor with datetime and timezone object
 def local_to_utc(year, month, day, hour, minute, second, offset):
-    """Return UTC time from local time"""
+    """Convert local time to  UTC time"""
     return swe.utc_time_zone(year, month, day, hour, minute, second, offset)
 
 
 # TODO: Refactor with datetime object
 def utc_to_julian(year, month, day, hour, minute, second):
-    """Return Julian date from UTC time"""
+    """Convert UTC time to Julian date"""
     return swe.utc_to_jd(year, month, day, hour, minute, second, 1)[1]
 
 
-def body_name(body):
+def body_name(b_id):
     """Return the body name"""
-    if swe.get_planet_name(body) == 'mean Node':
+    if swe.get_planet_name(b_id) == 'mean Node':
         return 'Rahu'
-    return swe.get_planet_name(body)
+    return swe.get_planet_name(b_id)
 
 
 @lru_cache()
-def body_properties(jdate, body):
+def body_properties(jdate, b_id):
     """
-    Return the body properties ( longitude, latitude, distance to Earth in AU,
-    longitude speed, latitude speed, distance speed ) as a Numpy array
+    Return the body properties (longitude, latitude, distance to Earth in AU,
+    longitude speed, latitude speed, distance speed) as a Numpy array
     """
-    return np.array(swe.calc_ut(jdate, body)[0])
+    return np.array(swe.calc_ut(jdate, b_id)[0])
 
 # --------------------------------------------------------
+
+
+def body_id(b_name):
+    """Return the body id"""
+    return bodies['id'][np.where(bodies['name'] == b_name.encode())]
 
 
 def body_long(jdate, body):
@@ -116,25 +127,26 @@ def is_ascending(jdate, body):
 
 
 def body_sign(long):
-    """Return the body position in sign"""
+    """Return the body position in sign, degrees, minutes and seconds"""
     dms = dd_to_dms(long)
     sign, degs = divmod(dms[0], 30)
     mins, secs = dms[1], dms[2]
     return np.array((sign, degs, mins, secs))
 
 
-def positions(jdate, bodies):
-    """Return array of bodies longitude"""
-    return np.array([body_long(jdate, int(body)) for body in np.nditer(bodies)])
+def positions(jdate, bodies_id):
+    """Return an array of bodies longitude"""
+    return np.array([body_long(jdate, int(body))
+                     for body in np.nditer(bodies_id)])
 
 
-def get_aspects(jdate, bodies):
+def get_aspects(jdate, bodies_id):
     """
     Return a dictionnary of aspects and orb between bodies for a certain date
     Return None if there's no aspect
     """
     d_aspects = {}
-    for comb in combs(bodies, 2):
+    for comb in combs(bodies_id, 2):
         dist = distance(body_long(jdate, comb[0]),
                         body_long(jdate, comb[1]))
         for aspect in aspects['value']:
@@ -150,7 +162,7 @@ def print_positions(jdate):
     """Function to format and print positions of the bodies for a date"""
     print('\n')
     print('------------- Bodies Positions -------------')
-    pos_it = np.nditer(positions(jdate, np.arange(11)), flags=['f_index'])
+    pos_it = np.nditer(positions(jdate, bodies['id']), flags=['f_index'])
     for pos in pos_it:
         sign, degs, mins, secs = body_sign(float(pos))
         retro = ', R' if is_retrograde(jdate, pos_it.index) else ''
@@ -162,8 +174,7 @@ def print_aspects(jdate):
     """Function to format and print aspects between the bodies for a date"""
     print('\n')
     print('------------- Bodies Aspects -------------')
-    bodies = np.arange(11)
-    for key, item in get_aspects(jdate, bodies).items():
+    for key, item in get_aspects(jdate, bodies['id']).items():
         body1, body2 = key
         index = np.searchsorted(aspects['value'], item[0])
         degs, mins, secs = dd_to_dms(item[1])
