@@ -1,8 +1,11 @@
 from unittest import TestCase
 
-from ketu.ketu import *
+from ketu.ketu import (bodies, signs, dd_to_dms, distance, get_orb, local_to_utc,
+                       utc_to_julian, body_name, body_properties, body_id,
+                       body_long, body_lat, body_distance, body_vlong,
+                       body_vlat, body_vdistance, is_retrograde, is_ascending,
+                       body_sign, positions, get_aspect, get_aspects)
 
-bodies = np.arange(11)
 jday = utc_to_julian(*local_to_utc(2020, 12, 21, 19, 20, 0, 1))
 zero_day = utc_to_julian(-4713, 11, 24, 12, 0, 0)
 
@@ -73,18 +76,15 @@ class KetuTest(TestCase):
         self.assertAlmostEqual(get_aspect(jday, 5, 6)[3], 0, delta=0.1)
 
     def test_get_aspects(self):
-        asps = get_aspects(jday, bodies)
+        asps = get_aspects(jday)
         asps2 = asps[np.where(asps['body1'] == 5)]
         body1, body2, aspect, orb = asps2[np.where(asps2['body2'] == 6)][0]
         self.assertEqual(aspect, 0)
         self.assertAlmostEqual(orb, 0, delta=1)
 
     def test_is_applicative(self):
-        pass
+        pass # in dev mode
 
     def test_bodies_positions(self):
         sign = body_sign(positions(jday, bodies)[0])[0]
         self.assertEqual(signs[sign], 'Capricorn')
-
-    def test_get_all_aspects(self):
-        pass
