@@ -3,15 +3,15 @@ from unittest import TestCase
 from ketu.ketu import *
 
 bodies = np.arange(11)
-jday = utc_to_julian(*local_to_utc(2020, 12, 21, 18, 30, 0, 1))
+jday = utc_to_julian(*local_to_utc(2020, 12, 21, 19, 20, 0, 1))
 zero_day = utc_to_julian(-4713, 11, 24, 12, 0, 0)
 
 
 class KetuTest(TestCase):
 
     def test_local_to_utc(self):
-        self.assertAlmostEqual(local_to_utc(2020, 12, 21, 18, 30, 0, 1)[-1]
-                               % -60, (2020, 12, 21, 17, 30, 0)[-1])
+        self.assertAlmostEqual(local_to_utc(2020, 12, 21, 19, 20, 0, 1)[-1]
+                               % -60, (2020, 12, 21, 18, 20, 0)[-1])
 
     def test_utc_to_julian(self):
         self.assertEqual(zero_day, 0)
@@ -28,7 +28,7 @@ class KetuTest(TestCase):
                                         body_long(jday, 1)), 90, delta=3)
 
     def test_get_orb(self):
-        self.assertEqual(get_orb(0, 1, 120), 8)
+        self.assertAlmostEqual(get_orb(0, 1, 3), 8, delta=0.001)
 
     def test_body_name(self):
         self.assertEqual('Sun', body_name(0))

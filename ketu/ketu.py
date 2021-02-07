@@ -42,22 +42,19 @@ def distance(pos1, pos2):
     return angle if angle <= 180 else 360 - angle
 
 
-@lru_cache()
-def get_orb(body1, body2, aspect):
+def get_orb(body1, body2, asp):
     """Calculate the orb for two bodies and aspect"""
-    return ((bodies['orb'][body1] + bodies['orb'][body2])/2 *
-            aspects['coef'][np.where(aspects['value'] == aspect)])[0]
+    orbs, coef = bodies['orb'], aspects['coef']
+    return (orbs[body1] + orbs[body2])/2 * coef[asp]
 
 
 # --------- interface functions with pyswisseph ---------
 
-# TODO: Refactor with datetime and timezone object
 def local_to_utc(year, month, day, hour, minute, second, offset):
     """Convert local time to  UTC time"""
     return swe.utc_time_zone(year, month, day, hour, minute, second, offset)
 
 
-# TODO: Refactor with datetime object
 def utc_to_julian(year, month, day, hour, minute, second):
     """Convert UTC time to Julian date"""
     return swe.utc_to_jd(year, month, day, hour, minute, second, 1)[1]
@@ -136,8 +133,7 @@ def body_sign(long):
 
 def positions(jdate, bodies_id=bodies['id']):
     """Return an array of bodies longitude"""
-    return np.array([body_long(jdate, int(body))
-                     for body in np.nditer(bodies_id)])
+    return np.array([body_long(jdate, body) for body in bodies_id])
 
 
 def get_aspect(jdate, body1, body2):
@@ -149,24 +145,24 @@ def get_aspect(jdate, body1, body2):
         body1, body2 = body2, body1
     dist = distance(body_long(jdate, body1),
                     body_long(jdate, body2))
-    for aspect in aspects['value']:
-        orb = get_orb(body1, body2, aspect)
-        if aspect == 0 and dist <= orb:
-            return body1, body2, aspect, dist
+    for i_asp, aspect in enumerate(aspects['value']):
+        orb = get_orb(body1, body2, i_asp)
+        if i_asp == 0 and dist <= orb:
+            return body1, body2, i_asp, dist
         elif aspect - orb <= dist <= aspect + orb:
-            return body1, body2, aspect, aspect - dist
+            return body1, body2, i_asp, aspect - dist
     return None
 
 
 def get_aspects(jdate, bodies_id=bodies['id']):
     """
-    Return a dictionnary of aspects and orb between bodies for a certain date
+    Return a structured array of aspects and orb
     Return None if there's no aspect
     """
     return np.array([get_aspect(jdate, *comb) for comb in combs(bodies_id, 2)
                      if get_aspect(jdate, *comb) is not None],
                     dtype=[('body1', 'i4'), ('body2', 'i4'),
-                           ('aspect', 'f4'), ('orb', 'f4')])
+                           ('i_asp', 'i4'), ('orb', 'f4')])
 
 
 def print_positions(jdate):
@@ -184,12 +180,11 @@ def print_aspects(jdate):
     """Function to format and print aspects between the bodies for a date"""
     print('\n')
     print('------------- Bodies Aspects -------------')
-    for asp in get_aspects(jdate):
-        body1, body2, aspect, orb = asp
-        index = np.searchsorted(aspects['value'], aspect)
+    for aspect in get_aspects(jdate):
+        body1, body2, i_asp, orb = aspect
         degs, mins, secs = dd_to_dms(orb)
         print(f"{body_name(body1):7} - {body_name(body2):8}: "
-              f"{aspects['name'][index].decode():12} "
+              f"{aspects['name'][i_asp].decode():12} "
               f"{degs:>2}º{mins:>2}'{secs:>2}\"")
 
 
@@ -198,7 +193,7 @@ def main():
     year, month, day = map(int, input(
         'Give a date with iso format, ex: 2020-12-21\n').split('-'))
     hour, mins = map(int, input(
-        'Give a time (hour, minute), with iso format, ex: 18:30\n').split(':'))
+        'Give a time (hour, minute), with iso format, ex: 19:20\n').split(':'))
     offset = float(input('Give the offset with UTC, ex: 1 for France\n'))
     jday = utc_to_julian(*local_to_utc(year, month, day, hour, mins, 0, offset))
     print_positions(jday)
