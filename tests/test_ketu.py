@@ -1,8 +1,10 @@
 from unittest import TestCase
 
-from ketu.ketu import (bodies, signs, dd_to_dms, distance, get_orb, local_to_utc,
-                       utc_to_julian, body_name, body_properties, body_id,
-                       body_long, body_lat, body_distance, body_vlong,
+import numpy as np
+
+from ketu.ketu import (bodies, signs, dd_to_dms, distance, get_orb,
+                       local_to_utc, utc_to_julian, body_name, body_properties,
+                       body_id, body_long, body_lat, body_distance, body_vlong,
                        body_vlat, body_vdistance, is_retrograde, is_ascending,
                        body_sign, positions, get_aspect, get_aspects)
 
@@ -83,7 +85,7 @@ class KetuTest(TestCase):
         self.assertAlmostEqual(orb, 0, delta=1)
 
     def test_is_applicative(self):
-        pass # in dev mode
+        pass  # in dev mode
 
     def test_bodies_positions(self):
         sign = body_sign(positions(jday, bodies)[0])[0]

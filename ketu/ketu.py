@@ -131,8 +131,9 @@ def body_sign(long):
     return np.array((sign, degs, mins, secs))
 
 
-def positions(jdate, bodies_id=bodies['id']):
+def positions(jdate, l_bodies=bodies):
     """Return an array of bodies longitude"""
+    bodies_id = l_bodies['id']
     return np.array([body_long(jdate, body) for body in bodies_id])
 
 
@@ -154,11 +155,12 @@ def get_aspect(jdate, body1, body2):
     return None
 
 
-def get_aspects(jdate, bodies_id=bodies['id']):
+def get_aspects(jdate, l_bodies=bodies):
     """
     Return a structured array of aspects and orb
     Return None if there's no aspect
     """
+    bodies_id = l_bodies['id']
     return np.array([get_aspect(jdate, *comb) for comb in combs(bodies_id, 2)
                      if get_aspect(jdate, *comb) is not None],
                     dtype=[('body1', 'i4'), ('body2', 'i4'),
