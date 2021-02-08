@@ -13,7 +13,7 @@ from ketu.ketu import (bodies, aspects, signs, dd_to_dms, distance, get_orb,
 zoneinfo = ZoneInfo('Europe/Paris')
 gday = datetime(2020, 12, 21, 19, 20, 0, tzinfo=zoneinfo)
 jday = utc_to_julian(gday)
-day_one = datetime(1, 1, 2, 12)
+day_one = datetime(1, 1, 1)
 
 
 class KetuTest(TestCase):
@@ -33,9 +33,10 @@ class KetuTest(TestCase):
     def test_local_to_utc(self):
         self.assertEqual(local_to_utc(gday),
                          datetime(2020, 12, 21, 18, 20, tzinfo=zoneinfo))
+        self.assertEqual(local_to_utc(day_one), datetime(1, 1, 1))
 
     def test_utc_to_julian(self):
-        self.assertEqual(utc_to_julian(day_one), 1721427)
+        self.assertEqual(utc_to_julian(day_one), 1721425.5)
 
     def test_dd_to_dms(self):
         self.assertEqual(dd_to_dms(271.45).all(), np.array((271, 27, 0)).all())

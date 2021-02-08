@@ -52,9 +52,13 @@ def get_orb(body1, body2, asp):
 
 # --------- interface functions with pyswisseph ---------
 
-def local_to_utc(dtime):
+def local_to_utc(localtime, zoneinfo=None):
     """Convert local time to  UTC time"""
-    return dtime - dtime.utcoffset()
+    if localtime.tzinfo is not None:
+        return localtime - localtime.utcoffset()
+    year, month, day = localtime.year, localtime.month, localtime.day
+    hour, minute = localtime.hour, localtime.minute
+    return datetime(year, month, day, hour, minute, tzinfo=zoneinfo)
 
 
 def utc_to_julian(dtime):
@@ -204,7 +208,8 @@ def main():
         "Give a date with iso format, ex: 2020-12-21\n").split("-"))
     hour, minute = map(int, input(
         "Give a time (hour, minute), with iso format, ex: 19:20\n").split(":"))
-    tzinfo = input("Give the Time Zone, ex: 'Europe/Paris' for France\n")
+    tzinfo = input("Give the Time Zone, ex: 'Europe/Paris' for France\n") \
+        or "Europe/Paris"
     zoneinfo = ZoneInfo(tzinfo)
     dtime = datetime(year, month, day, hour, minute, tzinfo=zoneinfo)
     jday = utc_to_julian(dtime)
