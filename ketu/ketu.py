@@ -1,8 +1,10 @@
 """Ketu is a python library to generate time series and calendars based on
 planetary aspects"""
 
+from datetime import datetime
 from functools import lru_cache
 from itertools import combinations as combs
+from zoneinfo import ZoneInfo
 
 import numpy as np
 import swisseph as swe
@@ -50,13 +52,19 @@ def get_orb(body1, body2, asp):
 
 # --------- interface functions with pyswisseph ---------
 
-def local_to_utc(year, month, day, hour, minute, second, offset):
+def local_to_utc(dtime):
     """Convert local time to  UTC time"""
-    return swe.utc_time_zone(year, month, day, hour, minute, second, offset)
+    return dtime - dtime.utcoffset()
 
 
-def utc_to_julian(year, month, day, hour, minute, second):
+def utc_to_julian(dtime):
     """Convert UTC time to Julian date"""
+    if dtime.tzinfo is not None:
+        utc = local_to_utc(dtime)
+    else:
+        utc = dtime
+    year, month, day = utc.year, utc.month, utc.day
+    hour, minute, second = utc.hour, utc.minute, utc.second
     return swe.utc_to_jd(year, month, day, hour, minute, second, 1)[1]
 
 
@@ -193,11 +201,13 @@ def print_aspects(jdate):
 def main():
     """Entry point of the programm"""
     year, month, day = map(int, input(
-        'Give a date with iso format, ex: 2020-12-21\n').split('-'))
-    hour, mins = map(int, input(
-        'Give a time (hour, minute), with iso format, ex: 19:20\n').split(':'))
-    offset = float(input('Give the offset with UTC, ex: 1 for France\n'))
-    jday = utc_to_julian(*local_to_utc(year, month, day, hour, mins, 0, offset))
+        "Give a date with iso format, ex: 2020-12-21\n").split("-"))
+    hour, minute = map(int, input(
+        "Give a time (hour, minute), with iso format, ex: 19:20\n").split(":"))
+    tzinfo = input("Give the Time Zone, ex: 'Europe/Paris' for France\n")
+    zoneinfo = ZoneInfo(tzinfo)
+    dtime = datetime(year, month, day, hour, minute, tzinfo=zoneinfo)
+    jday = utc_to_julian(dtime)
     print_positions(jday)
     print_aspects(jday)
 

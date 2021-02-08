@@ -1,4 +1,6 @@
+from datetime import datetime
 from unittest import TestCase
+from zoneinfo import ZoneInfo
 
 import numpy as np
 
@@ -8,8 +10,10 @@ from ketu.ketu import (bodies, aspects, signs, dd_to_dms, distance, get_orb,
                        body_vlat, body_vdistance, is_retrograde, is_ascending,
                        body_sign, positions, get_aspect, get_aspects)
 
-jday = utc_to_julian(*local_to_utc(2020, 12, 21, 19, 20, 0, 1))
-zero_day = utc_to_julian(-4713, 11, 24, 12, 0, 0)
+zoneinfo = ZoneInfo('Europe/Paris')
+gday = datetime(2020, 12, 21, 19, 20, 0, tzinfo=zoneinfo)
+jday = utc_to_julian(gday)
+day_one = datetime(1, 1, 2, 12)
 
 
 class KetuTest(TestCase):
@@ -27,11 +31,11 @@ class KetuTest(TestCase):
         self.assertEqual(signs[2], 'Gemini')
 
     def test_local_to_utc(self):
-        self.assertAlmostEqual(local_to_utc(2020, 12, 21, 19, 20, 0, 1)[-1]
-                               % -60, (2020, 12, 21, 18, 20, 0)[-1])
+        self.assertEqual(local_to_utc(gday),
+                         datetime(2020, 12, 21, 18, 20, tzinfo=zoneinfo))
 
     def test_utc_to_julian(self):
-        self.assertEqual(zero_day, 0)
+        self.assertEqual(utc_to_julian(day_one), 1721427)
 
     def test_dd_to_dms(self):
         self.assertEqual(dd_to_dms(271.45).all(), np.array((271, 27, 0)).all())
