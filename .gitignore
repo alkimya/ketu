@@ -3,4 +3,6 @@
 /ephe/
 /venv/
 /ketu/__pycache__
-
+/tests/__pycache__
+/tests/.pytest_cache
+.coverage
