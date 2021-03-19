@@ -2,12 +2,12 @@ from datetime import datetime
 from unittest import TestCase
 from zoneinfo import ZoneInfo
 
-import numpy as np
+from numpy import array, where
 
 from ketu.ketu import (bodies, aspects, signs, dd_to_dms, distance, get_orb,
                        local_to_utc, utc_to_julian, body_name, body_properties,
-                       body_id, body_long, body_lat, body_distance, body_vlong,
-                       body_vlat, body_vdistance, is_retrograde, is_ascending,
+                       body_id, long, lat, dist_au, vlong,
+                       vlat, vdist_au, is_retrograde, is_ascending,
                        body_sign, positions, get_aspect, get_aspects)
 
 zoneinfo = ZoneInfo('Europe/Paris')
@@ -39,11 +39,11 @@ class KetuTest(TestCase):
         self.assertEqual(utc_to_julian(day_one), 1721425.5)
 
     def test_dd_to_dms(self):
-        self.assertEqual(dd_to_dms(271.45).all(), np.array((271, 27, 0)).all())
+        self.assertEqual(dd_to_dms(271.45).all(), array((271, 27, 0)).all())
 
     def test_distance(self):
         # Test reflexivity of distance
-        dist, long = distance, body_long
+        dist = distance
         self.assertEqual(dist(long(jday, 0), long(jday, 1)),
                          dist(long(jday, 1), long(jday, 0)))
         self.assertAlmostEqual(dist(long(jday, 0), long(jday, 1)), 90, delta=3)
@@ -61,23 +61,23 @@ class KetuTest(TestCase):
         self.assertEqual(body_id('Moon'), 1)
         self.assertEqual(body_id('Rahu'), 10)
 
-    def test_body_long(self):
-        self.assertAlmostEqual(body_long(jday, 0), 270, delta=1)
+    def test_long(self):
+        self.assertAlmostEqual(long(jday, 0), 270, delta=1)
 
-    def test_body_lat(self):
-        self.assertAlmostEqual(body_lat(jday, 1), -5, delta=0.3)
+    def test_lat(self):
+        self.assertAlmostEqual(lat(jday, 1), -5, delta=0.3)
 
-    def test_body_distance(self):
-        self.assertAlmostEqual(body_distance(jday, 4), 0.8, delta=0.1)
+    def test_dist_au(self):
+        self.assertAlmostEqual(dist_au(jday, 4), 0.8, delta=0.1)
 
-    def test_body_vlong(self):
-        self.assertAlmostEqual(body_vlong(jday, 0), 1, delta=0.05)
+    def test_vlong(self):
+        self.assertAlmostEqual(vlong(jday, 0), 1, delta=0.05)
 
-    def test_body_vlat(self):
-        self.assertAlmostEqual(body_vlat(jday, 1), 0.1, delta=0.1)
+    def test_vlat(self):
+        self.assertAlmostEqual(vlat(jday, 1), 0.1, delta=0.1)
 
-    def test_body_vdistance(self):
-        self.assertAlmostEqual(body_vdistance(jday, 0), 0, delta=0.1)
+    def test_vdist_au(self):
+        self.assertAlmostEqual(vdist_au(jday, 0), 0, delta=0.1)
 
     def test_is_retrograde(self):
         self.assertTrue(is_retrograde(jday, 7))
@@ -87,7 +87,7 @@ class KetuTest(TestCase):
         self.assertTrue(is_ascending(jday, 1))
 
     def test_body_sign(self):
-        self.assertEqual(signs[body_sign(body_long(jday, 0))[0]], 'Capricorn')
+        self.assertEqual(signs[body_sign(long(jday, 0))[0]], 'Capricorn')
 
     def test_positions(self):
         sign = body_sign(positions(jday, bodies)[0])[0]
@@ -99,8 +99,8 @@ class KetuTest(TestCase):
 
     def test_get_aspects(self):
         asps = get_aspects(jday)
-        asps2 = asps[np.where(asps['body1'] == 5)]
-        body1, body2, aspect, orb = asps2[np.where(asps2['body2'] == 6)][0]
+        asps2 = asps[where(asps['body1'] == 5)]
+        body1, body2, aspect, orb = asps2[where(asps2['body2'] == 6)][0]
         self.assertEqual(body1, 5)
         self.assertEqual(body2, 6)
         self.assertEqual(aspect, 0)
