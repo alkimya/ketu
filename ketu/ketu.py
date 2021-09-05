@@ -179,6 +179,8 @@ def get_aspects(jdate, l_bodies=bodies):
                         ('orb', 'f4')])
 
 
+# TODO: find exact aspect
+
 def print_positions(jdate):
     """Function to format and print positions of the bodies for a date"""
     print('\n')
