@@ -16,5 +16,3 @@ Move to ketu directory, run `python ketu.py` and answer the questions.
 #### TODO:
  + find datetimes for beginning, end and exact aspect 
  * find all aspects between two dates
- 
- add colaborator Bertie Tozer
