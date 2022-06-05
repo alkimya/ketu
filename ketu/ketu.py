@@ -63,10 +63,7 @@ def local_to_utc(dtime, zoneinfo=None):
 
 def utc_to_julian(dtime):
     """Convert UTC time to Julian date"""
-    if dtime.tzinfo is not None:
-        utc = local_to_utc(dtime)
-    else:
-        utc = dtime
+    utc = local_to_utc(dtime) if dtime.tzinfo is not None else dtime
     year, month, day = utc.year, utc.month, utc.day
     hour, minute, second = utc.hour, utc.minute, utc.second
     return swe.utc_to_jd(year, month, day, hour, minute, second, 1)[1]
