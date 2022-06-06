@@ -13,29 +13,58 @@ import swisseph as swe
 # Jupiter, Saturn, Uranus, Neptune, Pluto and mean Node aka Rahu,
 # their id's and their orb of influence.
 # Inspired by Abu Ma’shar (787-886) and Al-Biruni (973-1050)
-bodies = array([('Sun', 0, 12), ('Moon', 1, 12), ('Mercury', 2, 8),
-                ('Venus', 3, 8), ('Mars', 4, 10), ('Jupiter', 5, 10),
-                ('Saturn', 6, 10), ('Uranus', 7, 6), ('Neptune', 8, 6),
-                ('Pluto', 9, 4), ('Rahu', 10, 0)],
-               dtype=[('name', 'S12'), ('id', 'i4'), ('orb', 'f4')])
+bodies = array(
+    [
+        ("Sun", 0, 12),
+        ("Moon", 1, 12),
+        ("Mercury", 2, 8),
+        ("Venus", 3, 8),
+        ("Mars", 4, 10),
+        ("Jupiter", 5, 10),
+        ("Saturn", 6, 10),
+        ("Uranus", 7, 6),
+        ("Neptune", 8, 6),
+        ("Pluto", 9, 4),
+        ("Rahu", 10, 0),
+    ],
+    dtype=[("name", "S12"), ("id", "i4"), ("orb", "f4")],
+)
 
 # Structured array of major aspects (harmonics 2 and 3) and their coefficient
 # for calculation of the orb
-aspects = array([('Conjunction', 0, 1), ('Sextile', 60, 1/3),
-                 ('Square', 90, 1/2), ('Trine', 120, 2/3),
-                 ('Opposition', 180, 1)],
-                dtype=[('name', 'S12'), ('value', 'f4'), ('coef', 'f4')])
+aspects = array(
+    [
+        ("Conjunction", 0, 1),
+        ("Sextile", 60, 1 / 3),
+        ("Square", 90, 1 / 2),
+        ("Trine", 120, 2 / 3),
+        ("Opposition", 180, 1),
+    ],
+    dtype=[("name", "S12"), ("value", "f4"), ("coef", "f4")],
+)
 
 # List of signs for body position
-signs = ['Aries', 'Taurus', 'Gemini', 'Cancer', 'Leo', 'Virgo', 'Libra',
-         'Scorpio', 'Sagittarius', 'Capricorn', 'Aquarius', 'Pisces']
+signs = [
+    "Aries",
+    "Taurus",
+    "Gemini",
+    "Cancer",
+    "Leo",
+    "Virgo",
+    "Libra",
+    "Scorpio",
+    "Sagittarius",
+    "Capricorn",
+    "Aquarius",
+    "Pisces",
+]
 
 
 def dd_to_dms(deg):
     """Return degrees, minutes, seconds from degrees decimal"""
     mins, secs = divmod(deg * 3600, 60)
     degs, mins = divmod(mins, 60)
-    return array((degs, mins, secs), dtype='i4')
+    return array((degs, mins, secs), dtype="i4")
 
 
 def distance(pos1, pos2):
@@ -46,11 +75,12 @@ def distance(pos1, pos2):
 
 def get_orb(body1, body2, asp):
     """Calculate the orb for two bodies and aspect"""
-    orbs, coef = bodies['orb'], aspects['coef']
-    return (orbs[body1] + orbs[body2])/2 * coef[asp]
+    orbs, coef = bodies["orb"], aspects["coef"]
+    return (orbs[body1] + orbs[body2]) / 2 * coef[asp]
 
 
 # --------- interface functions with pyswisseph ---------
+
 
 def local_to_utc(dtime, zoneinfo=None):
     """Convert local time to  UTC time"""
@@ -71,8 +101,8 @@ def utc_to_julian(dtime):
 
 def body_name(body):
     """Return the body name"""
-    if swe.get_planet_name(body) == 'mean Node':
-        return 'Rahu'
+    if swe.get_planet_name(body) == "mean Node":
+        return "Rahu"
     return swe.get_planet_name(body)
 
 
@@ -84,12 +114,13 @@ def body_properties(jdate, body):
     """
     return array(swe.calc_ut(jdate, body)[0])
 
+
 # --------------------------------------------------------
 
 
 def body_id(b_name):
     """Return the body id"""
-    return bodies['id'][where(bodies['name'] == b_name.encode())]
+    return bodies["id"][where(bodies["name"] == b_name.encode())]
 
 
 def long(jdate, body):
@@ -142,7 +173,7 @@ def body_sign(b_long):
 
 def positions(jdate, l_bodies=bodies):
     """Return an array of bodies longitude"""
-    bodies_id = l_bodies['id']
+    bodies_id = l_bodies["id"]
     return array([long(jdate, body) for body in bodies_id])
 
 
@@ -153,9 +184,8 @@ def get_aspect(jdate, body1, body2):
     """
     if body1 > body2:
         body1, body2 = body2, body1
-    dist = distance(long(jdate, body1),
-                    long(jdate, body2))
-    for i_asp, aspect in enumerate(aspects['value']):
+    dist = distance(long(jdate, body1), long(jdate, body2))
+    for i_asp, aspect in enumerate(aspects["value"]):
         orb = get_orb(body1, body2, i_asp)
         if i_asp == 0 and dist <= orb:
             return body1, body2, i_asp, dist
@@ -169,46 +199,59 @@ def get_aspects(jdate, l_bodies=bodies):
     Return a structured array of aspects and orb
     Return None if there's no aspect
     """
-    bodies_id = l_bodies['id']
-    return array([get_aspect(jdate, *comb) for comb in combs(bodies_id, 2)
-                  if get_aspect(jdate, *comb) is not None],
-                 dtype=[('body1', 'i4'), ('body2', 'i4'), ('i_asp', 'i4'),
-                        ('orb', 'f4')])
+    bodies_id = l_bodies["id"]
+    return array(
+        [
+            get_aspect(jdate, *comb)
+            for comb in combs(bodies_id, 2)
+            if get_aspect(jdate, *comb) is not None
+        ],
+        dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")],
+    )
 
 
 # TODO: find exact aspect
 
+
 def print_positions(jdate):
     """Function to format and print positions of the bodies for a date"""
-    print('\n')
-    print('------------- Bodies Positions -------------')
+    print("\n")
+    print("------------- Bodies Positions -------------")
     for index, pos in ndenumerate(positions(jdate)):
         sign, degs, mins, secs = body_sign(pos)
-        retro = ', R' if is_retrograde(jdate, *index) else ''
-        print(f"{body_name(*index):10}: "
-              f"{signs[sign]:15}{degs:>2}º{mins:>2}'{secs:>2}\"{retro}")
+        retro = ", R" if is_retrograde(jdate, *index) else ""
+        print(
+            f"{body_name(*index):10}: "
+            f"{signs[sign]:15}{degs:>2}º{mins:>2}'{secs:>2}\"{retro}"
+        )
 
 
 def print_aspects(jdate):
     """Function to format and print aspects between the bodies for a date"""
-    print('\n')
-    print('------------- Bodies Aspects -------------')
+    print("\n")
+    print("------------- Bodies Aspects -------------")
     for aspect in get_aspects(jdate):
         body1, body2, i_asp, orb = aspect
         degs, mins, secs = dd_to_dms(orb)
-        print(f"{body_name(body1):7} - {body_name(body2):8}: "
-              f"{aspects['name'][i_asp].decode():12} "
-              f"{degs:>2}º{mins:>2}'{secs:>2}\"")
+        print(
+            f"{body_name(body1):7} - {body_name(body2):8}: "
+            f"{aspects['name'][i_asp].decode():12} "
+            f"{degs:>2}º{mins:>2}'{secs:>2}\""
+        )
 
 
 def main():
     """Entry point of the programm"""
-    year, month, day = map(int, input(
-        "Give a date with iso format, ex: 2020-12-21\n").split("-"))
-    hour, minute = map(int, input(
-        "Give a time (hour, minute), with iso format, ex: 19:20\n").split(":"))
-    tzinfo = input("Give the Time Zone, ex: 'Europe/Paris' for France\n") \
-        or "Europe/Paris"
+    year, month, day = map(
+        int, input("Give a date with iso format, ex: 2020-12-21\n").split("-")
+    )
+    hour, minute = map(
+        int,
+        input("Give a time (hour, minute), with iso format, ex: 19:20\n").split(":"),
+    )
+    tzinfo = (
+        input("Give the Time Zone, ex: 'Europe/Paris' for France\n") or "Europe/Paris"
+    )
     zoneinfo = ZoneInfo(tzinfo)
     dtime = datetime(year, month, day, hour, minute, tzinfo=zoneinfo)
     jday = utc_to_julian(dtime)
@@ -216,5 +259,5 @@ def main():
     print_aspects(jday)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     main()
