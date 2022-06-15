@@ -3,7 +3,7 @@ planetary aspects"""
 
 from datetime import datetime
 from functools import lru_cache
-from itertools import combinations as combs
+from itertools import combinations_with_replacement as combs
 from zoneinfo import ZoneInfo
 
 from numpy import array, ndenumerate, where
@@ -27,7 +27,7 @@ bodies = array(
         ("Pluto", 9, 4),
         ("Rahu", 10, 0),
     ],
-    dtype=[("name", "S12"), ("id", "i4"), ("orb", "f4")],
+    dtype=[("name", "S12"), ("id", "i4"), ("orb", "i4")],
 )
 
 # Structured array of major aspects (harmonics 2 and 3) and their coefficient
@@ -40,7 +40,7 @@ aspects = array(
         ("Trine", 120, 2 / 3),
         ("Opposition", 180, 1),
     ],
-    dtype=[("name", "S12"), ("value", "f4"), ("coef", "f4")],
+    dtype=[("name", "S12"), ("value", "i4"), ("coef", "f4")],
 )
 
 # List of signs for body position
@@ -78,6 +78,15 @@ def get_orb(body1, body2, asp):
     orbs, coef = bodies["orb"], aspects["coef"]
     return (orbs[body1] + orbs[body2]) / 2 * coef[asp]
 
+
+# Data Structure for the list of orbs, by couple of bodies and aspect
+# We first use a dictionnary, with a frozenset of couple of bodies as key,
+# and a numpy array of the orbs, indexed by aspect as value
+# We build the dictionnary by comprehension
+t_aspects = {
+    frozenset(comb): array([get_orb(*comb, n) for n in range(len(aspects))])
+    for comb in combs(list(range(len(bodies))), 2)
+}
 
 # --------- interface functions with pyswisseph ---------
 
@@ -123,7 +132,7 @@ def body_id(b_name):
     return bodies["id"][where(bodies["name"] == b_name.encode())]
 
 
-def long(jdate, body):
+def lon(jdate, body):
     """Return the body longitude"""
     return body_properties(jdate, body)[0]
 
@@ -138,7 +147,7 @@ def dist_au(jdate, body):
     return body_properties(jdate, body)[2]
 
 
-def vlong(jdate, body):
+def vlon(jdate, body):
     """Return the body longitude speed"""
     return body_properties(jdate, body)[3]
 
@@ -155,7 +164,7 @@ def vdist_au(jdate, body):
 
 def is_retrograde(jdate, body):
     """Return True if a body is retrograde"""
-    return vlong(jdate, body) < 0
+    return vlon(jdate, body) < 0
 
 
 def is_ascending(jdate, body):
@@ -174,7 +183,7 @@ def body_sign(b_long):
 def positions(jdate, l_bodies=bodies):
     """Return an array of bodies longitude"""
     bodies_id = l_bodies["id"]
-    return array([long(jdate, body) for body in bodies_id])
+    return array([lon(jdate, body) for body in bodies_id])
 
 
 def get_aspect(jdate, body1, body2):
@@ -184,7 +193,7 @@ def get_aspect(jdate, body1, body2):
     """
     if body1 > body2:
         body1, body2 = body2, body1
-    dist = distance(long(jdate, body1), long(jdate, body2))
+    dist = distance(lon(jdate, body1), lon(jdate, body2))
     for i_asp, aspect in enumerate(aspects["value"]):
         orb = get_orb(body1, body2, i_asp)
         if i_asp == 0 and dist <= orb:
@@ -206,11 +215,13 @@ def get_aspects(jdate, l_bodies=bodies):
             for comb in combs(bodies_id, 2)
             if get_aspect(jdate, *comb) is not None
         ],
-        dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")],
+        dtype=[
+            ("body1", "i4"),
+            ("body2", "i4"),
+            ("i_asp", "i4"),
+            ("orb", "f4"),
+        ],
     )
-
-
-# TODO: find exact aspect
 
 
 def print_positions(jdate):
@@ -247,11 +258,15 @@ def main():
     )
     hour, minute = map(
         int,
-        input("Give a time (hour, minute), with iso format, ex: 19:20\n").split(":"),
+        input(
+            "Give a time (hour, minute), with iso format, ex: 19:20\n"
+        ).split(":"),
     )
     tzinfo = (
-        input("Give the Time Zone, ex: 'Europe/Paris' for France\n") or "Europe/Paris"
+        input("Give the Time Zone, ex: 'Europe/Paris' for France\n")
+        or "Europe/Paris"
     )
+
     zoneinfo = ZoneInfo(tzinfo)
     dtime = datetime(year, month, day, hour, minute, tzinfo=zoneinfo)
     jday = utc_to_julian(dtime)
@@ -260,4 +275,5 @@ def main():
 
 
 if __name__ == "__main__":
+    print(t_aspects)
     main()
