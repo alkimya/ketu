@@ -3,10 +3,14 @@ planetary aspects"""
 
 from datetime import datetime
 from functools import lru_cache
-from itertools import combinations_with_replacement as combs
+from itertools import (
+    combinations as combs,
+    combinations_with_replacement as rcombs,
+)
 from zoneinfo import ZoneInfo
 
 from numpy import array, ndenumerate, where
+
 import swisseph as swe
 
 # Structured array of astronomical bodies: Sun, Moon, Mercury, Venus, Mars,
@@ -85,7 +89,7 @@ def get_orb(body1, body2, asp):
 # We build the dictionnary by comprehension
 t_aspects = {
     frozenset(comb): array([get_orb(*comb, n) for n in range(len(aspects))])
-    for comb in combs(list(range(len(bodies))), 2)
+    for comb in rcombs(list(range(len(bodies))), 2)
 }
 
 # --------- interface functions with pyswisseph ---------
@@ -121,7 +125,17 @@ def body_properties(jdate, body):
     Return the body properties (longitude, latitude, distance to Earth in AU,
     longitude speed, latitude speed, distance speed) as a Numpy array
     """
-    return array(swe.calc_ut(jdate, body)[0])
+    return array(
+        swe.calc_ut(jdate, body)[0],
+        dtype=[
+            ("lon", "f4"),
+            ("lat", "f4"),
+            ("dist", "f4"),
+            ("vlon", "f4"),
+            ("vlat", "f4"),
+            ("vdist", "f4"),
+        ],
+    )
 
 
 # --------------------------------------------------------
@@ -132,49 +146,54 @@ def body_id(b_name):
     return bodies["id"][where(bodies["name"] == b_name.encode())]
 
 
-def lon(jdate, body):
+def body_orb(b_id):
+    """Return the body orb of influence of b_id"""
+    return bodies[b_id]["orb"]
+
+
+def lon(props):
     """Return the body longitude"""
-    return body_properties(jdate, body)[0]
+    return props["lon"]
 
 
-def lat(jdate, body):
+def lat(props):
     """Return the body latitude"""
-    return body_properties(jdate, body)[1]
+    return props["lat"]
 
 
-def dist_au(jdate, body):
+def dist(props):
     """Return distance of the body to Earth in AU"""
-    return body_properties(jdate, body)[2]
+    return props["dist"]
 
 
-def vlon(jdate, body):
+def vlon(props):
     """Return the body longitude speed"""
-    return body_properties(jdate, body)[3]
+    return props["vlon"]
 
 
-def vlat(jdate, body):
+def vlat(props):
     """Return the body latitude speed"""
-    return body_properties(jdate, body)[4]
+    return props["vlat"]
 
 
-def vdist_au(jdate, body):
+def vdist(props):
     """Return the distance speed of the body"""
-    return body_properties(jdate, body)[5]
+    return props["vdist"]
 
 
-def is_retrograde(jdate, body):
+def is_retrograde(props):
     """Return True if a body is retrograde"""
-    return vlon(jdate, body) < 0
+    return vlon(props) < 0
 
 
-def is_ascending(jdate, body):
+def is_ascending(props):
     """Return True if a body latitude is rising"""
-    return vlat(jdate, body) > 0
+    return vlat(props) > 0
 
 
-def body_sign(b_long):
+def body_sign(b_lon):
     """Return the body position in sign, degrees, minutes and seconds"""
-    dms = dd_to_dms(b_long)
+    dms = dd_to_dms(b_lon)
     sign, degs = divmod(dms[0], 30)
     mins, secs = dms[1], dms[2]
     return array((sign, degs, mins, secs))
@@ -183,7 +202,7 @@ def body_sign(b_long):
 def positions(jdate, l_bodies=bodies):
     """Return an array of bodies longitude"""
     bodies_id = l_bodies["id"]
-    return array([lon(jdate, body) for body in bodies_id])
+    return array([lon(body_properties(jdate, body)) for body in bodies_id])
 
 
 def get_aspect(jdate, body1, body2):
@@ -193,13 +212,16 @@ def get_aspect(jdate, body1, body2):
     """
     if body1 > body2:
         body1, body2 = body2, body1
-    dist = distance(lon(jdate, body1), lon(jdate, body2))
+    props1, props2 = body_properties(jdate, body1), body_properties(
+        jdate, body2
+    )
+    angle = distance(lon(props1), lon(props2))
     for i_asp, aspect in enumerate(aspects["value"]):
         orb = get_orb(body1, body2, i_asp)
-        if i_asp == 0 and dist <= orb:
-            return body1, body2, i_asp, dist
-        elif aspect - orb <= dist <= aspect + orb:
-            return body1, body2, i_asp, aspect - dist
+        if i_asp == 0 and angle <= orb:
+            return body1, body2, i_asp, angle
+        elif aspect - orb <= angle <= aspect + orb:
+            return body1, body2, i_asp, aspect - angle
     return None
 
 
@@ -213,7 +235,7 @@ def get_aspects(jdate, l_bodies=bodies):
         [
             get_aspect(jdate, *comb)
             for comb in combs(bodies_id, 2)
-            if get_aspect(jdate, *comb) is not None
+            if get_aspect(jdate, *comb) is not None and len(set(comb)) == 2
         ],
         dtype=[
             ("body1", "i4"),
@@ -230,7 +252,8 @@ def print_positions(jdate):
     print("------------- Bodies Positions -------------")
     for index, pos in ndenumerate(positions(jdate)):
         sign, degs, mins, secs = body_sign(pos)
-        retro = ", R" if is_retrograde(jdate, *index) else ""
+        props = body_properties(jdate, *index)
+        retro = ", R" if is_retrograde(props) else ""
         print(
             f"{body_name(*index):10}: "
             f"{signs[sign]:15}{degs:>2}º{mins:>2}'{secs:>2}\"{retro}"
@@ -275,5 +298,5 @@ def main():
 
 
 if __name__ == "__main__":
-    print(t_aspects)
+    # print(t_aspects)
     main()
