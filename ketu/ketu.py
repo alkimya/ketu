@@ -327,7 +327,7 @@ def print_aspects(jdate):
         app = "Applicative" if app else "Separative"
         b_name, b_id = body_name, body_id
         print(
-            f"{b_name(b_id(props1)):7} - {b_name(b_id(props2)):8}: "
+            f"{b_name(b_id(props2)):7} - {b_name(b_id(props1)):8}: "
             f"{aspects['name'][i_asp].decode():12} "
             f"{degs:>3}º{mins:>3}'{secs:>3}\" "
             f"{wax:>8} {app:>8}"
