@@ -4,13 +4,14 @@ from datetime import datetime
 from unittest import TestCase
 from zoneinfo import ZoneInfo
 
-from numpy import array, where
+from numpy import array
 
 from ketu.ketu import (
     bodies,
     aspects,
     signs,
     dd_to_dms,
+    norm,
     distance,
     get_orb,
     local_to_utc,
@@ -72,15 +73,21 @@ class KetuTest(TestCase):
         """Test dd_to_dms function"""
         self.assertEqual(dd_to_dms(271.45).all(), array((271, 27, 0)).all())
 
+    def test_norm(self):
+        """Test norm function"""
+        self.assertEqual(norm(-355), 5)
+
     def test_distance(self):
         """Test distance function"""
         # Test reflexivity of distance
         props0, props1 = props(jday, 0), props(jday, 1)
         self.assertEqual(
-            distance(lon(props0), lon(props1)),
-            distance(lon(props1), lon(props0)),
+            distance(lon(props0) - lon(props1)),
+            distance(lon(props1) - lon(props0)),
         )
-        self.assertAlmostEqual(distance(lon(props0), lon(props1)), 90, delta=3)
+        self.assertAlmostEqual(
+            distance(lon(props0) - lon(props1)), 90, delta=3
+        )
 
     def test_get_orb(self):
         """Test get_orb function"""
@@ -147,18 +154,22 @@ class KetuTest(TestCase):
 
     def test_get_aspect(self):
         """Test get_aspect function"""
-        self.assertEqual(get_aspect(jday, 5, 6)[2], 0)
-        self.assertAlmostEqual(get_aspect(jday, 5, 6)[3], 0, delta=0.1)
+        self.assertEqual(get_aspect(jday, 5, 6)["i_asp"], 0)
+        self.assertAlmostEqual(get_aspect(jday, 5, 6)["orb"], 0, delta=0.1)
 
     def test_get_aspects(self):
         """Test get_aspects function"""
         asps = get_aspects(jday)
-        asps2 = asps[where(asps["body1"] == 5)]
-        body1, body2, aspect, orb = asps2[where(asps2["body2"] == 6)][0]
+        print(asps["orb"])
+        body1, body2, aspect, orb, wax, app = [
+            asp for asp in asps if asp["body1"] == 5
+        ][0]
         self.assertEqual(body1, 5)
-        self.assertEqual(body2, 6)
-        self.assertEqual(aspect, 0)
-        self.assertAlmostEqual(orb, 0, delta=1)
+        self.assertEqual(body2, 1)
+        self.assertEqual(aspect, 1)
+        self.assertAlmostEqual(orb, 2.61, delta=0.01)
+        self.assertTrue(wax)
+        self.assertFalse(app)
 
     def test_is_applicative(self):
         """Test is_applicative"""
