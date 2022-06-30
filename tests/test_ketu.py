@@ -4,39 +4,15 @@ from datetime import datetime
 from unittest import TestCase
 from zoneinfo import ZoneInfo
 
-from numpy import array
-
 from ketu.ketu import (
-    bodies,
-    aspects,
-    signs,
-    dd_to_dms,
-    norm,
-    distance,
-    get_orb,
-    local_to_utc,
-    utc_to_julian,
-    body_name,
-    body_properties as props,
-    body_id,
-    body_orb,
-    lon,
-    lat,
-    dist,
-    vlon,
-    vlat,
-    vdist,
-    is_retrograde,
-    is_ascending,
-    body_sign,
-    positions,
-    get_aspect,
-    get_aspects,
-)
+    bodies, maspects, signs, utc_to_julian, local_to_utc, dd_to_dms, dms_to_dd, norm,
+    body_properties, distance, lon, calc_orb, body_name, get_swe_id, body_orb, lat, vlon, vlat, is_retrograd,
+    is_ascending, body_sign, positions, get_aspect, get_aspect_orb, get_aspects, find_easpect
+    )
 
-zoneinfo = ZoneInfo("Europe/Paris")
-gday = datetime(2020, 12, 21, 19, 20, 0, tzinfo=zoneinfo)
-jday = utc_to_julian(gday)
+zoneinfo = ZoneInfo('Europe/Paris')
+gdate = datetime(2022, 6, 14, 13, 0, 0, tzinfo=zoneinfo)
+jdate = utc_to_julian(gdate)
 day_one = datetime(1, 1, 1)
 
 
@@ -45,25 +21,26 @@ class KetuTest(TestCase):
 
     def test_bodies(self):
         """Test bodies data structure"""
-        self.assertEqual(len(bodies), 11)
-        self.assertEqual(bodies["id"][0], 0)
+        self.assertEqual(len(bodies), 12)
+        self.assertEqual(bodies['swe_id'][0], 0)
 
     def test_aspects(self):
         """Test aspects data structure"""
-        self.assertEqual(len(aspects), 5)
-        self.assertEqual(aspects["value"][0], 0)
+        self.assertEqual(len(maspects), 5)
+        self.assertEqual(maspects['angle'][0], 0)
 
     def test_signs(self):
         "Test signs data structure"
         self.assertEqual(len(signs), 12)
-        self.assertEqual(signs[2], "Gemini")
+        self.assertEqual(signs[2], 'Gemini')
 
     def test_local_to_utc(self):
         """Test local_to_utc function"""
         self.assertEqual(
-            local_to_utc(gday), datetime(2020, 12, 21, 18, 20, tzinfo=zoneinfo)
+            local_to_utc(gdate, zoneinfo), datetime(
+                2022, 6, 14, 13, 0, tzinfo=zoneinfo)
         )
-        self.assertEqual(local_to_utc(day_one), datetime(1, 1, 1))
+        self.assertEqual(local_to_utc(day_one), datetime(1, 1, 1, tzinfo=ZoneInfo('UTC')))
 
     def test_utc_to_julian(self):
         """Test utc_to julian function"""
@@ -71,7 +48,11 @@ class KetuTest(TestCase):
 
     def test_dd_to_dms(self):
         """Test dd_to_dms function"""
-        self.assertEqual(dd_to_dms(271.45).all(), array((271, 27, 0)).all())
+        self.assertEqual(dd_to_dms(271.45), (271, 27, 0))
+
+    def test_dms_to_dd(self):
+        """Test dms_to_dd"""
+        self.assertAlmostEqual(dms_to_dd([271, 27, 0]), 271.45, delta=0.1)
 
     def test_norm(self):
         """Test norm function"""
@@ -80,18 +61,18 @@ class KetuTest(TestCase):
     def test_distance(self):
         """Test distance function"""
         # Test reflexivity of distance
-        props0, props1 = props(jday, 0), props(jday, 1)
+        props0, props1 = body_properties(jdate, 0), body_properties(jdate, 1)
         self.assertEqual(
             distance(lon(props0) - lon(props1)),
             distance(lon(props1) - lon(props0)),
         )
         self.assertAlmostEqual(
-            distance(lon(props0) - lon(props1)), 90, delta=3
+            distance(lon(props0) - lon(props1)), 180, delta=1
         )
 
-    def test_get_orb(self):
-        """Test get_orb function"""
-        self.assertAlmostEqual(get_orb(0, 1, 3), 8, delta=0.001)
+    def test_calc_orb(self):
+        """Test calc_orb function"""
+        self.assertAlmostEqual(calc_orb(0, 1, 3), 8, delta=0.001)
 
     def test_body_name(self):
         """Test body_name function"""
@@ -99,12 +80,13 @@ class KetuTest(TestCase):
 
     def test_body_properties(self):
         """Test body_properties function"""
-        self.assertAlmostEqual(lon(props(jday, 0)), 270, delta=1)
+        self.assertAlmostEqual(lon(body_properties(jdate, 2)), 60, delta=1)
 
-    def test_body_id(self):
-        """Test body_id function"""
-        self.assertEqual(body_id("Moon"), 1)
-        self.assertEqual(body_id("Rahu"), 10)
+    def test_get_swe_id(self):
+        """Test get_swe_id function"""
+        props1, props2 = body_properties(jdate, 1), body_properties(jdate, 10)
+        self.assertEqual(get_swe_id(props1), 1)
+        self.assertEqual(get_swe_id(props2), 10)
 
     def test_body_orb(self):
         """Test body_orb function"""
@@ -112,65 +94,68 @@ class KetuTest(TestCase):
 
     def test_lon(self):
         """Test lon function"""
-        self.assertAlmostEqual(lon(props(jday, 0)), 270, delta=1)
+        self.assertAlmostEqual(lon(body_properties(jdate, 0)), 83, delta=1)
 
     def test_lat(self):
         """Test lat function"""
-        self.assertAlmostEqual(lat(props(jday, 1)), -5, delta=0.3)
-
-    def test_dist(self):
-        """Test dist function"""
-        self.assertAlmostEqual(dist(props(jday, 4)), 0.8, delta=0.1)
+        self.assertAlmostEqual(lat(body_properties(jdate, 1)), -2.7, delta=0.3)
 
     def test_vlon(self):
         """Test vlon function"""
-        self.assertAlmostEqual(vlon(props(jday, 0)), 1, delta=0.05)
+        self.assertAlmostEqual(vlon(body_properties(jdate, 0)), 1, delta=0.05)
 
     def test_vlat(self):
         """Test vlat function"""
-        self.assertAlmostEqual(vlat(props(jday, 1)), 0.1, delta=0.1)
+        self.assertAlmostEqual(vlat(body_properties(jdate, 1)), -1.17, delta=0.1)
 
-    def test_vdist(self):
-        """Test vdist"""
-        self.assertAlmostEqual(vdist(props(jday, 0)), 0, delta=0.1)
-
-    def test_is_retrograde(self):
+    def test_is_retrograd(self):
         """Test is_retrograde function"""
-        self.assertTrue(is_retrograde(props(jday, 7)))
-        self.assertTrue(is_retrograde(props(jday, 10)))
+        self.assertTrue(is_retrograd(body_properties(jdate, 6)))
+        self.assertTrue(is_retrograd(body_properties(jdate, 10)))
 
     def test_is_ascending(self):
         """Test is_ascending function"""
-        self.assertTrue(is_ascending(props(jday, 1)))
+        self.assertTrue(is_ascending(body_properties(jdate, 2)))
 
     def test_body_sign(self):
         """Test body_sign function"""
-        self.assertEqual(signs[body_sign(lon(props(jday, 0)))[0]], "Capricorn")
+        self.assertEqual(
+            signs[body_sign(*lon(body_properties(jdate, 0)))[0]], 'Gemini')
 
     def test_positions(self):
         """Test positions function"""
-        sign = body_sign(positions(jday, bodies)[0])[0]
-        self.assertEqual(signs[sign], "Capricorn")
+        sign = body_sign(*positions(jdate, bodies)[0])[0]
+        self.assertEqual(signs[sign], 'Gemini')
 
     def test_get_aspect(self):
         """Test get_aspect function"""
-        self.assertEqual(get_aspect(jday, 5, 6)["i_asp"], 0)
-        self.assertAlmostEqual(get_aspect(jday, 5, 6)["orb"], 0, delta=0.1)
+        self.assertEqual(get_aspect(jdate, 0, 1)['i_asp'], 4)
+
+    def test_get_aspect_orb(self):
+        """Test get_aspect_orb function"""
+        self.assertAlmostEqual(get_aspect_orb(get_aspect(jdate, 0, 1)), 1, delta=1)
 
     def test_get_aspects(self):
         """Test get_aspects function"""
-        asps = get_aspects(jday)
-        print(asps["orb"])
-        body1, body2, aspect, orb, wax, app = [
-            asp for asp in asps if asp["body1"] == 5
-        ][0]
-        self.assertEqual(body1, 5)
-        self.assertEqual(body2, 1)
-        self.assertEqual(aspect, 1)
-        self.assertAlmostEqual(orb, 2.61, delta=0.01)
-        self.assertTrue(wax)
-        self.assertFalse(app)
+        asps = get_aspects(jdate)
+        b_id = get_swe_id
+        date, props1, props2, aspect = [
+            asp for asp in asps if b_id(asp['props2']) == 4][0]
+        orb = distance(lon(props1) - lon(props2))
+        self.assertEqual(date, jdate)
+        self.assertEqual(get_swe_id(props1), 5)
+        self.assertEqual(get_swe_id(props2), 4)
+        self.assertEqual(aspect, 0)
+        self.assertAlmostEqual(orb, 10, delta=1)
 
     def test_is_applicative(self):
         """Test is_applicative"""
         # in dev mode
+
+    def test_find_easpect(self):
+        """Test find_easpect"""
+        # in dev mode
+        aspect = get_aspect(jdate, 0, 1)
+        print(aspect)
+        print(aspect.dtype)
+        self.assertAlmostEqual(find_easpect(aspect), 2459745, delta=0.1)
