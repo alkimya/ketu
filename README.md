@@ -11,7 +11,7 @@ At the moment, compute bodies positions and aspects for a date, interactively.
 
 Move to ketu directory, run `python ketu.py` and answer the questions.
 
-![Terminal screen](https://github.com/alkimya/ketu/blob/master/res/screen.png)
+![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
 
 ## TODO
 
