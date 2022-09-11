@@ -9,7 +9,11 @@ from itertools import (
 )
 from zoneinfo import ZoneInfo
 
-from numpy import array, fromiter, ndenumerate, where
+from numpy import argsort, dtype, fromiter, hstack, logical_and, ndenumerate, recarray, sort, unique, where
+from numpy.core.records import array, fromrecords
+from numpy.lib.recfunctions import append_fields
+from numpy.ma import MaskedArray as ma
+
 
 import swisseph as swe
 
@@ -35,7 +39,6 @@ bodies = array(
         ('Lilith', 12, 0, 0.113),
     ],
     dtype=[('name', 'S12'), ('swe_id', 'i4'), ('orb', 'f8'), ('avg_s', 'f8')],
-    ndmin=1,
 )
 
 # Structured array of major aspects (harmonics 2 and 3): Conjunction, Sextile,
@@ -70,12 +73,12 @@ def body_name(swe_id):
 
 def body_index(swe_id):
     """Return the index of the body in bodies with a swe_id"""
-    return where(bodies['swe_id'] == swe_id)[0][0]
+    return where(bodies.swe_id == swe_id)
 
 
 def body_orb(swe_id):
     """Return the body orb of influence of b_id"""
-    return bodies[body_index(swe_id)]['orb']
+    return bodies[body_index(swe_id)].orb
 
 
 def body_sign(long):
@@ -83,27 +86,13 @@ def body_sign(long):
     dms = dd_to_dms(long)
     sign, degs = divmod(dms[0], 30)
     mins, secs = dms[1], dms[2]
-    return array((sign, degs, mins, secs))
+    datatype = dtype([('sign', 'i4'), ('degs', 'i4'), ('mins', 'i4'), ('secs', 'i4')])
+    return array((sign, degs, mins, secs), dtype=datatype)
 
 
-def maspect_name(asp):
-    """Return the aspect name"""
-    return maspects[asp]['name']
-
-
-def maspect_angle(asp):
-    """Return the aspect angle"""
-    return maspects[asp]['name']
-
-
-def maspect_coef(asp):
-    """Return the coefficient of the aspect for the calcul of orb"""
-    return maspects[asp]['coef']
-
-
-def maspect_index(angle):
-    """Return the index of the aspect with a certain angle"""
-    return where(maspects['angle'] == angle)[0][0]
+def maspect_index(aspect):
+    """Return the index of the aspect with a certain aspect in maspect.value"""
+    return where(maspects['angle'] == aspect)[0][0]
 
 
 def dd_to_dms(dd):
@@ -126,7 +115,8 @@ def norm(angle):
 def znorm(angle):
     """Return the normalized angle of two bodies between -180 and 180"""
     angle = norm(angle)
-    return angle if angle < 180 else angle - 360
+    angle = where(angle < 180, angle, angle - 360)
+    return angle
 
 
 def distance(angle):
@@ -136,7 +126,7 @@ def distance(angle):
 
 def calc_orb(body1, body2, asp):
     """Calculate the orb for two bodies and aspect"""
-    return (body_orb(body1) + body_orb(body2)) / 2 * maspect_coef(asp)
+    return (body_orb(body1) + body_orb(body2)) / 2 * maspects.coef[asp]
 
 
 # --------- interface functions with pyswisseph ---------
@@ -164,61 +154,37 @@ def julian_to_utc(julian, zoneinfo):
 
 
 @lru_cache()
-def body_properties(jdate, swe_id):
+def properties(jdate, swe_id):
     """
     Return the body properties (longitude, latitude, distance to Earth in AU,
     longitude speed, latitude speed, distance speed) as a Numpy array
 
-    Return : array(['swe_id', 'lon', 'lat', 'vlon', 'vlat'])
+    Return : array(['jdate', 'swe_id', 'lon', 'lat', 'vlon', 'vlat'])
     """
+    datatype = dtype([('jdate', 'f8'), ('swe_id', 'i4'), ('lon', 'f8'), ('lat', 'f8'), ('vlon', 'f8'), ('vlat', 'f8')])
     return array(
         (
+            jdate,
             swe_id,
             swe.calc_ut(jdate, swe_id)[0][0],
             swe.calc_ut(jdate, swe_id)[0][1],
             swe.calc_ut(jdate, swe_id)[0][3],
             swe.calc_ut(jdate, swe_id)[0][4],
         ),
-        dtype=[('swe_id', 'i4'), ('lon', 'f8'), ('lat', 'f8'), ('vlon', 'f8'), ('vlat', 'f8')],
-        ndmin=1,)
+        dtype=datatype)
 
 
 # --------------------------------------------------------
 
 
-def get_swe_id(props):
-    """Return the body id"""
-    return props['swe_id']
-
-
-def lon(props):
-    """Return the body longitude"""
-    return props['lon']
-
-
-def lat(props):
-    """Return the body latitude"""
-    return props['lat']
-
-
-def vlon(props):
-    """Return the body longitude speed"""
-    return props['vlon']
-
-
-def vlat(props):
-    """Return the body latitude speed"""
-    return props['vlat']
-
-
 def is_retrograd(props):
     """Return True if a body is retrograd"""
-    return vlon(props) < 0
+    return props.vlon < 0
 
 
 def is_ascending(props):
     """Return True if a body latitude is rising"""
-    return vlat(props) > 0
+    return props.vlat > 0
 
 
 def is_waxing(angle):
@@ -227,96 +193,140 @@ def is_waxing(angle):
     return angle > 0
 
 
-def positions(jdate, l_bodies=bodies):
-    """Return an array of bodies longitude"""
-    bodies_id = l_bodies['swe_id']
-    return array([lon(body_properties(jdate, body)) for body in bodies_id])
-
-
-def get_aspect(jdate, body1, body2):
+def get_chart(jdate, l_bodies=bodies):
     """
-    Return the aspect and orb between two bodies for a certain date
+    Return the properties of a list of bodies
+    """
+    swe_id = l_bodies.swe_id
+    datatype = dtype([('jdate', 'f8'), ('swe_id', 'i4'), ('lon', 'f8'), ('lat', 'f8'), ('vlon', 'f8'), ('vlat', 'f8')])
+    chart = fromiter([properties(jdate, body_id) for body_id in swe_id], dtype=datatype).view(recarray)
+    return chart
+
+
+def get_angle(chart, body1, body2):
+    """
+    Return angles between body1 et body2
+    """
+    if bodies.avg_s[body_index(body1)] < bodies.avg_s[body_index(body2)]:
+        body1, body2 = body2, body1
+    jdate = unique(chart.jdate)
+    prop1 = chart[where(chart.swe_id == body1)]
+    prop2 = chart[where(chart.swe_id == body2)]
+    lon1, lon2 = prop1.lon, prop2.lon
+    vlon1, vlon2 = prop1.vlon, prop2.vlon
+    angle = znorm(lon1 - lon2)
+    datatype = dtype([('jdate', 'f8'), ('body1', 'i4'), ('body2', 'i4'), ('lon1', 'f8'), ('lon2', 'f8'), 
+                    ('vlon1', 'f8'), ('vlon2', 'f8'), ('angle', 'f8')])
+    c_angle = array((*jdate, body1, body2, *lon1, *lon2, *vlon1, *vlon2, *angle), dtype=datatype)
+    return c_angle
+
+
+def get_angles(chart):
+    """
+    Return angles between all bodies
+    """
+    bodies_id = chart.swe_id
+    datatype = dtype([('jdate', 'f8'), ('body1', 'i4'), ('body2', 'i4'), ('lon1', 'f8'), ('lon2', 'f8'), 
+                    ('vlon1', 'f8'), ('vlon2', 'f8'), ('angle', 'f8')])
+    c_angles = fromiter([get_angle(chart, *comb) for comb in combs(bodies_id, 2)],dtype=datatype).view(recarray)
+    return c_angles
+
+
+def gen_aspects(chart):
+    """
+    dev mode
+    """
+    c_angles = get_angles(chart)
+    for c_angle in c_angles:
+        angle = c_angle.angle
+        body1, body2 = c_angle.body1, c_angle.body2
+        dist = distance(angle)
+        for i_asp, aspect in ndenumerate(maspects.angle):
+            score = - (body_orb(body1) + body_orb(body2)) * maspects.coef[i_asp]
+            orbite = calc_orb(body1, body2, *i_asp)
+            if aspect - orbite <= dist <= aspect + orbite:
+                yield append_fields(c_angle, ['score', 'i_asp'], [score, *i_asp])
+
+
+def get_aspects(chart):
+    """
+    dev mode
+    """
+    datatype = dtype([('jdate', 'f8'), ('body1', 'i4'), ('body2', 'i4'), ('lon1', 'f8'), ('lon2', 'f8'), 
+                    ('vlon1', 'f8'), ('vlon2', 'f8'), ('angle', 'f8'), ('score', 'f8'), ('i_asp', 'i4')])
+    aspects = sort(fromiter(gen_aspects(chart), dtype=datatype).view(recarray), order='score')
+    return aspects
+
+
+def get_aspect(chart, body1, body2):
+    """
+    Return the aspect and orb between two bodies for a jdate
     Return the angle between the two bodies if there's no aspect
     """
-    if bodies[body_index(body1)]['avg_s'] > bodies[body_index(body2)]['avg_s']:
+    if bodies.avg_s[body_index(body1)] < bodies.avg_s[body_index(body2)]:
         body1, body2 = body2, body1
-    props1, props2 = (body_properties(jdate, body) for body in [body1, body2])
-    lon1, lon2 = lon(props1), lon(props2)
-    angle = lon2 - lon1
-    angle = distance(angle)
-    for i_asp, aspect in enumerate(maspects['angle']):
-        orbite = calc_orb(body1, body2, i_asp)
-        if aspect - orbite <= angle <= aspect + orbite:
-            return array(
-                (jdate, props1, props2, i_asp),
-                dtype=[('jdate', 'f8'), ('props1', 'O'), ('props2', 'O'), ('i_asp', 'i4')],
-                ndmin=1,)
-    return None
-
-
-def is_applicative(aspect):
-    """ "dev mode"""
-    lon1, lon2, i_asp = lon(aspect['props1'][0]), lon(aspect['props2'][0]), aspect['i_asp']
-    wax = is_waxing(lon2 - lon1)
-    asp = maspects['angle'][i_asp]
-    is_r = is_retrograd(aspect['props2'][0])
-    if i_asp == 0 and ((not wax and not is_r) or (wax and is_r)):
-        return True
-    if i_asp == 4 and (((wax and not is_r) or (not wax and is_r))):
-        return True
-    if distance(lon2 - lon1) - asp > 0 and not is_r:
-        return True
-    if distance(lon2 - lon1) - asp < 0 and is_r:
-        return True
-    return False
+    aspects = get_aspects(chart)
+    aspect = aspects[where(logical_and(aspects.body1 == body1, aspects.body2 == body2))]
+    return aspect[0] if aspect else None
 
 
 def get_aspect_orb(aspect):
     """dev mode"""
-    lon1, lon2, i_asp = lon(aspect['props1'][0]), lon(
-        aspect['props2'][0]), aspect['i_asp']
-    orb = distance(lon2 - lon1) - maspects['angle'][i_asp]
+    lon1, lon2 = aspect.lon1, aspect.lon2
+    i_asp = aspect.i_asp
+    orb = distance(lon2 - lon1) - maspects.angle[i_asp]
     return abs(orb)
 
 
-def get_aspects(jdate, l_bodies=bodies):
-    """
-    Return a structured array of aspects and orb
-    """
-    bodies_id = l_bodies['swe_id']
-    aspects = fromiter([get_aspect(jdate, *comb) for comb in combs(bodies_id, 2) if get_aspect(jdate, *comb)],
-                       dtype=[('jdate', 'f8'), ('props1', 'O'), ('props2', 'O'), ('i_asp', 'i4')])
-    return aspects
+def is_applicative(aspect):
+    """dev mode"""
+    jdate = aspect.jdate
+    body1 = aspect.body1
+    props1 = properties(jdate, body1)
+    lon1, lon2 = aspect.lon1, aspect.lon2
+    i_asp = aspect.i_asp
+    wax = is_waxing(lon1 - lon2)
+    asp = maspects.angle[i_asp]
+    is_r = is_retrograd(props1)
+    angle = distance(lon1 - lon2) - asp
+    if i_asp == 0 and ((not wax and not is_r) or (wax and is_r)):
+        return True
+    if i_asp == 4 and (((wax and not is_r) or (not wax and is_r))):
+        return True
+    if angle > 0 and not is_r:
+        return True
+    if angle < 0 and is_r:
+        return True
+    return False
 
 
 def find_easpect(aspect):
     """dev mode"""
-    jdate = aspect['jdate']
+    jdate = aspect.jdate
+    body1, body2 = aspect.body1, aspect.body2
     # i_asp = aspect["i_asp"]
-    props1 = aspect['props1']
-    orb = get_aspect_orb(aspect)[0]
+    orb = get_aspect_orb(aspect)
     app = is_applicative(aspect)
-    props1, props2 = aspect['props1'], aspect['props2']
-    body1, body2 = get_swe_id(props1[0]), get_swe_id(props2[0])
-    vlon1, vlon2 = vlon(props1[0]), vlon(props2[0])
+    vlon1, vlon2 = aspect.vlon1, aspect.vlon2
     if orb > dms_to_dd([0, 0, 1]):
-        delta = orb / (vlon2 - vlon1)
+        delta = orb / (vlon1 - vlon2)
         jdate = jdate + delta if app else jdate - delta
-        return find_easpect(get_aspect(*jdate, *body1, *body2))
-    return jdate[0]
+        return find_easpect(get_aspect(get_chart(jdate), body1, body2))
+    return jdate
 
 
 def print_positions(jdate):
     """Function to format and print positions of the bodies for a date"""
     print("\n")
     print("-------------- Bodies Positions --------------")
-    positions(jdate)
-    for index, pos in ndenumerate(positions(jdate)):
-        sign, degs, mins, secs = body_sign(pos)
-        props = body_properties(jdate, bodies[index[0]]['swe_id'])
+    chart = get_chart(jdate)
+    for index, props in ndenumerate(chart):
+        swe_id, lon = props.swe_id, props.lon
+        bsign = body_sign(lon)
+        sign, degs, mins, secs = bsign.sign, bsign.degs, bsign.mins, bsign.secs
         retro = ' Retrograd' if is_retrograd(props) else ''
         print(
-            f"{body_name(bodies[index[0]]['swe_id']):10}: "
+            f"{body_name(swe_id):10}: "
             f"{signs[sign]:15}{degs:>2}º{mins:>2}'{secs:>2}\"{retro}"
         )
 
@@ -325,21 +335,17 @@ def print_aspects(jdate):
     """Function to format and print aspects between the bodies for a date"""
     print("\n")
     print("------------- Bodies Aspects -------------")
-    for aspect in get_aspects(jdate):
-        props1, props2, i_asp, orb, app = (
-            aspect['props1'],
-            aspect['props2'],
-            aspect['i_asp'],
-            get_aspect_orb(aspect),
-            is_applicative(aspect),
-        )
+    chart = get_chart(jdate)
+    for aspect in get_aspects(chart):
+        body1, body2, i_asp = aspect.body1, aspect.body2, aspect.i_asp
+        orb = get_aspect_orb(aspect)
+        app = is_applicative(aspect)
         degs, mins, secs = dd_to_dms(orb)
         app = 'Applicative' if app else 'Separative'
-        b_name, b_id = body_name, get_swe_id
-        name1, name2 = b_name(b_id(props1[0])), b_name(b_id(props2[0]))
+        name1, name2 = body_name(body1), body_name(body2)
         print(
-            f"{name2:7} - {name1:8}: "
-            f"{maspects['name'][i_asp].decode():12} "
+            f"{name1:7} - {name2:8}: "
+            f"{maspects[i_asp].name.decode():12} "
             f"{degs:>3}º{mins:>3}'{secs:>3}\" "
             f"{app:>12} "
         )
@@ -363,14 +369,12 @@ def main():
     # )
 
     zoneinfo = ZoneInfo('Europe/Paris')
-    year, month, day, hour, minute = 1975, 6, 6, 15, 10
+    year, month, day, hour, minute = 2022, 7, 13, 19, 34
     dtime = datetime(year, month, day, hour, minute, tzinfo=zoneinfo)
     jdate = utc_to_julian(dtime)
-    print(jdate)
     print_positions(jdate)
     print_aspects(jdate)
 
 
 if __name__ == "__main__":
-    # print(t_aspects)
     main()
