@@ -14,11 +14,10 @@ from ketu import (
 from profile import timing
 
 zoneinfo = ZoneInfo('Europe/Paris')
-gday = datetime(1, 1, 1, 0, 0, 0, tzinfo=zoneinfo)
+gday = datetime(1, 1, 1, 12, 0, 0, tzinfo=zoneinfo)
 jday = utc_to_julian(gday)
 lemans = 48.0042, 0.1970, 100
-canar = 36.9263, -3.4277, 1014
-swe.set_topo(*canar)
+swe.set_topo(*lemans)
 
 
 @timing
@@ -47,8 +46,8 @@ def main():
     print_aspects(jday)
     print("\n")
     print(f"Initial datetime : \n{gday:}")
-    print(f"Datetime for full moon : \n{julian_to_utc(find_easpect(get_aspect(chart, 0, 1)), zoneinfo)}")
-    print(f"Datetime for moon rise : \n{julian_to_utc(swe.rise_trans(jday, 1, 1, *canar)[1][0], zoneinfo)}")
+    print(f"Datetime for next aspect Sun-Moon : \n{julian_to_utc(find_easpect(get_aspect(chart, 0, 1)), zoneinfo)}")
+    print(f"Datetime for moon rise : \n{julian_to_utc(swe.rise_trans(jday, 1, 1, *lemans)[1][0], zoneinfo)}")
 
 
 if __name__ == "__main__":
