@@ -7,11 +7,11 @@ aspects.
 Need python 3.9+, pyswisseph: `pip install pyswisseph` and numpy: `pip install
 numpy`
 
-At the moment, compute bodies positions and aspects for a date, interactively.
+At the moment, compute bodies positions and aspects for a date.
 
-Move to ketu directory, run `python ketu.py` and answer the questions.
+Move to ketu directory, run `python ketu.py`  or `python test_app.py` for the first full moon AD :).
 
-![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
+![Terminal screen](res/screen.png)
 
 ## TODO
 
