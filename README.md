@@ -11,7 +11,7 @@ At the moment, compute bodies positions and aspects for a date.
 
 Move to ketu directory, run `python ketu.py`  or `python test_app.py` for the first full moon AD :).
 
-![Terminal screen](res/screen.png)
+![Terminal screen](res/ketu.png)
 
 ## TODO
 
