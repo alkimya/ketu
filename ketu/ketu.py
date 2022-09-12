@@ -353,24 +353,24 @@ def print_aspects(jdate):
 
 def main():
     """Entry point of the programm"""
-    # year, month, day = map(
-    #     int, input("Give a date with iso format, ex: 2020-12-21\n")
-    # .split("-")
-    # )
-    # hour, minute = map(
-    #     int,
-    #     input(
-    #         "Give a time (hour, minute), with iso format, ex: 19:20\n"
-    #     ).split(":"),
-    # )
-    # tzinfo = (
-    #    input("Give the Time Zone, ex: 'Europe/Paris' for France\n")
-    #    or "Europe/Paris"
-    # )
+    year, month, day = map(
+        int, input("Give a date with iso format, ex: 2020-12-21\n")
+    .split("-")
+    )
+    hour, minute = map(
+        int,
+        input(
+            "Give a time (hour, minute), with iso format, ex: 19:20\n"
+        ).split(":"),
+    )
+    tzinfo = (
+       input("Give the Time Zone, ex: 'Europe/Paris' for France\n")
+       or "Europe/Paris"
+    )
 
-    zoneinfo = ZoneInfo('Europe/Paris')
-    year, month, day, hour, minute = 2022, 7, 13, 19, 34
-    dtime = datetime(year, month, day, hour, minute, tzinfo=zoneinfo)
+    # zoneinfo = ZoneInfo('Europe/Paris')
+    # year, month, day, hour, minute = 2022, 7, 13, 19, 34
+    dtime = datetime(year, month, day, hour, minute, tzinfo)
     jdate = utc_to_julian(dtime)
     print_positions(jdate)
     print_aspects(jdate)
