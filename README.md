@@ -16,8 +16,8 @@ aspects interactively.
 
 ## TODO
 
-+ find datetimes for beginning, end and exact aspect
++ Find datetimes for beginning, end and exact aspect
   
-+ find all aspects between two dates
++ Find all aspects between two dates
 
 + Refactor the API to fix bugs and make it clearer
