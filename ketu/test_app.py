@@ -15,7 +15,7 @@ from profile import timing
 
 zoneinfo = ZoneInfo('Europe/Paris')
 gday = datetime(1, 1, 1, 12, 0, 0, tzinfo=zoneinfo)
-jday = utc_to_julian(gday)
+jday = utc_to_julian(gday, zoneinfo)
 lemans = 48.0042, 0.1970, 100
 swe.set_topo(*lemans)
 
