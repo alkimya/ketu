@@ -19,3 +19,5 @@ aspects interactively.
 + find datetimes for beginning, end and exact aspect
   
 + find all aspects between two dates
+
++ Refactor the API to fix bugs and make it clearer
