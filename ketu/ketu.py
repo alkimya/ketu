@@ -139,17 +139,17 @@ def local_to_utc(dtime, zoneinfo=ZoneInfo('UTC')):
     return datetime(year, month, day, hour, minute, tzinfo=zoneinfo)
 
 
-def utc_to_julian(dtime):
+def utc_to_julian(dtime, zoneinfo):
     """Convert UTC time to Julian date"""
-    utc = local_to_utc(dtime)
+    utc = local_to_utc(dtime, zoneinfo)
     year, month, day = utc.year, utc.month, utc.day
     hour, minute, second = utc.hour, utc.minute, utc.second
-    return swe.utc_to_jd(year, month, day, hour, minute, second, 1)[1]
+    return swe.utc_to_jd(year, month, day, hour, minute, second, 1)[0]
 
 
 def julian_to_utc(julian, zoneinfo):
     """Convert Julian date to UTC time"""
-    year, month, day, hour, minute, second = map(int, swe.jdut1_to_utc(julian+13, 0))
+    year, month, day, hour, minute, second = map(int, swe.jdet_to_utc(julian, 0))
     return datetime(year, month, day, hour, minute, second, tzinfo=ZoneInfo('UTC')).astimezone(zoneinfo)
 
 
@@ -354,9 +354,8 @@ def print_aspects(jdate):
 def main():
     """Entry point of the programm"""
     year, month, day = map(
-        int, input("Give a date with iso format, ex: 2020-12-21\n")
-    .split("-")
-    )
+        int, input("Give a date with iso format, ex: 2020-12-21\n").split("-")
+        )
     hour, minute = map(
         int,
         input(
@@ -368,10 +367,10 @@ def main():
        or "Europe/Paris"
     )
 
-    # zoneinfo = ZoneInfo('Europe/Paris')
+    zoneinfo = ZoneInfo(tzinfo)
     # year, month, day, hour, minute = 2022, 7, 13, 19, 34
-    dtime = datetime(year, month, day, hour, minute, tzinfo)
-    jdate = utc_to_julian(dtime)
+    dtime = datetime(year, month, day, hour, minute, tzinfo=zoneinfo)
+    jdate = utc_to_julian(dtime, zoneinfo)
     print_positions(jdate)
     print_aspects(jdate)
 
