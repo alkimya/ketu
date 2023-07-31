@@ -7,14 +7,17 @@ aspects.
 Need python 3.9+, pyswisseph: `pip install pyswisseph` and numpy: `pip install
 numpy`
 
-At the moment, compute bodies positions and aspects for a date, interactively.
+At the moment, compute bodies positions and aspects for a date.
 
-Move to ketu directory, run `python ketu.py` and answer the questions.
+Move to ketu directory, run `python ketu.py`  to compute bodies positions and 
+aspects interactively.
 
-![Terminal screen](https://github.com/alkimya/ketu/blob/master/res/screen.png)
+![Terminal screen](res/ketu.png)
 
 ## TODO
 
-+ find datetimes for beginning, end and exact aspect
++ Find datetimes for beginning, end and exact aspect
   
-+ find all aspects between two dates
++ Find all aspects between two dates
+
++ Refactor the API to fix bugs and make it clearer
