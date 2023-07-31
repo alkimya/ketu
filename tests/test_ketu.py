@@ -11,8 +11,8 @@ from ketu.ketu import (
     )
 
 zoneinfo = ZoneInfo('Europe/Paris')
-gdate = datetime(2022, 6, 14, 13, 0, 0, tzinfo=zoneinfo)
-jdate = utc_to_julian(gdate)
+date = datetime(2022, 6, 14, 13, 0, 0, tzinfo=zoneinfo)
+date = utc_to_julian(date)
 day_one = datetime(1, 1, 1)
 
 
@@ -37,10 +37,10 @@ class KetuTest(TestCase):
     def test_local_to_utc(self):
         """Test local_to_utc function"""
         self.assertEqual(
-            local_to_utc(gdate, zoneinfo), datetime(
-                2022, 6, 14, 13, 0, tzinfo=zoneinfo)
+            local_to_utc(date), datetime(
+                2022, 6, 14, 11, 0, tzinfo=ZoneInfo(key='Europe/Paris'))
         )
-        self.assertEqual(local_to_utc(day_one), datetime(1, 1, 1, tzinfo=ZoneInfo('UTC')))
+        self.assertEqual(local_to_utc(day_one), datetime(1, 1, 1))
 
     def test_utc_to_julian(self):
         """Test utc_to julian function"""
@@ -61,7 +61,7 @@ class KetuTest(TestCase):
     def test_distance(self):
         """Test distance function"""
         # Test reflexivity of distance
-        props0, props1 = properties(jdate, 0), properties(jdate, 1)
+        props0, props1 = properties(date, 0), properties(date, 1)
         self.assertEqual(distance(props0.lon - props1.lon), distance(props1.lon - props0.lon))
         self.assertAlmostEqual(distance(props0.lon - props1.lon), 180, delta=1)
 
@@ -72,10 +72,11 @@ class KetuTest(TestCase):
     def test_body_name(self):
         """Test body_name function"""
         self.assertEqual("Sun", body_name(0))
+        self.assertEqual("Rahu", body_name(10))
 
     def test_properties(self):
         """Test body_properties function"""
-        self.assertAlmostEqual(properties(jdate, 2).lon, 60, delta=1)
+        self.assertAlmostEqual(properties(date, 2).lon, 60, delta=1)
 
     def test_body_orb(self):
         """Test body_orb function"""
@@ -83,17 +84,17 @@ class KetuTest(TestCase):
 
     def test_is_retrograd(self):
         """Test is_retrograde function"""
-        self.assertTrue(is_retrograd(properties(jdate, 6)))
-        self.assertTrue(is_retrograd(properties(jdate, 10)))
+        self.assertTrue(is_retrograd(properties(date, 6)))
+        self.assertTrue(is_retrograd(properties(date, 10)))
 
     def test_is_ascending(self):
         """Test is_ascending function"""
-        self.assertTrue(is_ascending(properties(jdate, 2)))
+        self.assertTrue(is_ascending(properties(date, 2)))
 
     def test_body_sign(self):
         """Test body_sign function"""
         self.assertEqual(
-            signs[body_sign(properties(jdate, 0).lon).sign], 'Gemini')
+            signs[body_sign(properties(date, 0).lon).sign], 'Gemini')
 
     def test_get_aspect_orb(self):
         """Test get_aspect_orb function"""
@@ -118,7 +119,7 @@ class KetuTest(TestCase):
     def test_find_easpect(self):
         """Test find_easpect"""
         # in dev mode
-        #aspect = get_aspect(jdate, 0, 1)
+        #aspect = get_aspect(date, 0, 1)
         #print(aspect)
         #print(aspect.dtype)
         #self.assertAlmostEqual(find_easpect(aspect), 2459745, delta=0.1)
