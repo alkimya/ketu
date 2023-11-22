@@ -4,15 +4,19 @@ from datetime import datetime
 from unittest import TestCase
 from zoneinfo import ZoneInfo
 
+import sys
+
+sys.path.append('/home/loc/workspace/ketu/')
+
 from ketu.ketu import (
-    bodies, maspects, signs, utc_to_julian, local_to_utc, dd_to_dms, dms_to_dd, norm,
-    properties, distance, calc_orb, body_name, body_orb, is_retrograd,
-    is_ascending, body_sign, get_aspect_orb, get_aspects, find_easpect, get_chart
+    bodies, aspects, signs, utc_to_julian, local_to_utc, dd_to_dms, dms_to_dd, norm,
+    properties, distance, calc_orb, bodies_name, bodies_orb, is_retrograd,
+    is_ascending, sign, get_aspect_orb, get_aspects, find_easpect, get_chart
     )
 
 zoneinfo = ZoneInfo('Europe/Paris')
-date = datetime(2022, 6, 14, 13, 0, 0, tzinfo=zoneinfo)
-date = utc_to_julian(date)
+gdate = datetime(2022, 6, 14, 13, 0, 0, tzinfo=zoneinfo)
+date = utc_to_julian(gdate)
 day_one = datetime(1, 1, 1)
 
 
@@ -22,12 +26,12 @@ class KetuTest(TestCase):
     def test_bodies(self):
         """Test bodies data structure"""
         self.assertEqual(len(bodies), 12)
-        self.assertEqual(bodies.swe_id[0], 0)
+        self.assertEqual(bodies['swe_id'][0], 0)
 
     def test_aspects(self):
         """Test aspects data structure"""
-        self.assertEqual(len(maspects), 5)
-        self.assertEqual(maspects.angle[0], 0)
+        self.assertEqual(len(aspects), 7)
+        self.assertEqual(aspects['angle'][0], 0)
 
     def test_signs(self):
         "Test signs data structure"
@@ -37,10 +41,11 @@ class KetuTest(TestCase):
     def test_local_to_utc(self):
         """Test local_to_utc function"""
         self.assertEqual(
-            local_to_utc(date), datetime(
+            local_to_utc(gdate), datetime(
                 2022, 6, 14, 11, 0, tzinfo=ZoneInfo(key='Europe/Paris'))
         )
-        self.assertEqual(local_to_utc(day_one), datetime(1, 1, 1))
+        print(local_to_utc(day_one))
+        self.assertEqual(local_to_utc(day_one), datetime(1, 1, 1).replace(tzinfo=ZoneInfo('UTC')))
 
     def test_utc_to_julian(self):
         """Test utc_to julian function"""
@@ -62,12 +67,12 @@ class KetuTest(TestCase):
         """Test distance function"""
         # Test reflexivity of distance
         props0, props1 = properties(date, 0), properties(date, 1)
-        self.assertEqual(distance(props0.lon - props1.lon), distance(props1.lon - props0.lon))
-        self.assertAlmostEqual(distance(props0.lon - props1.lon), 180, delta=1)
+        self.assertEqual(distance(props0['lon'] - props1['lon']), distance(props1['lon'] - props0['lon']))
+        self.assertAlmostEqual(distance(props0['lon'] - props1['lon']), 180, delta=1)
 
     def test_calc_orb(self):
         """Test calc_orb function"""
-        self.assertAlmostEqual(calc_orb(0, 1, 3), 8, delta=0.001)
+        self.assertAlmostEqual(calc_orb(0, 1, 4), 8, delta=0.001)
 
     def test_body_name(self):
         """Test body_name function"""
@@ -94,7 +99,7 @@ class KetuTest(TestCase):
     def test_body_sign(self):
         """Test body_sign function"""
         self.assertEqual(
-            signs[body_sign(properties(date, 0).lon).sign], 'Gemini')
+            signs[sign(properties(date, 0).lon).sign], 'Gemini')
 
     def test_get_aspect_orb(self):
         """Test get_aspect_orb function"""
