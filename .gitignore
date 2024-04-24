@@ -1,9 +1,9 @@
 /.vscode
+/.pytest_cache
 /docs/
 /ephe/
-/venv/
+/.venv/
 /ketu/__pycache__
 /tests/__pycache__
 /tests/.pytest_cache
 .coverage
-de421.bsp
