@@ -215,7 +215,6 @@ def get_aspects(jdate, l_bodies=bodies):
 # TODO: find exact aspect
 
 
-@timea
 def print_positions(jdate):
     """Function to format and print positions of the bodies for a date"""
     print("\n")
