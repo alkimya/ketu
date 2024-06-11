@@ -243,7 +243,7 @@ def main():
     """Entry point of the programm"""
     year, month, day = map(int, input("Give a date with iso format, ex: 2020-12-21\n").split("-"))
     hour, minute = map(int, input("Give a time (hour, minute), with iso format, ex: 19:20\n").split(":"))
-    tzinfo = input("Give the Time Zone, ex: 'Europe/Paris' for France\n") or "Europe/Paris"
+    tzinfo = input("Give the Time Zone, ex: 'Europe/Paris' for France") or "Europe/Paris"
     zoneinfo = ZoneInfo(tzinfo)
     dtime = datetime(year, month, day, hour, minute, tzinfo=zoneinfo)
     jday = utc_to_julian(dtime)
