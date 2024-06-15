@@ -111,8 +111,13 @@ def utc_to_julian(dtime):
 
 def body_name(body):
     """Return the body name"""
-    if swe.get_planet_name(body) == "mean Node":
-        return "Rahu"
+    match swe.get_planet_name(body):
+        case "mean Node":
+            return "Rahu"
+        case "true Node":
+            return "North Node"
+        case "mean Apogee":
+            return "Lilith"
     return swe.get_planet_name(body)
 
 
@@ -241,7 +246,7 @@ def print_aspects(jdate):
         body1, body2, i_asp, orb = aspect
         degs, mins, secs = dd_to_dms(orb)
         print(
-            f"{body_name(body1):7} - {body_name(body2):8}: "
+            f"{body_name(body1):7} - {body_name(body2):12}: "
             f"{aspects['name'][i_asp].decode():12} "
             f"{degs:>2}º{mins:>2}'{secs:>2}\""
         )
