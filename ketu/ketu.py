@@ -47,7 +47,7 @@ aspects = np.array(
         ("Quincunx", 150, 5 / 6),
         ("Opposition", 180, 1),
     ],
-    dtype=[("name", "S12"), ("value", "f4"), ("coef", "f4")],
+    dtype=[("name", "S12"), ("angle", "f4"), ("coef", "f4")],
 )
 
 # List of signs for body position
@@ -67,11 +67,11 @@ signs = [
 ]
 
 
-def dd_to_dms(deg):
+def decimal_degrees_to_dms(deg):
     """Return degrees, minutes, seconds from degrees decimal"""
     mins, secs = divmod(deg * 3600, 60)
     degs, mins = divmod(mins, 60)
-    return np.array((degs, mins, secs), dtype="i4")
+    return np.array((degs, mins, secs), dtype=np.dtype([("degs", "i4"), ("mins", "i4"), ("secs", "i4")]))
 
 
 def distance(pos1, pos2):
@@ -180,7 +180,7 @@ def is_ascending(jdate, body):
 
 def body_sign(b_long):
     """Return the body position in sign, degrees, minutes and seconds"""
-    dms = dd_to_dms(b_long)
+    dms = decimal_degrees_to_dms(b_long)
     sign, degs = divmod(dms[0], 30)
     mins, secs = dms[1], dms[2]
     return np.array((sign, degs, mins, secs))
@@ -244,7 +244,7 @@ def print_aspects(jdate):
     print("------------- Bodies Aspects -------------")
     for aspect in calculate_aspects(jdate):
         body1, body2, i_asp, orb = aspect
-        degs, mins, secs = dd_to_dms(orb)
+        degs, mins, secs = decimal_degrees_to_dms(orb)
         print(
             f"{body_name(body1):7} - {body_name(body2):12}: "
             f"{aspects['name'][i_asp].decode():12} "
