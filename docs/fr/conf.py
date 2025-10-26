@@ -11,8 +11,11 @@ sys.path.insert(0, os.path.abspath("../.."))
 project = "Ketu"
 copyright = f"{datetime.now().year}, Loc Cosnier"
 author = "Loc Cosnier"
-release = "0.1.0"
-version = "0.1.0"
+release = "0.2.0"
+version = "0.2.0"
+
+# Language
+language = "fr"
 
 # General configuration
 extensions = [
