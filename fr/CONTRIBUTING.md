@@ -135,3 +135,14 @@ Toute contribution, grande ou petite, est appréciée. Que ce soit :
 - Ajouter des tests
 - Améliorer les performances
 - Proposer de nouvelles fonctionnalités
+
+## 📚 Ressources
+
+- [Documentation du projet (Read the Docs)](https://ketu.readthedocs.io/)
+- [Issues](https://github.com/alkimya/ketu/issues)
+- [Discussions](https://github.com/alkimya/ketu/discussions)
+- Contact : [loc.cosnier@pm.me](mailto:loc.cosnier@pm.me)
+
+## 📄 Licence
+
+En contribuant, vous acceptez que votre code soit publié sous licence MIT.

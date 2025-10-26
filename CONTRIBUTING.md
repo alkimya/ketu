@@ -75,6 +75,57 @@ Use clear prefixes to convey the intent of a change:
 - `refactor`: code changes that neither fix nor add a feature
 - `chore`: maintenance, tooling, non-production code
 
+## 🐛 Report a bug
+
+Open an issue on GitHub with:
+
+- A clear description of the problem
+- Steps to reproduce the bug
+- Expected vs. observed behavior
+- Your version of Python and Ketu
+- A minimal code example if possible
+
+## 💡 Suggest a feature
+
+Before working on a major feature:
+
+1. Open an issue to discuss it
+2. Wait for feedback from the community
+3. Once approved, start development
+
+## 📚 Documentation
+
+If you add or modify features:
+
+1. Update the documentation in `/docs/source/`
+2. Add usage examples
+3. Update the [CHANGELOG.md](../CHANGELOG.md)
+
+To generate documentation locally:
+
+```bash
+cd docs
+make livehtml  # Launch a live reload documentation server
+```
+
+## ✅ Checklist before PR
+
+- [ ] Tests pass (`pytest tests/`)
+- [ ] Code coverage is maintained or improved
+- [ ] Code follows PEP 8
+- [ ] Docstrings are up to date
+- [ ] The [CHANGELOG.md](../CHANGELOG.md) is up to date
+- [ ] Documentation is updated if necessary
+
+## 🙏 Thank you
+
+Every contribution, big or small, is appreciated. Whether it's:
+
+- Correcting a typo in the documentation
+- Adding tests
+- Improving performance
+- Suggesting new features
+
 ## 📚 Resources
 
 - [Project documentation (Read the Docs)](https://ketu.readthedocs.io/)
