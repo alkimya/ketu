@@ -64,7 +64,7 @@ Ketu calculates the positions of 13 celestial bodies:
 
 ### Harmonic Theory
 
-Aspects are based on the division of the **semi-circle** (180°) by whole numbers, creating **harmonics**. Since an aspect never exceeds 180° (beyond that we measure from the other side), we work on a division of the semi-circle by 6.
+Aspects lean on the geometry of the zodiac circle: we often slice it into twelve 30° segments, but when comparing two planets we bring the angle back to the **half-circle** (180°) to keep the shortest distance. The **harmonics** are simply the integer fractions of those 180°, and they act as landmarks for the main kinds of planetary encounters.
 
 #### Harmonic 1 (180°/1 = 180°)
 
@@ -140,7 +140,7 @@ Quincunx     | 150°  | 6        | 5/6
 - Coefficient: 1/3 (sextile)
 - Final Orb: (8 + 10) / 2 × 0.333 = **3°**
 
-### Default Orbs (inspired by Abu Ma'shar)
+### Default Orbs
 
 Body                    | Orb
 ------------------------|--------

@@ -2,6 +2,8 @@
 
 **Ketu** is a Python library for calculating planetary positions and astrological aspects, based on `pyswisseph` and `numpy`.
 
+The library was originally designed to produce biodynamic calendars and time series driven by astrological aspects, and it can serve as a foundation for building astrology software.
+
 ## Overview
 
 Ketu allows you to:
@@ -82,7 +84,7 @@ ketu.print_aspects(jday)
 
 ## License
 
-MIT License - Copyright (c) 2024 Loc Cosnier
+MIT License - Copyright (c) 2021-2025 Loc Cosnier
 
 ## Contact
 

@@ -15,6 +15,10 @@ build:
     post_install:
       # Installe les dépendances du projet
       - pip install -e .
+    post_build:
+      # Construit également la documentation anglaise
+      - mkdir -p ${READTHEDOCS_OUTPUT:-_readthedocs/html}/en
+      - sphinx-build -b html docs/en ${READTHEDOCS_OUTPUT:-_readthedocs/html}/en
 
 # Configuration Sphinx
 # French documentation is the primary version

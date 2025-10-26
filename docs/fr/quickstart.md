@@ -211,8 +211,16 @@ ketu.bodies["orb"] = ketu.bodies["orb"] * 0.5
 # Calculer avec les nouveaux orbes
 aspects = ketu.calculate_aspects(jday)
 
+# Pour calculer les orbes en fonction des aspects seulement
+ketu.bodies["orb"] = 1
+original_coefs = ketu.aspects["coef"].copy()
+
+# Mettre une orbe de 6 à l'aspect carré par exemple, de même pour tous les aspects
+ketu.aspect["coef"][np.where(aspect["name"] == "Square")] = 6
+
 # Restaurer
 ketu.bodies["orb"] = original_orbs
+ketu.aspects["coef"] = original_coefs
 ```
 
 ### Prochaines étapes

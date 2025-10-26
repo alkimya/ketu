@@ -40,12 +40,6 @@ This method allows you to modify the source code and see changes immediately.
 # Create the environment
 python -m venv venv
 
-# Activate (Linux/Mac)
-source venv/bin/activate
-
-# Activate (Windows)
-venv\Scripts\activate
-
 # Install Ketu
 pip install ketu
 ```

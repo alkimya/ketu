@@ -1,137 +1,87 @@
-# Guide de contribution
+# Contributing to Ketu
 
-Merci de ton intérêt pour contribuer à Ketu ! Voici comment tu peux aider.
+Thanks for taking the time to contribute — every improvement helps!
 
-## 🚀 Démarrage rapide
+> 🇫🇷 Une version française de ce guide est disponible dans `fr/CONTRIBUTING.md`.
 
-### Configurer l'environnement de développement
+## 🚀 Quick start
 
-1. Clone le repository :
+### Set up your development environment
 
 ```bash
 git clone https://github.com/alkimya/ketu.git
 cd ketu
+
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+
+pip install -e ".[dev]"
 ```
 
-2. Crée un environnement virtuel :
+### Run the tests
 
-```bash
-python3 -m venv .venv
-source .venv/bin/activate  # Sur Windows: .venv\Scripts\activate
-```
-
-3. Installe les dépendances en mode développement :
-
-```bash
-pip install -e .
-pip install pytest pytest-cov
-```
-
-## 🧪 Lancer les tests
-
-Avant de soumettre une contribution, assure-toi que tous les tests passent :
+Before opening a pull request, make sure the suite is green:
 
 ```bash
 pytest tests/ -v --cov=ketu
 ```
 
-Pour lancer un fichier de test spécifique :
+You can target a specific test file if needed:
 
 ```bash
 pytest tests/test_ketu.py -v
 ```
 
-## 📝 Standards de code
+## 🧭 Development guidelines
 
-- **Style** : Utilise PEP 8 pour le style Python
-- **Docstrings** : Documente toutes les fonctions publiques
-- **Type hints** : Ajoute des annotations de type quand possible
-- **Tests** : Ajoute des tests pour toute nouvelle fonctionnalité
+- Follow **PEP 8** for Python style (Black’s defaults are a good baseline).
+- Add **type hints** whenever they improve readability.
+- Document every public function with a concise **docstring** (Google style).
+- Include unit tests for new features or bug fixes.
 
-### Exemple de docstring
+### Example docstring
 
 ```python
 def calculate_aspect(jdate, body1, body2):
-    """Calculate the aspect between two celestial bodies.
+    """Return the aspect between two celestial bodies.
 
     Args:
-        jdate (float): Julian day number
-        body1 (int): ID of the first body
-        body2 (int): ID of the second body
+        jdate (float): Julian day number.
+        body1 (int): ID of the first body.
+        body2 (int): ID of the second body.
 
     Returns:
-        tuple: (body1, body2, aspect_index, orb) or None if no aspect
+        tuple[int, int, int, float] | None: (body1, body2, aspect_index, orb)
+        or None if no aspect is detected.
     """
-    pass
 ```
 
-## 🔄 Workflow de contribution
+## 🔄 Contribution workflow
 
-1. **Fork** le projet
-2. **Crée une branche** pour ta fonctionnalité (`git checkout -b feature/ma-feature`)
-3. **Commit** tes changements (`git commit -m 'Ajoute une super fonctionnalité'`)
-4. **Push** vers la branche (`git push origin feature/ma-feature`)
-5. **Ouvre une Pull Request**
+1. **Fork** the repository.
+2. **Create** a feature branch: `git checkout -b feature/my-feature`.
+3. **Commit** with meaningful messages: `git commit -m "feat: add pure numpy ephemeris"`.
+4. **Push** your branch: `git push origin feature/my-feature`.
+5. **Open** a pull request on GitHub describing your changes.
 
-### Messages de commit
+### Commit messages
 
-Utilise des messages clairs et descriptifs :
+Use clear prefixes to convey the intent of a change:
 
-- ✅ `Ajoute calcul des aspects mineurs`
-- ✅ `Corrige bug dans le calcul de rétrogradation`
-- ✅ `Améliore performance du cache LRU`
-- ❌ `update`
-- ❌ `fix bug`
+- `feat`: new feature
+- `fix`: bug fix
+- `docs`: documentation update
+- `test`: tests only
+- `refactor`: code changes that neither fix nor add a feature
+- `chore`: maintenance, tooling, non-production code
 
-## 🐛 Signaler un bug
+## 📚 Resources
 
-Ouvre une issue sur GitHub avec :
+- [Project documentation (Read the Docs)](https://ketu.readthedocs.io/)
+- [Issue tracker](https://github.com/alkimya/ketu/issues)
+- [Discussions](https://github.com/alkimya/ketu/discussions)
+- Contact: [loc.cosnier@pm.me](mailto:loc.cosnier@pm.me)
 
-- Une description claire du problème
-- Les étapes pour reproduire le bug
-- Le comportement attendu vs observé
-- Ta version de Python et de Ketu
-- Un exemple de code minimal si possible
+## 📄 License
 
-## 💡 Proposer une fonctionnalité
-
-Avant de travailler sur une grosse fonctionnalité :
-
-1. Ouvre une issue pour en discuter
-2. Attends les retours de la communauté
-3. Une fois validée, commence le développement
-
-## 📚 Documentation
-
-Si tu ajoutes ou modifies des fonctionnalités :
-
-1. Mets à jour la documentation dans `/docs/source/`
-2. Ajoute des exemples d'utilisation
-3. Mets à jour le CHANGELOG.md
-
-Pour générer la documentation localement :
-
-```bash
-cd docs
-make livehtml  # Lance un serveur de documentation en live reload
-```
-
-## ✅ Checklist avant PR
-
-- [ ] Les tests passent (`pytest tests/`)
-- [ ] La couverture de code est maintenue ou améliorée
-- [ ] Le code suit PEP 8
-- [ ] Les docstrings sont à jour
-- [ ] Le CHANGELOG.md est mis à jour
-- [ ] La documentation est mise à jour si nécessaire
-
-## 🙏 Merci !
-
-Toute contribution, grande ou petite, est appréciée. Que ce soit :
-
-- Corriger une faute de frappe dans la doc
-- Ajouter des tests
-- Améliorer les performances
-- Proposer de nouvelles fonctionnalités
-
-Merci de faire partie de la communauté Ketu !
+By contributing you agree that your code will be released under the MIT License.

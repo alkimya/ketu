@@ -64,7 +64,7 @@ Ketu calcule les positions de 13 corps célestes :
 
 ### Théorie des harmoniques
 
-Les aspects sont basés sur la division du **demi-cercle** (180°) par des nombres entiers, créant des **harmoniques**. Puisqu'un aspect ne dépasse jamais 180° (au-delà on mesure de l'autre côté), on travaille sur une division du demi-cercle par 6.
+Les aspects reposent sur la division en douze parts de 30° du cercle zodiacal. Dès qu’on compare deux planètes on ramène l’angle au **demi-cercle** (180°) pour garder la distance la plus courte, ce qui donne 7 aspects principaux. Les **harmoniques** sont simplement les fractions entières de ces 180°, et elles servent de repères pour situer les grands types de rencontres planétaires.
 
 #### Harmonique 1 (180°/1 = 180°)
 
@@ -105,6 +105,17 @@ Dans la tradition arabe, chaque **planète possède une orbe** (zone d'influence
 orbe = (orbe_planete1 + orbe_planete2) / 2 * coefficient_harmonique
 ```
 
+### Orbes par défaut des planètes
+
+Corps                   | Orbe
+------------------------|--------
+Soleil, Lune            | 12°
+Mercure, Mars           | 8°
+Vénus, Jupiter, Saturne | 10°
+Uranus, Neptune         | 6°
+Pluton                  | 4°
+Rahu, Lilith            | 0°
+
 ### Coefficients des harmoniques
 
 Aspect       | Angle | Harmonique | Coefficient
@@ -139,17 +150,6 @@ Quinconce    | 150°  | 6          | 5/6
 - Orbe Jupiter : 10°
 - Coefficient : 1/3 (sextile)
 - Orbe finale : (8 + 10) / 2 × 0.333 = **3°**
-
-### Orbes par défaut (inspirées d'Abu Ma'shar)
-
-Corps                   | Orbe
-------------------------|--------
-Soleil, Lune            | 12°
-Mercure, Vénus          | 8°
-Mars, Jupiter, Saturne  | 10°
-Uranus, Neptune         | 6°
-Pluton                  | 4°
-Rahu, Lilith            | 0°
 
 **Note** : Les orbes peuvent être personnalisées selon les besoins. Voir l'[exemple 05](../examples/05_custom_orbs.py).
 
@@ -195,8 +195,6 @@ Neptune | 0.01°/jour      | 165 ans
 Pluton  | 0.00°/jour      | 248 ans
 
 ## Signes du zodiaque
-
-Ketu reconnaît les 12 signes du zodiaque tropical :
 
 ### Liste des signes
 

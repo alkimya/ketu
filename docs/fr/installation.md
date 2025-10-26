@@ -40,12 +40,6 @@ Cette méthode permet de modifier le code source et de voir immédiatement les c
 # Créer l'environnement
 python -m venv venv
 
-# Activer (Linux/Mac)
-source venv/bin/activate
-
-# Activer (Windows)
-venv\Scripts\activate
-
 # Installer Ketu
 pip install ketu
 ```
@@ -67,7 +61,7 @@ ketu
 ```python
 import ketu
 print(ketu.__version__)
-# Output: 0.1.0
+# Output: 0.2.0
 ```
 
 ## Dépendances

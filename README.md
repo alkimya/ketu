@@ -4,29 +4,33 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/ketu.svg)](https://pypi.org/project/ketu/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-**Ketu** est une bibliothèque Python légère pour calculer les positions des corps astronomiques (Soleil, Lune, planètes et Nœud moyen aka Rahu) et générer des calendriers basés sur les aspects astrologiques.
+> 🇫🇷 Vous préférez le français ? [Consultez README.md](fr/README.md)
+
+**Ketu** is a lightweight Python library for computing the positions of astronomical bodies (Sun, Moon, planets, and the mean Node a.k.a. Rahu) and generating calendars driven by astrological aspects.
+
+This library was originally designed to generate biodynamic calendars and time series based on astrological aspects. It can be used as a basis for building astrology software.
 
 ![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
 
-## ✨ Fonctionnalités
+## ✨ Features
 
-- 🌍 **Calcul de positions planétaires** pour 13 corps célestes (Soleil, Lune, Mercure, Venus, Mars, Jupiter, Saturne, Uranus, Neptune, Pluton, Rahu/Nœud Nord, Lilith)
-- ⭐ **Détection de 7 aspects majeurs** (Conjonction, Semi-sextile, Sextile, Carré, Trigone, Quinconce, Opposition)
-- 🔄 **Détection des rétrogradations** et mouvements planétaires
-- 🕐 **Conversion entre systèmes temporels** (UTC, Jour Julien)
-- 🎯 **Système d'orbes** basé sur Abu Ma'shar (787-886) et Al-Biruni (973-1050)
-- 🖥️ **Interface CLI interactive** pour une utilisation sans programmation
-- 📊 **API Python simple** pour une intégration dans tes projets
+- 🌍 **Planetary positions** for 13 bodies (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Rahu/Mean Node, True North Node, Lilith)
+- ⭐ **Detection of the 7 major aspects** (Conjunction, Semi-sextile, Sextile, Square, Trine, Quincunx, Opposition)
+- 🔄 **Retrogradation detection** and planet motion helpers
+- 🕐 **Time system conversions** (UTC, Julian Day)
+- 🎯 **Orb system** based on Abu Ma'shar (787-886) and Al-Biruni (973-1050)
+- 🖥️ **Interactive CLI** for a non-programmatic workflow
+- 📊 **Python API** that fits into your own tooling
 
 ## 📦 Installation
 
-### Depuis PyPI (recommandé)
+### From PyPI (recommended)
 
 ```bash
 pip install ketu
 ```
 
-### Depuis les sources
+### From source
 
 ```bash
 git clone https://github.com/alkimya/ketu.git
@@ -34,190 +38,123 @@ cd ketu
 pip install -e .
 ```
 
-## 🚀 Démarrage rapide
+## 🚀 Quick Start
 
-### Mode interactif (CLI)
+### Interactive mode (CLI)
 
-Lance simplement la commande `ketu` et réponds aux questions :
+Run the command below and answer the prompts:
 
 ```bash
 ketu
 ```
 
-Tu seras invité à entrer :
+You will be asked for:
 
-- Une date (format ISO : `2020-12-21`)
-- Une heure (format ISO : `19:20`)
-- Un fuseau horaire (ex : `Europe/Paris`)
+- A date (ISO format: `2020-12-21`)
+- A time (ISO format: `19:20`)
+- A timezone (for example `Europe/Paris`)
 
-Le programme affichera ensuite :
+The program prints:
 
-- Les positions de tous les corps célestes dans les signes zodiacaux
-- Tous les aspects entre les planètes avec leurs orbes
+- Positions of every celestial body with zodiac signs
+- All inter-planet aspects with their orbs
 
-### Utilisation programmatique
+### Programmatic usage
 
 ```python
 from datetime import datetime
 from zoneinfo import ZoneInfo
 import ketu
 
-# Définir une date et heure
+# Define a datetime
 dtime = datetime(2020, 12, 21, 19, 20, tzinfo=ZoneInfo("Europe/Paris"))
 jday = ketu.utc_to_julian(dtime)
 
-# Afficher les positions des planètes
+# Display planetary positions
 ketu.print_positions(jday)
 
-# Afficher les aspects entre les planètes
+# Display aspects
 ketu.print_aspects(jday)
 ```
 
-### Exemples avancés
+### Additional examples
 
-#### Calculer la position d'une planète
+#### Compute a planet position
 
 ```python
 from datetime import datetime
 from zoneinfo import ZoneInfo
 import ketu
 
-# Convertir en jour Julien
 dtime = datetime(2024, 10, 26, 12, 0, tzinfo=ZoneInfo("UTC"))
 jday = ketu.utc_to_julian(dtime)
 
-# Obtenir la longitude du Soleil (body id = 0)
 sun_long = ketu.long(jday, 0)
-print(f"Longitude du Soleil : {sun_long:.2f}°")
+print(f"Sun longitude: {sun_long:.2f}°")
 
-# Obtenir le signe zodiacal
 sign, deg, mins, secs = ketu.body_sign(sun_long)
-print(f"Position : {ketu.signs[sign]} {deg}°{mins}'{secs}\"")
+print(f"Position: {ketu.signs[sign]} {deg}°{mins}'{secs}\"")
 ```
 
-#### Vérifier si une planète est rétrograde
+#### Check whether a planet is retrograde
 
 ```python
 import ketu
 
 # Mars (body id = 4)
 if ketu.is_retrograde(jday, 4):
-    print("Mars est rétrograde")
+    print("Mars is retrograde")
 else:
-    print("Mars est directe")
+    print("Mars is direct")
 ```
 
-#### Calculer tous les aspects à une date
+#### Calculate all aspects for a given day
 
 ```python
 import ketu
 
-# Calculer tous les aspects
 aspects_data = ketu.calculate_aspects(jday)
 
-# Parcourir les aspects
 for aspect in aspects_data:
     body1, body2, i_asp, orb = aspect
     print(f"{ketu.body_name(body1)} - {ketu.body_name(body2)}: "
-          f"{ketu.aspects['name'][i_asp].decode()} (orbe: {orb:.2f}°)")
+          f"{ketu.aspects['name'][i_asp].decode()} (orb: {orb:.2f}°)")
 ```
 
-## 📚 Documentation complète
+## 📚 Documentation
 
-La documentation complète est disponible sur [ReadTheDocs](https://ketu.readthedocs.io) (en français).
+The full documentation is hosted on [Read the Docs](https://ketu.readthedocs.io) (French by default, English via the language toggle).
 
-Sections disponibles :
+Included sections:
 
-- **Installation** : Guide d'installation détaillé
-- **Quickstart** : Tutoriel de démarrage rapide
-- **Concepts** : Explication des concepts astrologiques et astronomiques
-- **API Reference** : Documentation complète de toutes les fonctions
-- **Examples** : Exemples d'utilisation avancés
+- **Installation**: detailed setup instructions
+- **Quickstart**: guided tour of the basics
+- **Concepts**: astrological and astronomical background
+- **API Reference**: all functions documented
+- **Examples**: advanced usage patterns
 
-## 🛠️ Prérequis
+## 🛠️ Requirements
 
-- Python 3.9 ou supérieur
-- `numpy` >= 1.20.0 : Calculs numériques et tableaux
-- `pyswisseph` >= 2.10.0 : Interface aux éphémérides Swiss Ephemeris
+- Python 3.9 or higher
+- `numpy` ≥ 1.20.0 — numerical routines and arrays
+- `pyswisseph` ≥ 2.10.0 — Swiss Ephemeris bindings
 
-**Note** : La dépendance à `pyswisseph` sera supprimée dans une version future au profit d'une implémentation pure numpy.
+> The dependency on `pyswisseph` is scheduled for removal in a future release, replaced by pure NumPy ephemerides.
 
-## 📋 Corps célestes supportés
+## 📋 Supported bodies
 
-| Corps | ID | Orbe | Vitesse moyenne (°/jour) |
-|-------|-----|------|--------------------------|
-| Soleil | 0 | 12° | 0.986 |
-| Lune | 1 | 12° | 13.176 |
-| Mercure | 2 | 8° | 1.383 |
-| Vénus | 3 | 8° | 1.200 |
+| Body | ID | Orb | Average speed (°/day) |
+|------|----|-----|-----------------------|
+| Sun | 0 | 12° | 0.986 |
+| Moon | 1 | 12° | 13.176 |
+| Mercury | 2 | 8° | 1.383 |
+| Venus | 3 | 8° | 1.200 |
 | Mars | 4 | 10° | 0.524 |
 | Jupiter | 5 | 10° | 0.083 |
-| Saturne | 6 | 10° | 0.034 |
+| Saturn | 6 | 10° | 0.034 |
 | Uranus | 7 | 6° | 0.012 |
 | Neptune | 8 | 6° | 0.007 |
-| Pluton | 9 | 4° | 0.004 |
-| Rahu (Nœud moyen) | 10 | 0° | -0.013 |
-| Nœud Nord (vrai) | 11 | 0° | -0.013 |
-| Lilith (Apogée moyen) | 12 | 0° | 0.113 |
-
-## 🎯 Aspects supportés
-
-| Aspect | Angle | Coefficient d'orbe |
-|--------|-------|-------------------|
-| Conjonction | 0° | 1 |
-| Semi-sextile | 30° | 1/6 |
-| Sextile | 60° | 1/3 |
-| Carré | 90° | 1/2 |
-| Trigone | 120° | 2/3 |
-| Quinconce | 150° | 5/6 |
-| Opposition | 180° | 1 |
-
-## 🗺️ Roadmap
-
-- [ ] Suppression de la dépendance à pyswisseph
-- [ ] Implémentation pure numpy des calculs planétaires
-- [ ] Recherche d'aspects exacts entre deux dates
-- [ ] Génération de calendriers d'aspects
-- [ ] API pour les progressions et directions
-- [ ] Support de plus de corps célestes (astéroïdes, etc.)
-
-## 🤝 Contribution
-
-Les contributions sont les bienvenues ! N'hésite pas à :
-
-- Ouvrir une issue pour signaler un bug ou proposer une fonctionnalité
-- Soumettre une pull request
-- Améliorer la documentation
-
-Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour plus de détails.
-
-## 🚀 Releases
-
-Pour les mainteneurs : consulte [docs/RELEASE.md](docs/RELEASE.md) pour le guide complet de release.
-
-**Release rapide :**
-
-```bash
-./scripts/release.sh 0.3.0  # Version stable → PyPI
-git push origin main --tags
-```
-
-Les releases sont automatiques :
-
-- 🏷️ **Tag git** → Publication PyPI automatique via GitHub Actions
-- 📚 **Documentation** → Mise à jour automatique sur ReadTheDocs
-
-## 📄 Licence
-
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
-## 🙏 Remerciements
-
-- Swiss Ephemeris pour les données éphémérides précises
-- Abu Ma'shar (787-886) et Al-Biruni (973-1050) pour leur travail fondateur sur les orbes planétaires
-
-## 📧 Contact
-
-Loc Cosnier - [@alkimya](https://github.com/alkimya)
-
-Projet : [https://github.com/alkimya/ketu](https://github.com/alkimya/ketu)
+| Pluto | 9 | 4° | 0.004 |
+| Rahu (Mean Node) | 10 | 0° | -0.013 |
+| True North Node | 11 | 0° | -0.013 |
+| Lilith (Black Moon) | 12 | 0° | -0.113 |

@@ -8,7 +8,7 @@ Nous accueillons avec plaisir les contributions ! 🌟
 
 ```bash
 # Forker sur GitHub puis cloner
-git clone https://github.com/VOTRE-USERNAME/ketu.git
+git clone https://github.com/alkimya/ketu.git
 cd ketu
 ```
 

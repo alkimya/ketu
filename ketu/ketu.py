@@ -20,8 +20,8 @@ bodies = np.array(
         ("Sun", 0, 12, 0.986),
         ("Moon", 1, 12, 13.176),
         ("Mercury", 2, 8, 1.383),
-        ("Venus", 3, 8, 1.2),
-        ("Mars", 4, 10, 0.524),
+        ("Venus", 3, 10, 1.2),
+        ("Mars", 4, 8, 0.524),
         ("Jupiter", 5, 10, 0.083),
         ("Saturn", 6, 10, 0.034),
         ("Uranus", 7, 6, 0.012),
@@ -34,7 +34,7 @@ bodies = np.array(
     dtype=[("name", "S12"), ("id", "i4"), ("orb", "f4"), ("speed", "f4")],
 )
 
-# Structured array of major aspects (harmonics 2 and 3): Conjunction,
+# Structured array of major aspects (harmonics 1, 2, 3 and 6): Conjunction,
 # Semi-sextile, Sextile, Square, Trine, Quincunx and Opposition,
 # their value and their coefficient for the calculation of the orb
 aspects = np.array(
@@ -249,9 +249,7 @@ def print_aspects(jdate):
         aspect_name_bytes = aspects["name"][i_asp]
         aspect_name = aspect_name_bytes.decode() if isinstance(aspect_name_bytes, bytes) else str(aspect_name_bytes)
         print(
-            f"{body_name(body1):7} - {body_name(body2):12}: "
-            f"{aspect_name:12} "
-            f"{degs:>2}º{mins:>2}'{secs:>2}\""
+            f"{body_name(body1):7} - {body_name(body2):12}: " f"{aspect_name:12} " f"{degs:>2}º{mins:>2}'{secs:>2}\""
         )
 
 

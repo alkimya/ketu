@@ -5,7 +5,10 @@
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
 SOURCEDIR     = fr
-BUILDDIR      = build/fr
+BUILDDIR      = build
+
+.PHONY: all
+all: html en
 
 # Put it first so that "make" without argument is like "make help".
 help:
@@ -22,18 +25,21 @@ help:
 .PHONY: clean livehtml install
 
 clean:
-	rm -rf $(BUILDDIR)
+	rm -rf build
 
 livehtml:
+	$(SPHINXBUILD) -b html en $(BUILDDIR)/html/en
 	sphinx-autobuild "$(SOURCEDIR)" "$(BUILDDIR)/html" \
 		--port 8000 \
 		--open-browser \
-		--watch ../ketu
+		--watch ../ketu \
+		--watch en \
+		--pre-build "$(SPHINXBUILD) -b html en $(BUILDDIR)/html/en"
 
 # Build English documentation
 .PHONY: en
 en:
-	sphinx-build -M html en build/en $(SPHINXOPTS)
+	$(SPHINXBUILD) -b html en $(BUILDDIR)/html/en $(SPHINXOPTS)
 
 install:
 	pip install -r requirements-docs.txt

@@ -2,6 +2,7 @@ include README.md
 include LICENSE
 include CHANGELOG.md
 include requirements.txt
+recursive-include fr *.md
 recursive-include docs *.md *.py *.txt
 recursive-include res *.png
 global-exclude __pycache__

@@ -2,6 +2,8 @@
 
 **Ketu** est une bibliothèque Python pour calculer les positions planétaires et les aspects astrologiques, basée sur `pyswisseph` et `numpy`.
 
+Cette bibliothèque a été conçue au départ pour générer des calendriers biodynamiques et séries temporelles basés sur les aspects astrologiques. Elle peut servir de base pour construire des logiciels d'astrologie.
+
 ## Vue d'ensemble
 
 Ketu permet de :
@@ -82,7 +84,7 @@ ketu.print_aspects(jday)
 
 ## Licence
 
-MIT License - Copyright (c) 2024 Loc Cosnier
+MIT License - Copyright (c) 2021-2025 Loc Cosnier
 
 ## Contact
 

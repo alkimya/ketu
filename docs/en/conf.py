@@ -67,6 +67,25 @@ html_theme_options = {
     "titles_only": False,
 }
 
+# Context for templates (language badges)
+on_rtd = os.environ.get("READTHEDOCS") == "True"
+rtd_version = os.environ.get("READTHEDOCS_VERSION", "latest")
+
+if on_rtd:
+    language_links = [
+        {"code": "fr", "label": "FR", "url": f"/fr/{rtd_version}/", "current": False},
+        {"code": "en", "label": "EN", "url": f"/en/{rtd_version}/", "current": True},
+    ]
+else:
+    language_links = [
+        {"code": "fr", "label": "FR", "url": "../index.html", "current": False},
+        {"code": "en", "label": "EN", "url": "/en/index.html", "current": True},
+    ]
+
+html_context = {
+    "languages": language_links,
+}
+
 # Autodoc configuration
 autodoc_default_options = {
     "members": True,

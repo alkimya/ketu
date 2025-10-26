@@ -1,93 +1,85 @@
 # Changelog
 
-Tous les changements notables de Ketu sont documentés ici.
+> 🇫🇷 Consultez la version française dans `fr/CHANGELOG.md`.
 
-Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
-et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+All notable changes to Ketu are documented here.
 
-## [Unreleased]
-
-### À venir
-
-- Suppression de la dépendance à pyswisseph
-- Implémentation pure numpy des calculs planétaires
-- Recherche d'aspects exacts entre deux dates
-- Génération de calendriers d'aspects
-- API pour les progressions et directions
+This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
+format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
 ## [0.2.0] - 2025-10-26
 
-### Ajouté
+### Added
 
-- Configuration complète pour publication sur PyPI
-- `pyproject.toml` avec métadonnées et dépendances
-- `requirements.txt` pour installation simple
-- Exports publics dans `ketu/__init__.py`
-- README enrichi avec exemples d'utilisation
-- Badges PyPI, Python versions et licence
-- MANIFEST.in pour distribution des fichiers
-- GitHub Actions pour tests automatiques (CI)
-- GitHub Actions pour publication automatique sur PyPI
-- Workflow de tests sur Python 3.9 à 3.13
-- Point d'entrée CLI `ketu` pour ligne de commande
-- Support de 13 corps célestes (ajout du Nœud Nord)
+- Full packaging setup for a PyPI release
+- `pyproject.toml` metadata and dependencies
+- `requirements.txt` for a minimal install
+- Public exports in `ketu/__init__.py`
+- Expanded README with usage examples
+- PyPI, Python versions, and license badges
+- `MANIFEST.in` to ship data files
+- GitHub Actions workflow for automated tests
+- GitHub Actions workflow for PyPI publishing
+- CI coverage for Python 3.9 through 3.13
+- `ketu` CLI entry point
+- Support for 13 celestial bodies (added True Node)
 
-### Modifié
+### Changed
 
-- Tests unitaires corrigés et validés
-- Module `timea.py` renommé en `_timea.py` (privé)
-- Structure du package optimisée pour distribution
-- Documentation alignée avec la nouvelle structure
+- Fixed and hardened the unit tests
+- Renamed `timea.py` to `_timea.py` (private module)
+- Optimised package structure for distribution
+- Aligned the documentation with the new layout
 
-### Technique
+### Technical
 
-- Python 3.9-3.13 supportés et testés
-- Configuration pytest dans pyproject.toml
-- Configuration coverage pour analyse de code
+- Official support for Python 3.9–3.13
+- Pytest configuration embedded in `pyproject.toml`
+- Coverage configuration for CI analysis
 - Package installable via `pip install ketu`
-- Compatible avec les environnements virtuels
+- Works seamlessly in virtual environments
 
 ## [0.1.0] - 2024-01-XX
 
-### Ajouté
+### Added
 
-- Interface CLI interactive pour calculer les positions et aspects
-- Calcul des positions planétaires via pyswisseph
-- Détection des aspects majeurs avec orbes
-- Conversion entre systèmes temporels (UTC, Julien)
-- Détection des rétrogradations
-- Documentation complète avec Sphinx et MyST
-- Tests unitaires de base
+- Interactive CLI to compute positions and aspects
+- Planetary position computations through pyswisseph
+- Detection of major aspects with orb handling
+- Conversion helpers between UTC and Julian Day
+- Retrogradation detection
+- Complete documentation with Sphinx and MyST
+- Initial PyPI-ready packaging
+- Foundational unit tests
 
-### Fonctionnalités
+### Features
 
-- Support de 12 corps célestes initiaux
-- 7 aspects majeurs (conjonction à opposition)
-- Calcul des signes zodiacaux
-- Système d'orbes basé sur Abu Ma'shar
-- Cache LRU pour optimiser les performances
-- Python 3.9+ requis
-- Dépendances : numpy, pyswisseph
-- Architecture modulaire
-- Code documenté
+- Support for 12 initial celestial bodies
+- Seven major aspects (conjunction to opposition)
+- Zodiac sign computations
+- Orb system inspired by Abu Ma'shar
+- LRU cache to improve performance
+- Requires Python 3.9+
+- Dependencies: numpy, pyswisseph
+- Modular, documented codebase
 
 ## [0.0.1] - 2023-01-XX
 
 ### Initial
 
-- Prototype de base
-- Calculs simples de positions
-- Interface ligne de commande
+- Prototype groundwork
+- Basic position calculations
+- Command-line interface
 
 ---
 
-## Convention de versioning
+## Versioning Convention
 
-- **MAJOR** : Changements incompatibles de l'API
-- **MINOR** : Ajout de fonctionnalités rétro-compatibles
-- **PATCH** : Corrections de bugs rétro-compatibles
+- **MAJOR**: Incompatible API changes
+- **MINOR**: Backward-compatible feature additions
+- **PATCH**: Backward-compatible bug fixes
 
-## Liens
+## Links
 
-- [Comparaison des versions](https://github.com/alkimya/ketu/compare/)
-- [Toutes les releases](https://github.com/alkimya/ketu/releases)
+- [Version comparison](https://github.com/alkimya/ketu/compare/)
+- [All releases](https://github.com/alkimya/ketu/releases)
