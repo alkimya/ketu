@@ -23,6 +23,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Workflow de tests sur Python 3.9 à 3.13
 - Point d'entrée CLI `ketu` pour ligne de commande
 - Support de 13 corps célestes (ajout du Nœud Nord)
+- Documentation française et anglaise
 
 ### Modifié
 

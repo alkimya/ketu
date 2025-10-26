@@ -13,7 +13,7 @@ git clone https://github.com/alkimya/ketu.git
 cd ketu
 
 python -m venv .venv
-source .venv/bin/activate  # Windows: .venv\Scripts\activate
+source .venv/bin/activate
 
 pip install -e ".[dev]"
 ```

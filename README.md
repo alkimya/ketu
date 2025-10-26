@@ -135,11 +135,11 @@ Included sections:
 
 ## 🛠️ Requirements
 
-- Python 3.9 or higher
+- Python 3.10 or higher
 - `numpy` ≥ 1.20.0 — numerical routines and arrays
 - `pyswisseph` ≥ 2.10.0 — Swiss Ephemeris bindings
 
-> The dependency on `pyswisseph` is scheduled for removal in a future release, replaced by pure NumPy ephemerides.
+> The dependency on `pyswisseph` is scheduled for removal in a future release, replaced by pure NumPy implementation.
 
 ## 📋 Supported bodies
 
@@ -148,8 +148,8 @@ Included sections:
 | Sun | 0 | 12° | 0.986 |
 | Moon | 1 | 12° | 13.176 |
 | Mercury | 2 | 8° | 1.383 |
-| Venus | 3 | 8° | 1.200 |
-| Mars | 4 | 10° | 0.524 |
+| Venus | 3 | 10° | 1.200 |
+| Mars | 4 | 8° | 0.524 |
 | Jupiter | 5 | 10° | 0.083 |
 | Saturn | 6 | 10° | 0.034 |
 | Uranus | 7 | 6° | 0.012 |
@@ -158,3 +158,46 @@ Included sections:
 | Rahu (Mean Node) | 10 | 0° | -0.013 |
 | True North Node | 11 | 0° | -0.013 |
 | Lilith (Black Moon) | 12 | 0° | -0.113 |
+
+## 🎯 Supported aspects
+
+| Aspect | Angle | Orb coefficient |
+|--------|-------|-------------------|
+| Conjunction | 0° | 1 |
+| Semi-sextile | 30° | 1/6 |
+| Sextile | 60° | 1/3 |
+| Square | 90° | 1/2 |
+| Trine | 120° | 2/3 |
+| Quincunx | 150° | 5/6 |
+| Opposition | 180° | 1 |
+
+## 🗺️ Roadmap
+
+- [ ] Removal of dependency on pyswisseph
+- [ ] Pure numpy implementation of planetary calculations
+- [ ] Search for exact aspects between two dates
+- [ ] Generation of aspect calendars
+- [ ] API for progressions and directions
+- [ ] Support for more celestial bodies (asteroids, etc.)
+
+## 🤝 Contribution
+
+Contributions are welcome! Feel free to:
+
+- Open an issue to report a bug or suggest a feature
+- Submit a pull request
+- Improve the documentation
+
+See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
+
+## 📄 License
+
+This project is licensed under MIT. See the [LICENSE](LICENSE) file for more details.
+
+## 📧 Contact
+
+Loc Cosnier - [@alkimya](https://github.com/alkimya)
+
+Project: [https://github.com/alkimya/ketu](https://github.com/alkimya/ketu)
+
+Translated with DeepL.com (free version)

@@ -71,7 +71,7 @@ def calculate_aspect(jdate, body1, body2):
 
 1. **Fork** le projet
 2. **Crée une branche** pour ta fonctionnalité (`git checkout -b feature/ma-feature`)
-3. **Commit** tes changements (`git commit -m 'Ajoute une super fonctionnalité'`)
+3. **Commit** tes changements (`git commit -m 'feat: implementation pure numpy`)
 4. **Push** vers la branche (`git push origin feature/ma-feature`)
 5. **Ouvre une Pull Request**
 

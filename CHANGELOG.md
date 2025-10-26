@@ -23,6 +23,7 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - CI coverage for Python 3.9 through 3.13
 - `ketu` CLI entry point
 - Support for 13 celestial bodies (added True Node)
+- English and French documentation
 
 ### Changed
 

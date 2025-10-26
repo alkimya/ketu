@@ -17,9 +17,6 @@ cd ketu
 ```bash
 # Créer un environnement virtuel
 python -m venv venv
-source venv/bin/activate  # Linux/Mac
-# ou
-venv\Scripts\activate  # Windows
 
 # Installer en mode développement
 pip install -e ".[dev]"
@@ -96,16 +93,6 @@ Puis créer une PR sur GitHub.
 
 1. **Migration pure numpy** : Remplacer pyswisseph
 2. **Calculs d'aspects exacts** : Trouver les moments précis
-3. **API étendue** : Maisons, parts arabes, etc.
-4. **Interface graphique** : GUI avec Tkinter ou web
-
-### 💡 Idées bienvenues
-
-- Optimisations de performance
-- Nouveaux types d'aspects
-- Systèmes de maisons
-- Exports (PDF, images)
-- Intégrations (API REST, Discord bot)
 
 ## Architecture du projet
 
@@ -114,9 +101,6 @@ ketu/
 ├── ketu/
 │   ├── __init__.py      # Exports publics
 │   ├── ketu.py          # Module principal
-│   ├── ephemeris.py     # (futur) Calculs pure numpy
-│   ├── aspects.py       # (futur) Module aspects
-│   └── utils.py         # (futur) Utilitaires
 ├── tests/
 │   ├── test_ketu.py
 │   ├── test_ephemeris.py
@@ -139,29 +123,17 @@ ketu/
 ### Documentation technique
 
 - [Swiss Ephemeris](https://www.astro.com/swisseph/)
-- [VSOP87](https://en.wikipedia.org/wiki/VSOP_model)
-- [JPL Horizons](https://ssd.jpl.nasa.gov/horizons/)
 
-### Livres de référence
-
-- *Astronomical Algorithms* - Jean Meeus
-- *Fundamentals of Astrodynamics* - Bate, Mueller, White
-
-### Communauté
+### Issues
 
 - [Discussions GitHub](https://github.com/alkimya/ketu/discussions)
 - [Issues](https://github.com/alkimya/ketu/issues)
 - Email : [loc.cosnier@pm.me](mailto:loc.cosnier@pm.me)
 
+### Documentation ReadTheDocs
+
+-- [Documentation du projet (Read the Docs)](https://ketu.readthedocs.io/)
+
 ## Licence
 
 En contribuant, vous acceptez que vos contributions soient sous licence MIT.
-
-## Code de conduite
-
-- Bienveillance et respect
-- Critiques constructives
-- Focus sur les solutions
-- Ouverture à l'apprentissage
-
-Merci de contribuer à Ketu ! 🙏

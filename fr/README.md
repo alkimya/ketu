@@ -140,7 +140,7 @@ Sections disponibles :
 
 ## 🛠️ Prérequis
 
-- Python 3.9 ou supérieur
+- Python 3.10 ou supérieur
 - `numpy` >= 1.20.0 : Calculs numériques et tableaux
 - `pyswisseph` >= 2.10.0 : Interface aux éphémérides Swiss Ephemeris
 
@@ -153,8 +153,8 @@ Sections disponibles :
 | Soleil | 0 | 12° | 0.986 |
 | Lune | 1 | 12° | 13.176 |
 | Mercure | 2 | 8° | 1.383 |
-| Vénus | 3 | 8° | 1.200 |
-| Mars | 4 | 10° | 0.524 |
+| Vénus | 3 | 10° | 1.200 |
+| Mars | 4 | 8° | 0.524 |
 | Jupiter | 5 | 10° | 0.083 |
 | Saturne | 6 | 10° | 0.034 |
 | Uranus | 7 | 6° | 0.012 |
@@ -195,30 +195,9 @@ Les contributions sont les bienvenues ! N'hésite pas à :
 
 Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour plus de détails.
 
-## 🚀 Releases
-
-Pour les mainteneurs : consulte [docs/RELEASE.md](../docs/RELEASE.md) pour le guide complet de release.
-
-**Release rapide :**
-
-```bash
-./scripts/release.sh 0.3.0  # Version stable → PyPI
-git push origin main --tags
-```
-
-Les releases sont automatiques :
-
-- 🏷️ **Tag git** → Publication PyPI automatique via GitHub Actions
-- 📚 **Documentation** → Mise à jour automatique sur ReadTheDocs
-
 ## 📄 Licence
 
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
-
-## 🙏 Remerciements
-
-- Swiss Ephemeris pour les données éphémérides précises
-- Abu Ma'shar (787-886) et Al-Biruni (973-1050) pour leur travail fondateur sur les orbes planétaires
+Ce projet est sous licence MIT. Voir le fichier [LICENSE](../LICENSE) pour plus de détails.
 
 ## 📧 Contact
 
