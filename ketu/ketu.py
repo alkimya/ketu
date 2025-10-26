@@ -67,8 +67,8 @@ signs = [
 ]
 
 
-def dd_to_dms(deg):
-    """Return degrees, minutes, seconds from degrees decimal"""
+def decimal_degrees_to_dms(deg):
+    """Return degrees, minutes, seconds from decimal degrees"""
     mins, secs = divmod(deg * 3600, 60)
     degs, mins = divmod(mins, 60)
     return np.array((degs, mins, secs), dtype="i4")
@@ -180,7 +180,7 @@ def is_ascending(jdate, body):
 
 def body_sign(b_long):
     """Return the body position in sign, degrees, minutes and seconds"""
-    dms = dd_to_dms(b_long)
+    dms = decimal_degrees_to_dms(b_long)
     sign, degs = divmod(dms[0], 30)
     mins, secs = dms[1], dms[2]
     return np.array((sign, degs, mins, secs))
@@ -244,7 +244,7 @@ def print_aspects(jdate):
     print("------------- Bodies Aspects -------------")
     for aspect in calculate_aspects(jdate):
         body1, body2, i_asp, orb = aspect
-        degs, mins, secs = dd_to_dms(orb)
+        degs, mins, secs = decimal_degrees_to_dms(orb)
         print(
             f"{body_name(body1):7} - {body_name(body2):12}: "
             f"{aspects['name'][i_asp].decode():12} "

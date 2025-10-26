@@ -1,0 +1,78 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ketu"
+version = "0.2.0"
+description = "Library to compute astronomical bodies positions and astrological aspects"
+readme = "README.md"
+requires-python = ">=3.9"
+license = "MIT"
+authors = [
+    {name = "Loc Cosnier", email = "loc.cosnier@pm.me"}
+]
+keywords = [
+    "astrology",
+    "astronomy",
+    "ephemeris",
+    "aspects",
+    "planets",
+    "zodiac",
+    "swiss ephemeris"
+]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Scientific/Engineering :: Astronomy",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "numpy>=1.20.0",
+    "pyswisseph>=2.10.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/alkimya/ketu"
+Documentation = "https://ketu.readthedocs.io"
+Repository = "https://github.com/alkimya/ketu"
+Issues = "https://github.com/alkimya/ketu/issues"
+
+[project.scripts]
+ketu = "ketu.ketu:main"
+
+[tool.setuptools]
+packages = ["ketu"]
+
+[tool.setuptools.package-data]
+ketu = ["py.typed"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = "test_*.py"
+python_classes = "Test*"
+python_functions = "test_*"
+addopts = "-v --cov=ketu --cov-report=term-missing"
+
+[tool.coverage.run]
+source = ["ketu"]
+omit = [
+    "*/tests/*",
+    "*/_timea.py",
+]
+
+[tool.coverage.report]
+exclude_lines = [
+    "pragma: no cover",
+    "def __repr__",
+    "raise NotImplementedError",
+    "if __name__ == .__main__.:",
+]

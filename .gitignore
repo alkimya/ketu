@@ -1,11 +1,18 @@
 /.vscode
 /.pytest_cache
-/docs/
-/ephe/
+/docs/build/
 /.venv/
 /ketu/__pycache__
 /tests/__pycache__
 /tests/.pytest_cache
 .coverage
-/ketu/ephe
-.gitignore
+
+# Distribution / packaging
+dist/
+build/
+*.egg-info/
+*.egg
+.eggs/
+
+# PyPI
+.pypirc
