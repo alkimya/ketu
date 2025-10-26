@@ -1,12 +1,20 @@
 name: Publish to PyPI
 
 on:
+  # Se déclenche lors d'une release GitHub
   release:
     types: [published]
+
+  # Se déclenche aussi sur les tags vX.Y.Z
+  push:
+    tags:
+      - 'v*.*.*'
 
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
 
     steps:
     - uses: actions/checkout@v4
@@ -24,8 +32,21 @@ jobs:
     - name: Build package
       run: python -m build
 
-    - name: Publish to PyPI
+    - name: Check package
+      run: twine check dist/*
+
+    - name: Publish to Test PyPI (si tag contient 'rc' ou 'beta')
+      if: contains(github.ref, 'rc') || contains(github.ref, 'beta')
+      env:
+        TWINE_USERNAME: __token__
+        TWINE_PASSWORD: ${{ secrets.TEST_PYPI_API_TOKEN }}
+      run: |
+        twine upload --repository testpypi dist/* --skip-existing
+
+    - name: Publish to PyPI (si tag stable)
+      if: "!contains(github.ref, 'rc') && !contains(github.ref, 'beta')"
       env:
         TWINE_USERNAME: __token__
         TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-      run: twine upload dist/*
+      run: |
+        twine upload dist/* --skip-existing

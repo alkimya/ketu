@@ -191,6 +191,20 @@ Les contributions sont les bienvenues ! N'hésite pas à :
 
 Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour plus de détails.
 
+## 🚀 Releases
+
+Pour les mainteneurs : consulte [docs/RELEASE.md](docs/RELEASE.md) pour le guide complet de release.
+
+**Release rapide :**
+```bash
+./scripts/release.sh 0.3.0  # Version stable → PyPI
+git push origin main --tags
+```
+
+Les releases sont automatiques :
+- 🏷️ **Tag git** → Publication PyPI automatique via GitHub Actions
+- 📚 **Documentation** → Mise à jour automatique sur ReadTheDocs
+
 ## 📄 Licence
 
 Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
