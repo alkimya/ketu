@@ -33,33 +33,74 @@ Ce document explique comment publier une nouvelle version de Ketu sur PyPI et me
 
 La documentation sera disponible sur : https://ketu.readthedocs.io
 
+## ⚠️ Important : Tag = Publication !
+
+**Règle d'or** : Ne crée un tag que quand tu veux publier une version !
+
+### Développement normal (PAS de publication)
+
+```bash
+# Travaille normalement sur main
+git add .
+git commit -m "Add new feature"
+git push origin main
+
+# ✅ Code poussé sur GitHub
+# ✅ Tests CI s'exécutent
+# ❌ RIEN n'est publié sur PyPI
+# ❌ Pas de release
+```
+
+**Tant que tu ne crées pas de tag, rien n'est publié !**
+
+### Publication (avec tag)
+
+```bash
+# Seulement quand tu es prêt à publier
+./scripts/release.sh 0.3.0
+git push origin main --tags
+
+# ✅ Tag créé → déclenche publication PyPI
+# ✅ Release GitHub créée
+# ✅ Documentation mise à jour
+```
+
+---
+
 ## Faire une release
 
 ### Méthode 1 : Script automatique (recommandé)
 
 ```bash
-# Release stable (va sur PyPI)
+# Test d'abord avec --dry-run (aucune modification)
+./scripts/release.sh 0.3.0 --dry-run
+
+# Release stable (va sur PyPI + crée Release GitHub)
 ./scripts/release.sh 0.3.0
 
-# Release candidate (va sur Test PyPI)
+# Release candidate (va sur Test PyPI + Pre-release GitHub)
 ./scripts/release.sh 0.3.0-rc1
 
-# Release beta (va sur Test PyPI)
+# Release beta (va sur Test PyPI + Pre-release GitHub)
 ./scripts/release.sh 0.3.0-beta1
 ```
 
 Le script va :
-1. Mettre à jour les versions dans `pyproject.toml` et `ketu/__init__.py`
-2. Mettre à jour `CHANGELOG.md`
-3. Créer un commit de release
-4. Créer un tag git `vX.Y.Z`
-5. Te demander confirmation
+1. Vérifier que `gh` (GitHub CLI) est installé et authentifié
+2. Mettre à jour les versions dans `pyproject.toml` et `ketu/__init__.py`
+3. Mettre à jour `CHANGELOG.md` avec la date
+4. Créer un commit de release
+5. Créer un tag git `vX.Y.Z`
+6. **Créer automatiquement une Release GitHub** avec les notes du CHANGELOG
+7. Te demander confirmation
 
 Ensuite, pousse les changements :
 ```bash
 git push origin main
 git push origin v0.3.0
 ```
+
+**Note :** Le script crée automatiquement la **Release GitHub** ! Plus besoin de le faire manuellement.
 
 ### Méthode 2 : Manuelle
 
