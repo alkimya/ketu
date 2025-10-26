@@ -66,9 +66,6 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 - Calcul des signes zodiacaux
 - Système d'orbes basé sur Abu Ma'shar
 - Cache LRU pour optimiser les performances
-
-### Technique
-
 - Python 3.9+ requis
 - Dépendances : numpy, pyswisseph
 - Architecture modulaire
