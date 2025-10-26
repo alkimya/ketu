@@ -1,6 +1,7 @@
 /.vscode
 /.pytest_cache
 /docs/build/
+/docs/RELEASE.md
 /.venv/
 /ketu/__pycache__
 /tests/__pycache__

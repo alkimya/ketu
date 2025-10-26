@@ -1,10 +1,11 @@
 # Minimal makefile for Sphinx documentation
+# Default build is French documentation
 
 # You can set these variables from the command line.
 SPHINXOPTS    ?=
 SPHINXBUILD   ?= sphinx-build
-SOURCEDIR     = source
-BUILDDIR      = build
+SOURCEDIR     = fr
+BUILDDIR      = build/fr
 
 # Put it first so that "make" without argument is like "make help".
 help:
@@ -28,6 +29,11 @@ livehtml:
 		--port 8000 \
 		--open-browser \
 		--watch ../ketu
+
+# Build English documentation
+.PHONY: en
+en:
+	sphinx-build -M html en build/en $(SPHINXOPTS)
 
 install:
 	pip install -r requirements-docs.txt

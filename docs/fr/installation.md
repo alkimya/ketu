@@ -4,7 +4,7 @@
 
 Ketu nécessite :
 
-- Python 3.9 ou supérieur
+- Python 3.10 ou supérieur
 - pip (gestionnaire de paquets Python)
 
 ## Installation stable depuis PyPI
