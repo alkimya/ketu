@@ -5,6 +5,10 @@ Tous les changements notables de Ketu sont documentés ici.
 Le format est basé sur [Keep a Changelog](https://keepachangelog.com/fr/1.0.0/),
 et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.2.1] - 2025-10-27
+
+- Correction mineure
+
 ## [0.2.0] - 2025-10-27
 
 ### Ajouté
