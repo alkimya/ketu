@@ -28,13 +28,13 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 ### Changed
 
 - Fixed and hardened the unit tests
-- Renamed `timea.py` to `_timea.py` (private module)
+- Removed the obsolete `_timea.py` profiling helper
 - Optimised package structure for distribution
 - Aligned the documentation with the new layout
 
 ### Technical
 
-- Official support for Python 3.9–3.13
+- Official support for Python 3.10–3.13
 - Pytest configuration embedded in `pyproject.toml`
 - Coverage configuration for CI analysis
 - Package installable via `pip install ketu`

@@ -170,12 +170,12 @@ def vdist_au(jdate, body):
 
 def is_retrograde(jdate, body):
     """Return True if a body is retrograde"""
-    return vlong(jdate, body) < 0
+    return bool(vlong(jdate, body) < 0)
 
 
 def is_ascending(jdate, body):
     """Return True if a body latitude is rising"""
-    return vlat(jdate, body) > 0
+    return bool(vlat(jdate, body) > 0)
 
 
 def body_sign(b_long):

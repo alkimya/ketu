@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "ketu"
 version = "0.2.0"
-description = "Library to compute astronomical bodies positions and astrological aspects"
+description = "Library to compute astronomical bodies positions and planetary aspects between them"
 readme = "README.md"
 requires-python = ">=3.10"
 license = "MIT"
@@ -64,7 +64,6 @@ addopts = "-v --cov=ketu --cov-report=term-missing"
 source = ["ketu"]
 omit = [
     "*/tests/*",
-    "*/_timea.py",
 ]
 
 [tool.coverage.report]

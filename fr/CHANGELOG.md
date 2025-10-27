@@ -28,7 +28,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 ### Modifié
 
 - Tests unitaires corrigés et validés
-- Module `timea.py` renommé en `_timea.py` (privé)
+- Suppression du module `_timea.py` devenu obsolète
 - Structure du package optimisée pour distribution
 - Documentation alignée avec la nouvelle structure
 
