@@ -234,7 +234,7 @@ def print_positions(jdate):
     print("------------- Bodies Positions -------------")
     for index, pos in np.ndenumerate(positions(jdate)):
         sign, degs, mins, secs = body_sign(pos)
-        retro = ", R" if is_retrograde(jdate, *index) else ""
+        retro = " ℞" if is_retrograde(jdate, *index) else ""
         print(f"{body_name(*index):10}: " f"{signs[sign]:15}{degs:>2}º{mins:>2}'{secs:>2}\"{retro}")
 
 
