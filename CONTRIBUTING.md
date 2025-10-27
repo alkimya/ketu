@@ -2,9 +2,9 @@
 
 Thanks for taking the time to contribute — every improvement helps!
 
-> 🇫🇷 Une version française de ce guide est disponible dans `fr/CONTRIBUTING.md`.
+> Une version française de ce guide est disponible dans `fr/CONTRIBUTING.md`.
 
-## 🚀 Quick start
+## Quick start
 
 ### Set up your development environment
 
@@ -32,7 +32,7 @@ You can target a specific test file if needed:
 pytest tests/test_ketu.py -v
 ```
 
-## 🧭 Development guidelines
+## Development guidelines
 
 - Follow **PEP 8** for Python style (Black’s defaults are a good baseline).
 - Add **type hints** whenever they improve readability.
@@ -56,7 +56,7 @@ def calculate_aspect(jdate, body1, body2):
     """
 ```
 
-## 🔄 Contribution workflow
+## Contribution workflow
 
 1. **Fork** the repository.
 2. **Create** a feature branch: `git checkout -b feature/my-feature`.
@@ -75,7 +75,7 @@ Use clear prefixes to convey the intent of a change:
 - `refactor`: code changes that neither fix nor add a feature
 - `chore`: maintenance, tooling, non-production code
 
-## 🐛 Report a bug
+## Report a bug
 
 Open an issue on GitHub with:
 
@@ -85,7 +85,7 @@ Open an issue on GitHub with:
 - Your version of Python and Ketu
 - A minimal code example if possible
 
-## 💡 Suggest a feature
+## Suggest a feature
 
 Before working on a major feature:
 
@@ -93,7 +93,7 @@ Before working on a major feature:
 2. Wait for feedback from the community
 3. Once approved, start development
 
-## 📚 Documentation
+## Documentation
 
 If you add or modify features:
 
@@ -108,7 +108,7 @@ cd docs
 make livehtml  # Launch a live reload documentation server
 ```
 
-## ✅ Checklist before PR
+## Checklist before PR
 
 - [ ] Tests pass (`pytest tests/`)
 - [ ] Code coverage is maintained or improved
@@ -117,7 +117,7 @@ make livehtml  # Launch a live reload documentation server
 - [ ] The [CHANGELOG.md](../CHANGELOG.md) is up to date
 - [ ] Documentation is updated if necessary
 
-## 🙏 Thank you
+## Thank you
 
 Every contribution, big or small, is appreciated. Whether it's:
 
@@ -126,13 +126,13 @@ Every contribution, big or small, is appreciated. Whether it's:
 - Improving performance
 - Suggesting new features
 
-## 📚 Resources
+## Resources
 
 - [Project documentation (Read the Docs)](https://ketu.readthedocs.io/)
 - [Issue tracker](https://github.com/alkimya/ketu/issues)
 - [Discussions](https://github.com/alkimya/ketu/discussions)
 - Contact: [loc.cosnier@pm.me](mailto:loc.cosnier@pm.me)
 
-## 📄 License
+## License
 
 By contributing you agree that your code will be released under the MIT License.

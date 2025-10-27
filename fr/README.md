@@ -4,7 +4,7 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/ketu.svg)](https://pypi.org/project/ketu/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> 🇺🇸 Looking for the English version? [Read the English README](../README.md)
+> Looking for the English version? [Read the English README](../README.md)
 
 **Ketu** est une bibliothèque Python légère pour calculer les positions des corps astronomiques (Soleil, Lune, planètes et Nœud moyen aka Rahu) et générer des calendriers basés sur les aspects astrologiques.
 
@@ -12,17 +12,17 @@ Cette bibliothèque a été conçue au départ pour générer des calendriers bi
 
 ![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
 
-## ✨ Fonctionnalités
+## Fonctionnalités
 
-- 🌍 **Calcul de positions planétaires** pour 13 corps célestes (Soleil, Lune, Mercure, Venus, Mars, Jupiter, Saturne, Uranus, Neptune, Pluton, Rahu/Nœud Nord, Lilith)
-- ⭐ **Détection de 7 aspects majeurs** (Conjonction, Semi-sextile, Sextile, Carré, Trigone, Quinconce, Opposition)
-- 🔄 **Détection des rétrogradations** et mouvements planétaires
-- 🕐 **Conversion entre systèmes temporels** (UTC, Jour Julien)
-- 🎯 **Système d'orbes** basé sur Abu Ma'shar (787-886) et Al-Biruni (973-1050)
-- 🖥️ **Interface CLI interactive** pour une utilisation sans programmation
-- 📊 **API Python simple** pour une intégration dans tes projets
+- **Calcul de positions planétaires** pour 13 corps célestes (Soleil, Lune, Mercure, Venus, Mars, Jupiter, Saturne, Uranus, Neptune, Pluton, Rahu/Nœud Nord, Lilith)
+- **Détection de 7 aspects majeurs** (Conjonction, Semi-sextile, Sextile, Carré, Trigone, Quinconce, Opposition)
+- **Détection des rétrogradations** et mouvements planétaires
+- **Conversion entre systèmes temporels** (UTC, Jour Julien)
+- **Système d'orbes** basé sur Abu Ma'shar (787-886) et Al-Biruni (973-1050)
+- **Interface CLI interactive** pour une utilisation sans programmation
+- **API Python simple** pour une intégration dans tes projets
 
-## 📦 Installation
+## Installation
 
 ### Depuis PyPI (recommandé)
 
@@ -38,7 +38,7 @@ cd ketu
 pip install -e .
 ```
 
-## 🚀 Démarrage rapide
+## Démarrage rapide
 
 ### Mode interactif (CLI)
 
@@ -126,7 +126,7 @@ for aspect in aspects_data:
           f"{ketu.aspects['name'][i_asp].decode()} (orbe: {orb:.2f}°)")
 ```
 
-## 📚 Documentation complète
+## Documentation complète
 
 La documentation complète est disponible sur [ReadTheDocs](https://ketu.readthedocs.io) (en français).
 
@@ -138,7 +138,7 @@ Sections disponibles :
 - **API Reference** : Documentation complète de toutes les fonctions
 - **Examples** : Exemples d'utilisation avancés
 
-## 🛠️ Prérequis
+## Prérequis
 
 - Python 3.10 ou supérieur
 - `numpy` >= 1.20.0 : Calculs numériques et tableaux
@@ -146,7 +146,7 @@ Sections disponibles :
 
 **Note** : La dépendance à `pyswisseph` sera supprimée dans une version future au profit d'une implémentation pure numpy.
 
-## 📋 Corps célestes supportés
+## Corps célestes supportés
 
 | Corps | ID | Orbe | Vitesse moyenne (°/jour) |
 |-------|-----|------|--------------------------|
@@ -164,7 +164,7 @@ Sections disponibles :
 | Nœud Nord (vrai) | 11 | 0° | -0.013 |
 | Lilith (Apogée moyen) | 12 | 0° | 0.113 |
 
-## 🎯 Aspects supportés
+## Aspects supportés
 
 | Aspect | Angle | Coefficient d'orbe |
 |--------|-------|-------------------|
@@ -176,7 +176,7 @@ Sections disponibles :
 | Quinconce | 150° | 5/6 |
 | Opposition | 180° | 1 |
 
-## 🗺️ Roadmap
+## Roadmap
 
 - [ ] Suppression de la dépendance à pyswisseph
 - [ ] Implémentation pure numpy des calculs planétaires
@@ -185,7 +185,7 @@ Sections disponibles :
 - [ ] API pour les progressions et directions
 - [ ] Support de plus de corps célestes (astéroïdes, etc.)
 
-## 🤝 Contribution
+## Contribution
 
 Les contributions sont les bienvenues ! N'hésite pas à :
 
@@ -195,11 +195,11 @@ Les contributions sont les bienvenues ! N'hésite pas à :
 
 Voir [CONTRIBUTING.md](CONTRIBUTING.md) pour plus de détails.
 
-## 📄 Licence
+## Licence
 
 Ce projet est sous licence MIT. Voir le fichier [LICENSE](../LICENSE) pour plus de détails.
 
-## 📧 Contact
+## Contact
 
 Loc Cosnier - [@alkimya](https://github.com/alkimya)
 

@@ -1,6 +1,6 @@
 # Changelog
 
-> 🇫🇷 Consultez la version française dans `fr/CHANGELOG.md`.
+> Consultez la version française dans `fr/CHANGELOG.md`.
 
 All notable changes to Ketu are documented here.
 

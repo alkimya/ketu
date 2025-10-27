@@ -1,10 +1,10 @@
 # Guide de contribution
 
-> 🇬🇧 Looking for the English guide? [Read CONTRIBUTING.md](../CONTRIBUTING.md)
+> Looking for the English guide? [Read CONTRIBUTING.md](../CONTRIBUTING.md)
 
 Merci de ton intérêt pour contribuer à Ketu ! Voici comment tu peux aider.
 
-## 🚀 Démarrage rapide
+## Démarrage rapide
 
 ### Configurer l'environnement de développement
 
@@ -29,7 +29,7 @@ pip install -e .
 pip install pytest pytest-cov
 ```
 
-## 🧪 Lancer les tests
+## Lancer les tests
 
 Avant de soumettre une contribution, assure-toi que tous les tests passent :
 
@@ -43,7 +43,7 @@ Pour lancer un fichier de test spécifique :
 pytest tests/test_ketu.py -v
 ```
 
-## 📝 Standards de code
+## Standards de code
 
 - **Style** : Utilise PEP 8 pour le style Python
 - **Docstrings** : Documente toutes les fonctions publiques
@@ -67,7 +67,7 @@ def calculate_aspect(jdate, body1, body2):
     pass
 ```
 
-## 🔄 Workflow de contribution
+## Workflow de contribution
 
 1. **Fork** le projet
 2. **Crée une branche** pour ta fonctionnalité (`git checkout -b feature/ma-feature`)
@@ -86,7 +86,7 @@ Utilise des messages clairs et descriptifs :
 - `refactor` : modifications du code qui ne corrigent ni n'ajoutent de fonctionnalité
 - `chore` : maintenance, outillage, code hors production
 
-## 🐛 Signaler un bug
+## Signaler un bug
 
 Ouvre une issue sur GitHub avec :
 
@@ -96,7 +96,7 @@ Ouvre une issue sur GitHub avec :
 - Ta version de Python et de Ketu
 - Un exemple de code minimal si possible
 
-## 💡 Proposer une fonctionnalité
+## Proposer une fonctionnalité
 
 Avant de travailler sur une grosse fonctionnalité :
 
@@ -104,7 +104,7 @@ Avant de travailler sur une grosse fonctionnalité :
 2. Attends les retours de la communauté
 3. Une fois validée, commence le développement
 
-## 📚 Documentation
+## Documentation
 
 Si tu ajoutes ou modifies des fonctionnalités :
 
@@ -119,7 +119,7 @@ cd docs
 make livehtml  # Lance un serveur de documentation en live reload
 ```
 
-## ✅ Checklist avant PR
+## Checklist avant PR
 
 - [ ] Les tests passent (`pytest tests/`)
 - [ ] La couverture de code est maintenue ou améliorée
@@ -128,22 +128,13 @@ make livehtml  # Lance un serveur de documentation en live reload
 - [ ] Le [CHANGELOG.md](../CHANGELOG.md) est à jour
 - [ ] La documentation est mise à jour si nécessaire
 
-## 🙏 Merci
-
-Toute contribution, grande ou petite, est appréciée. Que ce soit :
-
-- Corriger une faute de frappe dans la doc
-- Ajouter des tests
-- Améliorer les performances
-- Proposer de nouvelles fonctionnalités
-
-## 📚 Ressources
+## Ressources
 
 - [Documentation du projet (Read the Docs)](https://ketu.readthedocs.io/)
 - [Issues](https://github.com/alkimya/ketu/issues)
 - [Discussions](https://github.com/alkimya/ketu/discussions)
 - Contact : [loc.cosnier@pm.me](mailto:loc.cosnier@pm.me)
 
-## 📄 Licence
+## Licence
 
 En contribuant, vous acceptez que votre code soit publié sous licence MIT.

@@ -1,6 +1,6 @@
 # Changelog
 
-> 🇬🇧 Looking for the English changelog? [Read CHANGELOG.md](../CHANGELOG.md)
+> Looking for the English changelog? [Read CHANGELOG.md](../CHANGELOG.md)
 
 Tous les changements notables de Ketu sont documentés ici.
 

@@ -4,7 +4,7 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/ketu.svg)](https://pypi.org/project/ketu/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> 🇫🇷 Vous préférez le français ? [Consultez README.md](fr/README.md)
+> Vous préférez le français ? [Consultez README.md](fr/README.md)
 
 **Ketu** is a lightweight Python library for computing the positions of astronomical bodies (Sun, Moon, planets, and the mean Node a.k.a. Rahu) and generating calendars driven by astrological aspects.
 
@@ -12,17 +12,17 @@ This library was originally designed to generate biodynamic calendars and time s
 
 ![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
 
-## ✨ Features
+## Features
 
-- 🌍 **Planetary positions** for 13 bodies (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Rahu/Mean Node, True North Node, Lilith)
-- ⭐ **Detection of the 7 major aspects** (Conjunction, Semi-sextile, Sextile, Square, Trine, Quincunx, Opposition)
-- 🔄 **Retrogradation detection** and planet motion helpers
-- 🕐 **Time system conversions** (UTC, Julian Day)
-- 🎯 **Orb system** based on Abu Ma'shar (787-886) and Al-Biruni (973-1050)
-- 🖥️ **Interactive CLI** for a non-programmatic workflow
-- 📊 **Python API** that fits into your own tooling
+- **Planetary positions** for 13 bodies (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Rahu/Mean Node, True North Node, Lilith)
+- **Detection of the 7 major aspects** (Conjunction, Semi-sextile, Sextile, Square, Trine, Quincunx, Opposition)
+- **Retrogradation detection** and planet motion helpers
+- **Time system conversions** (UTC, Julian Day)
+- **Orb system** based on Abu Ma'shar (787-886) and Al-Biruni (973-1050)
+- **Interactive CLI** for a non-programmatic workflow
+- **Python API** that fits into your own tooling
 
-## 📦 Installation
+## Installation
 
 ### From PyPI (recommended)
 
@@ -38,7 +38,7 @@ cd ketu
 pip install -e .
 ```
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Interactive mode (CLI)
 
@@ -121,7 +121,7 @@ for aspect in aspects_data:
           f"{ketu.aspects['name'][i_asp].decode()} (orb: {orb:.2f}°)")
 ```
 
-## 📚 Documentation
+## Documentation
 
 The full documentation is hosted on [Read the Docs](https://ketu.readthedocs.io) (French by default, English via the language toggle).
 
@@ -133,7 +133,7 @@ Included sections:
 - **API Reference**: all functions documented
 - **Examples**: advanced usage patterns
 
-## 🛠️ Requirements
+## Requirements
 
 - Python 3.10 or higher
 - `numpy` ≥ 1.20.0 — numerical routines and arrays
@@ -141,7 +141,7 @@ Included sections:
 
 > The dependency on `pyswisseph` is scheduled for removal in a future release, replaced by pure NumPy implementation.
 
-## 📋 Supported bodies
+## Supported bodies
 
 | Body | ID | Orb | Average speed (°/day) |
 |------|----|-----|-----------------------|
@@ -159,7 +159,7 @@ Included sections:
 | True North Node | 11 | 0° | -0.013 |
 | Lilith (Black Moon) | 12 | 0° | -0.113 |
 
-## 🎯 Supported aspects
+## Supported aspects
 
 | Aspect | Angle | Orb coefficient |
 |--------|-------|-------------------|
@@ -171,7 +171,7 @@ Included sections:
 | Quincunx | 150° | 5/6 |
 | Opposition | 180° | 1 |
 
-## 🗺️ Roadmap
+## Roadmap
 
 - [ ] Removal of dependency on pyswisseph
 - [ ] Pure numpy implementation of planetary calculations
@@ -180,7 +180,7 @@ Included sections:
 - [ ] API for progressions and directions
 - [ ] Support for more celestial bodies (asteroids, etc.)
 
-## 🤝 Contribution
+## Contribution
 
 Contributions are welcome! Feel free to:
 
@@ -190,11 +190,11 @@ Contributions are welcome! Feel free to:
 
 See [CONTRIBUTING.md](CONTRIBUTING.md) for more details.
 
-## 📄 License
+## License
 
 This project is licensed under MIT. See the [LICENSE](LICENSE) file for more details.
 
-## 📧 Contact
+## Contact
 
 Loc Cosnier - [@alkimya](https://github.com/alkimya)
 
