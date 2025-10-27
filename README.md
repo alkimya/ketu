@@ -199,5 +199,3 @@ This project is licensed under MIT. See the [LICENSE](LICENSE) file for more det
 Loc Cosnier - [@alkimya](https://github.com/alkimya)
 
 Project: [https://github.com/alkimya/ketu](https://github.com/alkimya/ketu)
-
-Translated with DeepL.com (free version)
