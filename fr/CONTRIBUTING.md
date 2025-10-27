@@ -79,11 +79,12 @@ def calculate_aspect(jdate, body1, body2):
 
 Utilise des messages clairs et descriptifs :
 
-- ✅ `Ajoute calcul des aspects mineurs`
-- ✅ `Corrige bug dans le calcul de rétrogradation`
-- ✅ `Améliore performance du cache LRU`
-- ❌ `update`
-- ❌ `fix bug`
+- `feat` : nouvelle fonctionnalité
+- `fix` : correction d'un bug
+- `docs` : mise à jour de la documentation
+- `test` : tests uniquement
+- `refactor` : modifications du code qui ne corrigent ni n'ajoutent de fonctionnalité
+- `chore` : maintenance, outillage, code hors production
 
 ## 🐛 Signaler un bug
 

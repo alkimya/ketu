@@ -2,8 +2,6 @@
 
 ## Phases de la Lune avec Pattern Matching
 
-Nécessite Python >= 3.10 pour le pattern matching.
-
 ```python
 import ketu
 from datetime import datetime, timedelta
@@ -76,6 +74,8 @@ import ketu
 from datetime import datetime, timedelta
 from dataclasses import dataclass
 from typing import List, Tuple
+from zoneinfo import ZoneInfo
+
 
 @dataclass
 class Transit:
@@ -279,81 +279,10 @@ def detecter_configuration(jday) -> Optional[str]:
     return None
 
 # Test
+jday = ketu.utc_to_julian(datetime.now())
 config = detecter_configuration(jday)
 if config:
     print(f"Configuration détectée: {config}")
-```
-
-## Dominantes planétaires
-
-```python
-def calculer_dominantes(jday):
-    """Calculer les dominantes d'un thème"""
-    
-    dominantes = {
-        "signes": {},
-        "elements": {"Feu": 0, "Terre": 0, "Air": 0, "Eau": 0},
-        "modes": {"Cardinal": 0, "Fixe": 0, "Mutable": 0},
-        "planetes_angulaires": []
-    }
-    
-    # Correspondances
-    ELEMENTS = {
-        0: "Feu", 1: "Terre", 2: "Air", 3: "Eau",
-        4: "Feu", 5: "Terre", 6: "Air", 7: "Eau",
-        8: "Feu", 9: "Terre", 10: "Air", 11: "Eau"
-    }
-    
-    MODES = {
-        0: "Cardinal", 1: "Fixe", 2: "Mutable",
-        3: "Cardinal", 4: "Fixe", 5: "Mutable",
-        6: "Cardinal", 7: "Fixe", 8: "Mutable",
-        9: "Cardinal", 10: "Fixe", 11: "Mutable"
-    }
-    
-    # Poids des planètes
-    POIDS = {
-        0: 3,  # Soleil
-        1: 3,  # Lune  
-        2: 1,  # Mercure
-        3: 1,  # Venus
-        4: 1,  # Mars
-        5: 2,  # Jupiter
-        6: 2,  # Saturne
-        7: 1,  # Uranus
-        8: 1,  # Neptune
-        9: 1,  # Pluton
-    }
-    
-    # Calculer les positions
-    for i in range(10):
-        longitude = ketu.long(jday, i)
-        sign_idx = ketu.body_sign(longitude)[0]
-        sign_name = ketu.signs[sign_idx]
-        
-        # Ajouter aux compteurs
-        poids = POIDS.get(i, 1)
-        dominantes["signes"][sign_name] = dominantes["signes"].get(sign_name, 0) + poids
-        dominantes["elements"][ELEMENTS[sign_idx]] += poids
-        dominantes["modes"][MODES[sign_idx]] += poids
-    
-    # Trier par importance
-    dominantes["signes"] = dict(sorted(dominantes["signes"].items(), 
-                                     key=lambda x: x[1], reverse=True))
-    
-    return dominantes
-
-# Exemple
-jday = ketu.utc_to_julian(datetime.now())
-dom = calculer_dominantes(jday)
-
-print("Dominantes par signe:")
-for signe, score in list(dom["signes"].items())[:3]:
-    print(f"  {signe}: {score} points")
-
-print("\nDominantes par élément:")
-for element, score in dom["elements"].items():
-    print(f"  {element}: {score} points")
 ```
 
 ## Prochaines étapes

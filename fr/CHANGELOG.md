@@ -34,7 +34,7 @@ et ce projet adhère au [Semantic Versioning](https://semver.org/spec/v2.0.0.htm
 
 ### Technique
 
-- Python 3.9-3.13 supportés et testés
+- Python 3.10-3.13 supportés et testés
 - Configuration pytest dans pyproject.toml
 - Configuration coverage pour analyse de code
 - Package installable via `pip install ketu`

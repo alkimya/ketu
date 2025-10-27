@@ -1,191 +1,138 @@
-# Exemples Ketu
+# Ketu Examples
 
-Ce dossier contient des exemples pratiques d'utilisation de la bibliothèque Ketu.
+This folder contains practical examples of how to use the Ketu library.
 
-## 📋 Liste des exemples
+## List of examples
 
-### 01 - Positions planétaires de base
-**Fichier**: [`01_basic_positions.py`](01_basic_positions.py)
+### 01 - Basic planetary positions
 
-Calculs fondamentaux :
-- Conversion de dates en jour julien
-- Obtention des positions (longitude, latitude, distance)
-- Détermination des signes zodiacaux
-- Détection des rétrogradations
+**File**: [`01_basic_positions.py`](01_basic_positions.py)
+
+Fundamental calculations:
+
+- Conversion of dates to Julian days
+- Obtaining positions (longitude, latitude, distance)
+- Determining zodiac signs
+- Detecting retrogrades
 
 ```bash
 python examples/01_basic_positions.py
 ```
 
-### 02 - Aspects astrologiques
-**Fichier**: [`02_aspects.py`](02_aspects.py)
+### 02 - Astrological aspects
 
-Calculs d'aspects :
-- Aspect entre deux planètes spécifiques
-- Calcul de tous les aspects du moment
-- Filtrage par orbe (serrés, exacts)
-- Présentation détaillée
+**File**: [`02_aspects.py`](02_aspects.py)
+
+Aspect calculations:
+
+- Aspect between two specific planets
+- Calculation of all aspects at the moment
+- Filtering by orb (close, exact)
+- Detailed presentation
 
 ```bash
 python examples/02_aspects.py
 ```
 
-### 03 - Thème natal complet
-**Fichier**: [`03_natal_chart.py`](03_natal_chart.py)
+### 03 - Complete natal chart
 
-Génération de thème natal :
-- Positions de toutes les planètes
-- Signes zodiacaux et degrés
-- Symboles de rétrogradation (℞)
-- Aspects majeurs groupés par type
-- Marqueurs d'orbe serrés (●/○)
+**File**: [`03_natal_chart.py`](03_natal_chart.py)
+
+Natal chart generation:
+
+- Positions of all planets
+- Zodiac signs and degrees
+- Retrogradation symbols (℞)
+- Major aspects grouped by type
+- Tight orb markers (●/○)
 
 ```bash
 python examples/03_natal_chart.py
 ```
 
-### 04 - Séries temporelles
-**Fichier**: [`04_time_series.py`](04_time_series.py)
+### 04 - Time series
 
-Calculs sur plusieurs jours :
-- Évolution des positions planétaires
-- Détection des changements de signe
-- Périodes de rétrogradation
-- Statistiques (min, max, vitesse moyenne)
+**File**: [`04_time_series.py`](04_time_series.py)
+
+Calculations over several days:
+
+- Evolution of planetary positions
+- Detection of sign changes
+- Retrogradation periods
+- Statistics (min, max, average speed)
 
 ```bash
 python examples/04_time_series.py
 ```
 
-### 05 - Personnalisation des orbes
-**Fichier**: [`05_custom_orbs.py`](05_custom_orbs.py)
+## 🚀 Usage
 
-Gestion des orbes :
-- Comparaison de différents réglages
-- Orbes serrés vs larges
-- Configuration personnalisée
-- Sauvegarde et restauration
-
-```bash
-python examples/05_custom_orbs.py
-```
-
-## 🚀 Utilisation
-
-### Prérequis
-
-Assure-toi que Ketu est installé :
+### Prerequisites
 
 ```bash
 pip install ketu
-# ou depuis les sources :
+# or from source:
 pip install -e .
 ```
 
-### Exécution
+### Execution
 
-Tous les exemples sont des scripts Python autonomes :
+All examples are standalone Python scripts:
 
 ```bash
-# Depuis la racine du projet
+# From the project root
 python examples/01_basic_positions.py
 python examples/02_aspects.py
 # etc.
 
-# Ou rends-les exécutables
+# Or make them executable
 chmod +x examples/*.py
 ./examples/01_basic_positions.py
 ```
 
-### Modification
+## 📚 Complete documentation
 
-Tu peux facilement modifier les exemples :
+For more details, see the documentation:
+
+- [Quick start guide](../docs/source/quickstart.md)
+- [API Reference](../docs/source/api.md)
+- [Astrological Concepts](../docs/source/concepts.md)
+- [Online Documentation](https://ketu.readthedocs.io)
+
+## 🎯 Use Cases
+
+### Transit Analysis
 
 ```python
-# Dans n'importe quel exemple, change la date :
-dt = datetime(2024, 1, 1, 12, 0, tzinfo=ZoneInfo("Europe/Paris"))
-
-# Ou le corps céleste :
-mercury_position = ketu.long(jday, 2)  # 2 = Mercure
+# See example 04 - Time series
+detect_sign_changes(start_date, 365, 0)  # Sun over 1 year
 ```
 
-## 📚 Documentation complète
-
-Pour plus de détails, consulte la documentation :
-
-- [Guide de démarrage rapide](../docs/source/quickstart.md)
-- [Référence API](../docs/source/api.md)
-- [Concepts astrologiques](../docs/source/concepts.md)
-- [Documentation en ligne](https://ketu.readthedocs.io)
-
-## 🎯 Cas d'usage
-
-### Analyse de transit
+### Search for tight aspects
 
 ```python
-# Voir exemple 04 - Séries temporelles
-detect_sign_changes(start_date, 365, 0)  # Soleil sur 1 an
-```
-
-### Recherche d'aspects serrés
-
-```python
-# Voir exemple 02 - Aspects
+# See example 02 - Aspects
 tight_aspects = [asp for asp in aspects if abs(asp[3]) < 1]
 ```
 
-### Thème natal personnalisé
+### Custom natal chart
 
 ```python
-# Voir exemple 03 - Thème natal
-theme_natal(1990, 5, 15, 14, 30, "Europe/Paris")
+# See example 03 - Natal chart
+theme_natal(1990, 5, 15, 14, 30, “Europe/Paris”)
 ```
 
-## 💡 Conseils
+## 💡 Tips
 
 ### Performance
 
-Les calculs utilisent un cache LRU automatique. Pour des boucles sur de nombreuses dates :
+Calculations use an automatic LRU cache. For loops on many dates:
 
 ```python
-# Vide le cache si nécessaire
+# Clears the cache if necessary
 ketu.body_properties.cache_clear()
 ```
 
-### Orbes
-
-Les orbes par défaut suivent Abu Ma'shar. Pour des calculs plus serrés :
-
-```python
-import numpy as np
-original = ketu.bodies["orb"].copy()
-ketu.bodies["orb"] *= 0.7  # Réduit de 30%
-# ... calculs ...
-ketu.bodies["orb"] = original  # Restaure
-```
-
-### Bodies IDs
-
-```python
-# IDs des corps célestes
-0  = Soleil       5  = Jupiter     10 = Rahu (Nœud moyen)
-1  = Lune         6  = Saturne     11 = Nœud Nord (vrai)
-2  = Mercure      7  = Uranus      12 = Lilith (Apogée moyen)
-3  = Vénus        8  = Neptune
-4  = Mars         9  = Pluton
-```
-
-## 🤝 Contribution
-
-Tu as un exemple intéressant à partager ? N'hésite pas à :
-1. Créer un nouveau fichier `06_ton_exemple.py`
-2. Ajouter une description dans ce README
-3. Soumettre une pull request
-
-## ⚠️ Note
-
-Ces exemples utilisent des données éphémérides via Swiss Ephemeris. Les calculs sont précis pour l'astrologie moderne mais ne remplacent pas des calculs astronomiques de précision scientifique.
-
 ---
 
-Pour toute question : https://github.com/alkimya/ketu/issues
+For any questions: <https://github.com/alkimya/ketu/issues>

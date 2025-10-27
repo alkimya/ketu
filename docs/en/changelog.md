@@ -5,15 +5,38 @@ All notable changes to Ketu are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.2.0] - 2025-10-27
 
-### Planned
+### Added
 
-- Remove the pyswisseph dependency
-- Implement planetary computations with pure NumPy
-- Find exact aspect timings between two dates
-- Generate aspect calendars
-- Provide an API for progressions and directions
+- Full packaging setup for a PyPI release
+- `pyproject.toml` metadata and dependencies
+- `requirements.txt` for a minimal install
+- Public exports in `ketu/__init__.py`
+- Expanded README with usage examples
+- PyPI, Python versions, and license badges
+- `MANIFEST.in` to ship data files
+- GitHub Actions workflow for automated tests
+- GitHub Actions workflow for PyPI publishing
+- CI coverage for Python 3.9 through 3.13
+- `ketu` CLI entry point
+- Support for 13 celestial bodies (added True Node)
+- English and French documentation
+
+### Changed
+
+- Fixed and hardened the unit tests
+- Renamed `timea.py` to `_timea.py` (private module)
+- Optimised package structure for distribution
+- Aligned the documentation with the new layout
+
+### Technical
+
+- Official support for Python 3.10–3.13
+- Pytest configuration embedded in `pyproject.toml`
+- Coverage configuration for CI analysis
+- Package installable via `pip install ketu`
+- Works seamlessly in virtual environments
 
 ## [0.1.0] - 2024-01-XX
 

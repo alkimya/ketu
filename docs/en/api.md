@@ -335,7 +335,6 @@ Entry point for the interactive CLI interface.
 - Calculations use `@lru_cache` to optimize performance
 - Body IDs follow the Swiss Ephemeris convention
 - Angles are always in degrees (0-360)
-- Orbs are calculated according to Abu Ma'shar
 - Time precision is approximately 1 second
 
 ## See Also

@@ -49,9 +49,6 @@ pip install ketu
 ### En ligne de commande
 
 ```bash
-# Vérifier que la commande est disponible
-ketu --help
-
 # Lancer l'interface interactive
 ketu
 ```
