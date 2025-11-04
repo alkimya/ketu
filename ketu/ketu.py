@@ -71,7 +71,7 @@ def decimal_degrees_to_dms(deg):
     """Return degrees, minutes, seconds from degrees decimal"""
     mins, secs = divmod(deg * 3600, 60)
     degs, mins = divmod(mins, 60)
-    return np.array((degs, mins, secs), dtype=np.dtype([("degs", "i4"), ("mins", "i4"), ("secs", "i4")]))
+    return np.array((degs, mins, secs), dtype="i4")
 
 
 def distance(pos1, pos2):
