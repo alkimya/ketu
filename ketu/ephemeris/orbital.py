@@ -21,8 +21,8 @@ from typing import Tuple, Union
 
 ORBITAL_ELEMENTS = np.array(
     [
-        # Sun (Earth's orbit)
-        ("Sun", 0.0, 0.0, 282.9404, 1.000000, 0.016709, 356.0470, 0.0, 0.0, 4.70935e-5, -1.151e-9, 0.9856002585),
+        # Sun (Earth's orbit) - JPL J2000.0 values (L0=100.46435, w=102.94719, M0=L0-w=357.51716)
+        ("Sun", 0.0, 0.0, 102.9404, 1.000000, 0.016709, 357.5172, 0.0, 0.0, 4.70935e-5, -1.151e-9, 0.9856002585),
         # Moon (special handling required)
         (
             "Moon",
