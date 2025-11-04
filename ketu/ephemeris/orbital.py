@@ -23,15 +23,15 @@ ORBITAL_ELEMENTS = np.array(
     [
         # Sun (Earth's orbit) - JPL J2000.0 values (L0=100.46435, w=102.94719, M0=L0-w=357.51716)
         ("Sun", 0.0, 0.0, 102.9404, 1.000000, 0.016709, 357.5172, 0.0, 0.0, 4.70935e-5, -1.151e-9, 0.9856002585),
-        # Moon (special handling required)
+        # Moon - Meeus values (Ω=125.04452, M'=134.9633964)
         (
             "Moon",
-            125.1228,
+            125.04452,
             5.1454,
             318.0634,
             0.002569,
             0.0549,
-            115.3654,
+            134.9634,
             -0.0529538083,
             0.0,
             0.1643573223,
@@ -137,7 +137,8 @@ ORBITAL_ELEMENTS = np.array(
             2.15e-9,
             0.005995147,
         ),
-        ("Pluto", 110.30, 17.14, 113.76, 39.48, 0.2488, 238.93, 0.0, 0.0, 0.0, 0.0, 0.00396),  # Simplified elements
+        # Pluto - JPL J2000.0 values (L=238.92881, w_bar=224.06676, M=L-w_bar=14.86205)
+        ("Pluto", 110.30347, 17.14175, 113.76329, 39.48168677, 0.24880766, 14.86205, 0.0, 0.0, 0.0, 0.0, 0.003964),
         # Lunar nodes
         ("Rahu", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0529538083),  # Mean node
         ("NorthNode", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0529538083),  # True node
@@ -417,13 +418,13 @@ def get_moon_position(jd: float) -> Tuple[float, float, float]:
     # Days since J2000.0
     d = jd - 2451545.0
 
-    # Moon's mean elements
-    N = normalize_angle(125.1228 - 0.0529538083 * d)  # Long. ascending node
+    # Moon's mean elements (Meeus values)
+    N = normalize_angle(125.04452 - 0.0529538083 * d)  # Long. ascending node (Ω)
     i = 5.1454  # Inclination
     w = normalize_angle(318.0634 + 0.1643573223 * d)  # Arg. of perigee
     a = 60.2666  # Mean distance (Earth radii)
     e = 0.054900  # Eccentricity
-    M = normalize_angle(115.3654 + 13.0649929509 * d)  # Mean anomaly
+    M = normalize_angle(134.9634 + 13.0649929509 * d)  # Mean anomaly (M')
 
     # Convert to radians
     N_rad = np.deg2rad(N)
@@ -451,7 +452,7 @@ def get_moon_position(jd: float) -> Tuple[float, float, float]:
 
     # Add perturbations
     # Longitude
-    Ms = np.deg2rad(normalize_angle(356.0470 + 0.9856002585 * d))  # Sun's mean anomaly
+    Ms = np.deg2rad(normalize_angle(357.5172 + 0.9856002585 * d))  # Sun's mean anomaly (corrected)
     Mm = M_rad  # Moon's mean anomaly
     D = np.deg2rad(normalize_angle(lon - (100.46 + 0.9856474 * d)))  # Moon's elongation
     F = np.deg2rad(normalize_angle(lon - N))  # Argument of latitude
