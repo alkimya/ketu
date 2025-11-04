@@ -13,8 +13,8 @@ from zoneinfo import ZoneInfo
 import numpy as np
 
 # Import our new ephemeris modules
-from ephemeris.time import utc_to_julian, julian_to_utc, local_to_utc
-from ephemeris.planets import (
+from .ephemeris.time import utc_to_julian, julian_to_utc, local_to_utc
+from .ephemeris.planets import (
     calc_planet_position,
     get_planet_name,
     body_properties,

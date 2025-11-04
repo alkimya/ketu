@@ -200,7 +200,7 @@ def get_aspect(jdate, body1, body2):
     if body1 > body2:
         body1, body2 = body2, body1
     dist = distance(long(jdate, body1), long(jdate, body2))
-    for i_asp, aspect in enumerate(aspects["value"]):
+    for i_asp, aspect in enumerate(aspects["angle"]):
         orb = get_orb(body1, body2, i_asp)
         if i_asp == 0 and dist <= orb:
             return body1, body2, i_asp, dist
