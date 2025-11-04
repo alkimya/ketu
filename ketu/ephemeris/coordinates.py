@@ -30,25 +30,33 @@ def spherical_to_rectangular(lon: float, lat: float, r: float) -> Tuple[float, f
 
 
 def rectangular_to_spherical(x: float, y: float, z: float) -> Tuple[float, float, float]:
-    """Convert rectangular coordinates to spherical coordinates.
+    """Convert rectangular coordinates to spherical coordinates (vectorized).
 
     Args:
-        x, y, z: Rectangular coordinates
+        x, y, z: Rectangular coordinates (scalar or array)
 
     Returns:
-        Tuple of (lon, lat, r) where angles are in degrees
+        Tuple of (lon, lat, r) where angles are in degrees (scalar or array)
+
+    Note:
+        This function is vectorized and works with both scalars and arrays.
     """
     r = np.sqrt(x**2 + y**2 + z**2)
 
-    if r == 0:
-        return 0.0, 0.0, 0.0
+    # Handle zero distance (works for both scalars and arrays)
+    is_scalar = np.ndim(r) == 0
+    if is_scalar:
+        if r == 0:
+            return 0.0, 0.0, 0.0
+    else:
+        # For arrays, avoid division by zero
+        r = np.where(r == 0, 1.0, r)  # Temp fix for division
 
     lon = np.rad2deg(np.arctan2(y, x))
     lat = np.rad2deg(np.arcsin(z / r))
 
     # Normalize longitude to 0-360
-    if lon < 0:
-        lon += 360.0
+    lon = np.where(lon < 0, lon + 360.0, lon)
 
     return lon, lat, r
 

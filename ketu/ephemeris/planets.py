@@ -9,7 +9,15 @@ from typing import Tuple, Dict, Optional
 from functools import lru_cache
 
 from .time import utc_to_julian, terrestrial_to_universal
-from .orbital import ORBITAL_ELEMENTS, get_body_position, get_moon_position, get_lunar_nodes, get_lilith_position
+from .orbital import (
+    ORBITAL_ELEMENTS,
+    get_body_position,
+    get_moon_position,
+    get_lunar_nodes,
+    get_lilith_position,
+    get_body_position_vectorized,
+    get_moon_position_vectorized,
+)
 from .coordinates import (
     heliocentric_to_geocentric,
     ecliptic_to_equatorial,
@@ -403,3 +411,120 @@ def calculate_speed_ratio(jd: float, body_id: int) -> float:
         return 1.0
 
     return current_speed / avg_speed
+
+
+def calc_planet_position_batch(jd_array: np.ndarray, planet_id: int, flags: int = 0) -> np.ndarray:
+    """Calculate planet positions for multiple Julian Dates (vectorized/batch).
+
+    This function is optimized for calculating time series by vectorizing
+    calculations across multiple dates.
+
+    Args:
+        jd_array: Array of Julian Dates
+        planet_id: Planet ID (0-12)
+        flags: Calculation flags (for compatibility)
+
+    Returns:
+        2D array of shape (n_dates, 6) containing:
+        [longitude, latitude, distance, lon_speed, lat_speed, dist_speed]
+        for each Julian Date
+    """
+    planet_name = SWE_IDS.get(planet_id)
+    if planet_name is None:
+        raise ValueError(f"Unknown planet ID: {planet_id}")
+
+    n_dates = len(jd_array)
+    results = np.zeros((n_dates, 6))
+
+    # Special handling for different bodies
+    if planet_name == "Sun":
+        # Earth's heliocentric position gives us Sun's geocentric position
+        x_earth, y_earth, z_earth, _, _, _ = get_body_position_vectorized(BODY_INDICES["Sun"], jd_array)
+        # Reverse for geocentric Sun
+        x_sun, y_sun, z_sun = -x_earth, -y_earth, -z_earth
+        lon, lat, dist = rectangular_to_spherical(x_sun, y_sun, z_sun)
+
+        # Calculate speeds (vectorized with small time step)
+        jd_delta = 0.01
+        x_earth2, y_earth2, z_earth2, _, _, _ = get_body_position_vectorized(BODY_INDICES["Sun"], jd_array + jd_delta)
+        x_sun2, y_sun2, z_sun2 = -x_earth2, -y_earth2, -z_earth2
+        lon2, lat2, dist2 = rectangular_to_spherical(x_sun2, y_sun2, z_sun2)
+
+        lon_speed = (lon2 - lon) / jd_delta
+        lat_speed = (lat2 - lat) / jd_delta
+        dist_speed = (dist2 - dist) / jd_delta
+
+        results[:, 0] = lon
+        results[:, 1] = lat
+        results[:, 2] = dist
+        results[:, 3] = lon_speed
+        results[:, 4] = lat_speed
+        results[:, 5] = dist_speed
+
+    elif planet_name == "Moon":
+        lon, lat, dist = get_moon_position_vectorized(jd_array)
+
+        # Calculate speeds
+        jd_delta = 0.01
+        lon2, lat2, dist2 = get_moon_position_vectorized(jd_array + jd_delta)
+
+        lon_speed = (lon2 - lon) / jd_delta
+        lat_speed = (lat2 - lat) / jd_delta
+        dist_speed = (dist2 - dist) / jd_delta
+
+        results[:, 0] = lon
+        results[:, 1] = lat
+        results[:, 2] = dist
+        results[:, 3] = lon_speed
+        results[:, 4] = lat_speed
+        results[:, 5] = dist_speed
+
+    elif planet_name in ["Rahu", "NorthNode", "Lilith"]:
+        # These require individual calculations (relatively fast anyway)
+        for i, jd in enumerate(jd_array):
+            results[i] = calc_planet_position(jd, planet_id, flags)
+
+    else:
+        # Regular planets (vectorized)
+        body_idx = BODY_INDICES[planet_name]
+
+        # Get Earth's position for geocentric calculation
+        x_earth, y_earth, z_earth, _, _, _ = get_body_position_vectorized(BODY_INDICES["Sun"], jd_array)
+
+        # Get planet's heliocentric position
+        x_planet, y_planet, z_planet, _, _, _ = get_body_position_vectorized(body_idx, jd_array)
+
+        # Convert to geocentric (broadcasts automatically)
+        x_geo, y_geo, z_geo = heliocentric_to_geocentric(x_planet, y_planet, z_planet, x_earth, y_earth, z_earth)
+
+        # Convert to spherical
+        lon, lat, dist = rectangular_to_spherical(x_geo, y_geo, z_geo)
+
+        # Calculate speeds
+        jd_delta = 0.01
+        x_earth2, y_earth2, z_earth2, _, _, _ = get_body_position_vectorized(BODY_INDICES["Sun"], jd_array + jd_delta)
+        x_planet2, y_planet2, z_planet2, _, _, _ = get_body_position_vectorized(body_idx, jd_array + jd_delta)
+        x_geo2, y_geo2, z_geo2 = heliocentric_to_geocentric(
+            x_planet2, y_planet2, z_planet2, x_earth2, y_earth2, z_earth2
+        )
+        lon2, lat2, dist2 = rectangular_to_spherical(x_geo2, y_geo2, z_geo2)
+
+        lon_speed = (lon2 - lon) / jd_delta
+        lat_speed = (lat2 - lat) / jd_delta
+        dist_speed = (dist2 - dist) / jd_delta
+
+        # Apply aberration correction for planets (not Sun or Moon)
+        if planet_id >= 2:
+            for i in range(n_dates):
+                dlon, dlat = aberration_correction(lon[i], lat[i], jd_array[i])
+                lon[i] += dlon
+                lat[i] += dlat
+
+        results[:, 0] = lon
+        results[:, 1] = lat
+        results[:, 2] = dist
+        results[:, 3] = lon_speed
+        results[:, 4] = lat_speed
+        results[:, 5] = dist_speed
+
+    return results

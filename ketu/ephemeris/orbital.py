@@ -170,26 +170,34 @@ def normalize_angle(angle: float) -> float:
     return angle
 
 
-def solve_kepler_equation(M: float, e: float, tolerance: float = 1e-8) -> float:
-    """Solve Kepler's equation for eccentric anomaly.
+def solve_kepler_equation(M: Union[float, np.ndarray], e: Union[float, np.ndarray], tolerance: float = 1e-8) -> Union[float, np.ndarray]:
+    """Solve Kepler's equation for eccentric anomaly (vectorized).
 
     Args:
-        M: Mean anomaly in radians
-        e: Eccentricity
+        M: Mean anomaly in radians (scalar or array)
+        e: Eccentricity (scalar or array)
         tolerance: Convergence tolerance
 
     Returns:
-        Eccentric anomaly in radians
+        Eccentric anomaly in radians (scalar or array)
+
+    Note:
+        This function is automatically vectorized via numpy broadcasting.
+        It can handle arrays of M and/or e values efficiently.
     """
-    # Initial guess
+    # Initial guess (broadcasts automatically if M or e are arrays)
     E = M + e * np.sin(M) * (1.0 + e * np.cos(M))
 
-    # Newton-Raphson iteration
+    # Newton-Raphson iteration (vectorized)
     for _ in range(50):  # Maximum iterations
-        dE = (E - e * np.sin(E) - M) / (1.0 - e * np.cos(E))
-        E -= dE
+        sin_E = np.sin(E)
+        cos_E = np.cos(E)
 
-        if abs(dE) < tolerance:
+        dE = (E - e * sin_E - M) / (1.0 - e * cos_E)
+        E = E - dE
+
+        # For arrays, check if all elements have converged
+        if np.all(np.abs(dE) < tolerance):
             break
 
     return E
@@ -540,3 +548,160 @@ def get_lilith_position(jd: float) -> float:
     lilith = normalize_angle(83.3532 + 0.1114040803 * d)
 
     return lilith
+
+
+def get_body_position_vectorized(body_id: int, jd_array: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
+    """Get heliocentric position of a body for multiple Julian Dates (vectorized).
+
+    This function efficiently computes positions for time series by vectorizing
+    the orbital calculations across multiple dates.
+
+    Args:
+        body_id: Index of body in ORBITAL_ELEMENTS
+        jd_array: Array of Julian Dates
+
+    Returns:
+        Tuple of arrays (x, y, z, lon, lat, r) in AU and degrees
+    """
+    # Days since J2000.0 (vectorized)
+    d = jd_array - 2451545.0
+
+    # Get base elements
+    elem = ORBITAL_ELEMENTS[body_id]
+
+    # Calculate elements at dates (vectorized)
+    N = (elem["N"] + elem["N_dot"] * d) % 360.0
+    i = elem["i"] + elem["i_dot"] * d
+    w = (elem["w"] + elem["w_dot"] * d) % 360.0
+    a = elem["a"]
+    e = elem["e"] + elem["e_dot"] * d
+    M = (elem["M"] + elem["M_dot"] * d) % 360.0
+
+    # Convert to radians (vectorized)
+    N_rad = np.deg2rad(N)
+    i_rad = np.deg2rad(i)
+    w_rad = np.deg2rad(w)
+    M_rad = np.deg2rad(M)
+
+    # Solve Kepler's equation (vectorized)
+    E = solve_kepler_equation(M_rad, e)
+
+    # True anomaly (vectorized)
+    x_prime = a * (np.cos(E) - e)
+    y_prime = a * np.sqrt(1 - e**2) * np.sin(E)
+
+    r = np.sqrt(x_prime**2 + y_prime**2)
+    v = np.arctan2(y_prime, x_prime)
+
+    # Heliocentric coordinates (vectorized)
+    cos_N = np.cos(N_rad)
+    sin_N = np.sin(N_rad)
+    cos_i = np.cos(i_rad)
+    sin_i = np.sin(i_rad)
+    cos_vw = np.cos(v + w_rad)
+    sin_vw = np.sin(v + w_rad)
+
+    x = r * (cos_N * cos_vw - sin_N * sin_vw * cos_i)
+    y = r * (sin_N * cos_vw + cos_N * sin_vw * cos_i)
+    z = r * sin_vw * sin_i
+
+    # Spherical coordinates (vectorized)
+    lon = np.rad2deg(np.arctan2(y, x))
+    lon = lon % 360.0
+    lat = np.rad2deg(np.arcsin(z / r))
+
+    return x, y, z, lon, lat, r
+
+
+def get_moon_position_vectorized(jd_array: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Calculate geocentric position of the Moon for multiple dates (vectorized).
+
+    Args:
+        jd_array: Array of Julian Dates
+
+    Returns:
+        Tuple of arrays (lon, lat, dist) where:
+        - lon: Geocentric longitude in degrees
+        - lat: Geocentric latitude in degrees
+        - dist: Distance from Earth in AU
+    """
+    # Days since J2000.0 (vectorized)
+    d = jd_array - 2451545.0
+
+    # Moon's mean elements (vectorized)
+    N = (125.04452 - 0.0529538083 * d) % 360.0
+    i = 5.1454
+    w = (318.0634 + 0.1643573223 * d) % 360.0
+    a = 60.2666
+    e = 0.054900
+    M = (134.9634 + 13.0649929509 * d) % 360.0
+
+    # Convert to radians
+    N_rad = np.deg2rad(N)
+    w_rad = np.deg2rad(w)
+    M_rad = np.deg2rad(M)
+
+    # Solve Kepler's equation (vectorized)
+    E = solve_kepler_equation(M_rad, e)
+
+    # True anomaly and distance (vectorized)
+    x_prime = a * (np.cos(E) - e)
+    y_prime = a * np.sqrt(1 - e**2) * np.sin(E)
+
+    r = np.sqrt(x_prime**2 + y_prime**2)
+    v = np.arctan2(y_prime, x_prime)
+
+    # Moon's position in space (vectorized)
+    cos_i = np.cos(np.deg2rad(i))
+    sin_i = np.sin(np.deg2rad(i))
+
+    xeclip = r * (np.cos(N_rad) * np.cos(v + w_rad) - np.sin(N_rad) * np.sin(v + w_rad) * cos_i)
+    yeclip = r * (np.sin(N_rad) * np.cos(v + w_rad) + np.cos(N_rad) * np.sin(v + w_rad) * cos_i)
+    zeclip = r * np.sin(v + w_rad) * sin_i
+
+    # Convert to spherical coordinates (vectorized)
+    lon = np.rad2deg(np.arctan2(yeclip, xeclip))
+    lat = np.rad2deg(np.arcsin(zeclip / r))
+
+    # Add perturbations (vectorized)
+    Ms = np.deg2rad((357.5172 + 0.9856002585 * d) % 360.0)
+    Mm = M_rad
+    D = np.deg2rad((lon - (100.46 + 0.9856474 * d)) % 360.0)
+    F = np.deg2rad((lon - N) % 360.0)
+
+    # Main perturbations in longitude (vectorized)
+    dlon = (
+        -1.274 * np.sin(Mm - 2 * D)
+        + 0.658 * np.sin(2 * D)
+        - 0.186 * np.sin(Mm)
+        - 0.059 * np.sin(2 * Mm - 2 * D)
+        - 0.057 * np.sin(Mm - 2 * D + Ms)
+        + 0.053 * np.sin(Mm + 2 * D)
+        + 0.046 * np.sin(2 * D - Ms)
+        + 0.041 * np.sin(Mm - Ms)
+        - 0.035 * np.sin(D)
+        - 0.031 * np.sin(Mm + Ms)
+        - 0.015 * np.sin(2 * F - 2 * D)
+        + 0.011 * np.sin(Mm - 4 * D)
+    )
+
+    # Main perturbations in latitude (vectorized)
+    dlat = (
+        -0.173 * np.sin(F - 2 * D)
+        - 0.055 * np.sin(Mm - F - 2 * D)
+        - 0.046 * np.sin(Mm + F - 2 * D)
+        + 0.033 * np.sin(F + 2 * D)
+        + 0.017 * np.sin(2 * Mm + F)
+    )
+
+    # Main perturbation in distance (vectorized)
+    dr = -0.58 * np.cos(Mm - 2 * D) - 0.46 * np.cos(2 * D)
+
+    lon = (lon + dlon) % 360.0
+    lat = lat + dlat
+    dist = r + dr
+
+    # Convert distance to AU
+    dist_au = dist * 4.26352e-5
+
+    return lon, lat, dist_au
