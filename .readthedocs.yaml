@@ -1,0 +1,43 @@
+# Configuration ReadTheDocs
+# Documentation : https://docs.readthedocs.io/en/stable/config-file/v2.html
+
+version: 2
+
+# Build documentation in the docs/ directory with Sphinx
+build:
+  os: ubuntu-22.04
+  tools:
+    python: "3.12"
+  jobs:
+    post_checkout:
+      # Télécharge et installe les éphémérides Swiss Ephemeris si nécessaire
+      - mkdir -p $HOME/.swe_files
+    post_install:
+      # Installe les dépendances du projet
+      - pip install -e .
+    post_build:
+      # Construit également la documentation anglaise
+      - mkdir -p ${READTHEDOCS_OUTPUT:-_readthedocs/html}/en
+      - sphinx-build -b html docs/en ${READTHEDOCS_OUTPUT:-_readthedocs/html}/en
+
+# Configuration Sphinx
+# French documentation is the primary version
+# English documentation is available in docs/en/
+sphinx:
+  builder: html
+  configuration: docs/fr/conf.py
+  fail_on_warning: false
+
+# Formats de sortie supplémentaires
+formats:
+  - pdf
+  - epub
+
+# Configuration Python
+python:
+  install:
+    - method: pip
+      path: .
+      extra_requirements:
+        - docs
+    - requirements: docs/requirements-docs.txt

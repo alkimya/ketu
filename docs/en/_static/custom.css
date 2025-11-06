@@ -1,0 +1,249 @@
+/* Custom CSS for Ketu documentation */
+
+/* Color scheme */
+:root {
+    --ketu-primary: #1e3a8a;
+    --ketu-secondary: #3730a3;
+    --ketu-accent: #6366f1;
+    --ketu-light: #e0e7ff;
+    --ketu-dark: #1e1b4b;
+}
+
+/* Override RTD theme colors */
+.wy-nav-side {
+    background: var(--ketu-dark);
+}
+
+.wy-side-nav-search {
+    background: var(--ketu-primary);
+}
+
+.wy-side-nav-search input[type=text] {
+    border-color: var(--ketu-accent);
+}
+
+.wy-menu-vertical a:hover {
+    background: var(--ketu-secondary);
+}
+
+/* Admonitions */
+.admonition {
+    border-radius: 8px;
+    padding: 12px;
+    border-left: 4px solid;
+}
+
+.admonition.tip {
+    background-color: #e6fffa;
+    border-color: #38b2ac;
+}
+
+.admonition.important {
+    background-color: #fef3c7;
+    border-color: #f59e0b;
+}
+
+.admonition.warning {
+    background-color: #fee2e2;
+    border-color: #ef4444;
+}
+
+.admonition.note {
+    background-color: var(--ketu-light);
+    border-color: var(--ketu-accent);
+}
+
+/* Code blocks */
+.highlight {
+    border-radius: 6px;
+    border: 1px solid #e5e7eb;
+}
+
+.highlight pre {
+    padding: 16px;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+/* Tables */
+table.docutils {
+    border-collapse: collapse;
+    width: 100%;
+    margin: 20px 0;
+}
+
+table.docutils th {
+    background-color: var(--ketu-primary);
+    color: white;
+    padding: 12px;
+    text-align: left;
+}
+
+table.docutils td {
+    padding: 10px;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+table.docutils tr:hover {
+    background-color: #f9fafb;
+}
+
+/* Grid cards from sphinx-design */
+.sd-card {
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.sd-card:hover {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Tabs */
+.sphinx-tabs {
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.sphinx-tabs .sphinx-tabs-tab {
+    background-color: #f3f4f6;
+    border: none;
+    padding: 10px 20px;
+}
+
+.sphinx-tabs .sphinx-tabs-tab[aria-selected="true"] {
+    background-color: var(--ketu-accent);
+    color: white;
+}
+
+/* Version badge */
+.version {
+    background-color: var(--ketu-accent);
+    color: white;
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 12px;
+    margin-left: 10px;
+}
+
+/* Custom emoji support */
+.emoji {
+    font-size: 1.2em;
+    vertical-align: middle;
+    margin: 0 2px;
+}
+
+/* API documentation */
+.sig-name {
+    color: var(--ketu-primary);
+    font-weight: bold;
+}
+
+.sig-param {
+    color: var(--ketu-secondary);
+}
+
+/* Search results highlighting */
+.highlighted {
+    background-color: #fef3c7;
+    padding: 2px 4px;
+    border-radius: 2px;
+}
+
+/* Mobile responsive */
+@media screen and (max-width: 768px) {
+    .wy-nav-side {
+        width: 100%;
+    }
+
+    .wy-nav-content-wrap {
+        margin-left: 0;
+    }
+
+    table.docutils {
+        font-size: 12px;
+    }
+}
+
+/* Print styles */
+@media print {
+
+    .wy-nav-side,
+    .rst-versions,
+    .wy-nav-top {
+        display: none;
+    }
+
+    .wy-nav-content-wrap {
+        margin-left: 0;
+    }
+}
+
+/* Mermaid diagrams */
+.mermaid {
+    text-align: center;
+    margin: 20px 0;
+}
+
+/* Copy button */
+.copybtn {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    padding: 4px 8px;
+    font-size: 12px;
+    background-color: #6366f1;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.highlight:hover .copybtn {
+    opacity: 1;
+}
+
+/* Footer */
+footer {
+    margin-top: 40px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e7eb;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+/* Language badges */
+.language-toggle {
+    display: flex;
+    gap: 0.25rem;
+    margin-bottom: 0.75rem;
+}
+
+.lang-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    text-decoration: none;
+    border: 1px solid var(--ketu-accent);
+    color: var(--ketu-accent);
+    background-color: white;
+    transition: all 0.2s ease;
+}
+
+.lang-badge:hover {
+    background-color: var(--ketu-light);
+}
+
+.lang-badge.current {
+    background-color: var(--ketu-accent);
+    color: white;
+    border-color: var(--ketu-accent);
+}

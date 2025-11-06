@@ -1,0 +1,12 @@
+{% extends "!layout.html" %}
+
+{% block sidebartitle %}
+  {% if languages %}
+    <div class="language-toggle">
+      {% for lang in languages %}
+        <a class="lang-badge{% if lang.current %} current{% endif %}" href="{{ lang.url }}">{{ lang.label }}</a>
+      {% endfor %}
+    </div>
+  {% endif %}
+  {{ super() }}
+{% endblock %}

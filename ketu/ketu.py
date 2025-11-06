@@ -20,8 +20,8 @@ bodies = np.array(
         ("Sun", 0, 12, 0.986),
         ("Moon", 1, 12, 13.176),
         ("Mercury", 2, 8, 1.383),
-        ("Venus", 3, 8, 1.2),
-        ("Mars", 4, 10, 0.524),
+        ("Venus", 3, 10, 1.2),
+        ("Mars", 4, 8, 0.524),
         ("Jupiter", 5, 10, 0.083),
         ("Saturn", 6, 10, 0.034),
         ("Uranus", 7, 6, 0.012),
@@ -34,7 +34,7 @@ bodies = np.array(
     dtype=[("name", "S12"), ("id", "i4"), ("orb", "f4"), ("speed", "f4")],
 )
 
-# Structured array of major aspects (harmonics 2 and 3): Conjunction,
+# Structured array of major aspects (harmonics 1, 2, 3 and 6): Conjunction,
 # Semi-sextile, Sextile, Square, Trine, Quincunx and Opposition,
 # their value and their coefficient for the calculation of the orb
 aspects = np.array(
@@ -68,7 +68,7 @@ signs = [
 
 
 def decimal_degrees_to_dms(deg):
-    """Return degrees, minutes, seconds from degrees decimal"""
+    """Return degrees, minutes, seconds from decimal degrees"""
     mins, secs = divmod(deg * 3600, 60)
     degs, mins = divmod(mins, 60)
     return np.array((degs, mins, secs), dtype="i4")
@@ -170,12 +170,12 @@ def vdist_au(jdate, body):
 
 def is_retrograde(jdate, body):
     """Return True if a body is retrograde"""
-    return vlong(jdate, body) < 0
+    return bool(vlong(jdate, body) < 0)
 
 
 def is_ascending(jdate, body):
     """Return True if a body latitude is rising"""
-    return vlat(jdate, body) > 0
+    return bool(vlat(jdate, body) > 0)
 
 
 def body_sign(b_long):
@@ -234,7 +234,7 @@ def print_positions(jdate):
     print("------------- Bodies Positions -------------")
     for index, pos in np.ndenumerate(positions(jdate)):
         sign, degs, mins, secs = body_sign(pos)
-        retro = ", R" if is_retrograde(jdate, *index) else ""
+        retro = " ℞" if is_retrograde(jdate, *index) else ""
         print(f"{body_name(*index):10}: " f"{signs[sign]:15}{degs:>2}º{mins:>2}'{secs:>2}\"{retro}")
 
 
@@ -245,10 +245,11 @@ def print_aspects(jdate):
     for aspect in calculate_aspects(jdate):
         body1, body2, i_asp, orb = aspect
         degs, mins, secs = decimal_degrees_to_dms(orb)
+        # Extract aspect name as bytes and decode to string
+        aspect_name_bytes = aspects["name"][i_asp]
+        aspect_name = aspect_name_bytes.decode() if isinstance(aspect_name_bytes, bytes) else str(aspect_name_bytes)
         print(
-            f"{body_name(body1):7} - {body_name(body2):12}: "
-            f"{aspects['name'][i_asp].decode():12} "
-            f"{degs:>2}º{mins:>2}'{secs:>2}\""
+            f"{body_name(body1):7} - {body_name(body2):12}: " f"{aspect_name:12} " f"{degs:>2}º{mins:>2}'{secs:>2}\""
         )
 
 
