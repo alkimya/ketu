@@ -82,9 +82,12 @@ def dd_to_dms(deg: float) -> np.ndarray:
 
 
 def distance(pos1: float, pos2: float) -> float:
-    """Return the angular distance from two bodies positions"""
-    angle = abs(pos2 - pos1)
-    return angle if angle <= 180 else 360 - angle
+    """Return the angular distance from two bodies positions (vectorized).
+
+    Works with scalars or arrays via NumPy broadcasting.
+    """
+    angle = np.abs(pos2 - pos1)
+    return np.where(angle <= 180, angle, 360 - angle)
 
 
 def get_orb(body1: int, body2: int, asp: int) -> float:
@@ -197,6 +200,159 @@ def calculate_aspects(jdate: float, l_bodies=bodies) -> np.ndarray:
         aspects_data,
         dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")],
     )
+
+
+def calculate_aspects_vectorized(jdate: float, l_bodies=bodies) -> np.ndarray:
+    """Calculate all aspects using vectorized operations (faster).
+
+    This function computes all planetary aspects in parallel using NumPy
+    broadcasting, which is significantly faster than the loop-based approach.
+
+    Args:
+        jdate: Julian Date
+        l_bodies: Array of bodies (default: all bodies)
+
+    Returns:
+        Structured array of aspects with fields: body1, body2, i_asp, orb
+    """
+    bodies_id = l_bodies["id"]
+    n_bodies = len(bodies_id)
+
+    # Calculate all positions at once (vectorized)
+    all_positions = positions(jdate, l_bodies)
+
+    # Create pairwise combinations indices
+    # Upper triangle indices (to avoid duplicates)
+    i_indices, j_indices = np.triu_indices(n_bodies, k=1)
+
+    # Get positions for all pairs (vectorized)
+    pos1 = all_positions[i_indices]
+    pos2 = all_positions[j_indices]
+
+    # Calculate all distances at once (vectorized)
+    all_distances = distance(pos1, pos2)
+
+    # Get body IDs for all pairs
+    body1_ids = bodies_id[i_indices]
+    body2_ids = bodies_id[j_indices]
+
+    # Prepare to collect results
+    results = []
+
+    # For each aspect type, check all pairs at once (vectorized)
+    for i_asp, aspect_angle in enumerate(aspects["value"]):
+        # Calculate orbs for all pairs (vectorized)
+        orbs_body1 = l_bodies["orb"][i_indices]
+        orbs_body2 = l_bodies["orb"][j_indices]
+        aspect_coef = aspects["coef"][i_asp]
+        orbs = (orbs_body1 + orbs_body2) / 2 * aspect_coef
+
+        if i_asp == 0:  # Conjunction
+            # Check which pairs are in orb (vectorized)
+            in_orb = all_distances <= orbs
+            orb_values = all_distances[in_orb]
+        else:
+            # Check which pairs are in orb (vectorized)
+            in_orb = (all_distances >= aspect_angle - orbs) & (all_distances <= aspect_angle + orbs)
+            # Note: Using aspect_angle - distance (not abs) to match original behavior
+            # This can produce negative values when distance > aspect_angle
+            orb_values = aspect_angle - all_distances[in_orb]
+
+        # Collect results for this aspect
+        if np.any(in_orb):
+            for idx in np.where(in_orb)[0]:
+                results.append((body1_ids[idx], body2_ids[idx], i_asp, orb_values[np.where(in_orb)[0] == idx][0]))
+
+    # Convert to structured array
+    if len(results) == 0:
+        return np.array([], dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")])
+
+    return np.array(
+        results,
+        dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")],
+    )
+
+
+def calculate_aspects_batch(jd_array: np.ndarray, l_bodies=bodies) -> List[np.ndarray]:
+    """Calculate aspects for multiple dates (batch processing).
+
+    This function efficiently computes aspects for multiple dates by leveraging
+    vectorized position calculations.
+
+    Args:
+        jd_array: Array of Julian Dates
+        l_bodies: Array of bodies (default: all bodies)
+
+    Returns:
+        List of structured arrays, one for each date, containing aspects
+    """
+    from .ephemeris.planets import calc_planet_position_batch
+
+    bodies_id = l_bodies["id"]
+    n_bodies = len(bodies_id)
+    n_dates = len(jd_array)
+
+    # Calculate all positions for all bodies for all dates (vectorized!)
+    # Shape: (n_bodies, n_dates, 6) where 6 = [lon, lat, dist, vlon, vlat, vdist]
+    all_body_positions = np.zeros((n_bodies, n_dates, 6))
+    for i, body_id in enumerate(bodies_id):
+        all_body_positions[i] = calc_planet_position_batch(jd_array, body_id)
+
+    # Extract longitudes (shape: n_bodies x n_dates)
+    all_longitudes = all_body_positions[:, :, 0]
+
+    # Prepare pairwise combinations indices
+    i_indices, j_indices = np.triu_indices(n_bodies, k=1)
+    n_pairs = len(i_indices)
+
+    # Calculate all distances for all pairs for all dates (vectorized!)
+    # Shape: (n_pairs, n_dates)
+    pos1_all = all_longitudes[i_indices, :]  # Shape: (n_pairs, n_dates)
+    pos2_all = all_longitudes[j_indices, :]  # Shape: (n_pairs, n_dates)
+    all_distances = distance(pos1_all, pos2_all)  # Vectorized distance
+
+    # Pre-calculate orbs for all pairs for all aspects
+    orbs_body1 = l_bodies["orb"][i_indices]  # Shape: (n_pairs,)
+    orbs_body2 = l_bodies["orb"][j_indices]  # Shape: (n_pairs,)
+
+    # Get body IDs for all pairs
+    body1_ids = bodies_id[i_indices]
+    body2_ids = bodies_id[j_indices]
+
+    # Process each date
+    results_by_date = []
+    for date_idx in range(n_dates):
+        date_results = []
+        distances_this_date = all_distances[:, date_idx]  # All pair distances for this date
+
+        # Check each aspect type
+        for i_asp, aspect_angle in enumerate(aspects["value"]):
+            aspect_coef = aspects["coef"][i_asp]
+            orbs = (orbs_body1 + orbs_body2) / 2 * aspect_coef
+
+            if i_asp == 0:  # Conjunction
+                in_orb = distances_this_date <= orbs
+                orb_values = distances_this_date[in_orb]
+            else:
+                in_orb = (distances_this_date >= aspect_angle - orbs) & (distances_this_date <= aspect_angle + orbs)
+                # Note: Using aspect_angle - distance (not abs) to match original behavior
+                orb_values = aspect_angle - distances_this_date[in_orb]
+
+            # Collect results for this aspect
+            if np.any(in_orb):
+                indices_in_orb = np.where(in_orb)[0]
+                for i, idx in enumerate(indices_in_orb):
+                    date_results.append((body1_ids[idx], body2_ids[idx], i_asp, orb_values[i]))
+
+        # Convert to structured array for this date
+        if len(date_results) == 0:
+            results_by_date.append(np.array([], dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")]))
+        else:
+            results_by_date.append(
+                np.array(date_results, dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")])
+            )
+
+    return results_by_date
 
 
 # New functions for TODO features
