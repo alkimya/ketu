@@ -9,10 +9,10 @@ from datetime import datetime
 from zoneinfo import ZoneInfo
 import numpy as np
 
-# Import refactored modules
+# Import ketu modules
 from ketu.ephemeris import utc_to_julian, julian_to_utc
 from ketu.ephemeris import calc_planet_position, get_planet_name
-from ketu.ketu_refactored import (
+from ketu.ketu import (
     bodies,
     aspects,
     signs,

@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from ketu import ketu_refactored
+from ketu import ketu
 from ketu.ephemeris.time import utc_to_julian
 
 
@@ -24,10 +24,10 @@ def test_aspects_correctness():
     print("\nTest 1: calculate_aspects_vectorized vs calculate_aspects")
 
     # Original version
-    aspects_orig = ketu_refactored.calculate_aspects(TEST_JD)
+    aspects_orig = ketu.calculate_aspects(TEST_JD)
 
     # Vectorized version
-    aspects_vec = ketu_refactored.calculate_aspects_vectorized(TEST_JD)
+    aspects_vec = ketu.calculate_aspects_vectorized(TEST_JD)
 
     # Compare results
     assert len(aspects_orig) == len(aspects_vec), f"Different number of aspects: {len(aspects_orig)} vs {len(aspects_vec)}"
@@ -53,10 +53,10 @@ def test_aspects_correctness():
     jd_array = np.array([TEST_JD, TEST_JD + 1, TEST_JD + 2])
 
     # Scalar version (loop)
-    aspects_scalar = [ketu_refactored.calculate_aspects(jd) for jd in jd_array]
+    aspects_scalar = [ketu.calculate_aspects(jd) for jd in jd_array]
 
     # Batch version
-    aspects_batch = ketu_refactored.calculate_aspects_batch(jd_array)
+    aspects_batch = ketu.calculate_aspects_batch(jd_array)
 
     # Compare
     for i, jd in enumerate(jd_array):
@@ -89,13 +89,13 @@ def benchmark_aspects_performance():
     # Original version
     start = time.perf_counter()
     for _ in range(iterations):
-        _ = ketu_refactored.calculate_aspects(TEST_JD)
+        _ = ketu.calculate_aspects(TEST_JD)
     time_orig = time.perf_counter() - start
 
     # Vectorized version
     start = time.perf_counter()
     for _ in range(iterations):
-        _ = ketu_refactored.calculate_aspects_vectorized(TEST_JD)
+        _ = ketu.calculate_aspects_vectorized(TEST_JD)
     time_vec = time.perf_counter() - start
 
     speedup = time_orig / time_vec
@@ -110,12 +110,12 @@ def benchmark_aspects_performance():
 
     # Scalar loop version
     start = time.perf_counter()
-    _ = [ketu_refactored.calculate_aspects(jd) for jd in jd_array]
+    _ = [ketu.calculate_aspects(jd) for jd in jd_array]
     time_scalar = time.perf_counter() - start
 
     # Batch version
     start = time.perf_counter()
-    _ = ketu_refactored.calculate_aspects_batch(jd_array)
+    _ = ketu.calculate_aspects_batch(jd_array)
     time_batch = time.perf_counter() - start
 
     speedup = time_scalar / time_batch
@@ -130,12 +130,12 @@ def benchmark_aspects_performance():
 
     # Scalar loop version
     start = time.perf_counter()
-    _ = [ketu_refactored.calculate_aspects(jd) for jd in jd_array]
+    _ = [ketu.calculate_aspects(jd) for jd in jd_array]
     time_scalar = time.perf_counter() - start
 
     # Batch version
     start = time.perf_counter()
-    _ = ketu_refactored.calculate_aspects_batch(jd_array)
+    _ = ketu.calculate_aspects_batch(jd_array)
     time_batch = time.perf_counter() - start
 
     speedup = time_scalar / time_batch
@@ -158,7 +158,7 @@ def benchmark_distance_vectorization():
     # Vectorized version (new)
     start = time.perf_counter()
     for _ in range(100):
-        _ = ketu_refactored.distance(pos1, pos2)
+        _ = ketu.distance(pos1, pos2)
     time_vec = (time.perf_counter() - start) / 100
 
     print(f"\n  Vectorized distance for {n} pairs: {time_vec*1000:.3f} ms")
