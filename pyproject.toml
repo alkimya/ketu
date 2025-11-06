@@ -45,7 +45,7 @@ Repository = "https://github.com/alkimya/ketu"
 Issues = "https://github.com/alkimya/ketu/issues"
 
 [project.scripts]
-ketu = "ketu.ketu:main"
+ketu = "ketu.display:main"
 
 [tool.setuptools]
 packages = ["ketu"]
