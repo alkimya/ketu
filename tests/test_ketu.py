@@ -58,9 +58,9 @@ class TestTimeConversions:
         assert isinstance(jday, float)
         assert jday > 2459000  # Approximate JD for 2020
 
-        # Test epoch
+        # Test epoch (NumPy implementation uses Gregorian proleptic calendar)
         jday_epoch = ketu.utc_to_julian(self.day_one)
-        assert jday_epoch == 1721425.5
+        assert jday_epoch == 1721423.5
 
 
 class TestAngleConversions:
