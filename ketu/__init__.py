@@ -22,15 +22,13 @@ __version__ = "0.2.0"
 __author__ = "Loc Cosnier"
 __license__ = "MIT"
 
-from ketu.ketu import (
-    # Data structures
-    bodies,
-    aspects,
-    signs,
-
+# Import from modular structure
+from ketu.core import bodies, aspects, signs
+from ketu.calculations import (
     # Time conversion
     local_to_utc,
     utc_to_julian,
+    julian_to_utc,
 
     # Body information
     body_name,
@@ -53,19 +51,19 @@ from ketu.ketu import (
     # Aspect calculations
     get_aspect,
     calculate_aspects,
+    calculate_aspects_vectorized,
+    calculate_aspects_batch,
+    find_aspect_timing,
+    find_aspects_between_dates,
 
     # Utility functions
     decimal_degrees_to_dms,
+    dd_to_dms,
     distance,
     get_orb,
-
-    # Display functions
-    print_positions,
-    print_aspects,
-
-    # Main entry point
-    main,
+    body_properties,
 )
+from ketu.display import print_positions, print_aspects, main
 
 __all__ = [
     # Version and metadata
@@ -81,10 +79,12 @@ __all__ = [
     # Time conversion
     "local_to_utc",
     "utc_to_julian",
+    "julian_to_utc",
 
     # Body information
     "body_name",
     "body_id",
+    "body_properties",
 
     # Position calculations
     "long",
@@ -103,9 +103,14 @@ __all__ = [
     # Aspect calculations
     "get_aspect",
     "calculate_aspects",
+    "calculate_aspects_vectorized",
+    "calculate_aspects_batch",
+    "find_aspect_timing",
+    "find_aspects_between_dates",
 
     # Utility functions
     "decimal_degrees_to_dms",
+    "dd_to_dms",
     "distance",
     "get_orb",
 
