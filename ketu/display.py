@@ -25,7 +25,11 @@ from .calculations import (
 
 
 def print_positions(jdate: float):
-    """Function to format and print positions of the bodies for a date"""
+    """Print formatted positions of all bodies for a given date.
+
+    Args:
+        jdate: Julian Date
+    """
     print("\n")
     print("------------- Bodies Positions -------------")
     for index, pos in np.ndenumerate(positions(jdate)):
@@ -35,7 +39,11 @@ def print_positions(jdate: float):
 
 
 def print_aspects(jdate: float):
-    """Function to format and print aspects between the bodies for a date"""
+    """Print formatted aspects between all bodies for a given date.
+
+    Args:
+        jdate: Julian Date
+    """
     print("\n")
     print("------------- Bodies Aspects -------------")
     for aspect in calculate_aspects(jdate):
@@ -49,7 +57,7 @@ def print_aspects(jdate: float):
 
 
 def main():
-    """Entry point of the program"""
+    """Main CLI entry point for interactive astronomical calculations."""
     try:
         year, month, day = map(int, input("Give a date with ISO format, ex: 2020-12-21\n").split("-"))
         hour, minute = map(int, input("Give a time (hour, minute), with ISO format, ex: 19:20\n").split(":"))

@@ -4,7 +4,7 @@ This module contains all position, aspect, and orbital calculations for planetar
 It provides both scalar and vectorized implementations for performance.
 """
 
-from functools import lru_cache
+from functools import cache
 from itertools import combinations as combs
 from typing import Tuple, Optional, List
 
@@ -27,7 +27,14 @@ from .ephemeris.planets import (
 # ========== Utility Functions ==========
 
 def dd_to_dms(deg: float) -> np.ndarray:
-    """Return degrees, minutes, seconds from degrees decimal"""
+    """Convert decimal degrees to degrees, minutes, seconds.
+
+    Args:
+        deg: Decimal degrees
+
+    Returns:
+        Array of [degrees, minutes, seconds] as integers
+    """
     mins, secs = divmod(deg * 3600, 60)
     degs, mins = divmod(mins, 60)
     return np.array((degs, mins, secs), dtype="i4")
@@ -38,25 +45,44 @@ decimal_degrees_to_dms = dd_to_dms
 
 
 def distance(pos1: float, pos2: float) -> float:
-    """Return the angular distance from two bodies positions (vectorized).
+    """Calculate angular distance between two positions (vectorized).
 
     Works with scalars or arrays via NumPy broadcasting.
+    Always returns the shortest angular distance (0-180 degrees).
+
+    Args:
+        pos1: First position in degrees
+        pos2: Second position in degrees
+
+    Returns:
+        Shortest angular distance in degrees
     """
     angle = np.abs(pos2 - pos1)
     return np.where(angle <= 180, angle, 360 - angle)
 
 
 def get_orb(body1: int, body2: int, asp: int) -> float:
-    """Calculate the orb for two bodies and aspect"""
+    """Calculate the orb tolerance for two bodies and an aspect.
+
+    Args:
+        body1: First body ID (0-12)
+        body2: Second body ID (0-12)
+        asp: Aspect index (0-6)
+
+    Returns:
+        Orb in degrees
+    """
     orbs, coef = bodies["orb"], aspects["coef"]
     return (orbs[body1] + orbs[body2]) / 2 * coef[asp]
 
 
 # ========== Body Position Functions ==========
 
-@lru_cache(maxsize=1024)
+@cache
 def body_properties(jdate: float, body: int) -> np.ndarray:
     """Cached wrapper for body_properties to maintain API compatibility.
+
+    Uses unbounded cache for optimal performance with repeated calculations.
 
     Args:
         jdate: Julian Date
@@ -69,7 +95,14 @@ def body_properties(jdate: float, body: int) -> np.ndarray:
 
 
 def body_name(body: int) -> str:
-    """Return the body name"""
+    """Get the name of an astronomical body.
+
+    Args:
+        body: Body ID (0-12)
+
+    Returns:
+        Body name as string
+    """
     name = get_planet_name(body)
     # Convert to match original format
     if name == "mean Node":
@@ -82,52 +115,130 @@ def body_name(body: int) -> str:
 
 
 def body_id(b_name: str) -> int:
-    """Return the body id"""
+    """Get the ID of an astronomical body by name.
+
+    Args:
+        b_name: Body name (e.g., "Sun", "Moon", "Mars")
+
+    Returns:
+        Body ID (0-12)
+    """
     return bodies["id"][np.where(bodies["name"] == b_name.encode())][0]
 
 
 def long(jdate: float, body: int) -> float:
-    """Return the body longitude"""
+    """Get ecliptic longitude of a body.
+
+    Args:
+        jdate: Julian Date
+        body: Body ID (0-12)
+
+    Returns:
+        Longitude in degrees (0-360)
+    """
     return body_properties(jdate, body)[0]
 
 
 def lat(jdate: float, body: int) -> float:
-    """Return the body latitude"""
+    """Get ecliptic latitude of a body.
+
+    Args:
+        jdate: Julian Date
+        body: Body ID (0-12)
+
+    Returns:
+        Latitude in degrees
+    """
     return body_properties(jdate, body)[1]
 
 
 def dist_au(jdate: float, body: int) -> float:
-    """Return distance of the body to Earth in AU"""
+    """Get distance of a body from Earth.
+
+    Args:
+        jdate: Julian Date
+        body: Body ID (0-12)
+
+    Returns:
+        Distance in Astronomical Units (AU)
+    """
     return body_properties(jdate, body)[2]
 
 
 def vlong(jdate: float, body: int) -> float:
-    """Return the body longitude speed"""
+    """Get longitude velocity of a body.
+
+    Args:
+        jdate: Julian Date
+        body: Body ID (0-12)
+
+    Returns:
+        Longitude speed in degrees/day
+    """
     return body_properties(jdate, body)[3]
 
 
 def vlat(jdate: float, body: int) -> float:
-    """Return the body latitude speed"""
+    """Get latitude velocity of a body.
+
+    Args:
+        jdate: Julian Date
+        body: Body ID (0-12)
+
+    Returns:
+        Latitude speed in degrees/day
+    """
     return body_properties(jdate, body)[4]
 
 
 def vdist_au(jdate: float, body: int) -> float:
-    """Return the distance speed of the body"""
+    """Get distance velocity of a body.
+
+    Args:
+        jdate: Julian Date
+        body: Body ID (0-12)
+
+    Returns:
+        Distance speed in AU/day
+    """
     return body_properties(jdate, body)[5]
 
 
 def is_retrograde(jdate: float, body: int) -> bool:
-    """Return True if a body is retrograde"""
+    """Check if a body is in retrograde motion.
+
+    Args:
+        jdate: Julian Date
+        body: Body ID (0-12)
+
+    Returns:
+        True if retrograde (negative longitude velocity)
+    """
     return bool(vlong(jdate, body) < 0)
 
 
 def is_ascending(jdate: float, body: int) -> bool:
-    """Return True if a body latitude is rising"""
+    """Check if a body's latitude is rising.
+
+    Args:
+        jdate: Julian Date
+        body: Body ID (0-12)
+
+    Returns:
+        True if latitude is increasing
+    """
     return bool(vlat(jdate, body) > 0)
 
 
 def body_sign(b_long: float) -> Tuple[int, int, int, int]:
-    """Return the body position in sign, degrees, minutes and seconds"""
+    """Convert longitude to zodiac sign position.
+
+    Args:
+        b_long: Ecliptic longitude in degrees
+
+    Returns:
+        Tuple of (sign_index, degrees, minutes, seconds)
+    """
     dms = dd_to_dms(b_long)
     sign, degs = divmod(dms[0], 30)
     mins, secs = dms[1], dms[2]
@@ -135,7 +246,15 @@ def body_sign(b_long: float) -> Tuple[int, int, int, int]:
 
 
 def positions(jdate: float, l_bodies=bodies) -> np.ndarray:
-    """Return an array of bodies longitude"""
+    """Get ecliptic longitudes of all bodies.
+
+    Args:
+        jdate: Julian Date
+        l_bodies: Bodies array (default: all bodies)
+
+    Returns:
+        Array of longitudes in degrees
+    """
     bodies_id = l_bodies["id"]
     return np.array([long(jdate, body) for body in bodies_id])
 
@@ -143,9 +262,15 @@ def positions(jdate: float, l_bodies=bodies) -> np.ndarray:
 # ========== Aspect Functions ==========
 
 def get_aspect(jdate: float, body1: int, body2: int) -> Optional[Tuple]:
-    """
-    Return the aspect and orb between two bodies for a certain date
-    Return None if there's no aspect
+    """Find aspect between two bodies at a given date.
+
+    Args:
+        jdate: Julian Date
+        body1: First body ID
+        body2: Second body ID
+
+    Returns:
+        Tuple of (body1, body2, aspect_index, orb) or None if no aspect
     """
     if body1 > body2:
         body1, body2 = body2, body1
@@ -160,9 +285,14 @@ def get_aspect(jdate: float, body1: int, body2: int) -> Optional[Tuple]:
 
 
 def calculate_aspects(jdate: float, l_bodies=bodies) -> np.ndarray:
-    """
-    Return a structured array of aspects and orb
-    Return None if there's no aspect
+    """Calculate all aspects between bodies at a given date.
+
+    Args:
+        jdate: Julian Date
+        l_bodies: Bodies array (default: all bodies)
+
+    Returns:
+        Structured array with fields: body1, body2, i_asp, orb
     """
     bodies_id = l_bodies["id"]
     aspects_data = [get_aspect(jdate, *comb) for comb in combs(bodies_id, 2)]
