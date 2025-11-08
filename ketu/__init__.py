@@ -65,6 +65,14 @@ from ketu.calculations import (
 )
 from ketu.display import print_positions, print_aspects, main
 
+# Advanced aspect window calculations
+from ketu.aspect_windows import (
+    AspectMoment,
+    AspectWindow,
+    find_aspect_window,
+    find_aspects_timeline,
+)
+
 __all__ = [
     # Version and metadata
     "__version__",
@@ -120,4 +128,10 @@ __all__ = [
 
     # Main entry point
     "main",
+
+    # Advanced aspect windows
+    "AspectMoment",
+    "AspectWindow",
+    "find_aspect_window",
+    "find_aspects_timeline",
 ]
