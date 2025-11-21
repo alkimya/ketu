@@ -59,15 +59,15 @@ PLANET_SYMBOLS = {
     12: "⚷",  # Chiron
 }
 
-# Aspect colors (traditional astrological colors)
+# Aspect colors (distinctive colors for better visibility)
 ASPECT_COLORS = {
     0: "#FFD700",   # Conjunction - Gold
     1: "#4169E1",   # Semi-Sextile - Royal Blue
-    2: "#32CD32",   # Sextile - Lime Green
-    3: "#FF4500",   # Square - Orange Red
-    4: "#1E90FF",   # Trine - Dodger Blue
+    2: "#4169E1",   # Sextile - Royal Blue (swapped with Trine)
+    3: "#FF6600",   # Square - Bright Orange
+    4: "#32CD32",   # Trine - Lime Green (swapped with Sextile)
     5: "#FF1493",   # Quincunx - Deep Pink
-    6: "#DC143C",   # Opposition - Crimson
+    6: "#9400D3",   # Opposition - Dark Violet (more distinct)
 }
 
 # Planet colors
@@ -337,7 +337,7 @@ def _draw_zodiac_wheel(ax):
         ax.text(
             x, y, symbol,
             ha='center', va='center',
-            fontsize=14, fontweight='bold',
+            fontsize=16, fontweight='bold',
             color='#34495E', zorder=10
         )
 
@@ -367,19 +367,19 @@ def _draw_planets(ax, jd: float, planet_positions: dict):
         # Check if retrograde
         retro = is_retrograde(jd, body_id)
 
-        # Draw planet circle
+        # Draw planet circle (increased size)
         planet_circle = Circle(
-            (x, y), 0.04,
+            (x, y), 0.055,
             facecolor=color, edgecolor='white',
-            linewidth=1.5, zorder=20, alpha=0.9
+            linewidth=2, zorder=20, alpha=0.9
         )
         ax.add_patch(planet_circle)
 
-        # Draw symbol
+        # Draw symbol (increased font size)
         text = ax.text(
             x, y, symbol,
             ha='center', va='center',
-            fontsize=12, fontweight='bold',
+            fontsize=16, fontweight='bold',
             color='white', zorder=21
         )
         text.set_path_effects([
@@ -485,14 +485,14 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
 
             retro = "R" if is_retrograde(jd, body_id) else ""
 
-            y_pos = legend_y_start - y_offset * 0.06
+            y_pos = legend_y_start - y_offset * 0.045  # Reduced spacing
 
-            # Symbol (colored)
+            # Symbol (colored, larger)
             ax.text(
                 legend_x - 0.03, y_pos,
                 symbol,
                 transform=ax.transAxes,
-                fontsize=11, fontweight='bold',
+                fontsize=14, fontweight='bold',
                 color=color, ha='center', va='top'
             )
 
@@ -509,8 +509,8 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
             y_offset += 1
 
     if show_aspect_table:
-        # Aspect table
-        table_y_start = legend_y_start - 0.5
+        # Aspect table (moved down to avoid overlap)
+        table_y_start = legend_y_start - 0.7
 
         ax.text(
             legend_x, table_y_start, "Aspects",
