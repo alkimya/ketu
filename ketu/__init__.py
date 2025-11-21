@@ -73,6 +73,28 @@ from ketu.aspect_windows import (
     find_aspects_timeline,
 )
 
+# Transit calculations
+from ketu.transits import (
+    TransitMoment,
+    TransitWindow,
+    NatalPosition,
+    TransitAspect,
+    find_transits_to_position,
+    get_natal_positions,
+    compare_dates_transits,
+)
+
+# iCalendar export (requires: pip install icalendar)
+try:
+    from ketu.icalendar_export import (
+        export_lunations_to_ical,
+        export_transits_to_ical,
+        export_aspects_to_ical,
+    )
+    _ICALENDAR_AVAILABLE = True
+except ImportError:
+    _ICALENDAR_AVAILABLE = False
+
 __all__ = [
     # Version and metadata
     "__version__",
@@ -134,4 +156,21 @@ __all__ = [
     "AspectWindow",
     "find_aspect_window",
     "find_aspects_timeline",
+
+    # Transits
+    "TransitMoment",
+    "TransitWindow",
+    "NatalPosition",
+    "TransitAspect",
+    "find_transits_to_position",
+    "get_natal_positions",
+    "compare_dates_transits",
 ]
+
+# Add iCalendar exports if available
+if _ICALENDAR_AVAILABLE:
+    __all__.extend([
+        "export_lunations_to_ical",
+        "export_transits_to_ical",
+        "export_aspects_to_ical",
+    ])
