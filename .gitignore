@@ -27,5 +27,5 @@ build/
 .pypirc
 
 # Generated chart files
-chart_*.svg
+chart*.svg
 *.ics
