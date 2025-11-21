@@ -525,7 +525,7 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
         ax.text(
             legend_x, legend_y_start, "Planets",
             transform=ax.transAxes,
-            fontsize=12, fontweight='bold',
+            fontsize=14, fontweight='bold',
             ha='left', va='top'
         )
 
@@ -592,7 +592,7 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
         ax.text(
             legend_x, table_y_start, "Aspects",
             transform=ax.transAxes,
-            fontsize=12, fontweight='bold',
+            fontsize=14, fontweight='bold',
             ha='left', va='top'
         )
 
