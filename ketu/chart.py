@@ -14,7 +14,8 @@ from matplotlib.patches import Circle, Wedge, FancyBboxPatch
 from matplotlib.lines import Line2D
 import matplotlib.patheffects as path_effects
 
-from .core import bodies, aspects, signs
+from .core import bodies, signs
+from .core import aspects as aspects_data
 from .calculations import (
     positions,
     calculate_aspects,
@@ -99,6 +100,15 @@ PLANET_COLORS = {
 }
 
 
+# Predefined lists for common use cases
+PLANETS_DEFAULT = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12]  # All except North Node (11)
+"""Default planet list: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn,
+Uranus, Neptune, Pluto, South Node, Chiron (excludes North Node)"""
+
+BIG_FIVE = [0, 60, 90, 120, 180]  # Conjunction, Sextile, Square, Trine, Opposition
+"""Big Five aspects: Conjunction (0°), Sextile (60°), Square (90°), Trine (120°), Opposition (180°)"""
+
+
 def _is_aspect_applying(
     jd: float,
     body1_id: int,
@@ -142,8 +152,8 @@ def draw_zodiacal_chart(
     show_aspects: bool = True,
     show_legend: bool = True,
     show_aspect_table: bool = True,
-    bodies_to_show: Optional[List[int]] = None,
-    aspects_to_show: Optional[List[Union[str, int]]] = None,
+    planets: Optional[List[int]] = None,
+    aspects: Optional[List[Union[str, int]]] = None,
     figsize: Tuple[float, float] = (16, 11),
     dpi: int = 150,
 ) -> None:
@@ -169,11 +179,11 @@ def draw_zodiacal_chart(
         show_aspects: Draw aspect lines (default: True)
         show_legend: Show legend with planet info (default: True)
         show_aspect_table: Show aspect table (default: True)
-        bodies_to_show: List of body IDs to show (default: 0-12, all)
-        aspects_to_show: List of aspects to show by name or index
-                         (default: ["Conjunction", "Sextile", "Square", "Trine", "Opposition"])
-                         Excludes Semi-Sextile and Quincunx by default
-        figsize: Figure size in inches (default: 14x10)
+        planets: List of planet IDs to show (default: PLANETS_DEFAULT)
+                 PLANETS_DEFAULT = [0,1,2,3,4,5,6,7,8,9,10,12] (all except North Node)
+        aspects: List of aspects to show by angle or name (default: BIG_FIVE)
+                 BIG_FIVE = [0, 60, 90, 120, 180] (Conjunction, Sextile, Square, Trine, Opposition)
+        figsize: Figure size in inches (default: 16x11)
         dpi: Resolution for raster formats (default: 150)
 
     Examples:
@@ -253,25 +263,39 @@ def draw_zodiacal_chart(
         else:
             date_str = dt_utc.strftime("%Y-%m-%d %H:%M UTC")
 
-    # Default bodies to show (all)
-    if bodies_to_show is None:
-        bodies_to_show = list(range(13))  # 0-12
+    # Default planets to show (all except North Node)
+    if planets is None:
+        planets = PLANETS_DEFAULT
 
-    # Default aspects to show (major aspects, excluding Semi-Sextile and Quincunx)
-    if aspects_to_show is None:
-        aspects_to_show = ["Conjunction", "Sextile", "Square", "Trine", "Opposition"]
+    # Default aspects to show (Big Five)
+    if aspects is None:
+        aspects_list = BIG_FIVE
+    else:
+        aspects_list = aspects
 
-    # Convert aspect names to indices
+    # Convert aspect angles/names to indices
     aspect_indices = []
-    for aspect in aspects_to_show:
+    for aspect in aspects_list:
         if isinstance(aspect, str):
-            idx = np.where(aspects["name"] == aspect.encode())[0]
+            # Aspect name
+            idx = np.where(aspects_data["name"] == aspect.encode())[0]
             if len(idx) > 0:
                 aspect_indices.append(int(idx[0]))
+        elif isinstance(aspect, int) and aspect < 7:
+            # Aspect index
+            aspect_indices.append(aspect)
         else:
-            aspect_indices.append(int(aspect))
+            # Aspect angle
+            idx = np.where(aspects_data["angle"] == aspect)[0]
+            if len(idx) > 0:
+                aspect_indices.append(int(idx[0]))
 
-    # Create figure
+    # Create figure (adjust height based on number of aspects)
+    num_aspects = len(aspect_indices) * len(planets) // 2  # Rough estimate
+    if num_aspects > 20:
+        # Increase height for many aspects
+        figsize = (figsize[0], figsize[1] + 2)
+
     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
     ax.set_aspect('equal')
     ax.set_xlim(-1.6, 1.6)
@@ -288,7 +312,7 @@ def draw_zodiacal_chart(
 
     # Get planetary positions
     planet_positions = {}
-    for body_id in bodies_to_show:
+    for body_id in planets:
         pos_data = positions(jd)
         if body_id < len(pos_data):
             longitude = pos_data[body_id]
@@ -320,16 +344,16 @@ def draw_zodiacal_chart(
 
 def _draw_zodiac_wheel(ax):
     """Draw the zodiac wheel with 12 signs."""
-    # Outer circle
-    outer_circle = Circle((0, 0), 1.0, fill=False, edgecolor='#2C3E50', linewidth=2)
+    # Outer circle (slightly larger)
+    outer_circle = Circle((0, 0), 1.05, fill=False, edgecolor='#2C3E50', linewidth=2)
     ax.add_patch(outer_circle)
 
     # Inner circle
-    inner_circle = Circle((0, 0), 0.85, fill=False, edgecolor='#34495E', linewidth=1)
+    inner_circle = Circle((0, 0), 0.88, fill=False, edgecolor='#34495E', linewidth=1)
     ax.add_patch(inner_circle)
 
     # Zodiac background circle
-    background = Circle((0, 0), 1.0, fill=True, facecolor='#F8F9FA', zorder=0)
+    background = Circle((0, 0), 1.05, fill=True, facecolor='#F8F9FA', zorder=0)
     ax.add_patch(background)
 
     # Draw 12 zodiac segments
@@ -343,7 +367,7 @@ def _draw_zodiac_wheel(ax):
 
         # Draw wedge
         wedge = Wedge(
-            (0, 0), 0.85, theta1, theta2,
+            (0, 0), 0.88, theta1, theta2,
             facecolor=colors[i], edgecolor='none',
             zorder=1, alpha=0.3
         )
@@ -351,15 +375,15 @@ def _draw_zodiac_wheel(ax):
 
         # Draw division line
         angle_rad = np.radians(theta1)
-        x1, y1 = 0.85 * np.cos(angle_rad), 0.85 * np.sin(angle_rad)
-        x2, y2 = 1.0 * np.cos(angle_rad), 1.0 * np.sin(angle_rad)
+        x1, y1 = 0.88 * np.cos(angle_rad), 0.88 * np.sin(angle_rad)
+        x2, y2 = 1.05 * np.cos(angle_rad), 1.05 * np.sin(angle_rad)
         ax.plot([x1, x2], [y1, y2], color='#BDC3C7', linewidth=0.5, zorder=2)
 
         # Add zodiac symbol
         mid_angle = theta1 + 15
         angle_rad = np.radians(mid_angle)
-        x = 0.925 * np.cos(angle_rad)
-        y = 0.925 * np.sin(angle_rad)
+        x = 0.965 * np.cos(angle_rad)
+        y = 0.965 * np.sin(angle_rad)
 
         sign_name = signs[i]  # signs is a list
         symbol = ZODIAC_SYMBOLS.get(i, sign_name[:3])
@@ -371,11 +395,11 @@ def _draw_zodiac_wheel(ax):
             color='#34495E', zorder=10
         )
 
-    # Add cardinal points labels
-    ax.text(1.15, 0, 'E\n0° ♈', ha='center', va='center', fontsize=10, color='#2C3E50', fontweight='bold')
-    ax.text(0, 1.15, 'N\n90° ♋', ha='center', va='center', fontsize=10, color='#2C3E50', fontweight='bold')
-    ax.text(-1.15, 0, 'W\n180° ♎', ha='center', va='center', fontsize=10, color='#2C3E50', fontweight='bold')
-    ax.text(0, -1.15, 'S\n270° ♑', ha='center', va='center', fontsize=10, color='#2C3E50', fontweight='bold')
+    # Add cardinal points labels (degrees and symbols only)
+    ax.text(1.2, 0, '0° ♈', ha='center', va='center', fontsize=10, color='#2C3E50', fontweight='bold')
+    ax.text(0, 1.2, '90° ♋', ha='center', va='center', fontsize=10, color='#2C3E50', fontweight='bold')
+    ax.text(-1.2, 0, '180° ♎', ha='center', va='center', fontsize=10, color='#2C3E50', fontweight='bold')
+    ax.text(0, -1.2, '270° ♑', ha='center', va='center', fontsize=10, color='#2C3E50', fontweight='bold')
 
 
 def _draw_planets(ax, jd: float, planet_positions: dict):
@@ -430,9 +454,9 @@ def _draw_planets(ax, jd: float, planet_positions: dict):
 def _draw_aspects(ax, jd: float, planet_positions: dict, aspect_indices: list):
     """Draw aspect lines between planets."""
     # Calculate all aspects
-    aspects_data = calculate_aspects(jd)
+    aspects_found = calculate_aspects(jd)
 
-    for aspect_data in aspects_data:
+    for aspect_data in aspects_found:
         body1_id, body2_id, aspect_idx, orb_value = aspect_data
 
         # Only draw if aspect is in our filter list
@@ -455,7 +479,7 @@ def _draw_aspects(ax, jd: float, planet_positions: dict, aspect_indices: list):
         x2, y2 = 0.75 * np.cos(angle2), 0.75 * np.sin(angle2)
 
         # Get aspect info
-        aspect_angle = float(aspects["angle"][aspect_idx])
+        aspect_angle = float(aspects_data["angle"][aspect_idx])
         aspect_color = ASPECT_COLORS.get(aspect_idx, '#888888')
 
         # Calculate line intensity based on orb (closer = more intense)
@@ -572,11 +596,11 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
             ha='left', va='top'
         )
 
-        aspects_data = calculate_aspects(jd)
+        aspects_found = calculate_aspects(jd)
 
         # Filter and collect aspects
         filtered_aspects = []
-        for aspect_data in aspects_data:
+        for aspect_data in aspects_found:
             body1_id, body2_id, aspect_idx, orb_value = aspect_data
 
             # Filter by aspect index
@@ -604,7 +628,7 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
             fast_symbol = PLANET_SYMBOLS.get(fast_id, "?")
             slow_symbol = PLANET_SYMBOLS.get(slow_id, "?")
             aspect_symbol = ASPECT_SYMBOLS.get(aspect_idx, "?")
-            aspect_angle = float(aspects["angle"][aspect_idx])
+            aspect_angle = float(aspects_data["angle"][aspect_idx])
             aspect_color = ASPECT_COLORS.get(aspect_idx, '#888888')
 
             fast_color = PLANET_COLORS.get(fast_id, '#000000')
@@ -666,4 +690,6 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
 
 __all__ = [
     "draw_zodiacal_chart",
+    "PLANETS_DEFAULT",
+    "BIG_FIVE",
 ]
