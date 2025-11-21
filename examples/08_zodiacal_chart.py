@@ -5,6 +5,7 @@ with planetary positions and aspects.
 """
 
 from datetime import datetime
+from zoneinfo import ZoneInfo
 from ketu.chart import draw_zodiacal_chart
 
 
@@ -24,18 +25,20 @@ def example_1_current_chart():
 
 
 def example_2_summer_solstice():
-    """Example 2: Summer Solstice 2024 - Sun at top (90° Cancer)."""
+    """Example 2: Summer Solstice 2024 - Sun at top (90° Cancer) - Paris time."""
     print("=" * 70)
-    print("Example 2: Summer Solstice 2024")
+    print("Example 2: Summer Solstice 2024 (Paris Time)")
     print("=" * 70)
 
     draw_zodiacal_chart(
-        date="2024-06-20 20:51",
+        date="2024-06-20 22:51",
         filename="chart_summer_solstice.svg",
-        title="Summer Solstice 2024 - Sun at Zenith"
+        title="Summer Solstice 2024 - Sun at Zenith",
+        timezone="Europe/Paris"
     )
 
     print("✓ Sun should be near top (90° Cancer)")
+    print("✓ Displayed in Europe/Paris timezone (CEST)")
     print("✓ Chart saved to: chart_summer_solstice.svg\n")
 
 
@@ -120,6 +123,26 @@ def example_7_positions_only():
     print("✓ Chart saved to: chart_positions_only.svg\n")
 
 
+def example_8_datetime_with_timezone():
+    """Example 8: Using datetime object with timezone."""
+    print("=" * 70)
+    print("Example 8: Datetime with Timezone (New York)")
+    print("=" * 70)
+
+    # Create datetime with timezone
+    dt = datetime(2024, 11, 15, 16, 28, tzinfo=ZoneInfo("America/New_York"))
+
+    draw_zodiacal_chart(
+        date=dt,
+        filename="chart_ny_timezone.svg",
+        title="Full Moon - New York Time"
+    )
+
+    print("✓ Using datetime object with tzinfo")
+    print("✓ Timezone automatically detected from datetime")
+    print("✓ Chart saved to: chart_ny_timezone.svg\n")
+
+
 def main():
     """Run all chart visualization examples."""
     print("\n")
@@ -136,6 +159,7 @@ def main():
     example_5_autumn_equinox()
     example_6_full_moon()
     example_7_positions_only()
+    example_8_datetime_with_timezone()
 
     print("=" * 70)
     print("All charts generated successfully!")
@@ -143,12 +167,13 @@ def main():
     print()
     print("Charts created:")
     print("  • chart_current.svg - Current planetary positions")
-    print("  • chart_summer_solstice.svg - Sun at top (Cancer)")
+    print("  • chart_summer_solstice.svg - Sun at top (Cancer) - Paris time")
     print("  • chart_winter_solstice.svg - Sun at bottom (Capricorn)")
     print("  • chart_spring_equinox.svg - Sun at East (Aries)")
     print("  • chart_autumn_equinox.svg - Sun at West (Libra)")
     print("  • chart_full_moon.svg - Full Moon opposition")
     print("  • chart_positions_only.svg - Positions without aspects")
+    print("  • chart_ny_timezone.svg - Full Moon in New York time")
     print()
     print("Features:")
     print("  ✓ Zodiac wheel with 12 signs")
@@ -157,6 +182,7 @@ def main():
     print("  ✓ Intensity based on orb (closer = brighter)")
     print("  ✓ Glow effect for applying aspects")
     print("  ✓ Retrograde markers")
+    print("  ✓ Timezone support (auto-detect or specify)")
     print("  ✓ Legend with positions and aspect table")
     print()
 

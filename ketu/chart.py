@@ -6,6 +6,7 @@ with planetary positions, aspects, and color-coded visual elements.
 
 from datetime import datetime, timedelta
 from typing import Union, Optional, List, Tuple
+from zoneinfo import ZoneInfo
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
@@ -126,6 +127,7 @@ def draw_zodiacal_chart(
     date: Union[datetime, str, float],
     filename: str = "chart.svg",
     title: Optional[str] = None,
+    timezone: Optional[Union[str, ZoneInfo]] = None,
     show_aspects: bool = True,
     show_legend: bool = True,
     show_aspect_table: bool = True,
@@ -149,6 +151,9 @@ def draw_zodiacal_chart(
         date: Date for the chart (datetime, ISO string, or Julian Date)
         filename: Output filename (supports .svg, .png, .pdf)
         title: Optional chart title (default: date)
+        timezone: Timezone for display (str like 'Europe/Paris' or ZoneInfo object)
+                  If None and date is string without tz, assumes UTC
+                  If date is datetime with tzinfo, uses that timezone
         show_aspects: Draw aspect lines (default: True)
         show_legend: Show legend with planet info (default: True)
         show_aspect_table: Show aspect table (default: True)
@@ -157,25 +162,81 @@ def draw_zodiacal_chart(
         dpi: Resolution for raster formats (default: 150)
 
     Examples:
-        >>> # Summer solstice 2024
-        >>> draw_zodiacal_chart("2024-06-20 20:51", "summer_solstice.svg")
+        >>> # Summer solstice 2024 in Paris time
+        >>> draw_zodiacal_chart("2024-06-20 22:51", "summer_solstice.svg",
+        ...                      timezone="Europe/Paris")
 
         >>> # Chart without aspects
         >>> draw_zodiacal_chart("2024-01-01", "positions_only.svg", show_aspects=False)
+
+        >>> # With datetime object
+        >>> from datetime import datetime
+        >>> from zoneinfo import ZoneInfo
+        >>> dt = datetime(2024, 6, 20, 22, 51, tzinfo=ZoneInfo("Europe/Paris"))
+        >>> draw_zodiacal_chart(dt, "chart.svg")
     """
-    # Convert date to Julian Date
+    # Convert date to Julian Date and determine display timezone
     if isinstance(date, str):
+        # Parse ISO string
         dt = datetime.fromisoformat(date)
-        jd = utc_to_julian(dt)
-        date_str = dt.strftime("%Y-%m-%d %H:%M UTC")
+
+        # If no timezone in string and timezone param provided, add it
+        if dt.tzinfo is None and timezone is not None:
+            if isinstance(timezone, str):
+                tz = ZoneInfo(timezone)
+            else:
+                tz = timezone
+            dt = dt.replace(tzinfo=tz)
+        elif dt.tzinfo is None:
+            # Assume UTC if no timezone specified
+            dt = dt.replace(tzinfo=ZoneInfo("UTC"))
+
+        # Convert to UTC for calculations
+        dt_utc = dt.astimezone(ZoneInfo("UTC"))
+        jd = utc_to_julian(dt_utc)
+
+        # Format for display in original timezone
+        tz_name = dt.tzinfo.tzname(dt) if dt.tzinfo else "UTC"
+        date_str = dt.strftime(f"%Y-%m-%d %H:%M {tz_name}")
+
     elif isinstance(date, datetime):
-        jd = utc_to_julian(date)
-        date_str = date.strftime("%Y-%m-%d %H:%M UTC")
+        # Use timezone from datetime or apply timezone param
+        if date.tzinfo is None and timezone is not None:
+            if isinstance(timezone, str):
+                tz = ZoneInfo(timezone)
+            else:
+                tz = timezone
+            dt = date.replace(tzinfo=tz)
+        elif date.tzinfo is None:
+            dt = date.replace(tzinfo=ZoneInfo("UTC"))
+        else:
+            dt = date
+
+        # Convert to UTC for calculations
+        dt_utc = dt.astimezone(ZoneInfo("UTC"))
+        jd = utc_to_julian(dt_utc)
+
+        # Format for display
+        tz_name = dt.tzinfo.tzname(dt) if dt.tzinfo else "UTC"
+        date_str = dt.strftime(f"%Y-%m-%d %H:%M {tz_name}")
+
     else:
+        # Julian Date provided - convert to UTC datetime
         jd = float(date)
         from .calculations import julian_to_utc
-        dt = julian_to_utc(jd)
-        date_str = dt.strftime("%Y-%m-%d %H:%M UTC")
+        dt_utc = julian_to_utc(jd)
+
+        # Apply timezone for display if provided
+        if timezone is not None:
+            if isinstance(timezone, str):
+                tz = ZoneInfo(timezone)
+            else:
+                tz = timezone
+            dt = dt_utc.replace(tzinfo=ZoneInfo("UTC")).astimezone(tz)
+            tz_name = dt.tzinfo.tzname(dt)
+            date_str = dt.strftime(f"%Y-%m-%d %H:%M {tz_name}")
+        else:
+            date_str = dt_utc.strftime("%Y-%m-%d %H:%M UTC")
 
     # Default bodies to show (all)
     if bodies_to_show is None:
