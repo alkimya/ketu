@@ -84,6 +84,17 @@ from ketu.transits import (
     compare_dates_transits,
 )
 
+# iCalendar export (requires: pip install icalendar)
+try:
+    from ketu.icalendar_export import (
+        export_lunations_to_ical,
+        export_transits_to_ical,
+        export_aspects_to_ical,
+    )
+    _ICALENDAR_AVAILABLE = True
+except ImportError:
+    _ICALENDAR_AVAILABLE = False
+
 __all__ = [
     # Version and metadata
     "__version__",
@@ -155,3 +166,11 @@ __all__ = [
     "get_natal_positions",
     "compare_dates_transits",
 ]
+
+# Add iCalendar exports if available
+if _ICALENDAR_AVAILABLE:
+    __all__.extend([
+        "export_lunations_to_ical",
+        "export_transits_to_ical",
+        "export_aspects_to_ical",
+    ])
