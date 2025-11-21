@@ -640,48 +640,48 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
 
             y_pos = table_y_start - y_offset * 0.04
 
-            # Fast planet symbol
+            # Fast planet symbol (increased size)
             ax.text(
                 legend_x, y_pos,
                 fast_symbol,
                 transform=ax.transAxes,
-                fontsize=12, fontweight='bold',
+                fontsize=14, fontweight='bold',
                 color=fast_color, ha='left', va='top'
             )
 
-            # Aspect symbol
+            # Aspect symbol (increased size)
             ax.text(
                 legend_x + 0.03, y_pos,
                 aspect_symbol,
                 transform=ax.transAxes,
-                fontsize=11, fontweight='bold',
+                fontsize=13, fontweight='bold',
                 color=aspect_color, ha='left', va='top'
             )
 
-            # Slow planet symbol
+            # Slow planet symbol (increased size)
             ax.text(
                 legend_x + 0.055, y_pos,
                 slow_symbol,
                 transform=ax.transAxes,
-                fontsize=12, fontweight='bold',
+                fontsize=14, fontweight='bold',
                 color=slow_color, ha='left', va='top'
             )
 
-            # Applying/separating marker
+            # Applying/separating marker (increased size)
             ax.text(
                 legend_x + 0.085, y_pos,
                 applying_marker,
                 transform=ax.transAxes,
-                fontsize=10, ha='left', va='top',
+                fontsize=11, ha='left', va='top',
                 color='#555555'
             )
 
-            # Orb
+            # Orb (increased size)
             ax.text(
                 legend_x + 0.11, y_pos,
                 f"{abs(orb_value):4.1f}°",
                 transform=ax.transAxes,
-                fontsize=8, ha='left', va='top',
+                fontsize=9, ha='left', va='top',
                 family='monospace'
             )
 
