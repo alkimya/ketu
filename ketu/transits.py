@@ -36,6 +36,18 @@ from .calculations import (
 )
 from .ephemeris.planets import calc_planet_position_batch
 
+# Import shared algorithms from refactored core module
+from ._aspect_core import (
+    get_body_id as _get_body_id,
+    get_aspect_index as _get_aspect_index,
+    get_cached_positions,
+    refine_exact_moment,
+    find_orb_boundaries,
+    find_local_minima,
+    interpolate_minimum,
+    calculate_adaptive_step,
+)
+
 
 # ========== Data Structures ==========
 
@@ -101,29 +113,7 @@ Attributes:
 
 
 # ========== Helper Functions ==========
-
-def _get_body_id(body: Union[str, int]) -> int:
-    """Convert body name or ID to integer ID."""
-    if isinstance(body, str):
-        return body_id(body)
-    return body
-
-
-def _get_aspect_index(aspect: Union[str, int, float]) -> int:
-    """Get aspect index from name, index, or angle."""
-    if isinstance(aspect, str):
-        idx = np.where(aspects["name"] == aspect.encode())[0]
-        if len(idx) == 0:
-            raise ValueError(f"Unknown aspect name: {aspect}")
-        return int(idx[0])
-    elif isinstance(aspect, int) and aspect < 7:
-        return aspect
-    else:
-        idx = np.where(aspects["angle"] == aspect)[0]
-        if len(idx) == 0:
-            raise ValueError(f"Unknown aspect angle: {aspect}")
-        return int(idx[0])
-
+# Note: _get_body_id and _get_aspect_index are now imported from _aspect_core
 
 def _find_transit_crossings(
     body_id: int,
@@ -148,23 +138,16 @@ def _find_transit_crossings(
     Returns:
         List of (jd_crossing, error, motion) tuples
     """
-    # Calculate adaptive step size based on body speed
+    # Calculate adaptive step size using refactored function
     avg_speed = bodies["speed"][body_id]
-
-    if abs(avg_speed) < 0.001:
-        avg_speed = 0.001  # Minimum to avoid division by zero
-
-    # Sample such that we get ~10 points per orb width
-    days_per_orb = orb / abs(avg_speed)
-    step_days = min(days_per_orb / 10, 1.0)
-    step_days = max(step_days, 0.01)
+    step_days = calculate_adaptive_step([avg_speed], orb)
 
     # Create time grid
     n_steps = int((jd_end - jd_start) / step_days) + 1
     jd_grid = np.linspace(jd_start, jd_end, n_steps)
 
-    # Vectorized position calculation for transiting body
-    pos_data = calc_planet_position_batch(jd_grid, body_id)
+    # Vectorized position calculation with caching
+    pos_data = get_cached_positions(jd_grid, body_id)
 
     # Extract longitudes and velocities
     lon = pos_data[:, 0]
@@ -176,166 +159,66 @@ def _find_transit_crossings(
     # Calculate absolute error from target aspect angle
     aspect_error = np.abs(dists - aspect_angle)
 
-    # Find local minima of aspect_error
+    # Find local minima using refactored function
+    minima_indices = find_local_minima(aspect_error, orb)
+
     candidates = []
 
-    for idx in range(1, len(aspect_error) - 1):
+    # Process each local minimum
+    for idx in minima_indices:
         error_before = aspect_error[idx - 1]
         error_current = aspect_error[idx]
         error_after = aspect_error[idx + 1]
 
-        # Check if this is a local minimum
-        if error_current < error_before and error_current < error_after:
-            # Check if within orb
-            if error_current <= orb:
-                # Quadratic interpolation for better initial guess
-                denominator = 2 * (error_before - 2 * error_current + error_after)
-                if abs(denominator) > 1e-10:
-                    offset = (error_before - error_after) / denominator
-                    offset = np.clip(offset, -0.5, 0.5)
-                else:
-                    offset = 0
+        # Use quadratic interpolation from refactored function
+        offset, _ = interpolate_minimum(error_before, error_current, error_after, idx, step_days)
+        jd_approx = jd_grid[idx] + offset * step_days
 
-                jd_approx = jd_grid[idx] + offset * step_days
+        # Determine motion (retrograde or direct)
+        is_retro = vlon[idx] < 0
+        motion_type = "retrograde" if is_retro else "direct"
 
-                # Determine motion (retrograde or direct)
-                is_retro = vlon[idx] < 0
-                motion_type = "retrograde" if is_retro else "direct"
-
-                candidates.append((jd_approx, error_current, motion_type))
+        candidates.append((jd_approx, error_current, motion_type))
 
     return candidates
 
 
-def _refine_transit_exact(
-    body_id: int,
-    reference_lon: float,
-    aspect_angle: float,
-    jd_initial: float,
-    max_iterations: int = 50,
-    tolerance: float = 1e-7,
-) -> Optional[float]:
-    """Refine transit timing using binary search.
+def _make_transit_distance_callback(body_id: int, reference_lon: float, aspect_angle: float):
+    """Create callback for transit distance calculation (for refinement).
 
     Args:
         body_id: Transiting body ID
-        reference_lon: Reference longitude (degrees)
-        aspect_angle: Target aspect angle (degrees)
-        jd_initial: Initial guess for exact transit time
-        max_iterations: Maximum iterations
-        tolerance: Convergence tolerance in days
+        reference_lon: Reference longitude
+        aspect_angle: Target aspect angle
 
     Returns:
-        Refined Julian Date of exact transit
+        Callback function that takes JD and returns distance error
     """
-    def get_error(jd: float) -> float:
-        """Calculate error from target aspect angle."""
+    def callback(jd: float) -> float:
         pos = long(jd, body_id)
         dist = distance(pos, reference_lon)
         return dist - aspect_angle
-
-    # Search window
-    search_window = 0.5
-    jd_left = jd_initial - search_window
-    jd_right = jd_initial + search_window
-
-    error_initial = get_error(jd_initial)
-
-    if abs(error_initial) < 0.001:
-        return jd_initial
-
-    best_jd = jd_initial
-    best_error = abs(error_initial)
-
-    for iteration in range(max_iterations):
-        jd_mid = (jd_left + jd_right) / 2
-        error_mid = get_error(jd_mid)
-
-        if abs(error_mid) < best_error:
-            best_error = abs(error_mid)
-            best_jd = jd_mid
-
-        if abs(error_mid) < 0.001:
-            return jd_mid
-
-        if abs(jd_right - jd_left) < tolerance:
-            return best_jd
-
-        # Binary search
-        error_left_mid = get_error((jd_left + jd_mid) / 2)
-        error_mid_right = get_error((jd_mid + jd_right) / 2)
-
-        if abs(error_left_mid) < abs(error_mid_right):
-            jd_right = jd_mid
-        else:
-            jd_left = jd_mid
-
-    return best_jd
+    return callback
 
 
-def _find_transit_orb_boundaries(
-    body_id: int,
-    reference_lon: float,
-    aspect_angle: float,
-    orb: float,
-    jd_exact: float,
-    search_days: float = 30,
-) -> Tuple[Optional[float], Optional[float]]:
-    """Find orb entry and exit times for a transit.
+def _make_transit_orb_callback(body_id: int, reference_lon: float, aspect_angle: float, orb: float):
+    """Create callback to check if within orb (for boundary finding).
 
     Args:
         body_id: Transiting body ID
-        reference_lon: Reference longitude (degrees)
-        aspect_angle: Aspect angle (degrees)
-        orb: Orb tolerance (degrees)
-        jd_exact: Julian Date of exact transit
-        search_days: Maximum days to search in each direction
+        reference_lon: Reference longitude
+        aspect_angle: Target aspect angle
+        orb: Orb tolerance
 
     Returns:
-        Tuple of (jd_begin, jd_end)
+        Callback function that takes JD and returns bool (within orb?)
     """
-    def is_within_orb(jd: float) -> bool:
-        """Check if transit is within orb at given time."""
+    def callback(jd: float) -> bool:
         pos = long(jd, body_id)
         dist = distance(pos, reference_lon)
         error = abs(dist - aspect_angle) if aspect_angle > 0 else dist
         return error <= orb
-
-    # Binary search for beginning
-    jd_begin = None
-    left = jd_exact - search_days
-    right = jd_exact
-
-    for _ in range(20):
-        mid = (left + right) / 2
-
-        if is_within_orb(mid):
-            jd_begin = mid
-            right = mid
-        else:
-            left = mid
-
-        if abs(right - left) < 1e-5:
-            break
-
-    # Binary search for end
-    jd_end = None
-    left = jd_exact
-    right = jd_exact + search_days
-
-    for _ in range(20):
-        mid = (left + right) / 2
-
-        if is_within_orb(mid):
-            jd_end = mid
-            left = mid
-        else:
-            right = mid
-
-        if abs(right - left) < 1e-5:
-            break
-
-    return jd_begin, jd_end
+    return callback
 
 
 # ========== Public API ==========
@@ -427,21 +310,24 @@ def find_transits_to_position(
         if not candidates:
             continue
 
-        # Refine each candidate
+        # Refine each candidate using generic algorithms from _aspect_core
         refined_moments = []
 
         for jd_approx, _, motion in candidates:
-            jd_exact = _refine_transit_exact(
-                body_id_val, reference_longitude, aspect_angle, jd_approx
+            # Refine exact moment using generic refinement with callback
+            distance_callback = _make_transit_distance_callback(
+                body_id_val, reference_longitude, aspect_angle
             )
+            jd_exact = refine_exact_moment(distance_callback, jd_approx)
 
             if jd_exact is None:
                 continue
 
-            # Find orb boundaries
-            jd_begin, jd_end_orb = _find_transit_orb_boundaries(
-                body_id_val, reference_longitude, aspect_angle, orb, jd_exact, 30
+            # Find orb boundaries using generic boundary finding with callback
+            orb_callback = _make_transit_orb_callback(
+                body_id_val, reference_longitude, aspect_angle, orb
             )
+            jd_begin, jd_end_orb = find_orb_boundaries(orb_callback, jd_exact, 30)
 
             if jd_begin is None or jd_end_orb is None:
                 continue

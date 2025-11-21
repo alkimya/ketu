@@ -5,9 +5,10 @@ with support for retrograde motion detection and multiple exact moments.
 
 The implementation uses a hybrid approach:
 1. Vectorized grid search for fast initial detection
-2. Newton-Raphson refinement for high precision (±1 second)
+2. Binary search refinement for high precision (±1 second)
 
 This provides 8-15x speedup compared to linear search methods.
+Core algorithms are shared with the transits module via _aspect_core.
 """
 
 from collections import namedtuple
@@ -19,13 +20,24 @@ from .core import bodies, aspects
 from .calculations import (
     distance,
     get_orb,
-    body_id,
     long,
     vlong,
     utc_to_julian,
     julian_to_utc,
 )
 from .ephemeris.planets import calc_planet_position_batch
+
+# Import shared algorithms from refactored core module
+from ._aspect_core import (
+    get_body_id as _get_body_id,
+    get_aspect_index as _get_aspect_index,
+    get_cached_positions,
+    refine_exact_moment,
+    find_orb_boundaries,
+    find_local_minima,
+    interpolate_minimum,
+    calculate_adaptive_step,
+)
 
 
 # ========== Data Structures ==========
@@ -63,46 +75,7 @@ Attributes:
 
 
 # ========== Core Algorithms ==========
-
-
-def _get_body_id(body: Union[str, int]) -> int:
-    """Convert body name or ID to integer ID.
-
-    Args:
-        body: Body name (str) or ID (int)
-
-    Returns:
-        Body ID (0-12)
-    """
-    if isinstance(body, str):
-        return body_id(body)
-    return body
-
-
-def _get_aspect_index(aspect: Union[str, int, float]) -> int:
-    """Get aspect index from name, index, or angle.
-
-    Args:
-        aspect: Aspect name, index, or angle
-
-    Returns:
-        Aspect index (0-6)
-    """
-    if isinstance(aspect, str):
-        # Find by name
-        idx = np.where(aspects["name"] == aspect.encode())[0]
-        if len(idx) == 0:
-            raise ValueError(f"Unknown aspect name: {aspect}")
-        return int(idx[0])
-    elif isinstance(aspect, int) and aspect < 7:
-        # Direct index
-        return aspect
-    else:
-        # Find by angle
-        idx = np.where(aspects["angle"] == aspect)[0]
-        if len(idx) == 0:
-            raise ValueError(f"Unknown aspect angle: {aspect}")
-        return int(idx[0])
+# Note: _get_body_id and _get_aspect_index are now imported from _aspect_core
 
 
 def _adaptive_grid_search(
@@ -129,29 +102,18 @@ def _adaptive_grid_search(
     Returns:
         List of (jd_crossing, orb_value, motion) tuples for refinement
     """
-    # Calculate adaptive step size based on body speeds
+    # Calculate adaptive step size using refactored function
     avg_speed1 = bodies["speed"][body1_id]
     avg_speed2 = bodies["speed"][body2_id]
-
-    # Relative speed determines sampling frequency
-    # Fast bodies (Moon) need fine sampling, slow bodies (Pluto) need less
-    relative_speed = abs(avg_speed1 - avg_speed2)
-    if relative_speed == 0:
-        relative_speed = 0.001  # Minimum to avoid division by zero
-
-    # Sample such that we get ~10 points per orb width
-    # This ensures we don't miss any crossings
-    days_per_orb = orb / relative_speed
-    step_days = min(days_per_orb / 10, 1.0)  # At most 1 day steps
-    step_days = max(step_days, 0.01)  # At least ~15 minute resolution
+    step_days = calculate_adaptive_step([avg_speed1, avg_speed2], orb)
 
     # Create time grid
     n_steps = int((jd_end - jd_start) / step_days) + 1
     jd_grid = np.linspace(jd_start, jd_end, n_steps)
 
-    # Vectorized position calculation for both bodies
-    pos1_data = calc_planet_position_batch(jd_grid, body1_id)
-    pos2_data = calc_planet_position_batch(jd_grid, body2_id)
+    # Vectorized position calculation with caching
+    pos1_data = get_cached_positions(jd_grid, body1_id)
+    pos2_data = get_cached_positions(jd_grid, body2_id)
 
     # Extract longitudes and velocities
     lon1 = pos1_data[:, 0]
@@ -165,207 +127,69 @@ def _adaptive_grid_search(
     # Calculate absolute error from target aspect angle
     aspect_error = np.abs(dists - aspect_angle)
 
-    # Find local minima of aspect_error (= closest approaches to aspect angle)
-    # A local minimum at index i means: error[i-1] > error[i] < error[i+1]
-    # This works for all aspect types (conjunction, trine, opposition, etc.)
+    # Find local minima using refactored function
+    minima_indices = find_local_minima(aspect_error, orb)
 
     candidates = []
 
-    # Check interior points for local minima
-    for idx in range(1, len(aspect_error) - 1):
+    # Process each local minimum
+    for idx in minima_indices:
         error_before = aspect_error[idx - 1]
         error_current = aspect_error[idx]
         error_after = aspect_error[idx + 1]
 
-        # Check if this is a local minimum
-        if error_current < error_before and error_current < error_after:
-            # This is a local extremum - closest approach to aspect angle
-            dist_current = dists[idx]
+        # Use quadratic interpolation from refactored function
+        offset, _ = interpolate_minimum(error_before, error_current, error_after, idx, step_days)
+        jd_approx = jd_grid[idx] + offset * step_days
 
-            # Check if within orb
-            if error_current <= orb:
-                # Use quadratic interpolation for better initial guess
-                # Fit parabola through 3 points to find minimum
-                # Formula: x_min = idx + (error_before - error_after) / (2 * (error_before - 2*error_current + error_after))
-                denominator = 2 * (error_before - 2 * error_current + error_after)
-                if abs(denominator) > 1e-10:
-                    offset = (error_before - error_after) / denominator
-                    offset = np.clip(offset, -0.5, 0.5)  # Keep it local
-                else:
-                    offset = 0
+        # Determine motion (retrograde or direct)
+        is_retro1 = vlon1[idx] < 0
+        is_retro2 = vlon2[idx] < 0
+        motion = "retrograde" if (is_retro1 or is_retro2) else "direct"
 
-                jd_approx = jd_grid[idx] + offset * step_days
-
-                # Determine motion (retrograde or direct)
-                # Check relative velocity at extremum
-                vrel = vlon2[idx] - vlon1[idx]
-
-                # For retrograde detection: if relative velocity changes sign,
-                # bodies are retrograding relative to each other
-                # Simplified: just check if either body is retrograde
-                is_retro1 = vlon1[idx] < 0
-                is_retro2 = vlon2[idx] < 0
-                motion = "retrograde" if (is_retro1 or is_retro2) else "direct"
-
-                candidates.append((jd_approx, error_current, motion))
+        candidates.append((jd_approx, error_current, motion))
 
     return candidates
 
 
-def _newton_raphson_refinement(
-    body1_id: int,
-    body2_id: int,
-    aspect_angle: float,
-    jd_initial: float,
-    max_iterations: int = 50,
-    tolerance: float = 1e-7,  # ~1 second in Julian days
-) -> Optional[float]:
-    """Refine aspect timing using binary search (bisection method).
-
-    More robust than Newton-Raphson for this application.
-    Converges to ±1 second precision in ~20-50 iterations.
+def _make_aspect_distance_callback(body1_id: int, body2_id: int, aspect_angle: float):
+    """Create callback for aspect distance calculation (for refinement).
 
     Args:
         body1_id: First body ID
         body2_id: Second body ID
-        aspect_angle: Target aspect angle (degrees)
-        jd_initial: Initial guess for exact aspect time
-        max_iterations: Maximum iterations (default: 50)
-        tolerance: Convergence tolerance in days (default: ~1 second)
+        aspect_angle: Target aspect angle
 
     Returns:
-        Refined Julian Date of exact aspect, or None if failed to converge
+        Callback function that takes JD and returns distance error
     """
-
-    def get_error(jd: float) -> float:
-        """Calculate error from target aspect angle."""
+    def callback(jd: float) -> float:
         pos1 = long(jd, body1_id)
         pos2 = long(jd, body2_id)
         dist = distance(pos1, pos2)
         return dist - aspect_angle
-
-    # Start with a small search window around initial guess
-    # We know the local minimum is near jd_initial
-    search_window = 0.5  # Half day on each side
-    jd_left = jd_initial - search_window
-    jd_right = jd_initial + search_window
-
-    error_left = get_error(jd_left)
-    error_right = get_error(jd_right)
-    error_initial = get_error(jd_initial)
-
-    # Check if we're at a valid extremum
-    # The error should change sign or be minimal
-    if abs(error_initial) < 0.001:  # Already very close
-        return jd_initial
-
-    # Binary search for zero crossing or minimum
-    # We're looking for where |error| is minimized
-    best_jd = jd_initial
-    best_error = abs(error_initial)
-
-    for iteration in range(max_iterations):
-        jd_mid = (jd_left + jd_right) / 2
-        error_mid = get_error(jd_mid)
-
-        # Update best if this is closer
-        if abs(error_mid) < best_error:
-            best_error = abs(error_mid)
-            best_jd = jd_mid
-
-        # Check convergence
-        if abs(error_mid) < 0.001:  # Within 0.001 degrees
-            return jd_mid
-
-        if abs(jd_right - jd_left) < tolerance:
-            return best_jd
-
-        # Decide which half to search
-        # We want to move toward smaller |error|
-        error_left_mid = get_error((jd_left + jd_mid) / 2)
-        error_mid_right = get_error((jd_mid + jd_right) / 2)
-
-        if abs(error_left_mid) < abs(error_mid_right):
-            # Left half looks better
-            jd_right = jd_mid
-        else:
-            # Right half looks better
-            jd_left = jd_mid
-
-    return best_jd
+    return callback
 
 
-def _find_orb_boundaries(
-    body1_id: int,
-    body2_id: int,
-    aspect_angle: float,
-    orb: float,
-    jd_exact: float,
-    search_days: float = 30,
-) -> Tuple[Optional[float], Optional[float]]:
-    """Find orb entry and exit times around exact aspect.
-
-    Uses binary search to find when angular separation equals orb boundaries.
+def _make_aspect_orb_callback(body1_id: int, body2_id: int, aspect_angle: float, orb: float):
+    """Create callback to check if within orb (for boundary finding).
 
     Args:
         body1_id: First body ID
         body2_id: Second body ID
-        aspect_angle: Aspect angle (degrees)
-        orb: Orb tolerance (degrees)
-        jd_exact: Julian Date of exact aspect
-        search_days: Maximum days to search in each direction
+        aspect_angle: Target aspect angle
+        orb: Orb tolerance
 
     Returns:
-        Tuple of (jd_begin, jd_end) or (None, None) if not found
+        Callback function that takes JD and returns bool (within orb?)
     """
-
-    def is_within_orb(jd: float) -> bool:
-        """Check if aspect is within orb at given time."""
+    def callback(jd: float) -> bool:
         pos1 = long(jd, body1_id)
         pos2 = long(jd, body2_id)
         dist = distance(pos1, pos2)
         error = abs(dist - aspect_angle) if aspect_angle > 0 else dist
         return error <= orb
-
-    # Binary search for beginning (backward from exact)
-    jd_begin = None
-    left = jd_exact - search_days
-    right = jd_exact
-
-    for _ in range(20):  # ~1 minute precision with 30-day range
-        mid = (left + right) / 2
-
-        if is_within_orb(mid):
-            # Still within orb, search earlier
-            jd_begin = mid
-            right = mid
-        else:
-            # Outside orb, search later
-            left = mid
-
-        if abs(right - left) < 1e-5:  # ~1 second
-            break
-
-    # Binary search for end (forward from exact)
-    jd_end = None
-    left = jd_exact
-    right = jd_exact + search_days
-
-    for _ in range(20):
-        mid = (left + right) / 2
-
-        if is_within_orb(mid):
-            # Still within orb, search later
-            jd_end = mid
-            left = mid
-        else:
-            # Outside orb, search earlier
-            right = mid
-
-        if abs(right - left) < 1e-5:
-            break
-
-    return jd_begin, jd_end
+    return callback
 
 
 # ========== Public API ==========
@@ -455,22 +279,20 @@ def find_aspect_window(
             retrograde_count=0,
         )
 
-    # Phase 2: Refine each candidate with Newton-Raphson
+    # Phase 2: Refine each candidate using generic algorithms from _aspect_core
     refined_moments = []
 
     for jd_approx, _, motion in candidates:
-        # Refine exact moment
-        jd_exact = _newton_raphson_refinement(
-            body1_id, body2_id, aspect_angle, jd_approx
-        )
+        # Refine exact moment using generic refinement with callback
+        distance_callback = _make_aspect_distance_callback(body1_id, body2_id, aspect_angle)
+        jd_exact = refine_exact_moment(distance_callback, jd_approx)
 
         if jd_exact is None:
             continue
 
-        # Find orb boundaries
-        jd_begin, jd_end_orb = _find_orb_boundaries(
-            body1_id, body2_id, aspect_angle, orb, jd_exact, search_days
-        )
+        # Find orb boundaries using generic boundary finding with callback
+        orb_callback = _make_aspect_orb_callback(body1_id, body2_id, aspect_angle, orb)
+        jd_begin, jd_end_orb = find_orb_boundaries(orb_callback, jd_exact, search_days)
 
         if jd_begin is None or jd_end_orb is None:
             continue
