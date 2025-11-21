@@ -25,3 +25,7 @@ build/
 
 # PyPI
 .pypirc
+
+# Generated chart files
+chart_*.svg
+*.ics

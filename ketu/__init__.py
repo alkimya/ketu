@@ -95,6 +95,13 @@ try:
 except ImportError:
     _ICALENDAR_AVAILABLE = False
 
+# Chart visualization (requires: pip install matplotlib)
+try:
+    from ketu.chart import draw_zodiacal_chart
+    _CHART_AVAILABLE = True
+except ImportError:
+    _CHART_AVAILABLE = False
+
 __all__ = [
     # Version and metadata
     "__version__",
@@ -173,4 +180,10 @@ if _ICALENDAR_AVAILABLE:
         "export_lunations_to_ical",
         "export_transits_to_ical",
         "export_aspects_to_ical",
+    ])
+
+# Add chart visualization if available
+if _CHART_AVAILABLE:
+    __all__.extend([
+        "draw_zodiacal_chart",
     ])
