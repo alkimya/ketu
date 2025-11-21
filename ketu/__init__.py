@@ -73,6 +73,17 @@ from ketu.aspect_windows import (
     find_aspects_timeline,
 )
 
+# Transit calculations
+from ketu.transits import (
+    TransitMoment,
+    TransitWindow,
+    NatalPosition,
+    TransitAspect,
+    find_transits_to_position,
+    get_natal_positions,
+    compare_dates_transits,
+)
+
 __all__ = [
     # Version and metadata
     "__version__",
@@ -134,4 +145,13 @@ __all__ = [
     "AspectWindow",
     "find_aspect_window",
     "find_aspects_timeline",
+
+    # Transits
+    "TransitMoment",
+    "TransitWindow",
+    "NatalPosition",
+    "TransitAspect",
+    "find_transits_to_position",
+    "get_natal_positions",
+    "compare_dates_transits",
 ]
