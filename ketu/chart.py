@@ -64,10 +64,21 @@ ASPECT_COLORS = {
     0: "#FFD700",   # Conjunction - Gold
     1: "#4169E1",   # Semi-Sextile - Royal Blue
     2: "#4169E1",   # Sextile - Royal Blue (swapped with Trine)
-    3: "#FF6600",   # Square - Bright Orange
+    3: "#FF0000",   # Square - Vivid Red
     4: "#32CD32",   # Trine - Lime Green (swapped with Sextile)
     5: "#FF1493",   # Quincunx - Deep Pink
     6: "#9400D3",   # Opposition - Dark Violet (more distinct)
+}
+
+# Aspect symbols (Unicode - using more compatible characters)
+ASPECT_SYMBOLS = {
+    0: "☌",   # Conjunction
+    1: "⚹",   # Semi-Sextile (using sextile symbol)
+    2: "*",   # Sextile (asterisk as fallback)
+    3: "□",   # Square
+    4: "△",   # Trine
+    5: "Q",   # Quincunx (letter Q)
+    6: "☍",   # Opposition
 }
 
 # Planet colors
@@ -132,7 +143,8 @@ def draw_zodiacal_chart(
     show_legend: bool = True,
     show_aspect_table: bool = True,
     bodies_to_show: Optional[List[int]] = None,
-    figsize: Tuple[float, float] = (14, 10),
+    aspects_to_show: Optional[List[Union[str, int]]] = None,
+    figsize: Tuple[float, float] = (16, 11),
     dpi: int = 150,
 ) -> None:
     """Draw a zodiacal chart with planetary positions and aspects.
@@ -158,6 +170,9 @@ def draw_zodiacal_chart(
         show_legend: Show legend with planet info (default: True)
         show_aspect_table: Show aspect table (default: True)
         bodies_to_show: List of body IDs to show (default: 0-12, all)
+        aspects_to_show: List of aspects to show by name or index
+                         (default: ["Conjunction", "Sextile", "Square", "Trine", "Opposition"])
+                         Excludes Semi-Sextile and Quincunx by default
         figsize: Figure size in inches (default: 14x10)
         dpi: Resolution for raster formats (default: 150)
 
@@ -242,6 +257,20 @@ def draw_zodiacal_chart(
     if bodies_to_show is None:
         bodies_to_show = list(range(13))  # 0-12
 
+    # Default aspects to show (major aspects, excluding Semi-Sextile and Quincunx)
+    if aspects_to_show is None:
+        aspects_to_show = ["Conjunction", "Sextile", "Square", "Trine", "Opposition"]
+
+    # Convert aspect names to indices
+    aspect_indices = []
+    for aspect in aspects_to_show:
+        if isinstance(aspect, str):
+            idx = np.where(aspects["name"] == aspect.encode())[0]
+            if len(idx) > 0:
+                aspect_indices.append(int(idx[0]))
+        else:
+            aspect_indices.append(int(aspect))
+
     # Create figure
     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
     ax.set_aspect('equal')
@@ -267,7 +296,7 @@ def draw_zodiacal_chart(
 
     # Draw aspects first (so they're behind planets)
     if show_aspects:
-        _draw_aspects(ax, jd, planet_positions)
+        _draw_aspects(ax, jd, planet_positions, aspect_indices)
 
     # Draw planets
     _draw_planets(ax, jd, planet_positions)
@@ -276,6 +305,7 @@ def draw_zodiacal_chart(
     if show_legend or show_aspect_table:
         _draw_legend_and_table(
             fig, ax, jd, planet_positions,
+            aspect_indices,
             show_legend=show_legend,
             show_aspect_table=show_aspect_table
         )
@@ -397,13 +427,17 @@ def _draw_planets(ax, jd: float, planet_positions: dict):
             )
 
 
-def _draw_aspects(ax, jd: float, planet_positions: dict):
+def _draw_aspects(ax, jd: float, planet_positions: dict, aspect_indices: list):
     """Draw aspect lines between planets."""
     # Calculate all aspects
     aspects_data = calculate_aspects(jd)
 
     for aspect_data in aspects_data:
         body1_id, body2_id, aspect_idx, orb_value = aspect_data
+
+        # Only draw if aspect is in our filter list
+        if aspect_idx not in aspect_indices:
+            continue
 
         # Only draw if both bodies are in our planet list
         if body1_id not in planet_positions or body2_id not in planet_positions:
@@ -456,22 +490,23 @@ def _draw_aspects(ax, jd: float, planet_positions: dict):
 
 
 def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
+                           aspect_indices: list,
                            show_legend: bool = True, show_aspect_table: bool = True):
     """Draw legend with planet info and aspect table."""
     legend_x = 1.05
-    legend_y_start = 0.95
+    legend_y_start = 0.98
 
     if show_legend:
-        # Legend title
+        # Legend title (reduced spacing after)
         ax.text(
-            legend_x, legend_y_start + 0.15, "Planets",
+            legend_x, legend_y_start, "Planets",
             transform=ax.transAxes,
             fontsize=12, fontweight='bold',
             ha='left', va='top'
         )
 
         # Planet list
-        y_offset = 0
+        y_offset = 1.5  # Reduced spacing from title
         for body_id in sorted(planet_positions.keys()):
             longitude = planet_positions[body_id]
             body_name_str = bodies["name"][body_id].decode()
@@ -482,27 +517,45 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
             sign_idx = int(longitude / 30)
             degree_in_sign = longitude % 30
             sign_symbol = ZODIAC_SYMBOLS.get(sign_idx, "")
+            sign_name = signs[sign_idx]
 
-            retro = "R" if is_retrograde(jd, body_id) else ""
+            retro = " R" if is_retrograde(jd, body_id) else ""
 
             y_pos = legend_y_start - y_offset * 0.045  # Reduced spacing
 
-            # Symbol (colored, larger)
+            # Planet symbol (colored, larger)
             ax.text(
-                legend_x - 0.03, y_pos,
+                legend_x - 0.04, y_pos,
                 symbol,
                 transform=ax.transAxes,
-                fontsize=14, fontweight='bold',
+                fontsize=16, fontweight='bold',
                 color=color, ha='center', va='top'
             )
 
-            # Name and position
-            position_text = f"{body_name_str:9} {degree_in_sign:5.1f}° {sign_symbol} {retro}"
+            # Planet name and longitude
             ax.text(
-                legend_x + 0.02, y_pos,
-                position_text,
+                legend_x, y_pos,
+                f"{body_name_str:9} {degree_in_sign:5.1f}°{retro}",
                 transform=ax.transAxes,
                 fontsize=9, ha='left', va='top',
+                family='monospace'
+            )
+
+            # Sign symbol (larger)
+            ax.text(
+                legend_x + 0.17, y_pos,
+                sign_symbol,
+                transform=ax.transAxes,
+                fontsize=14, fontweight='bold',
+                color='#34495E', ha='center', va='top'
+            )
+
+            # Sign name
+            ax.text(
+                legend_x + 0.2, y_pos,
+                sign_name,
+                transform=ax.transAxes,
+                fontsize=8, ha='left', va='top',
                 family='monospace'
             )
 
@@ -510,7 +563,7 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
 
     if show_aspect_table:
         # Aspect table (moved down to avoid overlap)
-        table_y_start = legend_y_start - 0.7
+        table_y_start = legend_y_start - 0.75
 
         ax.text(
             legend_x, table_y_start, "Aspects",
@@ -521,44 +574,87 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
 
         aspects_data = calculate_aspects(jd)
 
-        y_offset = 1
-        for aspect_data in aspects_data[:10]:  # Show first 10
+        # Filter and collect aspects
+        filtered_aspects = []
+        for aspect_data in aspects_data:
             body1_id, body2_id, aspect_idx, orb_value = aspect_data
+
+            # Filter by aspect index
+            if aspect_idx not in aspect_indices:
+                continue
 
             if body1_id not in planet_positions or body2_id not in planet_positions:
                 continue
 
-            body1_name = bodies["name"][body1_id].decode()
-            body2_name = bodies["name"][body2_id].decode()
-            aspect_name = aspects["name"][aspect_idx].decode()
+            # Get body speeds to determine which is faster
+            speed1 = abs(bodies["speed"][body1_id])
+            speed2 = abs(bodies["speed"][body2_id])
+
+            # Faster planet first (transiting planet)
+            if speed1 >= speed2:
+                fast_id, slow_id = body1_id, body2_id
+            else:
+                fast_id, slow_id = body2_id, body1_id
+
+            filtered_aspects.append((fast_id, slow_id, aspect_idx, orb_value))
+
+        # Display aspects (all of them, increase figure size if needed)
+        y_offset = 1.5
+        for fast_id, slow_id, aspect_idx, orb_value in filtered_aspects:
+            fast_symbol = PLANET_SYMBOLS.get(fast_id, "?")
+            slow_symbol = PLANET_SYMBOLS.get(slow_id, "?")
+            aspect_symbol = ASPECT_SYMBOLS.get(aspect_idx, "?")
             aspect_angle = float(aspects["angle"][aspect_idx])
             aspect_color = ASPECT_COLORS.get(aspect_idx, '#888888')
 
-            # Check if applying
-            is_applying = _is_aspect_applying(jd, body1_id, body2_id, aspect_angle)
+            fast_color = PLANET_COLORS.get(fast_id, '#000000')
+            slow_color = PLANET_COLORS.get(slow_id, '#000000')
+
+            # Check if applying (orb decreasing)
+            is_applying = _is_aspect_applying(jd, fast_id, slow_id, aspect_angle)
             applying_marker = "→" if is_applying else "←"
 
-            y_pos = table_y_start - y_offset * 0.05
+            y_pos = table_y_start - y_offset * 0.04
 
-            # Colored aspect name
+            # Fast planet symbol
             ax.text(
                 legend_x, y_pos,
-                f"{body1_name[:3]}-{body2_name[:3]}",
+                fast_symbol,
                 transform=ax.transAxes,
-                fontsize=8, ha='left', va='top',
-                family='monospace'
+                fontsize=12, fontweight='bold',
+                color=fast_color, ha='left', va='top'
             )
 
+            # Aspect symbol
             ax.text(
-                legend_x + 0.08, y_pos,
-                f"{aspect_name[:3]} {applying_marker}",
+                legend_x + 0.03, y_pos,
+                aspect_symbol,
                 transform=ax.transAxes,
-                fontsize=8, ha='left', va='top',
-                color=aspect_color, fontweight='bold'
+                fontsize=11, fontweight='bold',
+                color=aspect_color, ha='left', va='top'
             )
 
+            # Slow planet symbol
             ax.text(
-                legend_x + 0.15, y_pos,
+                legend_x + 0.055, y_pos,
+                slow_symbol,
+                transform=ax.transAxes,
+                fontsize=12, fontweight='bold',
+                color=slow_color, ha='left', va='top'
+            )
+
+            # Applying/separating marker
+            ax.text(
+                legend_x + 0.085, y_pos,
+                applying_marker,
+                transform=ax.transAxes,
+                fontsize=10, ha='left', va='top',
+                color='#555555'
+            )
+
+            # Orb
+            ax.text(
+                legend_x + 0.11, y_pos,
                 f"{abs(orb_value):4.1f}°",
                 transform=ax.transAxes,
                 fontsize=8, ha='left', va='top',
