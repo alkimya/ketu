@@ -153,16 +153,97 @@ table.docutils tr:hover {
 
 /* Mobile responsive */
 @media screen and (max-width: 768px) {
+    /* Fix sidebar in mobile portrait mode */
     .wy-nav-side {
-        width: 100%;
+        width: 300px;
+        transform: translateX(-300px);
+        transition: transform 0.3s ease;
+        position: fixed;
+        height: 100%;
+        z-index: 200;
+    }
+
+    .wy-nav-side.shift {
+        transform: translateX(0);
     }
 
     .wy-nav-content-wrap {
         margin-left: 0;
     }
 
+    /* Ensure content is readable on mobile */
+    .wy-nav-content {
+        max-width: 100%;
+        padding: 1.618em;
+    }
+
+    /* Make tables responsive */
     table.docutils {
         font-size: 12px;
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    /* Improve menu readability in portrait mode */
+    .wy-menu-vertical li.toctree-l1 > a {
+        font-size: 90%;
+        padding: 0.4045em 1.618em;
+    }
+
+    .wy-menu-vertical li.toctree-l2 > a {
+        font-size: 85%;
+        padding: 0.4045em 2.427em;
+    }
+
+    /* Fix navigation toggle button */
+    .wy-nav-top {
+        display: block;
+        background: var(--ketu-primary);
+        color: white;
+        padding: 0.4045em 0.809em;
+        position: relative;
+        line-height: 50px;
+    }
+
+    .wy-nav-top i {
+        font-size: 1.5em;
+    }
+}
+
+/* Portrait mode specific fixes */
+@media screen and (max-width: 480px) and (orientation: portrait) {
+    /* Ensure sidebar doesn't overlap content in portrait */
+    .wy-nav-side {
+        width: 85%;
+        transform: translateX(-100%);
+    }
+
+    .wy-nav-side.shift {
+        transform: translateX(0);
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+    }
+
+    /* Reduce padding for more content space */
+    .wy-nav-content {
+        padding: 1em;
+    }
+
+    /* Stack tables vertically on very small screens */
+    table.docutils {
+        font-size: 11px;
+    }
+
+    table.docutils th,
+    table.docutils td {
+        padding: 6px;
+    }
+
+    /* Improve language badges on mobile */
+    .lang-badge {
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.7rem;
     }
 }
 

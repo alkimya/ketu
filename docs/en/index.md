@@ -1,6 +1,6 @@
 # Ketu Documentation
 
-**Ketu** is a Python library for calculating planetary positions and planetary aspects, based on `pyswisseph` and `numpy`.
+**Ketu** is a Python library for calculating planetary positions and planetary aspects using pure NumPy.
 
 The library was originally designed to produce biodynamic calendars and time series driven by planetary aspects, and it can serve as a foundation for building astrology software.
 
@@ -25,6 +25,14 @@ concepts
 examples
 API <api>
 changelog
+```
+
+```{toctree}
+:maxdepth: 2
+:caption: Developer Guide
+migration
+architecture
+performance
 contributing
 ```
 
