@@ -11,8 +11,8 @@ sys.path.insert(0, os.path.abspath("../.."))
 project = "Ketu"
 copyright = f"{datetime.now().year}, Loc Cosnier"
 author = "Loc Cosnier"
-release = "0.2.0"
-version = "0.2.0"
+release = "0.3.0"
+version = "0.3.0"
 
 # Language
 language = "en"
@@ -99,7 +99,6 @@ autodoc_default_options = {
 intersphinx_mapping = {
     "python": ("https://docs.python.org/3", None),
     "numpy": ("https://numpy.org/doc/stable/", None),
-    "pyswisseph": ("https://astrorigin.com/pyswisseph/", None),
 }
 
 # Source suffix
