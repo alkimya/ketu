@@ -8,11 +8,11 @@ The library was originally designed to produce biodynamic calendars and time ser
 
 Ketu allows you to:
 
-- 🌟 Calculate precise positions of celestial bodies (Sun, Moon, planets, Nodes, Lilith)
-- ⚡ Determine aspects between planets
-- 📅 Convert between different time systems (UTC, Julian)
-- 🔮 Identify retrogradations and zodiac signs
-- 📊 Generate time series of aspects (coming soon)
+- Calculate precise positions of celestial bodies (Sun, Moon, planets, Nodes, Lilith)
+- Determine aspects between planets
+- Convert between different time systems (UTC, Julian)
+- Identify retrogradations and zodiac signs
+- Generate time series of aspects
 
 ## Navigation
 
@@ -45,8 +45,8 @@ Body                |   Symbol  |   Orb     |   Average Speed
 Sun                 |   ☉       |  12°      |  0.986°/day
 Moon                |   ☽       |  12°      |  13.176°/day
 Mercury             |   ☿       |  8°       |  1.383°/day
-Venus               |   ♀       |  8°       |  1.2°/day
-Mars                |   ♂       |  10°      |  0.524°/day
+Venus               |   ♀       |  10°       |  1.2°/day
+Mars                |   ♂       |  8°      |  0.524°/day
 Jupiter             |   ♃       |  10°      |  0.083°/day
 Saturn              |   ♄       |  10°      |  0.034°/day
 Uranus              |   ♅       |  6°       |  0.012°/day

@@ -42,7 +42,7 @@ BODY_INDICES = {
     "Neptune": 8,
     "Pluto": 9,
     "Rahu": 10,
-    "NorthNode": 11,
+    "Ketu": 11,
     "Lilith": 12,
 }
 
@@ -201,9 +201,9 @@ def get_planet_name(planet_id: int) -> str:
         7: "Uranus",
         8: "Neptune",
         9: "Pluto",
-        10: "mean Node",  # Swiss Ephemeris convention
-        11: "true Node",
-        12: "mean Apogee",  # Lilith
+        10: "Rahu",  # Mean North Node
+        11: "Ketu",  # Mean South Node
+        12: "Lilith",  # Lilith
     }
     return names.get(planet_id, f"Unknown({planet_id})")
 

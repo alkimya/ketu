@@ -8,7 +8,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 
 def lunar_phase(jday):
-    """Determine the lunar phase with pattern matching (Python 3.10+)"""
+    """Determine the lunar phase with pattern matching"""
     
     # Calculate the Sun-Moon angle
     sun_long = ketu.long(jday, 0)

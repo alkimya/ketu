@@ -21,8 +21,8 @@ except ImportError:
         "Install with: pip install icalendar"
     )
 
-from .aspect_windows import find_aspects_timeline
-from .transits import find_transits_to_position, get_natal_positions
+from ..aspect_windows import find_aspects_timeline
+from ..transits import find_transits_to_position, get_natal_positions
 
 
 def _check_icalendar():

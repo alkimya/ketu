@@ -6,7 +6,7 @@ with planetary positions and aspects.
 
 from datetime import datetime
 from zoneinfo import ZoneInfo
-from ketu.chart import draw_zodiacal_chart
+from ketu.export.chart import draw_zodiacal_chart
 
 
 def example_1_current_chart():

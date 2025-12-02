@@ -12,7 +12,7 @@ Requirements: pip install icalendar
 """
 
 import os
-from ketu.icalendar_export import (
+from ketu.export.icalendar import (
     export_lunations_to_ical,
     export_transits_to_ical,
     export_aspects_to_ical,

@@ -48,21 +48,24 @@ from ketu.calculations import (
     is_ascending,
     body_sign,
 
-    # Aspect calculations
+    # Utility functions
+    decimal_degrees_to_dms,
+    dd_to_dms,
+    distance,
+    body_properties,
+)
+
+# Aspect calculations (moved to aspects module)
+from ketu.aspects import (
     get_aspect,
     calculate_aspects,
     calculate_aspects_vectorized,
     calculate_aspects_batch,
     find_aspect_timing,
     find_aspects_between_dates,
-
-    # Utility functions
-    decimal_degrees_to_dms,
-    dd_to_dms,
-    distance,
     get_orb,
-    body_properties,
 )
+
 from ketu.display import print_positions, print_aspects, main
 
 # Advanced aspect window calculations
@@ -84,23 +87,17 @@ from ketu.transits import (
     compare_dates_transits,
 )
 
-# iCalendar export (requires: pip install icalendar)
+# Export module (optional dependencies)
 try:
-    from ketu.icalendar_export import (
+    from ketu.export import (
+        draw_zodiacal_chart,
         export_lunations_to_ical,
         export_transits_to_ical,
         export_aspects_to_ical,
     )
-    _ICALENDAR_AVAILABLE = True
+    _EXPORT_AVAILABLE = True
 except ImportError:
-    _ICALENDAR_AVAILABLE = False
-
-# Chart visualization (requires: pip install matplotlib)
-try:
-    from ketu.chart import draw_zodiacal_chart
-    _CHART_AVAILABLE = True
-except ImportError:
-    _CHART_AVAILABLE = False
+    _EXPORT_AVAILABLE = False
 
 __all__ = [
     # Version and metadata
@@ -144,12 +141,12 @@ __all__ = [
     "calculate_aspects_batch",
     "find_aspect_timing",
     "find_aspects_between_dates",
+    "get_orb",
 
     # Utility functions
     "decimal_degrees_to_dms",
     "dd_to_dms",
     "distance",
-    "get_orb",
 
     # Display functions
     "print_positions",
@@ -174,16 +171,11 @@ __all__ = [
     "compare_dates_transits",
 ]
 
-# Add iCalendar exports if available
-if _ICALENDAR_AVAILABLE:
+# Add export functions if available
+if _EXPORT_AVAILABLE:
     __all__.extend([
+        "draw_zodiacal_chart",
         "export_lunations_to_ical",
         "export_transits_to_ical",
         "export_aspects_to_ical",
-    ])
-
-# Add chart visualization if available
-if _CHART_AVAILABLE:
-    __all__.extend([
-        "draw_zodiacal_chart",
     ])

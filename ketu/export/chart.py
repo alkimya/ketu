@@ -14,99 +14,26 @@ from matplotlib.patches import Circle, Wedge, FancyBboxPatch
 from matplotlib.lines import Line2D
 import matplotlib.patheffects as path_effects
 
-from .core import bodies, signs
-from .core import aspects as aspects_data
-from .calculations import (
+from ..core import bodies, signs
+from ..core import aspects as aspects_data
+from ..calculations import (
     positions,
-    calculate_aspects,
     utc_to_julian,
     is_retrograde,
     long,
     vlong,
     distance,
 )
-
-
-# Zodiac symbols (Unicode)
-ZODIAC_SYMBOLS = {
-    0: "♈",   # Aries
-    1: "♉",   # Taurus
-    2: "♊",   # Gemini
-    3: "♋",   # Cancer
-    4: "♌",   # Leo
-    5: "♍",   # Virgo
-    6: "♎",   # Libra
-    7: "♏",   # Scorpio
-    8: "♐",   # Sagittarius
-    9: "♑",   # Capricorn
-    10: "♒",  # Aquarius
-    11: "♓",  # Pisces
-}
-
-# Planet symbols (Unicode)
-PLANET_SYMBOLS = {
-    0: "☉",   # Sun
-    1: "☽",   # Moon
-    2: "☿",   # Mercury
-    3: "♀",   # Venus
-    4: "♂",   # Mars
-    5: "♃",   # Jupiter
-    6: "♄",   # Saturn
-    7: "♅",   # Uranus
-    8: "♆",   # Neptune
-    9: "♇",   # Pluto
-    10: "☊",  # North Node
-    11: "☋",  # South Node
-    12: "⚷",  # Chiron
-}
-
-# Aspect colors (distinctive colors for better visibility)
-ASPECT_COLORS = {
-    0: "#FFD700",   # Conjunction - Gold
-    1: "#4169E1",   # Semi-Sextile - Royal Blue
-    2: "#4169E1",   # Sextile - Royal Blue (swapped with Trine)
-    3: "#FF0000",   # Square - Vivid Red
-    4: "#32CD32",   # Trine - Lime Green (swapped with Sextile)
-    5: "#FF1493",   # Quincunx - Deep Pink
-    6: "#9400D3",   # Opposition - Dark Violet (more distinct)
-}
-
-# Aspect symbols (Unicode - using more compatible characters)
-ASPECT_SYMBOLS = {
-    0: "☌",   # Conjunction
-    1: "⚹",   # Semi-Sextile (using sextile symbol)
-    2: "*",   # Sextile (asterisk as fallback)
-    3: "□",   # Square
-    4: "△",   # Trine
-    5: "Q",   # Quincunx (letter Q)
-    6: "☍",   # Opposition
-}
-
-# Planet colors
-PLANET_COLORS = {
-    0: "#FFA500",   # Sun - Orange
-    1: "#C0C0C0",   # Moon - Silver
-    2: "#FFD700",   # Mercury - Gold
-    3: "#FF69B4",   # Venus - Hot Pink
-    4: "#FF0000",   # Mars - Red
-    5: "#4169E1",   # Jupiter - Royal Blue
-    6: "#8B4513",   # Saturn - Saddle Brown
-    7: "#00CED1",   # Uranus - Dark Turquoise
-    8: "#4169E1",   # Neptune - Royal Blue
-    9: "#8B0000",   # Pluto - Dark Red
-    10: "#9370DB",  # North Node - Medium Purple
-    11: "#9370DB",  # South Node - Medium Purple
-    12: "#FF8C00",  # Chiron - Dark Orange
-}
-
-
-# Predefined lists for common use cases
-PLANETS_DEFAULT = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12]  # All except North Node (11)
-"""Default planet list: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn,
-Uranus, Neptune, Pluto, South Node, Chiron (excludes North Node)"""
-
-BIG_FIVE = [0, 60, 90, 120, 180]  # Conjunction, Sextile, Square, Trine, Opposition
-"""Big Five aspects: Conjunction (0°), Sextile (60°), Square (90°), Trine (120°), Opposition (180°)"""
+from ..aspects import calculate_aspects
+from .constants import (
+    ZODIAC_SYMBOLS,
+    PLANET_SYMBOLS,
+    ASPECT_COLORS,
+    ASPECT_SYMBOLS,
+    PLANET_COLORS,
+    PLANETS_DEFAULT,
+    BIG_FIVE,
+)
 
 
 def _is_aspect_applying(
@@ -248,7 +175,8 @@ def draw_zodiacal_chart(
     else:
         # Julian Date provided - convert to UTC datetime
         jd = float(date)
-        from .calculations import julian_to_utc
+        from ..calculations import julian_to_utc
+
         dt_utc = julian_to_utc(jd)
 
         # Apply timezone for display if provided
@@ -297,15 +225,15 @@ def draw_zodiacal_chart(
         figsize = (figsize[0], figsize[1] + 2)
 
     fig, ax = plt.subplots(figsize=figsize, dpi=dpi)
-    ax.set_aspect('equal')
+    ax.set_aspect("equal")
     ax.set_xlim(-1.6, 1.6)
     ax.set_ylim(-1.3, 1.3)
-    ax.axis('off')
+    ax.axis("off")
 
     # Title
     if title is None:
         title = f"Zodiacal Chart - {date_str}"
-    fig.suptitle(title, fontsize=16, fontweight='bold', y=0.98)
+    fig.suptitle(title, fontsize=16, fontweight="bold", y=0.98)
 
     # Draw zodiac wheel
     _draw_zodiac_wheel(ax)
@@ -328,15 +256,12 @@ def draw_zodiacal_chart(
     # Draw legend and aspect table
     if show_legend or show_aspect_table:
         _draw_legend_and_table(
-            fig, ax, jd, planet_positions,
-            aspect_indices,
-            show_legend=show_legend,
-            show_aspect_table=show_aspect_table
+            fig, ax, jd, planet_positions, aspect_indices, show_legend=show_legend, show_aspect_table=show_aspect_table
         )
 
     # Save figure
     plt.tight_layout()
-    plt.savefig(filename, bbox_inches='tight', dpi=dpi)
+    plt.savefig(filename, bbox_inches="tight", dpi=dpi)
     plt.close()
 
     print(f"Chart saved to: {filename}")
@@ -345,19 +270,19 @@ def draw_zodiacal_chart(
 def _draw_zodiac_wheel(ax):
     """Draw the zodiac wheel with 12 signs."""
     # Outer circle (slightly larger)
-    outer_circle = Circle((0, 0), 1.05, fill=False, edgecolor='#2C3E50', linewidth=2)
+    outer_circle = Circle((0, 0), 1.05, fill=False, edgecolor="#2C3E50", linewidth=2)
     ax.add_patch(outer_circle)
 
     # Inner circle
-    inner_circle = Circle((0, 0), 0.88, fill=False, edgecolor='#34495E', linewidth=1)
+    inner_circle = Circle((0, 0), 0.88, fill=False, edgecolor="#34495E", linewidth=1)
     ax.add_patch(inner_circle)
 
     # Zodiac background circle
-    background = Circle((0, 0), 1.05, fill=True, facecolor='#F8F9FA', zorder=0)
+    background = Circle((0, 0), 1.05, fill=True, facecolor="#F8F9FA", zorder=0)
     ax.add_patch(background)
 
     # Draw 12 zodiac segments
-    colors = ['#FFE5E5', '#E5FFE5'] * 6  # Alternating light colors
+    colors = ["#FFE5E5", "#E5FFE5"] * 6  # Alternating light colors
 
     for i in range(12):
         # Each sign is 30 degrees
@@ -366,18 +291,14 @@ def _draw_zodiac_wheel(ax):
         theta2 = (i + 1) * 30
 
         # Draw wedge
-        wedge = Wedge(
-            (0, 0), 0.88, theta1, theta2,
-            facecolor=colors[i], edgecolor='none',
-            zorder=1, alpha=0.3
-        )
+        wedge = Wedge((0, 0), 0.88, theta1, theta2, facecolor=colors[i], edgecolor="none", zorder=1, alpha=0.3)
         ax.add_patch(wedge)
 
         # Draw division line
         angle_rad = np.radians(theta1)
         x1, y1 = 0.88 * np.cos(angle_rad), 0.88 * np.sin(angle_rad)
         x2, y2 = 1.05 * np.cos(angle_rad), 1.05 * np.sin(angle_rad)
-        ax.plot([x1, x2], [y1, y2], color='#BDC3C7', linewidth=0.5, zorder=2)
+        ax.plot([x1, x2], [y1, y2], color="#BDC3C7", linewidth=0.5, zorder=2)
 
         # Add zodiac symbol
         mid_angle = theta1 + 15
@@ -388,18 +309,13 @@ def _draw_zodiac_wheel(ax):
         sign_name = signs[i]  # signs is a list
         symbol = ZODIAC_SYMBOLS.get(i, sign_name[:3])
 
-        ax.text(
-            x, y, symbol,
-            ha='center', va='center',
-            fontsize=16, fontweight='bold',
-            color='#34495E', zorder=10
-        )
+        ax.text(x, y, symbol, ha="center", va="center", fontsize=16, fontweight="bold", color="#34495E", zorder=10)
 
     # Add cardinal points labels (degrees and symbols only)
-    ax.text(1.2, 0, '0° ♈', ha='center', va='center', fontsize=10, color='#2C3E50', fontweight='bold')
-    ax.text(0, 1.2, '90° ♋', ha='center', va='center', fontsize=10, color='#2C3E50', fontweight='bold')
-    ax.text(-1.2, 0, '180° ♎', ha='center', va='center', fontsize=10, color='#2C3E50', fontweight='bold')
-    ax.text(0, -1.2, '270° ♑', ha='center', va='center', fontsize=10, color='#2C3E50', fontweight='bold')
+    ax.text(1.2, 0, "0° ♈", ha="center", va="center", fontsize=10, color="#2C3E50", fontweight="bold")
+    ax.text(0, 1.2, "90° ♋", ha="center", va="center", fontsize=10, color="#2C3E50", fontweight="bold")
+    ax.text(-1.2, 0, "180° ♎", ha="center", va="center", fontsize=10, color="#2C3E50", fontweight="bold")
+    ax.text(0, -1.2, "270° ♑", ha="center", va="center", fontsize=10, color="#2C3E50", fontweight="bold")
 
 
 def _draw_planets(ax, jd: float, planet_positions: dict):
@@ -416,38 +332,33 @@ def _draw_planets(ax, jd: float, planet_positions: dict):
         # Get planet info
         body_name_str = bodies["name"][body_id].decode()
         symbol = PLANET_SYMBOLS.get(body_id, body_name_str[0])
-        color = PLANET_COLORS.get(body_id, '#000000')
+        color = PLANET_COLORS.get(body_id, "#000000")
 
         # Check if retrograde
         retro = is_retrograde(jd, body_id)
 
         # Draw planet circle (increased size)
-        planet_circle = Circle(
-            (x, y), 0.055,
-            facecolor=color, edgecolor='white',
-            linewidth=2, zorder=20, alpha=0.9
-        )
+        planet_circle = Circle((x, y), 0.055, facecolor=color, edgecolor="white", linewidth=2, zorder=20, alpha=0.9)
         ax.add_patch(planet_circle)
 
         # Draw symbol (increased font size)
         text = ax.text(
-            x, y, symbol,
-            ha='center', va='center',
-            fontsize=16, fontweight='bold',
-            color='white', zorder=21
+            x, y, symbol, ha="center", va="center", fontsize=16, fontweight="bold", color="white", zorder=21
         )
-        text.set_path_effects([
-            path_effects.Stroke(linewidth=2, foreground='black'),
-            path_effects.Normal()
-        ])
+        text.set_path_effects([path_effects.Stroke(linewidth=2, foreground="black"), path_effects.Normal()])
 
         # Add retrograde marker
         if retro:
             ax.text(
-                x + 0.06, y + 0.06, 'R',
-                ha='center', va='center',
-                fontsize=8, fontweight='bold',
-                color='red', zorder=22
+                x + 0.06,
+                y + 0.06,
+                "R",
+                ha="center",
+                va="center",
+                fontsize=8,
+                fontweight="bold",
+                color="red",
+                zorder=22,
             )
 
 
@@ -480,7 +391,7 @@ def _draw_aspects(ax, jd: float, planet_positions: dict, aspect_indices: list):
 
         # Get aspect info
         aspect_angle = float(aspects_data["angle"][aspect_idx])
-        aspect_color = ASPECT_COLORS.get(aspect_idx, '#888888')
+        aspect_color = ASPECT_COLORS.get(aspect_idx, "#888888")
 
         # Calculate line intensity based on orb (closer = more intense)
         # Typical orbs are 0-10 degrees
@@ -496,26 +407,32 @@ def _draw_aspects(ax, jd: float, planet_positions: dict, aspect_indices: list):
 
         # Draw aspect line
         line = ax.plot(
-            [x1, x2], [y1, y2],
-            color=aspect_color, alpha=alpha,
-            linewidth=linewidth, zorder=5,
-            linestyle='-'
+            [x1, x2], [y1, y2], color=aspect_color, alpha=alpha, linewidth=linewidth, zorder=5, linestyle="-"
         )[0]
 
         # Add glow effect for applying aspects
         if is_applying:
             # Outer glow
             ax.plot(
-                [x1, x2], [y1, y2],
-                color=aspect_color, alpha=alpha * 0.3,
-                linewidth=linewidth + 3, zorder=4,
-                linestyle='-'
+                [x1, x2],
+                [y1, y2],
+                color=aspect_color,
+                alpha=alpha * 0.3,
+                linewidth=linewidth + 3,
+                zorder=4,
+                linestyle="-",
             )
 
 
-def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
-                           aspect_indices: list,
-                           show_legend: bool = True, show_aspect_table: bool = True):
+def _draw_legend_and_table(
+    fig,
+    ax,
+    jd: float,
+    planet_positions: dict,
+    aspect_indices: list,
+    show_legend: bool = True,
+    show_aspect_table: bool = True,
+):
     """Draw legend with planet info and aspect table."""
     legend_x = 1.05
     legend_y_start = 0.98
@@ -523,10 +440,14 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
     if show_legend:
         # Legend title (reduced spacing after)
         ax.text(
-            legend_x, legend_y_start, "Planets",
+            legend_x,
+            legend_y_start,
+            "Planets",
             transform=ax.transAxes,
-            fontsize=14, fontweight='bold',
-            ha='left', va='top'
+            fontsize=14,
+            fontweight="bold",
+            ha="left",
+            va="top",
         )
 
         # Planet list
@@ -535,7 +456,7 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
             longitude = planet_positions[body_id]
             body_name_str = bodies["name"][body_id].decode()
             symbol = PLANET_SYMBOLS.get(body_id, body_name_str[0])
-            color = PLANET_COLORS.get(body_id, '#000000')
+            color = PLANET_COLORS.get(body_id, "#000000")
 
             # Calculate sign and degree
             sign_idx = int(longitude / 30)
@@ -549,38 +470,52 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
 
             # Planet symbol (colored, larger)
             ax.text(
-                legend_x - 0.04, y_pos,
+                legend_x - 0.04,
+                y_pos,
                 symbol,
                 transform=ax.transAxes,
-                fontsize=16, fontweight='bold',
-                color=color, ha='center', va='top'
+                fontsize=16,
+                fontweight="bold",
+                color=color,
+                ha="center",
+                va="top",
             )
 
             # Planet name and longitude
             ax.text(
-                legend_x, y_pos,
+                legend_x,
+                y_pos,
                 f"{body_name_str:9} {degree_in_sign:5.1f}°{retro}",
                 transform=ax.transAxes,
-                fontsize=9, ha='left', va='top',
-                family='monospace'
+                fontsize=9,
+                ha="left",
+                va="top",
+                family="monospace",
             )
 
             # Sign symbol (larger)
             ax.text(
-                legend_x + 0.17, y_pos,
+                legend_x + 0.17,
+                y_pos,
                 sign_symbol,
                 transform=ax.transAxes,
-                fontsize=14, fontweight='bold',
-                color='#34495E', ha='center', va='top'
+                fontsize=14,
+                fontweight="bold",
+                color="#34495E",
+                ha="center",
+                va="top",
             )
 
             # Sign name
             ax.text(
-                legend_x + 0.2, y_pos,
+                legend_x + 0.2,
+                y_pos,
                 sign_name,
                 transform=ax.transAxes,
-                fontsize=8, ha='left', va='top',
-                family='monospace'
+                fontsize=8,
+                ha="left",
+                va="top",
+                family="monospace",
             )
 
             y_offset += 1
@@ -590,10 +525,14 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
         table_y_start = legend_y_start - 0.75
 
         ax.text(
-            legend_x, table_y_start, "Aspects",
+            legend_x,
+            table_y_start,
+            "Aspects",
             transform=ax.transAxes,
-            fontsize=14, fontweight='bold',
-            ha='left', va='top'
+            fontsize=14,
+            fontweight="bold",
+            ha="left",
+            va="top",
         )
 
         aspects_found = calculate_aspects(jd)
@@ -629,10 +568,10 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
             slow_symbol = PLANET_SYMBOLS.get(slow_id, "?")
             aspect_symbol = ASPECT_SYMBOLS.get(aspect_idx, "?")
             aspect_angle = float(aspects_data["angle"][aspect_idx])
-            aspect_color = ASPECT_COLORS.get(aspect_idx, '#888888')
+            aspect_color = ASPECT_COLORS.get(aspect_idx, "#888888")
 
-            fast_color = PLANET_COLORS.get(fast_id, '#000000')
-            slow_color = PLANET_COLORS.get(slow_id, '#000000')
+            fast_color = PLANET_COLORS.get(fast_id, "#000000")
+            slow_color = PLANET_COLORS.get(slow_id, "#000000")
 
             # Check if applying (orb decreasing)
             is_applying = _is_aspect_applying(jd, fast_id, slow_id, aspect_angle)
@@ -642,47 +581,65 @@ def _draw_legend_and_table(fig, ax, jd: float, planet_positions: dict,
 
             # Fast planet symbol (increased size)
             ax.text(
-                legend_x, y_pos,
+                legend_x,
+                y_pos,
                 fast_symbol,
                 transform=ax.transAxes,
-                fontsize=14, fontweight='bold',
-                color=fast_color, ha='left', va='top'
+                fontsize=14,
+                fontweight="bold",
+                color=fast_color,
+                ha="left",
+                va="top",
             )
 
             # Aspect symbol (increased size)
             ax.text(
-                legend_x + 0.03, y_pos,
+                legend_x + 0.03,
+                y_pos,
                 aspect_symbol,
                 transform=ax.transAxes,
-                fontsize=13, fontweight='bold',
-                color=aspect_color, ha='left', va='top'
+                fontsize=13,
+                fontweight="bold",
+                color=aspect_color,
+                ha="left",
+                va="top",
             )
 
             # Slow planet symbol (increased size)
             ax.text(
-                legend_x + 0.055, y_pos,
+                legend_x + 0.055,
+                y_pos,
                 slow_symbol,
                 transform=ax.transAxes,
-                fontsize=14, fontweight='bold',
-                color=slow_color, ha='left', va='top'
+                fontsize=14,
+                fontweight="bold",
+                color=slow_color,
+                ha="left",
+                va="top",
             )
 
             # Applying/separating marker (increased size)
             ax.text(
-                legend_x + 0.085, y_pos,
+                legend_x + 0.085,
+                y_pos,
                 applying_marker,
                 transform=ax.transAxes,
-                fontsize=11, ha='left', va='top',
-                color='#555555'
+                fontsize=11,
+                ha="left",
+                va="top",
+                color="#555555",
             )
 
             # Orb (increased size)
             ax.text(
-                legend_x + 0.11, y_pos,
+                legend_x + 0.11,
+                y_pos,
                 f"{abs(orb_value):4.1f}°",
                 transform=ax.transAxes,
-                fontsize=9, ha='left', va='top',
-                family='monospace'
+                fontsize=9,
+                ha="left",
+                va="top",
+                family="monospace",
             )
 
             y_offset += 1

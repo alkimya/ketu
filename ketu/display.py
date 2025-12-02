@@ -15,11 +15,13 @@ from .calculations import (
     body_id,
     body_sign,
     positions,
-    calculate_aspects,
     is_retrograde,
     dd_to_dms,
     utc_to_julian,
     julian_to_utc,
+)
+from .aspects import (
+    calculate_aspects,
     find_aspects_between_dates,
 )
 

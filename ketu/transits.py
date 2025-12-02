@@ -26,7 +26,6 @@ import numpy as np
 from .core import bodies, aspects
 from .calculations import (
     distance,
-    get_orb,
     body_id,
     long,
     vlong,
@@ -34,6 +33,7 @@ from .calculations import (
     julian_to_utc,
     positions,
 )
+from .aspects import get_orb
 from .ephemeris.planets import calc_planet_position_batch
 
 # Import shared algorithms from refactored core module

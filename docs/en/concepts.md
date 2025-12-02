@@ -57,14 +57,14 @@ Ketu calculates the positions of 13 celestial bodies:
 ### Fictitious Points
 
 - **Rahu** ☊: Mean North Node
-- **North Node**: True North Node
+- **Ketu** ☋: Mean South Node
 - **Lilith** ⚸: Black Moon (Mean Apogee)
 
 ## Aspects
 
 ### Harmonic Theory
 
-Aspects lean on the geometry of the zodiac circle: we often slice it into twelve 30° segments, but when comparing two planets we bring the angle back to the **half-circle** (180°) to keep the shortest distance. The **harmonics** are simply the integer fractions of those 180°, and they act as landmarks for the main kinds of planetary encounters.
+Aspects lean on the geometry of the zodiac circle: we often slice it into twelve 30° segments, but when comparing two planets we bring the angle back to the **half-circle** (180°) to keep the shortest distance. The **harmonics** are simply the integer fractions of those 180° by 30º, and they act as landmarks for the main kinds of planetary encounters.
 
 #### Harmonic 1 (180°/1 = 180°)
 
@@ -94,6 +94,8 @@ Harmonic | Division | Aspects
 3        | 180°/3   | Sextile (60°), Trine (120°)
 6        | 180°/6   | Semi-sextile (30°), Quincunx (150°)
 
+In practice, we use mainly harmonics 1, 2 and 3.
+
 ## Orbs
 
 ### Orb Principle
@@ -102,20 +104,33 @@ In the Arabic tradition, each **planet has an orb** (zone of influence) that is 
 
 ```python
 # Orb calculation in Ketu
-orb = (orb_planet1 + orb_planet2) / 2 * harmonic_coefficient
+orb = [(orb_planet1 + orb_planet2) / 2] * harmonic_coefficient
 ```
 
-### Harmonic Coefficients
+### Default Orbs of Planets
 
-Aspect       | Angle | Harmonic | Coefficient
--------------|-------|----------|------------
-Conjunction  | 0°    | 1        | 1
-Opposition   | 180°  | 1        | 1
-Square       | 90°   | 2        | 1/2
-Sextile      | 60°   | 3        | 1/3
-Trine        | 120°  | 3        | 2/3
-Semi-sextile | 30°   | 6        | 1/6
-Quincunx     | 150°  | 6        | 5/6
+Body                    | Orb
+------------------------|--------
+Sun, Moon               | 12°
+Venus, Jupiter, Saturn  | 10°
+Mercury, Mars           | 8°
+Uranus, Neptune         | 6°
+Pluto                   | 4°
+Rahu, Lilith            | 0°
+
+### Aspect Types and Harmonic Coefficients
+
+Ketu calculates 7 major aspects based on harmonics 1, 2, 3, and 6:
+
+Aspect       | Angle | Symbol | Harmonic | Coefficient
+-------------|-------|--------|----------|------------
+Conjunction  | 0°    | ☌      | 1        | 1
+Semi-sextile | 30°   | ⚺      | 6        | 1/6
+Sextile      | 60°   | ⚹      | 3        | 1/3
+Square       | 90°   | □      | 2        | 1/2
+Trine        | 120°  | △      | 3        | 2/3
+Quincunx     | 150°  | ⚻      | 6        | 5/6
+Opposition   | 180°  | ☍      | 1        | 1
 
 ### Calculation Examples
 
@@ -129,43 +144,16 @@ Quincunx     | 150°  | 6        | 5/6
 #### Mercury-Mars Aspect (Square)
 
 - Mercury Orb: 8°
-- Mars Orb: 10°
+- Mars Orb: 8°
 - Coefficient: 1/2 (square)
-- Final Orb: (8 + 10) / 2 × 0.5 = **4.5°**
+- Final Orb: (8 + 8) / 2 × 0.5 = **4°**
 
 #### Venus-Jupiter Aspect (Sextile)
 
-- Venus Orb: 8°
+- Venus Orb: 10°
 - Jupiter Orb: 10°
 - Coefficient: 1/3 (sextile)
-- Final Orb: (8 + 10) / 2 × 0.333 = **3°**
-
-### Default Orbs
-
-Body                    | Orb
-------------------------|--------
-Sun, Moon               | 12°
-Mercury, Venus          | 8°
-Mars, Jupiter, Saturn   | 10°
-Uranus, Neptune         | 6°
-Pluto                   | 4°
-Rahu, Lilith            | 0°
-
-**Note**: Orbs can be customized as needed. See [example 05](../../examples/05_custom_orbs.py).
-
-## Aspect Types
-
-Ketu calculates 7 major aspects based on harmonics 1, 2, 3, and 6:
-
-Aspect       | Angle | Symbol
--------------|-------|--------
-Conjunction  | 0°    | ☌
-Semi-sextile | 30°   | ⚺
-Sextile      | 60°   | ⚹
-Square       | 90°   | □
-Trine        | 120°  | △
-Quincunx     | 150°  | ⚻
-Opposition   | 180°  | ☍
+- Final Orb: (10 + 10) / 2 × 0.333 = **3.33°**
 
 ## Planetary Movements
 
@@ -195,10 +183,6 @@ Neptune | 0.01°/day     | 165 years
 Pluto   | 0.00°/day     | 248 years
 
 ## Zodiac Signs
-
-Ketu recognizes the 12 tropical zodiac signs:
-
-### Sign List
 
 No | Sign        | Symbol | Start Degree | End Degree
 ---|-------------|--------|--------------|----------
@@ -266,28 +250,6 @@ current_position = ketu.long(current_jday, planet_id)
 if abs(current_position - natal_position) < 1.0:
     print("Planetary return!")
 ```
-
-## Swiss Ephemeris
-
-Ketu uses **pyswisseph**, the Python interface to Swiss Ephemeris, for high-precision calculations:
-
-- Precision: ±0.001" arc
-- Period covered: 13000 BCE to 17000 CE
-- Data: JPL DE431/DE441
-- Model: Jet Propulsion Laboratory (NASA) planetary ephemerides
-
-## Resources
-
-### Websites
-
-- [Swiss Ephemeris](https://www.astro.com/swisseph/) - Ephemeris documentation
-- [Astrodienst](https://www.astro.com/) - Online astrological calculations
-- [NASA JPL Horizons](https://ssd.jpl.nasa.gov/horizons/) - Astronomical ephemerides
-
-### Technical Documentation
-
-- [pyswisseph Documentation](https://astrorigin.com/pyswisseph/) - Python interface
-- [JPL Ephemerides](https://ssd.jpl.nasa.gov/planets/eph_export.html) - Source data
 
 ## Next Steps
 

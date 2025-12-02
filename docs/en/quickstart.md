@@ -199,22 +199,6 @@ signs = [ketu.body_sign(pos)[0] for pos in sun_positions]
 changes = np.where(np.diff(signs))[0]
 ```
 
-#### Customizing Orbs
-
-```python
-# Temporarily modify orbs
-original_orbs = ketu.bodies["orb"].copy()
-
-# Tighter orbs
-ketu.bodies["orb"] = ketu.bodies["orb"] * 0.5
-
-# Calculate with new orbs
-aspects = ketu.calculate_aspects(jday)
-
-# Restore
-ketu.bodies["orb"] = original_orbs
-```
-
 ### Next Steps
 
 - Explore [Advanced Examples](examples.md) for complex use cases

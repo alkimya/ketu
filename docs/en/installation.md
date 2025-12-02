@@ -58,17 +58,16 @@ ketu
 ```python
 import ketu
 print(ketu.__version__)
-# Output: 0.2.0
+# Output: 0.3.0
 ```
 
 ## Dependencies
 
-Ketu uses the following libraries:
+Ketu uses thefollowing libraries:
 
 Library         |   Version |   Description
 ----------------|-----------|--------------
 numpy           |   ≥1.20.0 |   Numerical computations and arrays
-pyswisseph      |   ≥2.10.0 |   Planetary ephemerides
 
 ## Uninstallation
 
