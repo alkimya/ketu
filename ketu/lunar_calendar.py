@@ -270,8 +270,10 @@ def generate_lunar_calendar(
     current_date = cycle.start + timedelta(days=2)
     search_end = cycle.end - timedelta(days=2)  # End before cycle end since we handled end conjunction
 
-    # Track found aspects to avoid duplicates
-    found_aspects = [(0, cycle.start), (0, cycle.end)] if 0 in aspects else []
+    # Track found aspects to avoid duplicates - use dict for O(1) lookups
+    found_aspects = {}  # aspect_angle -> list of exact times
+    if 0 in aspects:
+        found_aspects[0] = [cycle.start, cycle.end]
 
     while current_date < search_end:
         # Try to find each aspect type around current position
@@ -286,7 +288,7 @@ def generate_lunar_calendar(
                     body2=1,  # Moon
                     aspect=aspect_angle,
                     around_date=current_date,
-                    search_days=4,  # Search ±4 days from current position
+                    search_days=3.5,  # Search ±3.5 days (slightly reduced for speed)
                     detect_retrograde=False  # Moon doesn't retrograde
                 )
 
@@ -296,16 +298,19 @@ def generate_lunar_calendar(
 
                         # Check if this aspect falls within cycle (exclusive of exact boundaries)
                         if cycle.start < exact_time < cycle.end:
-                            # Check if we already found this exact aspect
-                            is_duplicate = any(
-                                aspect_angle == found_asp and
-                                abs((exact_time - found_time).total_seconds()) < 1800  # 30 min tolerance
-                                for found_asp, found_time in found_aspects
-                            )
+                            # Check if we already found this exact aspect (faster dict lookup)
+                            is_duplicate = False
+                            if aspect_angle in found_aspects:
+                                for found_time in found_aspects[aspect_angle]:
+                                    if abs((exact_time - found_time).total_seconds()) < 900:  # 15 min tolerance
+                                        is_duplicate = True
+                                        break
 
                             if not is_duplicate:
                                 aspect_windows.append(window)
-                                found_aspects.append((aspect_angle, exact_time))
+                                if aspect_angle not in found_aspects:
+                                    found_aspects[aspect_angle] = []
+                                found_aspects[aspect_angle].append(exact_time)
 
             except Exception:
                 # If error finding this aspect, continue with next aspect
