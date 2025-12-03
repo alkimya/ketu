@@ -77,9 +77,9 @@ PLANET_COLORS = {
 }
 
 # Predefined lists for common use cases
-PLANETS_DEFAULT = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 12]  # All except North Node (11)
+PLANETS_DEFAULT = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]  # All planets
 """Default planet list: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn,
-Uranus, Neptune, Pluto, Rahu, Lilith"""
+Uranus, Neptune, Pluto, Rahu (North Node), Ketu (South Node), Lilith"""
 
 BIG_FIVE = [0, 60, 90, 120, 180]  # Conjunction, Sextile, Square, Trine, Opposition
 """Big Five aspects: Conjunction (0°), Sextile (60°), Square (90°), Trine (120°), Opposition (180°)"""

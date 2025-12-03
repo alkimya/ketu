@@ -58,9 +58,9 @@ SWE_IDS = {
     7: "Uranus",
     8: "Neptune",
     9: "Pluto",
-    10: "Rahu",
-    11: "NorthNode",
-    12: "Lilith",
+    10: "Rahu",      # Mean North Node
+    11: "Ketu",      # Mean South Node (opposite of Rahu)
+    12: "Lilith",    # Mean Apogee (Black Moon)
 }
 
 
@@ -120,16 +120,15 @@ def calc_planet_position(jd: float, planet_id: int, flags: int = 0) -> np.ndarra
         lat_speed = 0.0
         dist_speed = 0.0
 
-    elif planet_name == "NorthNode":
-        _, true_node = get_lunar_nodes(jd)
-        lon = true_node
+    elif planet_name == "Ketu":
+        # Ketu is the South Node, exactly opposite to Rahu (North Node)
+        mean_node, _ = get_lunar_nodes(jd)
+        lon = (mean_node + 180.0) % 360.0  # Opposite of Rahu
         lat = 0.0
-        dist = 0.0
+        dist = 0.0  # Nodes don't have physical distance
 
-        # True node speed varies, approximate
-        jd_delta = 0.01
-        _, true_node2 = get_lunar_nodes(jd + jd_delta)
-        lon_speed = (true_node2 - true_node) / jd_delta
+        # Same regression speed as Rahu (but for opposite point)
+        lon_speed = -0.0529538083  # degrees per day
         lat_speed = 0.0
         dist_speed = 0.0
 

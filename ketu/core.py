@@ -22,9 +22,9 @@ bodies = np.array(
         ("Uranus", 7, 6, 0.012),
         ("Neptune", 8, 6, 0.007),
         ("Pluto", 9, 4, 0.004),
-        ("Rahu", 10, 0, -0.013),  # Mean Node
-        ("Ketu", 11, 0, -0.013),  # True Node
-        ("Lilith", 12, 0, 0.113),  # Mean Apogee
+        ("Rahu", 10, 0, -0.013),  # Mean North Node
+        ("Ketu", 11, 0, -0.013),  # Mean South Node (opposite of Rahu)
+        ("Lilith", 12, 0, 0.113),  # Mean Apogee (Black Moon)
     ],
     dtype=[("name", "S12"), ("id", "i4"), ("orb", "f4"), ("speed", "f4")],
 )

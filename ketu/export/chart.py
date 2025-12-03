@@ -107,7 +107,7 @@ def draw_zodiacal_chart(
         show_legend: Show legend with planet info (default: True)
         show_aspect_table: Show aspect table (default: True)
         planets: List of planet IDs to show (default: PLANETS_DEFAULT)
-                 PLANETS_DEFAULT = [0,1,2,3,4,5,6,7,8,9,10,12] (all except North Node)
+                 PLANETS_DEFAULT = [0,1,2,3,4,5,6,7,8,9,10,11,12] (all planets)
         aspects: List of aspects to show by angle or name (default: BIG_FIVE)
                  BIG_FIVE = [0, 60, 90, 120, 180] (Conjunction, Sextile, Square, Trine, Opposition)
         figsize: Figure size in inches (default: 16x11)
@@ -191,7 +191,7 @@ def draw_zodiacal_chart(
         else:
             date_str = dt_utc.strftime("%Y-%m-%d %H:%M UTC")
 
-    # Default planets to show (all except North Node)
+    # Default planets to show (all planets)
     if planets is None:
         planets = PLANETS_DEFAULT
 
