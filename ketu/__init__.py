@@ -66,6 +66,13 @@ from ketu.aspects import (
     get_orb,
 )
 
+from ketu.lunar_calendar import (
+    LunarCycle,
+    LunarCalendar,
+    generate_lunar_calendar,
+    print_lunar_calendar,
+)
+
 from ketu.display import print_positions, print_aspects, main
 
 # Advanced aspect window calculations
@@ -160,6 +167,12 @@ __all__ = [
     "AspectWindow",
     "find_aspect_window",
     "find_aspects_timeline",
+
+    # Lunar calendar
+    "LunarCycle",
+    "LunarCalendar",
+    "generate_lunar_calendar",
+    "print_lunar_calendar",
 
     # Transits
     "TransitMoment",
