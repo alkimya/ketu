@@ -183,28 +183,33 @@ def generate_lunar_calendar(
     """Generate a lunar calendar for a given month.
 
     Finds the lunar cycle (new moon to new moon) with the most days in the
-    specified month, then generates a timeline of all major aspects during
+    specified month, then generates a timeline of all Sun-Moon aspects during
     that cycle with their exact windows (begin, exact, end).
 
     Args:
         year: Year
         month: Month (1-12)
         aspects: List of aspect angles to track (default: BIG_FIVE = [0, 60, 90, 120, 180])
+                 Examples: [0, 90, 180] for conjunction/square/opposition only
+                          [0, 30, 60, 90, 120, 150, 180] for all major aspects
         timezone: Timezone for datetimes (default: UTC)
 
     Returns:
-        LunarCalendar containing the cycle info and all aspect windows
+        LunarCalendar containing the cycle info and Sun-Moon aspect windows
 
     Example:
         >>> from ketu.lunar_calendar import generate_lunar_calendar
+        >>>
+        >>> # Full lunar calendar (all BIG_FIVE aspects)
         >>> calendar = generate_lunar_calendar(2024, 1, timezone="Europe/Paris")
         >>> print(f"Cycle: {calendar.cycle.start} to {calendar.cycle.end}")
         >>> print(f"Aspects found: {len(calendar.aspect_windows)}")
-        >>> for window in calendar.aspect_windows[:5]:
-        ...     print(f"{window.body1_name} {window.aspect_name} {window.body2_name}")
-        ...     print(f"  Begins: {window.begin}")
-        ...     print(f"  Exact:  {window.exact}")
-        ...     print(f"  Ends:   {window.end}")
+        >>>
+        >>> # Only major aspects (New/Full/Quarters)
+        >>> calendar = generate_lunar_calendar(2024, 1, aspects=[0, 90, 180])
+        >>>
+        >>> # All aspects including semi-sextile and quincunx
+        >>> calendar = generate_lunar_calendar(2024, 1, aspects=[0, 30, 60, 90, 120, 150, 180])
     """
     # Default aspects: BIG_FIVE
     if aspects is None:
@@ -228,42 +233,36 @@ def generate_lunar_calendar(
     # Step 2: Select the primary lunar cycle
     cycle = select_primary_lunar_cycle(year, month, new_moons)
 
-    # Step 3: Generate aspect windows for the entire cycle
+    # Step 3: Generate Sun-Moon aspect windows for the entire cycle
     aspect_windows = []
 
-    # For each aspect type
+    # Calculate mid-point of cycle and search range
+    cycle_midpoint = cycle.start + (cycle.end - cycle.start) / 2
+    cycle_duration_days = (cycle.end - cycle.start).days
+
+    # For each Sun-Moon aspect type
     for aspect_angle in aspects:
-        # For all planetary pairs (excluding Rahu and Ketu for major aspects)
-        # Use bodies 0-9 (Sun to Pluto) for BIG_FIVE aspects
-        bodies_for_aspects = list(range(10))  # 0-9: classical + modern planets
+        try:
+            # Find Sun-Moon aspect window centered on cycle midpoint
+            window = find_aspect_window(
+                body1=0,  # Sun
+                body2=1,  # Moon
+                aspect=aspect_angle,
+                around_date=cycle_midpoint,
+                search_days=cycle_duration_days / 2 + 2,  # Search entire cycle + buffer
+                detect_retrograde=False  # Moon doesn't retrograde
+            )
 
-        for i, body1 in enumerate(bodies_for_aspects):
-            for body2 in bodies_for_aspects[i+1:]:
-                try:
-                    # Calculate mid-point of cycle and search range
-                    cycle_midpoint = cycle.start + (cycle.end - cycle.start) / 2
-                    cycle_duration_days = (cycle.end - cycle.start).days
+            if window is not None and len(window.moments) > 0:
+                # Check if any moment falls within the cycle
+                for moment in window.moments:
+                    if cycle.start <= moment.exact <= cycle.end:
+                        aspect_windows.append(window)
+                        break  # Only add the window once
 
-                    # Find aspect window centered on cycle midpoint
-                    window = find_aspect_window(
-                        body1=body1,
-                        body2=body2,
-                        aspect=aspect_angle,
-                        around_date=cycle_midpoint,
-                        search_days=cycle_duration_days / 2 + 2,  # Search entire cycle + buffer
-                        detect_retrograde=True
-                    )
-
-                    if window is not None and len(window.moments) > 0:
-                        # Check if any moment falls within the cycle
-                        for moment in window.moments:
-                            if cycle.start <= moment.exact <= cycle.end:
-                                aspect_windows.append(window)
-                                break  # Only add the window once
-
-                except Exception:
-                    # If aspect not found or error, continue
-                    continue
+        except Exception:
+            # If aspect not found or error, continue
+            continue
 
     # Sort by exact moment of first occurrence
     aspect_windows.sort(key=lambda w: w.moments[0].exact if w.moments else cycle.start)
