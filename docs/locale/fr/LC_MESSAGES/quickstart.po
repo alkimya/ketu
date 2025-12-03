@@ -1,0 +1,126 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Loc Cosnier
+# This file is distributed under the same license as the Ketu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Ketu 0.3.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-02 22:42+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: fr <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/quickstart.md:1
+msgid "Quick Start Guide"
+msgstr "### Trucs et astuces"
+
+#: ../../source/quickstart.md:3
+msgid "First Calculation"
+msgstr "## Premier calcul"
+
+#: ../../source/quickstart.md:5
+msgid "Interactive Mode (CLI)"
+msgstr "### Mode interactif (CLI)"
+
+#: ../../source/quickstart.md:7
+msgid "The simplest way to get started:"
+msgstr "Le plus simple pour commencer :"
+
+#: ../../source/quickstart.md:13
+msgid "Follow the prompts:"
+msgstr "### Mode programmation"
+
+#: ../../source/quickstart.md:15
+msgid "Enter a date (ISO format): `2020-12-21`"
+msgstr "### Mode interactif (CLI)"
+
+#: ../../source/quickstart.md:16
+msgid "Enter a time: `19:20`"
+msgstr "### Mode interactif (CLI)"
+
+#: ../../source/quickstart.md:17
+msgid "Enter a timezone: `Europe/Paris`"
+msgstr "### Mode interactif (CLI)"
+
+#: ../../source/quickstart.md:19
+msgid "Programming Mode"
+msgstr "### Mode programmation"
+
+#: ../../source/quickstart.md:37
+msgid "Basic Calculations"
+msgstr "### Calcul des aspects"
+
+#: ../../source/quickstart.md:39
+msgid "Planetary Positions"
+msgstr "#### Positions planétaires"
+
+#: ../../source/quickstart.md:59
+msgid "Determine Zodiac Sign"
+msgstr "#### Déterminer le signe zodiacal"
+
+#: ../../source/quickstart.md:74
+msgid "Check Retrogradation"
+msgstr "#### Vérifier la rétrogradation"
+
+#: ../../source/quickstart.md:84
+msgid "Aspect Calculation"
+msgstr "## Premier calcul"
+
+#: ../../source/quickstart.md:86
+msgid "Aspects Between Two Planets"
+msgstr "#### Aspects entre deux planètes"
+
+#: ../../source/quickstart.md:100
+msgid "All Current Aspects"
+msgstr "### Calcul des aspects"
+
+#: ../../source/quickstart.md:116
+msgid "Complete Example: Natal Chart"
+msgstr "### Exemple complet : Thème natal"
+
+#: ../../source/quickstart.md:172
+msgid "Tips and Tricks"
+msgstr "#### Positions planétaires"
+
+#: ../../source/quickstart.md:174
+msgid "Using the Cache"
+msgstr "#### Utiliser le cache"
+
+#: ../../source/quickstart.md:176
+msgid "Position calculations use `@lru_cache` to optimize performance:"
+msgstr ""
+"Les calculs de positions utilisent `@lru_cache` pour optimiser les "
+"performances :"
+
+#: ../../source/quickstart.md:188
+msgid "Working with NumPy"
+msgstr "#### Travailler avec numpy"
+
+#: ../../source/quickstart.md:202
+msgid "Next Steps"
+msgstr "### Trucs et astuces"
+
+#: ../../source/quickstart.md:204
+msgid "Explore [Advanced Examples](examples.md) for complex use cases"
+msgstr "### Exemple complet : Thème natal"
+
+#: ../../source/quickstart.md:205
+msgid "See the [API Reference](api.md) for all details"
+msgstr ""
+"# Vérifier rétrogradation retro = \" ℞\" if ketu.is_retrograde(jday, i) else"
+" \"\""
+
+#: ../../source/quickstart.md:206
+msgid "Learn about [Astrological Concepts](concepts.md) used in Ketu"
+msgstr ""
+"```python from datetime import datetime from zoneinfo import ZoneInfo import"
+" ketu"

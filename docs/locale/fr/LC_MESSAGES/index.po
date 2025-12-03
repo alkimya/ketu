@@ -1,0 +1,451 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Loc Cosnier
+# This file is distributed under the same license as the Ketu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Ketu 0.3.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-02 22:42+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: fr <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/index.md:19
+msgid "API"
+msgstr ""
+
+#: ../../source/index.md:19
+msgid "User Guide"
+msgstr "Ketu permet de :"
+
+#: ../../source/index.md:30
+msgid "Developer Guide"
+msgstr "Ketu permet de :"
+
+#: ../../source/index.md:1
+msgid "Ketu Documentation"
+msgstr "# Ketu Documentation"
+
+#: ../../source/index.md:3
+msgid ""
+"**Ketu** is a Python library for calculating planetary positions and "
+"planetary aspects using pure NumPy."
+msgstr ""
+"**Ketu** est une bibliothèque Python pour calculer les positions planétaires"
+" et les aspects planétaires en utilisant NumPy pur."
+
+#: ../../source/index.md:5
+msgid ""
+"The library was originally designed to produce biodynamic calendars and time"
+" series driven by planetary aspects, and it can serve as a foundation for "
+"building astrology software."
+msgstr ""
+"**Ketu** est une bibliothèque Python pour calculer les positions planétaires"
+" et les aspects planétaires en utilisant NumPy pur."
+
+#: ../../source/index.md:7
+msgid "Overview"
+msgstr ""
+
+#: ../../source/index.md:9
+msgid "Ketu allows you to:"
+msgstr "Ketu permet de :"
+
+#: ../../source/index.md:11
+msgid ""
+"Calculate precise positions of celestial bodies (Sun, Moon, planets, Nodes, "
+"Lilith)"
+msgstr ""
+"**Ketu** est une bibliothèque Python pour calculer les positions planétaires"
+" et les aspects planétaires en utilisant NumPy pur."
+
+#: ../../source/index.md:12
+msgid "Determine aspects between planets"
+msgstr "### Aspects majeurs"
+
+#: ../../source/index.md:13
+msgid "Convert between different time systems (UTC, Julian)"
+msgstr ""
+
+#: ../../source/index.md:14
+msgid "Identify retrogradations and zodiac signs"
+msgstr ""
+
+#: ../../source/index.md:15
+msgid "Generate time series of aspects"
+msgstr "### Aspects majeurs"
+
+#: ../../source/index.md:17
+msgid "Navigation"
+msgstr "## Navigation"
+
+#: ../../source/index.md:39
+msgid "Main Features"
+msgstr "### Aspects majeurs"
+
+#: ../../source/index.md:41
+msgid "Supported Celestial Bodies"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Body"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Symbol"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Orb"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Average Speed"
+msgstr "## Vue d'ensemble"
+
+#: ../../source/index.md:30
+msgid "Sun"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "☉"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "12°"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "0.986°/day"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Moon"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "☽"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "13.176°/day"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Mercury"
+msgstr "{ref}`search`"
+
+#: ../../source/index.md:30
+msgid "☿"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "8°"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "1.383°/day"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Venus"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "♀"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "10°"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "1.2°/day"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Mars"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "♂"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "0.524°/day"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Jupiter"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "♃"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "0.083°/day"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Saturn"
+msgstr "{ref}`search`"
+
+#: ../../source/index.md:30
+msgid "♄"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "0.034°/day"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Uranus"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "♅"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "6°"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "0.012°/day"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Neptune"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "♆"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "0.007°/day"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Pluto"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "♇"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "4°"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "0.004°/day"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Rahu (Mean Node)"
+msgstr "Ketu permet de :"
+
+#: ../../source/index.md:30
+msgid "☊"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "0º"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "-0.013°/day"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Lilith (Black Moon)"
+msgstr "## Indices et tables"
+
+#: ../../source/index.md:30
+msgid "⚸"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "-0.113°/day"
+msgstr ""
+
+#: ../../source/index.md:58
+msgid "Major Aspects"
+msgstr "### Aspects majeurs"
+
+#: ../../source/index.md:30
+msgid "Aspect"
+msgstr "## Contact"
+
+#: ../../source/index.md:30
+msgid "Angle"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Harmonic"
+msgstr "## Contact"
+
+#: ../../source/index.md:30
+msgid "Conjunction"
+msgstr "## Contact"
+
+#: ../../source/index.md:30
+msgid "0°"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "☌"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "1"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Semi-sextile"
+msgstr "{ref}`genindex`"
+
+#: ../../source/index.md:30
+msgid "30°"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "⚺"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "1/6"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Sextile"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "60°"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "⚹"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "1/3"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Square"
+msgstr "{ref}`search`"
+
+#: ../../source/index.md:30
+msgid "90°"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "□"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "1/2"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Trine"
+msgstr "{ref}`genindex`"
+
+#: ../../source/index.md:30
+msgid "120°"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "△"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "2/3"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Quincunx"
+msgstr "## Licence"
+
+#: ../../source/index.md:30
+msgid "150°"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "⚻"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "5/6"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "Opposition"
+msgstr "## Navigation"
+
+#: ../../source/index.md:30
+msgid "180°"
+msgstr ""
+
+#: ../../source/index.md:30
+msgid "☍"
+msgstr ""
+
+#: ../../source/index.md:70
+msgid "Quick Example"
+msgstr "## Exemple rapide"
+
+#: ../../source/index.md:87
+msgid "Indices and Tables"
+msgstr "## Indices et tables"
+
+#: ../../source/index.md:89
+#, python-brace-format
+msgid "{ref}`genindex`"
+msgstr "{ref}`genindex`"
+
+#: ../../source/index.md:91
+#, python-brace-format
+msgid "{ref}`search`"
+msgstr "{ref}`search`"
+
+#: ../../source/index.md:93
+msgid "License"
+msgstr "## Licence"
+
+#: ../../source/index.md:95
+msgid "MIT License - Copyright (c) 2021-2025 Loc Cosnier"
+msgstr "MIT License - Copyright (c) 2021-2025 Loc Cosnier"
+
+#: ../../source/index.md:97
+msgid "Contact"
+msgstr "## Contact"
+
+#: ../../source/index.md:99
+msgid "Author: Loc Cosnier"
+msgstr "## Licence"
+
+#: ../../source/index.md:100
+msgid "Email: <loc.cosnier@pm.me>"
+msgstr ""
+
+#: ../../source/index.md:101
+msgid "GitHub: alkimya/ketu"
+msgstr "### Aspects majeurs"
+
+#: ../../source/index.md:102
+msgid "PyPI: pypi.org/project/ketu"
+msgstr ""

@@ -1,0 +1,995 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Loc Cosnier
+# This file is distributed under the same license as the Ketu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Ketu 0.3.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-02 22:42+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: fr <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/concepts.md:1
+msgid "Astrological Concepts"
+msgstr "# Concepts astrologiques"
+
+#: ../../source/concepts.md:3
+msgid "Coordinate System"
+msgstr "## Système de coordonnées"
+
+#: ../../source/concepts.md:5
+msgid "Ecliptic Longitude"
+msgstr "# Concepts astrologiques"
+
+#: ../../source/concepts.md:7
+msgid ""
+"**Ecliptic longitude** is the position of a celestial body measured along "
+"the ecliptic (the Earth's orbital plane around the Sun), expressed in "
+"degrees from 0° to 360°."
+msgstr ""
+"La **longitude écliptique** est la position d'un corps céleste mesurée le "
+"long de l'écliptique (plan orbital de la Terre autour du Soleil), exprimée "
+"en degrés de 0° à 360°."
+
+#: ../../source/concepts.md:9
+msgid "0° = Vernal point (0° Aries)"
+msgstr "### Coefficients des harmoniques"
+
+#: ../../source/concepts.md:10
+msgid "90° = Summer solstice (0° Cancer)"
+msgstr "#### Aspect Soleil-Lune (Conjonction)"
+
+#: ../../source/concepts.md:11
+msgid "180° = Autumn equinox (0° Libra)"
+msgstr "#### Harmonique 2 (180°/2 = 90°)"
+
+#: ../../source/concepts.md:12
+msgid "270° = Winter solstice (0° Capricorn)"
+msgstr "#### Aspect Soleil-Lune (Conjonction)"
+
+#: ../../source/concepts.md:14
+msgid "Ecliptic Latitude"
+msgstr "### Latitude écliptique"
+
+#: ../../source/concepts.md:16
+msgid ""
+"**Ecliptic latitude** measures the angular distance of a body above (+) or "
+"below (-) the ecliptic plane."
+msgstr ""
+"La **latitude écliptique** mesure la distance angulaire d'un corps au-dessus"
+" (+) ou en-dessous (-) du plan de l'écliptique."
+
+#: ../../source/concepts.md:18
+msgid "Distance in AU"
+msgstr "### Distance en UA"
+
+#: ../../source/concepts.md:20
+msgid ""
+"The **Astronomical Unit** (AU) is the average Earth-Sun distance, "
+"approximately 149.6 million km."
+msgstr ""
+"L'**Unité Astronomique** (UA) est la distance moyenne Terre-Soleil, environ "
+"149,6 millions de km."
+
+#: ../../source/concepts.md:22
+msgid "Astronomical Time"
+msgstr "## Temps astronomique"
+
+#: ../../source/concepts.md:24
+msgid "Coordinated Universal Time (UTC)"
+msgstr "### Temps Universel Coordonné (UTC)"
+
+#: ../../source/concepts.md:26
+msgid ""
+"**UTC** is the reference time standard, based on international atomic time."
+msgstr ""
+"Le **UTC** est le standard de temps de référence, basé sur le temps atomique"
+" international."
+
+#: ../../source/concepts.md:28
+msgid "Julian Day"
+msgstr "### Jour Julien"
+
+#: ../../source/concepts.md:30
+msgid ""
+"The **Julian Day** (JD) is a continuous dating system used in astronomy. JD "
+"begins at noon UTC on January 1, 4713 BCE in the proleptic Julian calendar."
+msgstr ""
+"Le **Jour Julien** (JD) est un système de datation continue utilisé en "
+"astronomie. Le JD commence à midi UTC le 1er janvier 4713 av. J.-C. du "
+"calendrier julien proleptique."
+
+#: ../../source/concepts.md:37
+msgid "Celestial Bodies"
+msgstr "## Cycles et retours"
+
+#: ../../source/concepts.md:39
+msgid "Ketu calculates the positions of 13 celestial bodies:"
+msgstr "Ketu calcule les positions de 13 corps célestes :"
+
+#: ../../source/concepts.md:41
+msgid "Classical Planets"
+msgstr "## Configurations planétaires"
+
+#: ../../source/concepts.md:43
+msgid "**Sun** ☉"
+msgstr ""
+
+#: ../../source/concepts.md:44
+msgid "**Moon** ☽"
+msgstr ""
+
+#: ../../source/concepts.md:45
+msgid "**Mercury** ☿"
+msgstr "#### Aspect Mercure-Mars (Carré)"
+
+#: ../../source/concepts.md:46
+msgid "**Venus** ♀"
+msgstr "## Mouvements planétaires"
+
+#: ../../source/concepts.md:47
+msgid "**Mars** ♂"
+msgstr "**Principaux retours :**"
+
+#: ../../source/concepts.md:48
+msgid "**Jupiter** ♃"
+msgstr "#### Aspect Vénus-Jupiter (Sextile)"
+
+#: ../../source/concepts.md:49
+msgid "**Saturn** ♄"
+msgstr "**Principaux retours :**"
+
+#: ../../source/concepts.md:51
+msgid "Modern Planets"
+msgstr "## Mouvements planétaires"
+
+#: ../../source/concepts.md:53
+msgid "**Uranus** ♅"
+msgstr "## Prochaines étapes"
+
+#: ../../source/concepts.md:54
+msgid "**Neptune** ♆"
+msgstr "# Concepts astrologiques"
+
+#: ../../source/concepts.md:55
+msgid "**Pluto** ♇"
+msgstr "**Principaux retours :**"
+
+#: ../../source/concepts.md:57
+msgid "Fictitious Points"
+msgstr "## Configurations planétaires"
+
+#: ../../source/concepts.md:59
+msgid "**Rahu** ☊: Mean North Node"
+msgstr "- Carré (90°) : quart de cercle"
+
+#: ../../source/concepts.md:60
+msgid "**Ketu** ☋: Mean South Node"
+msgstr "### Grand Trigone"
+
+#: ../../source/concepts.md:61
+msgid "**Lilith** ⚸: Black Moon (Mean Apogee)"
+msgstr "# Concepts astrologiques"
+
+#: ../../source/concepts.md ../../source/concepts.md:63
+msgid "Aspects"
+msgstr ""
+
+#: ../../source/concepts.md:65
+msgid "Harmonic Theory"
+msgstr "### Théorie des harmoniques"
+
+#: ../../source/concepts.md:67
+msgid ""
+"Aspects lean on the geometry of the zodiac circle: we often slice it into "
+"twelve 30° segments, but when comparing two planets we bring the angle back "
+"to the **half-circle** (180°) to keep the shortest distance. The "
+"**harmonics** are simply the integer fractions of those 180° by 30º, and "
+"they act as landmarks for the main kinds of planetary encounters."
+msgstr ""
+
+#: ../../source/concepts.md:69
+msgid "Harmonic 1 (180°/1 = 180°)"
+msgstr "#### Harmonique 1 (180°/1 = 180°)"
+
+#: ../../source/concepts.md:71
+msgid "Conjunction (0°): same point"
+msgstr "## Configurations planétaires"
+
+#: ../../source/concepts.md:72
+msgid "Opposition (180°): opposite point"
+msgstr "## Configurations planétaires"
+
+#: ../../source/concepts.md:74
+msgid "Harmonic 2 (180°/2 = 90°)"
+msgstr "#### Harmonique 2 (180°/2 = 90°)"
+
+#: ../../source/concepts.md:76
+msgid "Square (90°): quarter circle"
+msgstr "- Carré (90°) : quart de cercle"
+
+#: ../../source/concepts.md:78
+msgid "Harmonic 3 (180°/3 = 60°)"
+msgstr "#### Harmonique 3 (180°/3 = 60°)"
+
+#: ../../source/concepts.md:80
+msgid "Sextile (60°): 1/3 of semi-circle"
+msgstr "- Carré (90°) : quart de cercle"
+
+#: ../../source/concepts.md:81
+msgid "Trine (120°): 2/3 of semi-circle"
+msgstr "- Carré (90°) : quart de cercle"
+
+#: ../../source/concepts.md:83
+msgid "Harmonic 6 (180°/6 = 30°)"
+msgstr "#### Harmonique 6 (180°/6 = 30°)"
+
+#: ../../source/concepts.md:85
+msgid "Semi-sextile (30°): 1/6 of semi-circle"
+msgstr "- Carré (90°) : quart de cercle"
+
+#: ../../source/concepts.md:86
+msgid "Quincunx (150°): 5/6 of semi-circle"
+msgstr "- Carré (90°) : quart de cercle"
+
+#: ../../source/concepts.md:88
+msgid "Summary Table"
+msgstr "### Jour Julien"
+
+#: ../../source/concepts.md
+msgid "Harmonic"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Division"
+msgstr "### Rétrogradation"
+
+#: ../../source/concepts.md
+msgid "1"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "180°/1"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Conjunction (0°), Opposition (180°)"
+msgstr "## Configurations planétaires"
+
+#: ../../source/concepts.md
+msgid "2"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "180°/2"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Square (90°)"
+msgstr "#### Aspect Mercure-Mars (Carré)"
+
+#: ../../source/concepts.md
+msgid "3"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "180°/3"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Sextile (60°), Trine (120°)"
+msgstr "### Liste des signes"
+
+#: ../../source/concepts.md
+msgid "6"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "180°/6"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Semi-sextile (30°), Quincunx (150°)"
+msgstr "#### Aspect Soleil-Lune (Conjonction)"
+
+#: ../../source/concepts.md:97
+msgid "In practice, we use mainly harmonics 1, 2 and 3."
+msgstr ""
+"Ketu calcule 7 aspects majeurs basés sur les harmoniques 1, 2, 3 et 6 :"
+
+#: ../../source/concepts.md:99
+msgid "Orbs"
+msgstr "## Orbes"
+
+#: ../../source/concepts.md:101
+msgid "Orb Principle"
+msgstr "### Principe des orbes"
+
+#: ../../source/concepts.md:103
+msgid ""
+"In the Arabic tradition, each **planet has an orb** (zone of influence) that"
+" is specific to it. The orb of an aspect between two planets is calculated "
+"as the **half-sum of the orbs of the two planets**, multiplied by the "
+"**harmonic coefficient**."
+msgstr ""
+
+#: ../../source/concepts.md:110
+msgid "Default Orbs of Planets"
+msgstr "### Orbes par défaut des planètes"
+
+#: ../../source/concepts.md
+msgid "Body"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Orb"
+msgstr "## Orbes"
+
+#: ../../source/concepts.md
+msgid "Sun, Moon"
+msgstr "### Planètes modernes"
+
+#: ../../source/concepts.md
+msgid "12°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Venus, Jupiter, Saturn"
+msgstr "#### Aspect Vénus-Jupiter (Sextile)"
+
+#: ../../source/concepts.md
+msgid "10°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Mercury, Mars"
+msgstr "#### Aspect Mercure-Mars (Carré)"
+
+#: ../../source/concepts.md
+msgid "8°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Uranus, Neptune"
+msgstr "### Grand Trigone"
+
+#: ../../source/concepts.md
+msgid "6°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Pluto"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "4°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Rahu, Lilith"
+msgstr "### Latitude écliptique"
+
+#: ../../source/concepts.md
+msgid "0°"
+msgstr ""
+
+#: ../../source/concepts.md:121
+msgid "Aspect Types and Harmonic Coefficients"
+msgstr "### Théorie des harmoniques"
+
+#: ../../source/concepts.md:123
+msgid "Ketu calculates 7 major aspects based on harmonics 1, 2, 3, and 6:"
+msgstr ""
+"Ketu calcule 7 aspects majeurs basés sur les harmoniques 1, 2, 3 et 6 :"
+
+#: ../../source/concepts.md
+msgid "Aspect"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Angle"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Symbol"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Coefficient"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Conjunction"
+msgstr "### Rétrogradation"
+
+#: ../../source/concepts.md
+msgid "☌"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Semi-sextile"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "30°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "⚺"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "1/6"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Sextile"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "60°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "⚹"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "1/3"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Square"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "90°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "□"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "1/2"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Trine"
+msgstr "### Rétrogradation"
+
+#: ../../source/concepts.md
+msgid "120°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "△"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "2/3"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Quincunx"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "150°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "⚻"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "5/6"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Opposition"
+msgstr "### Rétrogradation"
+
+#: ../../source/concepts.md
+msgid "180°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "☍"
+msgstr ""
+
+#: ../../source/concepts.md:135
+msgid "Calculation Examples"
+msgstr "## Configurations planétaires"
+
+#: ../../source/concepts.md:137
+msgid "Sun-Moon Aspect (Conjunction)"
+msgstr "#### Aspect Soleil-Lune (Conjonction)"
+
+#: ../../source/concepts.md:139
+msgid "Sun Orb: 12°"
+msgstr "## Orbes"
+
+#: ../../source/concepts.md:140
+msgid "Moon Orb: 12°"
+msgstr "## Orbes"
+
+#: ../../source/concepts.md:141
+msgid "Coefficient: 1 (conjunction)"
+msgstr "#### Aspect Soleil-Lune (Conjonction)"
+
+#: ../../source/concepts.md:142
+msgid "Final Orb: (12 + 12) / 2 × 1 = **12°**"
+msgstr "#### Harmonique 1 (180°/1 = 180°)"
+
+#: ../../source/concepts.md:144
+msgid "Mercury-Mars Aspect (Square)"
+msgstr "## Les aspects"
+
+#: ../../source/concepts.md:146
+msgid "Mercury Orb: 8°"
+msgstr "## Orbes"
+
+#: ../../source/concepts.md:147
+msgid "Mars Orb: 8°"
+msgstr "## Orbes"
+
+#: ../../source/concepts.md:148
+msgid "Coefficient: 1/2 (square)"
+msgstr "### Coefficients des harmoniques"
+
+#: ../../source/concepts.md:149
+msgid "Final Orb: (8 + 8) / 2 × 0.5 = **4°**"
+msgstr "#### Harmonique 3 (180°/3 = 60°)"
+
+#: ../../source/concepts.md:151
+msgid "Venus-Jupiter Aspect (Sextile)"
+msgstr "#### Aspect Vénus-Jupiter (Sextile)"
+
+#: ../../source/concepts.md:153
+msgid "Venus Orb: 10°"
+msgstr "## Orbes"
+
+#: ../../source/concepts.md:154
+msgid "Jupiter Orb: 10°"
+msgstr "### Principe des orbes"
+
+#: ../../source/concepts.md:155
+msgid "Coefficient: 1/3 (sextile)"
+msgstr "### Coefficients des harmoniques"
+
+#: ../../source/concepts.md:156
+msgid "Final Orb: (10 + 10) / 2 × 0.333 = **3.33°**"
+msgstr "#### Harmonique 2 (180°/2 = 90°)"
+
+#: ../../source/concepts.md:158
+msgid "Planetary Movements"
+msgstr "### Planètes modernes"
+
+#: ../../source/concepts.md:160
+msgid "Retrogradation"
+msgstr "### Rétrogradation"
+
+#: ../../source/concepts.md:162
+msgid ""
+"**Retrogradation** is the apparent movement of a planet that seems to move "
+"backward in the zodiac. It's an optical illusion due to differences in "
+"orbital speed between Earth and the observed planet."
+msgstr ""
+"La **rétrogradation** est le mouvement apparent d'une planète qui semble "
+"reculer dans le zodiaque. C'est une illusion optique due aux différences de "
+"vitesse orbitale entre la Terre et la planète observée."
+
+#: ../../source/concepts.md:170
+msgid "Average Speeds"
+msgstr "## Les aspects"
+
+#: ../../source/concepts.md
+msgid "Planet"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Average Speed"
+msgstr "## Ressources"
+
+#: ../../source/concepts.md
+msgid "Complete Cycle"
+msgstr "### Exemples de calcul"
+
+#: ../../source/concepts.md
+msgid "Moon"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "13.18°/day"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "27.3 days"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Mercury"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "1.38°/day"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "88 days"
+msgstr "## Types d'aspects"
+
+#: ../../source/concepts.md
+msgid "Venus"
+msgstr "## Ressources"
+
+#: ../../source/concepts.md
+msgid "1.20°/day"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "225 days"
+msgstr "## Types d'aspects"
+
+#: ../../source/concepts.md
+msgid "Sun"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "0.99°/day"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "365.25 days"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Mars"
+msgstr "## Orbes"
+
+#: ../../source/concepts.md
+msgid "0.52°/day"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "687 days"
+msgstr "## Types d'aspects"
+
+#: ../../source/concepts.md
+msgid "Jupiter"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "0.08°/day"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "11.9 years"
+msgstr "## Types d'aspects"
+
+#: ../../source/concepts.md
+msgid "Saturn"
+msgstr "## Ressources"
+
+#: ../../source/concepts.md
+msgid "0.03°/day"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "29.5 years"
+msgstr "## Types d'aspects"
+
+#: ../../source/concepts.md
+msgid "Uranus"
+msgstr "## Ressources"
+
+#: ../../source/concepts.md
+msgid "0.01°/day"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "84 years"
+msgstr "## Types d'aspects"
+
+#: ../../source/concepts.md
+msgid "Neptune"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "165 years"
+msgstr "## Types d'aspects"
+
+#: ../../source/concepts.md
+msgid "0.00°/day"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "248 years"
+msgstr "## Types d'aspects"
+
+#: ../../source/concepts.md:185
+msgid "Zodiac Signs"
+msgstr "### Liste des signes"
+
+#: ../../source/concepts.md
+msgid "No"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Sign"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Start Degree"
+msgstr "### Liste des signes"
+
+#: ../../source/concepts.md
+msgid "End Degree"
+msgstr "### Liste des signes"
+
+#: ../../source/concepts.md
+msgid "Aries"
+msgstr "## Orbes"
+
+#: ../../source/concepts.md
+msgid "♈"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Taurus"
+msgstr "### T-Carré"
+
+#: ../../source/concepts.md
+msgid "♉"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Gemini"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "♊"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "4"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Cancer"
+msgstr "### T-Carré"
+
+#: ../../source/concepts.md
+msgid "♋"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "5"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Leo"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "♌"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Virgo"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "♍"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "7"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Libra"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "♎"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "210°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "8"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Scorpio"
+msgstr "### Rétrogradation"
+
+#: ../../source/concepts.md
+msgid "♏"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "240°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "9"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Sagittarius"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "♐"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "270°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "10"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Capricorn"
+msgstr "### T-Carré"
+
+#: ../../source/concepts.md
+msgid "♑"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "300°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "11"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Aquarius"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "♒"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "330°"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "12"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "Pisces"
+msgstr "## Ressources"
+
+#: ../../source/concepts.md
+msgid "♓"
+msgstr ""
+
+#: ../../source/concepts.md
+msgid "360°"
+msgstr ""
+
+#: ../../source/concepts.md:213
+msgid "Planetary Configurations"
+msgstr "## Configurations planétaires"
+
+#: ../../source/concepts.md:215
+msgid "Grand Trine"
+msgstr "### Grand Trigone"
+
+#: ../../source/concepts.md:217
+msgid ""
+"Three planets forming trines with each other (equilateral triangle of 120°)."
+msgstr ""
+"Trois planètes formant des trigones entre elles (triangle équilatéral de "
+"120°)."
+
+#: ../../source/concepts.md:219
+msgid "T-Square"
+msgstr "### T-Carré"
+
+#: ../../source/concepts.md:221
+msgid ""
+"Two planets in opposition (180°), both square (90°) to a third planet "
+"(apex)."
+msgstr ""
+"Deux planètes en opposition (180°), toutes deux en carré (90°) à une "
+"troisième planète (apex)."
+
+#: ../../source/concepts.md:223
+msgid "Yod (Finger of God)"
+msgstr "### Yod (Doigt de Dieu)"
+
+#: ../../source/concepts.md:225
+msgid ""
+"Two planets in sextile (60°), both quincunx (150°) to a third planet (apex)."
+msgstr ""
+"Deux planètes en sextile (60°), toutes deux en quinconce (150°) à une "
+"troisième planète (apex)."
+
+#: ../../source/concepts.md:227
+msgid "Grand Square"
+msgstr "### Grand Carré"
+
+#: ../../source/concepts.md:229
+msgid ""
+"Four planets forming four squares (90°) and two oppositions (180°), creating"
+" a square in the chart."
+msgstr ""
+"Quatre planètes formant quatre carrés (90°) et deux oppositions (180°), "
+"créant un carré dans le thème."
+
+#: ../../source/concepts.md:231
+msgid "Cycles and Returns"
+msgstr "## Cycles et retours"
+
+#: ../../source/concepts.md:233
+msgid "Planetary Returns"
+msgstr "## Cycles et retours"
+
+#: ../../source/concepts.md:235
+msgid ""
+"A **planetary return** occurs when a planet returns to its natal position "
+"(same ecliptic longitude)."
+msgstr ""
+"Un **retour planétaire** se produit quand une planète revient à sa position "
+"natale (même longitude écliptique)."
+
+#: ../../source/concepts.md:237
+msgid "**Main returns:**"
+msgstr "**Principaux retours :**"
+
+#: ../../source/concepts.md:239
+msgid "**Solar return**: Astrological birthday (365.25 days)"
+msgstr "# Concepts astrologiques"
+
+#: ../../source/concepts.md:240
+msgid "**Lunar return**: Approximately every 27.3 days"
+msgstr "### Retours planétaires"
+
+#: ../../source/concepts.md:241
+msgid "**Jupiter return**: Approximately every 12 years"
+msgstr "### Retours planétaires"
+
+#: ../../source/concepts.md:242
+msgid "**Saturn return**: Approximately at 29-30 years and 58-60 years"
+msgstr ""
+
+#: ../../source/concepts.md:254
+msgid "Next Steps"
+msgstr "# Concepts astrologiques"
+
+#: ../../source/concepts.md:256
+msgid "Explore [Examples](examples.md) to see these concepts in action"
+msgstr ""
+"Le **UTC** est le standard de temps de référence, basé sur le temps atomique"
+" international."
+
+#: ../../source/concepts.md:257
+msgid "See the [API Reference](api.md) for technical implementation"
+msgstr ""
+
+#: ../../source/concepts.md:258
+msgid "Read the [Quick Start Guide](quickstart.md) to begin coding"
+msgstr ""

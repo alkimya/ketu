@@ -1,0 +1,136 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Loc Cosnier
+# This file is distributed under the same license as the Ketu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Ketu 0.3.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-02 22:42+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: fr <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/installation.md:1
+msgid "Installation"
+msgstr "# Installation"
+
+#: ../../source/installation.md:3
+msgid "Prerequisites"
+msgstr "## Prérequis"
+
+#: ../../source/installation.md:5
+msgid "Ketu requires:"
+msgstr "## Prérequis"
+
+#: ../../source/installation.md:7
+msgid "Python 3.10 or higher"
+msgstr "### En Python"
+
+#: ../../source/installation.md:8
+msgid "pip (Python package manager)"
+msgstr "### En ligne de commande"
+
+#: ../../source/installation.md:10
+msgid "Stable Installation from PyPI"
+msgstr "# Installation"
+
+#: ../../source/installation.md:12
+msgid "The simplest way to install Ketu:"
+msgstr "La méthode la plus simple pour installer Ketu :"
+
+#: ../../source/installation.md:18
+msgid "Installation from Source"
+msgstr "## Installation depuis les sources"
+
+#: ../../source/installation.md:20
+msgid "Clone the Repository"
+msgstr "### Cloner le dépôt"
+
+#: ../../source/installation.md:27
+msgid "Development Mode Installation"
+msgstr "## Vérification de l'installation"
+
+#: ../../source/installation.md:33
+msgid ""
+"This method allows you to modify the source code and see changes "
+"immediately."
+msgstr ""
+"Cette méthode permet de modifier le code source et de voir immédiatement les"
+" changements."
+
+#: ../../source/installation.md:35
+msgid "Installation in a Virtual Environment (Recommended)"
+msgstr "## Installation dans un environnement virtuel (recommandé)"
+
+#: ../../source/installation.md:37
+msgid "With venv"
+msgstr "### Avec venv"
+
+#: ../../source/installation.md:47
+msgid "Installation Verification"
+msgstr "# Installation"
+
+#: ../../source/installation.md:49
+msgid "Command Line"
+msgstr "### Cloner le dépôt"
+
+#: ../../source/installation.md:56
+msgid "In Python"
+msgstr "### En Python"
+
+#: ../../source/installation.md:64
+msgid "Dependencies"
+msgstr "## Dépendances"
+
+#: ../../source/installation.md:66
+msgid "Ketu uses thefollowing libraries:"
+msgstr "Ketu utilise les bibliothèques suivantes :"
+
+#: ../../source/installation.md
+msgid "Library"
+msgstr ""
+
+#: ../../source/installation.md
+msgid "Version"
+msgstr "# Installation"
+
+#: ../../source/installation.md
+msgid "Description"
+msgstr "## Désinstallation"
+
+#: ../../source/installation.md
+msgid "numpy"
+msgstr ""
+
+#: ../../source/installation.md
+msgid "≥1.20.0"
+msgstr ""
+
+#: ../../source/installation.md
+msgid "Numerical computations and arrays"
+msgstr "## Installation depuis les sources"
+
+#: ../../source/installation.md:72
+msgid "Uninstallation"
+msgstr "# Installation"
+
+#: ../../source/installation.md:78
+msgid "Next Steps"
+msgstr "Ketu nécessite :"
+
+#: ../../source/installation.md:80
+msgid ""
+"Once installed, see the [Quick Start Guide](quickstart.md) to begin using "
+"Ketu."
+msgstr ""
+"Une fois installé, consultez le [Guide de démarrage rapide](quickstart.md) "
+"pour commencer à utiliser Ketu."

@@ -14,8 +14,11 @@ author = "Loc Cosnier"
 release = "0.3.0"
 version = "0.3.0"
 
-# Language
-language = "fr"
+# Language and internationalization
+language = "en"
+locale_dirs = ["../locale/"]
+gettext_compact = False
+gettext_uuid = False
 
 # General configuration
 extensions = [
@@ -68,19 +71,38 @@ html_theme_options = {
 }
 
 # Context for templates (language badges)
+# Language will be dynamically set by sphinx-intl
 on_rtd = os.environ.get("READTHEDOCS") == "True"
 rtd_version = os.environ.get("READTHEDOCS_VERSION", "latest")
 
-if on_rtd:
-    language_links = [
-        {"code": "fr", "label": "FR", "url": f"/fr/{rtd_version}/", "current": True},
-        {"code": "en", "label": "EN", "url": f"/en/{rtd_version}/", "current": False},
-    ]
-else:
-    language_links = [
-        {"code": "fr", "label": "FR", "url": "/index.html", "current": True},
-        {"code": "en", "label": "EN", "url": "/en/index.html", "current": False},
-    ]
+# Get current language from environment or default to 'en'
+current_language = language if language else "en"
+
+# Define available languages
+available_languages = [
+    {"code": "en", "label": "EN"},
+    {"code": "fr", "label": "FR"},
+]
+
+# Build language links
+language_links = []
+for lang in available_languages:
+    is_current = lang["code"] == current_language
+
+    if on_rtd:
+        url = f"/{lang['code']}/{rtd_version}/"
+    else:
+        if lang["code"] == "en":
+            url = "../html/index.html"
+        else:
+            url = f"../html-{lang['code']}/index.html"
+
+    language_links.append({
+        "code": lang["code"],
+        "label": lang["label"],
+        "url": url,
+        "current": is_current
+    })
 
 html_context = {
     "languages": language_links,
