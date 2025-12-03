@@ -236,33 +236,83 @@ def generate_lunar_calendar(
     # Step 3: Generate Sun-Moon aspect windows for the entire cycle
     aspect_windows = []
 
-    # Calculate mid-point of cycle and search range
-    cycle_midpoint = cycle.start + (cycle.end - cycle.start) / 2
-    cycle_duration_days = (cycle.end - cycle.start).days
-
-    # For each Sun-Moon aspect type
-    for aspect_angle in aspects:
+    # If Conjunction (0°) is in the requested aspects, explicitly add the start and end new moons
+    if 0 in aspects:
         try:
-            # Find Sun-Moon aspect window centered on cycle midpoint
-            window = find_aspect_window(
+            # Add start new moon (conjunction)
+            start_window = find_aspect_window(
                 body1=0,  # Sun
                 body2=1,  # Moon
-                aspect=aspect_angle,
-                around_date=cycle_midpoint,
-                search_days=cycle_duration_days / 2 + 2,  # Search entire cycle + buffer
-                detect_retrograde=False  # Moon doesn't retrograde
+                aspect=0,  # Conjunction
+                around_date=cycle.start,
+                search_days=2,
+                detect_retrograde=False
             )
+            if start_window is not None and len(start_window.moments) > 0:
+                aspect_windows.append(start_window)
 
-            if window is not None and len(window.moments) > 0:
-                # Check if any moment falls within the cycle
-                for moment in window.moments:
-                    if cycle.start <= moment.exact <= cycle.end:
-                        aspect_windows.append(window)
-                        break  # Only add the window once
-
+            # Add end new moon (conjunction)
+            end_window = find_aspect_window(
+                body1=0,  # Sun
+                body2=1,  # Moon
+                aspect=0,  # Conjunction
+                around_date=cycle.end,
+                search_days=2,
+                detect_retrograde=False
+            )
+            if end_window is not None and len(end_window.moments) > 0:
+                aspect_windows.append(end_window)
         except Exception:
-            # If aspect not found or error, continue
-            continue
+            pass
+
+    # Scan chronologically through the cycle for all other aspects
+    # Start slightly after cycle start since we already handled the start conjunction
+    current_date = cycle.start + timedelta(days=2)
+    search_end = cycle.end - timedelta(days=2)  # End before cycle end since we handled end conjunction
+
+    # Track found aspects to avoid duplicates
+    found_aspects = [(0, cycle.start), (0, cycle.end)] if 0 in aspects else []
+
+    while current_date < search_end:
+        # Try to find each aspect type around current position
+        for aspect_angle in aspects:
+            if aspect_angle == 0:
+                # Skip conjunction, already handled
+                continue
+
+            try:
+                window = find_aspect_window(
+                    body1=0,  # Sun
+                    body2=1,  # Moon
+                    aspect=aspect_angle,
+                    around_date=current_date,
+                    search_days=4,  # Search ±4 days from current position
+                    detect_retrograde=False  # Moon doesn't retrograde
+                )
+
+                if window is not None and len(window.moments) > 0:
+                    for moment in window.moments:
+                        exact_time = moment.exact
+
+                        # Check if this aspect falls within cycle (exclusive of exact boundaries)
+                        if cycle.start < exact_time < cycle.end:
+                            # Check if we already found this exact aspect
+                            is_duplicate = any(
+                                aspect_angle == found_asp and
+                                abs((exact_time - found_time).total_seconds()) < 1800  # 30 min tolerance
+                                for found_asp, found_time in found_aspects
+                            )
+
+                            if not is_duplicate:
+                                aspect_windows.append(window)
+                                found_aspects.append((aspect_angle, exact_time))
+
+            except Exception:
+                # If error finding this aspect, continue with next aspect
+                continue
+
+        # Move forward by 3 days (aspects happen roughly every 3-4 days in lunar cycle)
+        current_date += timedelta(days=3)
 
     # Sort by exact moment of first occurrence
     aspect_windows.sort(key=lambda w: w.moments[0].exact if w.moments else cycle.start)
