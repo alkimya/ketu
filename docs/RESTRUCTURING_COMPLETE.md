@@ -7,7 +7,8 @@ The Ketu documentation has been successfully restructured from a parallel EN/FR 
 ## What Changed
 
 ### Old Structure ❌
-```
+
+```text
 docs/
 ├── en/           # Duplicate English docs
 ├── fr/           # Duplicate French docs (manual sync required)
@@ -15,7 +16,8 @@ docs/
 ```
 
 ### New Structure ✅
-```
+
+```text
 docs/
 ├── source/       # Single source of truth (English)
 ├── locale/       # Professional translations
@@ -41,6 +43,7 @@ docs/
 ## Translation Statistics
 
 Total PO files: **11**
+
 - api.po: 95 entries (94 translated, 1 skipped)
 - architecture.po: 118 entries (117 translated, 1 skipped)
 - changelog.po: 62 entries (41 translated, 21 skipped)
@@ -61,6 +64,7 @@ Total PO files: **11**
 ## Build Commands
 
 ### Install Dependencies
+
 ```bash
 cd docs
 pip install -r requirements-docs.txt
@@ -69,24 +73,28 @@ pip install -r requirements-docs.txt
 ### Build Documentation
 
 **English (default)**:
+
 ```bash
 make html
 # Output: build/html/
 ```
 
 **French**:
+
 ```bash
 make html-fr
 # Output: build/html-fr/
 ```
 
 **All languages**:
+
 ```bash
 make html-all
 # Builds both EN and FR
 ```
 
 **Live preview** (English, auto-reload):
+
 ```bash
 make livehtml
 # Opens browser at http://localhost:8000
@@ -97,22 +105,26 @@ make livehtml
 **1. Update source** (edit docs/source/*.md files)
 
 **2. Extract new translatable strings**:
+
 ```bash
 make gettext
 # Creates POT files in build/gettext/
 ```
 
 **3. Update PO files**:
+
 ```bash
 make update-po
 # Updates locale/fr/LC_MESSAGES/*.po
 ```
 
 **4. Translate** (edit locale/fr/LC_MESSAGES/*.po files)
-   - Use tools like Poedit, Lokalize, or any text editor
-   - Format: msgid (English) → msgstr (French)
+
+- Use tools like Poedit, Lokalize, or any text editor
+- Format: msgid (English) → msgstr (French)
 
 **5. Build translated docs**:
+
 ```bash
 make html-fr
 ```
@@ -120,12 +132,14 @@ make html-fr
 ### Add a New Language
 
 For example, Spanish:
+
 ```bash
 make init-po LANG=es
 # Creates locale/es/LC_MESSAGES/*.po files
 ```
 
 Then translate the PO files and build:
+
 ```bash
 make html-es  # (requires updating Makefile first)
 ```
@@ -133,6 +147,7 @@ make html-es  # (requires updating Makefile first)
 ## File Changes
 
 ### New Files
+
 - `docs/source/` - Copied from `docs/en/`
 - `docs/locale/fr/LC_MESSAGES/*.po` - 11 PO translation files
 - `docs/locale/fr/LC_MESSAGES/*.mo` - Compiled translations (auto-generated)
@@ -141,17 +156,20 @@ make html-es  # (requires updating Makefile first)
 - `docs/RESTRUCTURING_COMPLETE.md` - This file
 
 ### Modified Files
+
 - `docs/Makefile` - Complete rewrite with i18n targets
 - `docs/source/conf.py` - Added internationalization config
 - `docs/requirements-docs.txt` - Added `sphinx-intl>=2.1.0`
 
 ### Old Files (Can be archived/removed)
+
 - `docs/en/` - Now in `docs/source/`
 - `docs/fr/` - Now in `docs/locale/fr/LC_MESSAGES/`
 
 ## Responsive Design
 
 ✅ **Already excellent!** The current `custom.css` has comprehensive mobile support:
+
 - Mobile breakpoints (@media max-width: 768px)
 - Portrait mode fixes (@media max-width: 480px + orientation: portrait)
 - Proper sidebar behavior with hamburger menu
@@ -163,12 +181,14 @@ make html-es  # (requires updating Makefile first)
 ## Next Steps
 
 ### Immediate
+
 1. ✅ Review and test built documentation
 2. ✅ Commit changes to git
 3. ⚠️ Complete missing French translations in PO files (229 entries)
 4. ⚠️ Remove or archive old `docs/en/` and `docs/fr/` directories
 
 ### Optional
+
 1. Configure ReadTheDocs to build both language versions
 2. Add more languages (Spanish, German, etc.)
 3. Set up translation automation (Weblate, Transifex, etc.)
@@ -177,6 +197,7 @@ make html-es  # (requires updating Makefile first)
 ## Translation Helpers
 
 ### Check Translation Status
+
 ```bash
 # Count untranslated strings
 for file in locale/fr/LC_MESSAGES/*.po; do
@@ -185,11 +206,13 @@ done
 ```
 
 ### Find Fuzzy Translations
+
 ```bash
 grep -r "#, fuzzy" locale/fr/LC_MESSAGES/
 ```
 
 ### Validate PO Files
+
 ```bash
 msgfmt -c -v -o /dev/null locale/fr/LC_MESSAGES/*.po
 ```
@@ -197,12 +220,14 @@ msgfmt -c -v -o /dev/null locale/fr/LC_MESSAGES/*.po
 ## Documentation URLs
 
 After building:
+
 - **English**: `file:///home/loc/workspace/ketu/docs/build/html/index.html`
 - **French**: `file:///home/loc/workspace/ketu/docs/build/html-fr/index.html`
 
 ## Help
 
 For translation workflow help:
+
 ```bash
 make i18n-help
 ```

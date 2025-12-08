@@ -7,11 +7,13 @@ This guide helps you migrate from Ketu v0.2.x (pyswisseph-based) to v0.3.0 (pure
 ### Dependencies
 
 **Before (v0.2.x):**
+
 ```bash
 pip install ketu  # Installed pyswisseph + numpy
 ```
 
 **After (v0.3.0):**
+
 ```bash
 pip install ketu  # Only numpy required
 pip install ketu[chart]  # With visualization
@@ -86,11 +88,13 @@ ketu.export_lunations_to_ical(jd_start, jd_end, "lunations.ics")
 ### When to Care
 
 You likely **don't need** Swiss Ephemeris precision if:
+
 - You're doing astrology (orbs are typically 1-12°)
 - You're working with aspects (orb tolerance >> 0.5°)
 - You need aspects exact to the minute (v0.3.0 handles this)
 
 You **might prefer** Swiss Ephemeris if:
+
 - You need arc-second precision for scientific astronomy
 - You're computing asteroid positions (not yet supported in v0.3.0)
 - You need positions for dates outside 1800-2200 CE
@@ -161,12 +165,14 @@ The public API (`ketu.*`) has **no breaking changes**.
 If you were importing from internal modules:
 
 **Before:**
+
 ```python
 # Don't do this - internal API
 from ketu.ketu import body_properties
 ```
 
 **After:**
+
 ```python
 # Use public API instead
 from ketu import body_properties
@@ -177,6 +183,7 @@ from ketu import body_properties
 ### Import Errors
 
 **Problem:**
+
 ```python
 ImportError: No module named 'swisseph'
 ```

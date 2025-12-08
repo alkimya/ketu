@@ -96,7 +96,7 @@ Then open a PR on GitHub.
 
 ## Project Architecture
 
-```
+```text
 ketu/
 ├── ketu/
 │   ├── __init__.py      # Public exports

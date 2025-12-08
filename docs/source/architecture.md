@@ -4,7 +4,7 @@ This page describes the internal architecture of Ketu v0.3.0.
 
 ## Module Structure
 
-```
+```text
 ketu/
 ├── __init__.py          # Public API and imports
 ├── core.py              # Data structures (bodies, aspects, signs)
@@ -175,7 +175,7 @@ The public API maintains compatibility with previous versions where possible.
 
 ### Position Calculation Flow
 
-```
+```text
 User calls: ketu.long(jday, body)
            ↓
 calculations.long(jday, body)
@@ -191,7 +191,7 @@ Returns: [lon, lat, dist, lon_speed, lat_speed, dist_speed]
 
 ### Aspect Calculation Flow
 
-```
+```text
 User calls: ketu.calculate_aspects(jday)
            ↓
 calculations.calculate_aspects(jday)

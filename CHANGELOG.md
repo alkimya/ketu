@@ -13,7 +13,7 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## [0.2.0] - 2025-10-27
 
-### Added
+### Added 0.2.0
 
 - Full packaging setup for a PyPI release
 - `pyproject.toml` metadata and dependencies
@@ -46,7 +46,7 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## [0.1.0] - 2024-01-XX
 
-### Added
+### Added 0.1.0
 
 - Interactive CLI to compute positions and aspects
 - Planetary position computations through pyswisseph

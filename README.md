@@ -222,6 +222,7 @@ Included sections:
 - `numpy` ≥ 1.20.0 — numerical routines and arrays
 
 **Optional dependencies:**
+
 - `matplotlib` ≥ 3.5.0 — for chart visualization (`pip install ketu[chart]`)
 - `icalendar` ≥ 5.0.0 — for calendar export (`pip install ketu[icalendar]`)
 
@@ -277,7 +278,7 @@ The implementation provides good accuracy for astrological purposes:
 
 ## Architecture
 
-```
+```text
 ketu/
 ├── __init__.py          # Main API
 ├── core.py              # Data structures (bodies, aspects, signs)
