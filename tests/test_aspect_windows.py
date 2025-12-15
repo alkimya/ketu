@@ -2,7 +2,7 @@
 
 import unittest
 from datetime import datetime, timedelta
-from ketu.aspect_windows import (
+from ketu.aspects import (
     find_aspect_window,
     find_aspects_timeline,
     AspectMoment,

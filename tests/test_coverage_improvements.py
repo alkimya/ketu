@@ -10,7 +10,8 @@ from zoneinfo import ZoneInfo
 from io import StringIO
 import sys
 
-from ketu import ketu
+import ketu
+from ketu.core import aspects as aspects_data
 
 
 class TestVelocityFunctions:
@@ -104,7 +105,7 @@ class TestAspectTiming:
             aspect = aspects[0]
             body1, body2 = aspect["body1"], aspect["body2"]
             asp_idx = aspect["i_asp"]
-            aspect_value = ketu.aspects["angle"][asp_idx]
+            aspect_value = aspects_data["angle"][asp_idx]
 
             # Find timing for this aspect
             begin_jd, exact_jd, end_jd = ketu.find_aspect_timing(

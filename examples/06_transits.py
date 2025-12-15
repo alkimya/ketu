@@ -7,7 +7,7 @@ This example demonstrates the transit calculation API that allows you to:
 """
 
 from datetime import datetime
-from ketu.transits import (
+from ketu.aspects import (
     find_transits_to_position,
     get_natal_positions,
     compare_dates_transits,

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ketu"
-version = "0.3.0"
+version = "0.4.0"
 description = "Library to compute astronomical bodies positions and planetary aspects between them"
 readme = "README.md"
 requires-python = ">=3.10"
@@ -52,7 +52,7 @@ all = ["matplotlib>=3.5.0", "icalendar>=5.0.0"]
 ketu = "ketu.display:main"
 
 [tool.setuptools]
-packages = ["ketu", "ketu.ephemeris"]
+packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.export"]
 
 [tool.setuptools.package-data]
 ketu = ["py.typed"]

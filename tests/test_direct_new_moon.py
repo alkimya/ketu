@@ -6,7 +6,7 @@ from zoneinfo import ZoneInfo
 import time
 
 from ketu.calculations import long, vlong, utc_to_julian, julian_to_utc, distance
-from ketu.aspect_windows import find_aspect_window
+from ketu.aspects import find_aspect_window
 
 
 def estimate_next_new_moon(jd: float) -> float:

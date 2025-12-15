@@ -51,9 +51,11 @@ def print_aspects(jdate: float):
     for aspect in calculate_aspects(jdate):
         body1, body2, i_asp, orb = aspect
         degs, mins, secs = dd_to_dms(orb)
+        aspect_name_bytes = aspects['name'][i_asp]
+        aspect_name = aspect_name_bytes.decode() if isinstance(aspect_name_bytes, bytes) else str(aspect_name_bytes)
         print(
             f"{body_name(body1):7} - {body_name(body2):12}: "
-            f"{aspects['name'][i_asp].decode():12} "
+            f"{aspect_name:12} "
             f"{degs:>2}º{mins:>2}'{secs:>2}\""
         )
 

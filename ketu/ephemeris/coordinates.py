@@ -5,7 +5,7 @@ systems used in astronomy: rectangular/spherical, ecliptic/equatorial, etc.
 """
 
 import numpy as np
-from typing import Tuple
+from typing import Tuple, Union
 
 
 def spherical_to_rectangular(lon: float, lat: float, r: float) -> Tuple[float, float, float]:
@@ -29,7 +29,11 @@ def spherical_to_rectangular(lon: float, lat: float, r: float) -> Tuple[float, f
     return x, y, z
 
 
-def rectangular_to_spherical(x: float, y: float, z: float) -> Tuple[float, float, float]:
+def rectangular_to_spherical(
+    x: Union[float, np.ndarray],
+    y: Union[float, np.ndarray],
+    z: Union[float, np.ndarray]
+) -> Tuple[Union[float, np.ndarray], Union[float, np.ndarray], Union[float, np.ndarray]]:
     """Convert rectangular coordinates to spherical coordinates (vectorized).
 
     Args:
@@ -104,16 +108,21 @@ def equatorial_to_ecliptic(x: float, y: float, z: float, obliquity: float) -> Tu
 
 
 def heliocentric_to_geocentric(
-    x_planet: float, y_planet: float, z_planet: float, x_earth: float, y_earth: float, z_earth: float
-) -> Tuple[float, float, float]:
-    """Convert heliocentric coordinates to geocentric coordinates.
+    x_planet: Union[float, np.ndarray],
+    y_planet: Union[float, np.ndarray],
+    z_planet: Union[float, np.ndarray],
+    x_earth: Union[float, np.ndarray],
+    y_earth: Union[float, np.ndarray],
+    z_earth: Union[float, np.ndarray]
+) -> Tuple[Union[float, np.ndarray], Union[float, np.ndarray], Union[float, np.ndarray]]:
+    """Convert heliocentric coordinates to geocentric coordinates (vectorized).
 
     Args:
-        x_planet, y_planet, z_planet: Heliocentric coordinates of planet
-        x_earth, y_earth, z_earth: Heliocentric coordinates of Earth
+        x_planet, y_planet, z_planet: Heliocentric coordinates of planet (scalar or array)
+        x_earth, y_earth, z_earth: Heliocentric coordinates of Earth (scalar or array)
 
     Returns:
-        Tuple of (x_geo, y_geo, z_geo) geocentric coordinates
+        Tuple of (x_geo, y_geo, z_geo) geocentric coordinates (scalar or array)
     """
     x_geo = x_planet - x_earth
     y_geo = y_planet - y_earth

@@ -10,7 +10,7 @@ from zoneinfo import ZoneInfo
 import calendar
 
 from .calculations import utc_to_julian, julian_to_utc
-from .aspect_windows import find_aspect_window, AspectWindow
+from ketu.aspects import find_aspect_window, AspectWindow
 from .export.constants import BIG_FIVE
 
 

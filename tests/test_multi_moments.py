@@ -4,7 +4,7 @@
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from ketu.aspect_windows import find_aspect_window
+from ketu.aspects import find_aspect_window
 
 
 def test_multiple_new_moons():

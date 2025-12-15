@@ -9,6 +9,7 @@ Montre comment :
 """
 
 import ketu
+from ketu.core import aspects as aspects_data
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -31,7 +32,7 @@ def main():
 
     if aspect:
         body1, body2, asp_type, orb = aspect
-        aspect_name = ketu.aspects["name"][asp_type].decode()
+        aspect_name = aspects_data["name"][asp_type].decode()
         print(f"Aspect : {aspect_name}")
         print(f"Orbe   : {orb:.2f}°")
     else:
@@ -48,7 +49,7 @@ def main():
         b1, b2, asp_idx, orb = aspect
         name1 = ketu.body_name(b1)
         name2 = ketu.body_name(b2)
-        asp_name = ketu.aspects["name"][asp_idx].decode()
+        asp_name = aspects_data["name"][asp_idx].decode()
 
         print(f"{name1:12} - {name2:12} : {asp_name:12} (orbe: {orb:+6.2f}°)")
 
@@ -61,7 +62,7 @@ def main():
             b1, b2, asp_idx, orb = aspect
             name1 = ketu.body_name(b1)
             name2 = ketu.body_name(b2)
-            asp_name = ketu.aspects["name"][asp_idx].decode()
+            asp_name = aspects_data["name"][asp_idx].decode()
 
             print(f"{name1:12} - {name2:12} : {asp_name:12} (orbe: {orb:+6.2f}°)")
     else:
@@ -76,7 +77,7 @@ def main():
             b1, b2, asp_idx, orb = aspect
             name1 = ketu.body_name(b1)
             name2 = ketu.body_name(b2)
-            asp_name = ketu.aspects["name"][asp_idx].decode()
+            asp_name = aspects_data["name"][asp_idx].decode()
 
             print(f"⭐ {name1:12} - {name2:12} : {asp_name:12} (orbe: {orb:+6.2f}°)")
     else:

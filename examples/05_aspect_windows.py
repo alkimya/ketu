@@ -9,7 +9,7 @@ precise timing for aspect events including:
 """
 
 from datetime import datetime
-from ketu.aspect_windows import find_aspect_window, find_aspects_timeline
+from ketu.aspects import find_aspect_window, find_aspects_timeline
 
 
 def example_1_full_moon():

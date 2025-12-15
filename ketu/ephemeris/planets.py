@@ -516,8 +516,8 @@ def calc_planet_position_batch(jd_array: np.ndarray, planet_id: int, flags: int 
         if planet_id >= 2:
             for i in range(n_dates):
                 dlon, dlat = aberration_correction(lon[i], lat[i], jd_array[i])
-                lon[i] += dlon
-                lat[i] += dlat
+                lon[i] += dlon  # type: ignore[index]
+                lat[i] += dlat  # type: ignore[index]
 
         results[:, 0] = lon
         results[:, 1] = lat

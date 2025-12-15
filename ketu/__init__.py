@@ -18,7 +18,7 @@ Example:
     >>> print_aspects(jday)
 """
 
-__version__ = "0.3.0"
+__version__ = "0.4.0"
 __author__ = "Loc Cosnier"
 __license__ = "MIT"
 
@@ -75,16 +75,20 @@ from ketu.lunar_calendar import (
 
 from ketu.display import print_positions, print_aspects, main
 
-# Advanced aspect window calculations
-from ketu.aspect_windows import (
+# Advanced aspect calculations (from aspects package)
+from ketu.aspects import (
+    # Aspect windows (precise timing)
     AspectMoment,
     AspectWindow,
     find_aspect_window,
     find_aspects_timeline,
-)
 
-# Transit calculations
-from ketu.transits import (
+    # Aspect timelines (ML-ready)
+    AspectEvent,
+    AspectTimeline,
+    generate_aspect_timeline,
+
+    # Transits
     TransitMoment,
     TransitWindow,
     NatalPosition,
@@ -182,6 +186,11 @@ __all__ = [
     "find_transits_to_position",
     "get_natal_positions",
     "compare_dates_transits",
+
+    # Aspect timelines (ML/research)
+    "AspectEvent",
+    "AspectTimeline",
+    "generate_aspect_timeline",
 ]
 
 # Add export functions if available

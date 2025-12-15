@@ -13,9 +13,9 @@ from functools import lru_cache
 from typing import Union, Optional, Tuple, Callable
 import numpy as np
 
-from .core import bodies, aspects
-from .calculations import body_id as _body_id_lookup, long, distance
-from .ephemeris.planets import calc_planet_position_batch
+from ketu.core import bodies, aspects
+from ketu.calculations import body_id as _body_id_lookup, long, distance
+from ketu.ephemeris.planets import calc_planet_position_batch
 
 
 # ========== Input Validation ==========

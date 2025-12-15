@@ -16,19 +16,19 @@ from datetime import datetime
 from typing import Union, List, Optional, Tuple
 import numpy as np
 
-from .core import bodies, aspects
-from .calculations import (
+from ketu.core import bodies, aspects
+from ketu.calculations import (
     distance,
     long,
     vlong,
     utc_to_julian,
     julian_to_utc,
 )
-from .aspects import get_orb
-from .ephemeris.planets import calc_planet_position_batch
+from ketu.aspects.calculator import get_orb
+from ketu.ephemeris.planets import calc_planet_position_batch
 
 # Import shared algorithms from refactored core module
-from ._aspect_core import (
+from ketu.aspects.core import (
     get_body_id as _get_body_id,
     get_aspect_index as _get_aspect_index,
     get_cached_positions,
@@ -122,7 +122,7 @@ def _adaptive_grid_search(
     vlon2 = pos2_data[:, 3]
 
     # Calculate angular distances (vectorized)
-    dists = distance(lon1, lon2)
+    dists = distance(lon1, lon2)  # type: ignore[arg-type]
 
     # Calculate absolute error from target aspect angle
     aspect_error = np.abs(dists - aspect_angle)
@@ -346,8 +346,8 @@ def find_aspects_timeline(
     body1: Union[str, int],
     body2: Union[str, int],
     aspects_list: Optional[List[Union[str, int]]] = None,
-    start_date: Union[datetime, str, float] = None,
-    end_date: Union[datetime, str, float] = None,
+    start_date: Optional[Union[datetime, str, float]] = None,
+    end_date: Optional[Union[datetime, str, float]] = None,
     custom_orb: Optional[float] = None,
     detect_retrograde: bool = True,
 ) -> List[AspectWindow]:

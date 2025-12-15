@@ -5,7 +5,8 @@ import numpy as np
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from ketu import ketu
+import ketu
+from ketu.core import bodies, aspects as aspects_data, signs
 
 
 class TestData:
@@ -13,27 +14,27 @@ class TestData:
 
     def test_bodies_structure(self):
         """Test bodies array structure and content"""
-        assert len(ketu.bodies) == 13
-        assert ketu.bodies["id"][0] == 0  # Sun
-        assert ketu.bodies["id"][1] == 1  # Moon
-        assert ketu.bodies["name"][0] == b"Sun"
-        assert ketu.bodies["orb"][0] == 12.0
-        assert ketu.bodies["speed"][1] > 13.0  # Moon speed ~13°/day
+        assert len(bodies) == 13
+        assert bodies["id"][0] == 0  # Sun
+        assert bodies["id"][1] == 1  # Moon
+        assert bodies["name"][0] == b"Sun"
+        assert bodies["orb"][0] == 12.0
+        assert bodies["speed"][1] > 13.0  # Moon speed ~13°/day
 
     def test_aspects_structure(self):
         """Test aspects array structure and content"""
-        assert len(ketu.aspects) == 7
-        assert ketu.aspects["angle"][0] == 0  # Conjunction
-        assert ketu.aspects["angle"][6] == 180  # Opposition
-        assert ketu.aspects["name"][3] == b"Square"
-        assert ketu.aspects["coef"][4] == 2 / 3  # Trine coefficient
+        assert len(aspects_data) == 7
+        assert aspects_data["angle"][0] == 0  # Conjunction
+        assert aspects_data["angle"][6] == 180  # Opposition
+        assert aspects_data["name"][3] == b"Square"
+        assert aspects_data["coef"][4] == 2 / 3  # Trine coefficient
 
     def test_signs_list(self):
         """Test zodiac signs list"""
-        assert len(ketu.signs) == 12
-        assert ketu.signs[0] == "Aries"
-        assert ketu.signs[2] == "Gemini"
-        assert ketu.signs[11] == "Pisces"
+        assert len(signs) == 12
+        assert signs[0] == "Aries"
+        assert signs[2] == "Gemini"
+        assert signs[11] == "Pisces"
 
 
 class TestTimeConversions:
@@ -171,7 +172,7 @@ class TestBodyFunctions:
         """Test all positions calculation"""
         all_positions = ketu.positions(self.jday)
         assert isinstance(all_positions, np.ndarray)
-        assert len(all_positions) == len(ketu.bodies)
+        assert len(all_positions) == len(bodies)
         assert all(0 <= pos <= 360 for pos in all_positions)
 
 
@@ -208,9 +209,9 @@ class TestAspects:
 
             # Check first aspect
             first = aspects[0]
-            assert 0 <= first["body1"] < len(ketu.bodies)
-            assert 0 <= first["body2"] < len(ketu.bodies)
-            assert 0 <= first["i_asp"] < len(ketu.aspects)
+            assert 0 <= first["body1"] < len(bodies)
+            assert 0 <= first["body2"] < len(bodies)
+            assert 0 <= first["i_asp"] < len(aspects_data)
 
 
 class TestDisplay:
@@ -230,7 +231,7 @@ class TestDisplay:
         assert "Sun" in captured.out
         assert "Moon" in captured.out
         # Should show zodiac signs
-        assert any(sign in captured.out for sign in ketu.signs)
+        assert any(sign in captured.out for sign in signs)
 
     def test_print_aspects(self, capsys):
         """Test aspects printing"""

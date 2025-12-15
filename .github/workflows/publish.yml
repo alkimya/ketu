@@ -1,14 +1,15 @@
 name: Publish to PyPI
 
-on:
-  # Se déclenche lors d'une release GitHub
-  release:
-    types: [published]
+# Disabled temporarily for local development
+# on:
+#   release:
+#     types: [published]
+#   push:
+#     tags:
+#       - 'v*.*.*'
 
-  # Se déclenche aussi sur les tags vX.Y.Z
-  push:
-    tags:
-      - 'v*.*.*'
+on:
+  workflow_dispatch:  # Manual trigger only
 
 jobs:
   publish:

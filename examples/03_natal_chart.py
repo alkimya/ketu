@@ -10,6 +10,7 @@ Crée un thème natal avec :
 """
 
 import ketu
+from ketu.core import bodies, aspects as aspects_data
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -30,7 +31,7 @@ def theme_natal(year, month, day, hour, minute, timezone_str):
     print("POSITIONS PLANÉTAIRES:")
     print("-" * 60)
 
-    for i, body in enumerate(ketu.bodies["name"]):
+    for i, body in enumerate(bodies["name"]):
         if i > 9:  # Skip Rahu/Lilith pour simplifier
             break
 
@@ -57,7 +58,7 @@ def theme_natal(year, month, day, hour, minute, timezone_str):
         b1, b2, asp_idx, orb = aspect
         # Afficher seulement les aspects avec orbe < 5°
         if abs(orb) < 5:
-            asp_name = ketu.aspects["name"][asp_idx].decode()
+            asp_name = aspects_data["name"][asp_idx].decode()
             if asp_name not in aspect_groups:
                 aspect_groups[asp_name] = []
             aspect_groups[asp_name].append((b1, b2, orb))

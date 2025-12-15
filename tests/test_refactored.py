@@ -12,17 +12,9 @@ import numpy as np
 # Import ketu modules
 from ketu.ephemeris import utc_to_julian, julian_to_utc
 from ketu.ephemeris import calc_planet_position, get_planet_name
-from ketu.ketu import (
-    bodies,
-    aspects,
-    signs,
-    dd_to_dms,
-    body_sign,
-    positions,
-    calculate_aspects,
-    is_retrograde,
-    find_aspects_between_dates,
-)
+from ketu.core import bodies, aspects, signs
+from ketu.calculations import dd_to_dms, body_sign, positions, is_retrograde
+from ketu.aspects import calculate_aspects, find_aspects_between_dates
 
 
 def test_time_conversions():

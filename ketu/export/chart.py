@@ -186,7 +186,7 @@ def draw_zodiacal_chart(
             else:
                 tz = timezone
             dt = dt_utc.replace(tzinfo=ZoneInfo("UTC")).astimezone(tz)
-            tz_name = dt.tzinfo.tzname(dt)
+            tz_name = dt.tzinfo.tzname(dt) if dt.tzinfo else "UTC"
             date_str = dt.strftime(f"%Y-%m-%d %H:%M {tz_name}")
         else:
             date_str = dt_utc.strftime("%Y-%m-%d %H:%M UTC")
@@ -330,7 +330,8 @@ def _draw_planets(ax, jd: float, planet_positions: dict):
         y = 0.75 * np.sin(angle_rad)
 
         # Get planet info
-        body_name_str = bodies["name"][body_id].decode()
+        body_name_bytes = bodies["name"][body_id]
+        body_name_str = body_name_bytes.decode() if isinstance(body_name_bytes, bytes) else str(body_name_bytes)
         symbol = PLANET_SYMBOLS.get(body_id, body_name_str[0])
         color = PLANET_COLORS.get(body_id, "#000000")
 
@@ -454,7 +455,8 @@ def _draw_legend_and_table(
         y_offset = 1.5  # Reduced spacing from title
         for body_id in sorted(planet_positions.keys()):
             longitude = planet_positions[body_id]
-            body_name_str = bodies["name"][body_id].decode()
+            body_name_bytes = bodies["name"][body_id]
+            body_name_str = body_name_bytes.decode() if isinstance(body_name_bytes, bytes) else str(body_name_bytes)
             symbol = PLANET_SYMBOLS.get(body_id, body_name_str[0])
             color = PLANET_COLORS.get(body_id, "#000000")
 

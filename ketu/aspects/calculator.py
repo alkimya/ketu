@@ -11,13 +11,13 @@ from typing import Tuple, Optional, List
 import numpy as np
 
 # Import core data structures
-from .core import bodies, aspects
+from ketu.core import bodies, aspects
 
 # Import ephemeris functions
-from .ephemeris.planets import find_exact_aspect, find_all_aspects
+from ketu.ephemeris.planets import find_exact_aspect, find_all_aspects
 
 # Import calculation utilities
-from .calculations import long, positions, distance
+from ketu.calculations import long, positions, distance
 
 
 def get_orb(body1: int, body2: int, asp: int) -> float:
@@ -105,7 +105,7 @@ def calculate_aspects_vectorized(jdate: float, l_bodies=bodies) -> np.ndarray:
     pos2 = all_positions[j_indices]
 
     # Calculate all distances at once (vectorized)
-    all_distances = distance(pos1, pos2)
+    all_distances = distance(pos1, pos2)  # type: ignore[arg-type]
 
     # Get body IDs for all pairs
     body1_ids = bodies_id[i_indices]
@@ -125,13 +125,13 @@ def calculate_aspects_vectorized(jdate: float, l_bodies=bodies) -> np.ndarray:
         if i_asp == 0:  # Conjunction
             # Check which pairs are in orb (vectorized)
             in_orb = all_distances <= orbs
-            orb_values = all_distances[in_orb]
+            orb_values = all_distances[in_orb]  # type: ignore[index]
         else:
             # Check which pairs are in orb (vectorized)
             in_orb = (all_distances >= aspect_angle - orbs) & (all_distances <= aspect_angle + orbs)
             # Note: Using aspect_angle - distance (not abs) to match original behavior
             # This can produce negative values when distance > aspect_angle
-            orb_values = aspect_angle - all_distances[in_orb]
+            orb_values = aspect_angle - all_distances[in_orb]  # type: ignore[index]
 
         # Collect results for this aspect
         if np.any(in_orb):
@@ -161,7 +161,7 @@ def calculate_aspects_batch(jd_array: np.ndarray, l_bodies=bodies) -> List[np.nd
     Returns:
         List of structured arrays, one for each date, containing aspects
     """
-    from .ephemeris.planets import calc_planet_position_batch
+    from ketu.ephemeris.planets import calc_planet_position_batch
 
     bodies_id = l_bodies["id"]
     n_bodies = len(bodies_id)
@@ -184,7 +184,7 @@ def calculate_aspects_batch(jd_array: np.ndarray, l_bodies=bodies) -> List[np.nd
     # Shape: (n_pairs, n_dates)
     pos1_all = all_longitudes[i_indices, :]  # Shape: (n_pairs, n_dates)
     pos2_all = all_longitudes[j_indices, :]  # Shape: (n_pairs, n_dates)
-    all_distances = distance(pos1_all, pos2_all)  # Vectorized distance
+    all_distances = distance(pos1_all, pos2_all)  # type: ignore[arg-type]
 
     # Pre-calculate orbs for all pairs for all aspects
     orbs_body1 = l_bodies["orb"][i_indices]  # Shape: (n_pairs,)
@@ -207,11 +207,11 @@ def calculate_aspects_batch(jd_array: np.ndarray, l_bodies=bodies) -> List[np.nd
 
             if i_asp == 0:  # Conjunction
                 in_orb = distances_this_date <= orbs
-                orb_values = distances_this_date[in_orb]
+                orb_values = distances_this_date[in_orb]  # type: ignore[index]
             else:
                 in_orb = (distances_this_date >= aspect_angle - orbs) & (distances_this_date <= aspect_angle + orbs)
                 # Note: Using aspect_angle - distance (not abs) to match original behavior
-                orb_values = aspect_angle - distances_this_date[in_orb]
+                orb_values = aspect_angle - distances_this_date[in_orb]  # type: ignore[index]
 
             # Collect results for this aspect
             if np.any(in_orb):
@@ -323,7 +323,8 @@ def find_aspects_between_dates(
         for exact_jd, aspect_angle in aspect_list:
             # Find aspect type
             asp_idx = np.where(aspects["angle"] == aspect_angle)[0][0]
-            aspect_name = aspects["name"][asp_idx].decode()
+            aspect_name_bytes = aspects["name"][asp_idx]
+            aspect_name = aspect_name_bytes.decode() if isinstance(aspect_name_bytes, bytes) else str(aspect_name_bytes)
 
             results.append((exact_jd, b1, b2, aspect_name, aspect_angle))
 

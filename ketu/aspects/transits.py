@@ -23,8 +23,8 @@ from datetime import datetime
 from typing import Union, List, Optional, Dict, Tuple
 import numpy as np
 
-from .core import bodies, aspects
-from .calculations import (
+from ketu.core import bodies, aspects
+from ketu.calculations import (
     distance,
     body_id,
     long,
@@ -33,11 +33,11 @@ from .calculations import (
     julian_to_utc,
     positions,
 )
-from .aspects import get_orb
-from .ephemeris.planets import calc_planet_position_batch
+from ketu.aspects.calculator import get_orb
+from ketu.ephemeris.planets import calc_planet_position_batch
 
 # Import shared algorithms from refactored core module
-from ._aspect_core import (
+from ketu.aspects.core import (
     get_body_id as _get_body_id,
     get_aspect_index as _get_aspect_index,
     get_cached_positions,
@@ -154,7 +154,7 @@ def _find_transit_crossings(
     vlon = pos_data[:, 3]
 
     # Calculate angular distances from reference (vectorized)
-    dists = distance(lon, reference_lon)
+    dists = distance(lon, reference_lon)  # type: ignore[arg-type]
 
     # Calculate absolute error from target aspect angle
     aspect_error = np.abs(dists - aspect_angle)
@@ -227,8 +227,8 @@ def find_transits_to_position(
     transiting_body: Union[str, int],
     reference_longitude: float,
     aspects_list: Optional[List[Union[str, int]]] = None,
-    start_date: Union[datetime, str, float] = None,
-    end_date: Union[datetime, str, float] = None,
+    start_date: Optional[Union[datetime, str, float]] = None,
+    end_date: Optional[Union[datetime, str, float]] = None,
     custom_orb: Optional[float] = None,
     detect_retrograde: bool = True,
 ) -> List[TransitWindow]:
@@ -420,7 +420,7 @@ def get_natal_positions(
         body_id_val = _get_body_id(body)
         body_name = bodies["name"][body_id_val].decode()
 
-        from .calculations import body_properties
+        from ketu.calculations import body_properties
         props = body_properties(jd, body_id_val)
 
         natal_positions[body_name] = NatalPosition(

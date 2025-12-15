@@ -5,8 +5,16 @@ import time
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-from ketu import ketu
+from ketu import aspects, calculations, core
 from ketu.ephemeris.time import utc_to_julian
+
+# Create ketu namespace for backward compatibility
+class ketu:
+    calculate_aspects = aspects.calculate_aspects
+    calculate_aspects_vectorized = aspects.calculate_aspects_vectorized
+    calculate_aspects_batch = aspects.calculate_aspects_batch
+    positions = calculations.positions
+    bodies = core.bodies
 
 
 # Test date

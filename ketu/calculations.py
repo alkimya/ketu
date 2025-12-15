@@ -5,7 +5,7 @@ For aspect calculations, see the aspects module.
 """
 
 from functools import lru_cache
-from typing import Tuple
+from typing import Tuple, Union
 
 import numpy as np
 
@@ -41,21 +41,21 @@ def dd_to_dms(deg: float) -> np.ndarray:
 decimal_degrees_to_dms = dd_to_dms
 
 
-def distance(pos1: float, pos2: float) -> float:
+def distance(pos1: Union[float, np.ndarray], pos2: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
     """Calculate angular distance between two positions (vectorized).
 
     Works with scalars or arrays via NumPy broadcasting.
     Always returns the shortest angular distance (0-180 degrees).
 
     Args:
-        pos1: First position in degrees
-        pos2: Second position in degrees
+        pos1: First position in degrees (scalar or array)
+        pos2: Second position in degrees (scalar or array)
 
     Returns:
-        Shortest angular distance in degrees
+        Shortest angular distance in degrees (scalar or array)
     """
     angle = np.abs(pos2 - pos1)
-    return np.where(angle <= 180, angle, 360 - angle)
+    return np.where(angle <= 180, angle, 360 - angle)  # type: ignore[return-value]
 
 
 # ========== Body Position Functions ==========
