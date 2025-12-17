@@ -13,6 +13,15 @@ from ketu.core import bodies
 from ketu.calculations import long, vlong, utc_to_julian, distance
 from ketu.ephemeris.planets import calc_planet_position_batch
 
+# Optional cache import
+try:
+    from ketu.cache import EphemerisCache, get_default_cache
+    CACHE_AVAILABLE = True
+except ImportError:
+    CACHE_AVAILABLE = False
+    EphemerisCache = None
+    get_default_cache = None
+
 
 # Major aspects for proximity calculation
 MAJOR_ASPECTS = np.array([0, 60, 90, 120, 180, 240, 270, 300, 360], dtype=np.float32)
@@ -173,6 +182,8 @@ def generate_cycle_series(
     body2: Union[str, int],
     timestamps: Union[np.ndarray, List[datetime], "pd.DatetimeIndex"],
     include_aspects: bool = True,
+    use_cache: bool = True,
+    cache: Optional["EphemerisCache"] = None,
 ) -> np.ndarray:
     """Generate cycle state series for a planetary pair.
 
@@ -184,6 +195,8 @@ def generate_cycle_series(
         body2: Second body (name or ID) - typically the slower body
         timestamps: Array of timestamps (datetime or Julian dates)
         include_aspects: Calculate aspect proximity info (default: True)
+        use_cache: Use EphemerisCache for faster lookups (default: True)
+        cache: Optional EphemerisCache instance (uses default if None)
 
     Returns:
         Structured numpy array with CYCLE_DTYPE
@@ -228,19 +241,59 @@ def generate_cycle_series(
     result['body1_id'] = body1_id
     result['body2_id'] = body2_id
 
-    # Calculate positions and velocities using vectorized batch operations
-    # calc_planet_position_batch returns shape (n, 6): [lon, lat, dist, lon_speed, lat_speed, dist_speed]
-    pos1 = calc_planet_position_batch(jds, body1_id)
-    pos2 = calc_planet_position_batch(jds, body2_id)
+    # Determine if we should use cache
+    use_ephemeris_cache = (
+        use_cache and
+        CACHE_AVAILABLE and
+        hasattr(timestamps, 'to_pydatetime') or
+        (isinstance(timestamps, (list, np.ndarray)) and len(timestamps) > 0)
+    )
 
-    # Extract longitudes (column 0) and velocities (column 3)
-    result['body1_lon'] = pos1[:, 0]
-    result['body2_lon'] = pos2[:, 0]
-    result['body1_velocity'] = pos1[:, 3]
-    result['body2_velocity'] = pos2[:, 3]
-    result['relative_velocity'] = pos2[:, 3] - pos1[:, 3]
-    result['body1_retro'] = pos1[:, 3] < 0
-    result['body2_retro'] = pos2[:, 3] < 0
+    if use_ephemeris_cache and not isinstance(timestamps[0] if len(timestamps) > 0 else None, float):
+        # Use cache for datetime-based timestamps
+        if cache is None:
+            cache = get_default_cache()
+
+        # Convert timestamps to datetime if needed
+        if hasattr(timestamps, 'to_pydatetime'):
+            dts = timestamps.to_pydatetime()
+        else:
+            dts = list(timestamps)
+
+        # Batch lookup from cache (much faster than calc_planet_position_batch)
+        pos1_lon = np.zeros(n, dtype=np.float32)
+        pos1_vel = np.zeros(n, dtype=np.float32)
+        pos2_lon = np.zeros(n, dtype=np.float32)
+        pos2_vel = np.zeros(n, dtype=np.float32)
+
+        for i, dt in enumerate(dts):
+            # Get positions from cache (returns [lon, lat, dist, speed])
+            p1 = cache.get_position(dt, body1_id)
+            p2 = cache.get_position(dt, body2_id)
+            pos1_lon[i] = p1[0]
+            pos1_vel[i] = p1[3]
+            pos2_lon[i] = p2[0]
+            pos2_vel[i] = p2[3]
+
+        result['body1_lon'] = pos1_lon
+        result['body2_lon'] = pos2_lon
+        result['body1_velocity'] = pos1_vel
+        result['body2_velocity'] = pos2_vel
+    else:
+        # Fallback to direct calculation (for Julian dates or when cache unavailable)
+        # calc_planet_position_batch returns shape (n, 6): [lon, lat, dist, lon_speed, lat_speed, dist_speed]
+        pos1 = calc_planet_position_batch(jds, body1_id)
+        pos2 = calc_planet_position_batch(jds, body2_id)
+
+        # Extract longitudes (column 0) and velocities (column 3)
+        result['body1_lon'] = pos1[:, 0]
+        result['body2_lon'] = pos2[:, 0]
+        result['body1_velocity'] = pos1[:, 3]
+        result['body2_velocity'] = pos2[:, 3]
+
+    result['relative_velocity'] = result['body2_velocity'] - result['body1_velocity']
+    result['body1_retro'] = result['body1_velocity'] < 0
+    result['body2_retro'] = result['body2_velocity'] < 0
 
     # Calculate separation (vectorized)
     result['angular_separation'] = _calculate_separation(
@@ -274,6 +327,8 @@ def generate_multi_cycle_series(
     planet_pairs: List[Tuple[Union[str, int], Union[str, int]]],
     timestamps: Union[np.ndarray, List[datetime], "pd.DatetimeIndex"],
     include_aspects: bool = True,
+    use_cache: bool = True,
+    cache: Optional["EphemerisCache"] = None,
 ) -> dict:
     """Generate cycle series for multiple planetary pairs.
 
@@ -281,6 +336,8 @@ def generate_multi_cycle_series(
         planet_pairs: List of (body1, body2) tuples
         timestamps: Array of timestamps
         include_aspects: Calculate aspect proximity (default: True)
+        use_cache: Use EphemerisCache for faster lookups (default: True)
+        cache: Optional EphemerisCache instance (uses default if None)
 
     Returns:
         Dict mapping pair names to structured arrays
@@ -292,6 +349,10 @@ def generate_multi_cycle_series(
         >>> sun_moon = cycles["Sun-Moon"]
     """
     result = {}
+
+    # Get cache once for all pairs (efficiency)
+    if use_cache and CACHE_AVAILABLE and cache is None:
+        cache = get_default_cache()
 
     for body1, body2 in planet_pairs:
         # Create pair name
@@ -309,7 +370,8 @@ def generate_multi_cycle_series(
 
         # Generate cycle series
         result[pair_name] = generate_cycle_series(
-            body1, body2, timestamps, include_aspects
+            body1, body2, timestamps, include_aspects,
+            use_cache=use_cache, cache=cache
         )
 
     return result
