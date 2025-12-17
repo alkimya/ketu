@@ -8,6 +8,13 @@
 /tests/__pycache__
 /tests/.pytest_cache
 .coverage
+/ketu/ephe
+.gitignore
+
+# Python cache files
+__pycache__/
+*.py[cod]
+*$py.class
 
 # Distribution / packaging
 dist/
@@ -18,3 +25,8 @@ build/
 
 # PyPI
 .pypirc
+
+# Generated chart files
+chart*.svg
+*.ics
+kala

@@ -4,7 +4,7 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/ketu.svg)](https://pypi.org/project/ketu/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Vous préférez le français ? [Consultez README.md](fr/README.md)
+> Vous préférez le français ? [Consultez README.md](fr/README.md)
 
 **Ketu** is a lightweight Python library for computing the positions of astronomical bodies (Sun, Moon, planets, and the mean Node a.k.a. Rahu) and generating calendars driven by astrological aspects.
 
@@ -12,22 +12,51 @@ This library was originally designed to generate biodynamic calendars and time s
 
 ![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
 
+## 🚀 What's New in v0.3.0
+
+- **Pure NumPy implementation** - No more external binary dependencies!
+- **Removed `pyswisseph` dependency** - Fully self-contained astronomical calculations
+- **Modular architecture** - New `ketu.ephemeris` package for transparent calculations
+- **Massive performance gains** - 208x faster for time series, 14.55x faster for aspects
+- **New features:**
+  - **Aspect windows** - Find exact aspect timing (beginning, exact, end)
+  - **Transit calculations** - Compare natal positions with transits
+  - **Zodiacal charts** - Beautiful matplotlib visualization (optional)
+  - **iCalendar export** - Export aspects and lunations to .ics format (optional)
+  - **Vectorized calculations** - Batch processing for time series
+- **Better accuracy** - Custom implementations for planetary positions
+- **Optional dependencies** - Install only what you need
+
 ## Features
 
 - **Planetary positions** for 13 bodies (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Rahu/Mean Node, True North Node, Lilith)
 - **Detection of the 7 major aspects** (Conjunction, Semi-sextile, Sextile, Square, Trine, Quincunx, Opposition)
+- **Aspect windows** - Find when aspects begin, peak, and end
+- **Transit calculations** - Track transits to natal positions
 - **Retrogradation detection** and planet motion helpers
 - **Time system conversions** (UTC, Julian Day)
 - **Orb system** based on Abu Ma'shar (787-886) and Al-Biruni (973-1050)
 - **Interactive CLI** for a non-programmatic workflow
 - **Python API** that fits into your own tooling
+- **Zodiacal chart visualization** (optional matplotlib integration)
+- **iCalendar export** (optional icalendar integration)
 
 ## Installation
 
 ### From PyPI (recommended)
 
 ```bash
+# Basic installation
 pip install ketu
+
+# With chart visualization support
+pip install ketu[chart]
+
+# With iCalendar export support
+pip install ketu[icalendar]
+
+# With all optional features
+pip install ketu[all]
 ```
 
 ### From source
@@ -77,9 +106,9 @@ ketu.print_positions(jday)
 ketu.print_aspects(jday)
 ```
 
-### Additional examples
+## Advanced Examples
 
-#### Compute a planet position
+### Compute a planet position
 
 ```python
 from datetime import datetime
@@ -96,7 +125,7 @@ sign, deg, mins, secs = ketu.body_sign(sun_long)
 print(f"Position: {ketu.signs[sign]} {deg}°{mins}'{secs}\"")
 ```
 
-#### Check whether a planet is retrograde
+### Check whether a planet is retrograde
 
 ```python
 import ketu
@@ -108,22 +137,75 @@ else:
     print("Mars is direct")
 ```
 
-#### Calculate all aspects for a given day
+### Find aspect windows
+
+```python
+from datetime import datetime, timedelta
+import ketu
+
+# Find Sun-Moon conjunction window
+start = ketu.utc_to_julian(datetime(2025, 1, 1, tzinfo=ZoneInfo("UTC")))
+end = ketu.utc_to_julian(datetime(2025, 12, 31, tzinfo=ZoneInfo("UTC")))
+
+windows = ketu.find_aspect_window(start, end, body1=0, body2=1, aspect=0)
+
+for window in windows:
+    print(f"Conjunction from {ketu.julian_to_utc(window.begin_jd)} "
+          f"to {ketu.julian_to_utc(window.end_jd)}")
+    print(f"  Exact: {ketu.julian_to_utc(window.exact_jd)}")
+```
+
+### Calculate transits to natal positions
 
 ```python
 import ketu
 
-aspects_data = ketu.calculate_aspects(jday)
+# Your natal chart
+natal_date = ketu.utc_to_julian(datetime(1990, 1, 15, 12, 0, tzinfo=ZoneInfo("UTC")))
+natal_positions = ketu.get_natal_positions(natal_date)
 
-for aspect in aspects_data:
-    body1, body2, i_asp, orb = aspect
-    print(f"{ketu.body_name(body1)} - {ketu.body_name(body2)}: "
-          f"{ketu.aspects['name'][i_asp].decode()} (orb: {orb:.2f}°)")
+# Find transits for a specific date
+transit_date = ketu.utc_to_julian(datetime(2025, 11, 22, 12, 0, tzinfo=ZoneInfo("UTC")))
+transits = ketu.compare_dates_transits(natal_positions, transit_date)
+
+for transit in transits:
+    print(f"{transit.transiting_body} {transit.aspect} natal {transit.natal_body}")
+```
+
+### Draw zodiacal chart
+
+```python
+import ketu
+
+# Requires: pip install ketu[chart]
+jday = ketu.utc_to_julian(datetime(2025, 11, 22, 12, 0, tzinfo=ZoneInfo("UTC")))
+
+ketu.draw_zodiacal_chart(
+    jday,
+    title="Birth Chart",
+    output_file="chart.svg"
+)
+```
+
+### Export to iCalendar
+
+```python
+import ketu
+
+# Requires: pip install ketu[icalendar]
+start = ketu.utc_to_julian(datetime(2025, 1, 1, tzinfo=ZoneInfo("UTC")))
+end = ketu.utc_to_julian(datetime(2025, 12, 31, tzinfo=ZoneInfo("UTC")))
+
+# Export lunations (New Moon and Full Moon)
+ketu.export_lunations_to_ical(start, end, "lunations_2025.ics")
+
+# Export all aspects
+ketu.export_aspects_to_ical(start, end, "aspects_2025.ics")
 ```
 
 ## Documentation
 
-The full documentation is hosted on [Read the Docs](https://ketu.readthedocs.io) (French by default, English via the language toggle).
+The full documentation is hosted on [Read the Docs](https://ketu.readthedocs.io).
 
 Included sections:
 
@@ -132,14 +214,17 @@ Included sections:
 - **Concepts**: astrological and astronomical background
 - **API Reference**: all functions documented
 - **Examples**: advanced usage patterns
+- **Developer Guide**: architecture and performance details
 
 ## Requirements
 
 - Python 3.10 or higher
 - `numpy` ≥ 1.20.0 — numerical routines and arrays
-- `pyswisseph` ≥ 2.10.0 — Swiss Ephemeris bindings
 
-> The dependency on `pyswisseph` is scheduled for removal in a future release, replaced by pure NumPy implementation.
+**Optional dependencies:**
+
+- `matplotlib` ≥ 3.5.0 — for chart visualization (`pip install ketu[chart]`)
+- `icalendar` ≥ 5.0.0 — for calendar export (`pip install ketu[icalendar]`)
 
 ## Supported bodies
 
@@ -171,14 +256,62 @@ Included sections:
 | Quincunx | 150° | 5/6 |
 | Opposition | 180° | 1 |
 
+## Performance
+
+The pure NumPy implementation provides excellent performance:
+
+- **Time series (365 days)**: 208x faster than loop-based approach
+- **Aspect calculations**: 14.55x faster with vectorization
+- **Single planet position**: 67x faster with optimized algorithms
+- **Moon position**: 59x faster with custom perturbation calculations
+
+See [docs/en/performance.md](docs/en/performance.md) for detailed benchmarks.
+
+## Accuracy
+
+The implementation provides good accuracy for astrological purposes:
+
+- **Planetary positions**: ±0.1° for inner planets, ±0.5° for outer planets
+- **Moon position**: ±0.5° (includes major perturbations)
+- **Aspect timing**: ±2 minutes for exact aspects
+- **Best accuracy range**: 1800-2200 CE
+
+## Architecture
+
+```text
+ketu/
+├── __init__.py          # Main API
+├── core.py              # Data structures (bodies, aspects, signs)
+├── calculations.py      # High-level calculation functions
+├── display.py           # CLI and display utilities
+├── aspects/             # Aspect calculations
+│   ├── windows.py       # Aspect timing calculations
+│   ├── transits.py      # Transit calculations
+│   └── timelines.py     # ML-ready aspect timelines
+├── export/              # Optional export utilities
+│   ├── chart.py         # Zodiacal chart visualization
+│   └── icalendar.py     # iCalendar export
+└── ephemeris/           # Astronomical calculations
+    ├── time.py          # Time conversions
+    ├── orbital.py       # Orbital mechanics
+    ├── coordinates.py   # Coordinate transformations
+    └── planets.py       # Planetary position calculations
+```
+
 ## Roadmap
 
-- [ ] Removal of dependency on pyswisseph
-- [ ] Pure numpy implementation of planetary calculations
-- [ ] Search for exact aspects between two dates
+- [x] Removal of dependency on pyswisseph
+- [x] Pure numpy implementation of planetary calculations
+- [x] Search for exact aspects between two dates
+- [x] Aspect windows and timing
+- [x] Transit calculations
+- [x] Zodiacal chart visualization
+- [x] iCalendar export
 - [ ] Generation of aspect calendars
 - [ ] API for progressions and directions
 - [ ] Support for more celestial bodies (asteroids, etc.)
+- [ ] House systems
+- [ ] Additional coordinate systems
 
 ## Contribution
 
@@ -199,3 +332,9 @@ This project is licensed under MIT. See the [LICENSE](LICENSE) file for more det
 Loc Cosnier - [@alkimya](https://github.com/alkimya)
 
 Project: [https://github.com/alkimya/ketu](https://github.com/alkimya/ketu)
+
+## Acknowledgments
+
+- Original orbital calculations based on Paul Schlyter's work
+- Inspired by the accuracy and reliability of Swiss Ephemeris
+- Built with the power of NumPy for scientific computing

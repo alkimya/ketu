@@ -18,19 +18,17 @@ Example:
     >>> print_aspects(jday)
 """
 
-__version__ = "0.2.0"
+__version__ = "0.4.0"
 __author__ = "Loc Cosnier"
 __license__ = "MIT"
 
-from ketu.ketu import (
-    # Data structures
-    bodies,
-    aspects,
-    signs,
-
+# Import from modular structure
+from ketu.core import bodies, aspects, signs
+from ketu.calculations import (
     # Time conversion
     local_to_utc,
     utc_to_julian,
+    julian_to_utc,
 
     # Body information
     body_name,
@@ -50,22 +48,67 @@ from ketu.ketu import (
     is_ascending,
     body_sign,
 
-    # Aspect calculations
-    get_aspect,
-    calculate_aspects,
-
     # Utility functions
     decimal_degrees_to_dms,
+    dd_to_dms,
     distance,
-    get_orb,
-
-    # Display functions
-    print_positions,
-    print_aspects,
-
-    # Main entry point
-    main,
+    body_properties,
 )
+
+# Aspect calculations (moved to aspects module)
+from ketu.aspects import (
+    get_aspect,
+    calculate_aspects,
+    calculate_aspects_vectorized,
+    calculate_aspects_batch,
+    find_aspect_timing,
+    find_aspects_between_dates,
+    get_orb,
+)
+
+from ketu.lunar_calendar import (
+    LunarCycle,
+    LunarCalendar,
+    generate_lunar_calendar,
+    print_lunar_calendar,
+)
+
+from ketu.display import print_positions, print_aspects, main
+
+# Advanced aspect calculations (from aspects package)
+from ketu.aspects import (
+    # Aspect windows (precise timing)
+    AspectMoment,
+    AspectWindow,
+    find_aspect_window,
+    find_aspects_timeline,
+
+    # Aspect timelines (ML-ready)
+    AspectEvent,
+    AspectTimeline,
+    generate_aspect_timeline,
+
+    # Transits
+    TransitMoment,
+    TransitWindow,
+    NatalPosition,
+    TransitAspect,
+    find_transits_to_position,
+    get_natal_positions,
+    compare_dates_transits,
+)
+
+# Export module (optional dependencies)
+try:
+    from ketu.export import (
+        draw_zodiacal_chart,
+        export_lunations_to_ical,
+        export_transits_to_ical,
+        export_aspects_to_ical,
+    )
+    _EXPORT_AVAILABLE = True
+except ImportError:
+    _EXPORT_AVAILABLE = False
 
 __all__ = [
     # Version and metadata
@@ -81,10 +124,12 @@ __all__ = [
     # Time conversion
     "local_to_utc",
     "utc_to_julian",
+    "julian_to_utc",
 
     # Body information
     "body_name",
     "body_id",
+    "body_properties",
 
     # Position calculations
     "long",
@@ -103,11 +148,16 @@ __all__ = [
     # Aspect calculations
     "get_aspect",
     "calculate_aspects",
+    "calculate_aspects_vectorized",
+    "calculate_aspects_batch",
+    "find_aspect_timing",
+    "find_aspects_between_dates",
+    "get_orb",
 
     # Utility functions
     "decimal_degrees_to_dms",
+    "dd_to_dms",
     "distance",
-    "get_orb",
 
     # Display functions
     "print_positions",
@@ -115,4 +165,39 @@ __all__ = [
 
     # Main entry point
     "main",
+
+    # Advanced aspect windows
+    "AspectMoment",
+    "AspectWindow",
+    "find_aspect_window",
+    "find_aspects_timeline",
+
+    # Lunar calendar
+    "LunarCycle",
+    "LunarCalendar",
+    "generate_lunar_calendar",
+    "print_lunar_calendar",
+
+    # Transits
+    "TransitMoment",
+    "TransitWindow",
+    "NatalPosition",
+    "TransitAspect",
+    "find_transits_to_position",
+    "get_natal_positions",
+    "compare_dates_transits",
+
+    # Aspect timelines (ML/research)
+    "AspectEvent",
+    "AspectTimeline",
+    "generate_aspect_timeline",
 ]
+
+# Add export functions if available
+if _EXPORT_AVAILABLE:
+    __all__.extend([
+        "draw_zodiacal_chart",
+        "export_lunations_to_ical",
+        "export_transits_to_ical",
+        "export_aspects_to_ical",
+    ])

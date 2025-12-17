@@ -1,0 +1,254 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2025, Loc Cosnier
+# This file is distributed under the same license as the Ketu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: Ketu 0.3.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-12-02 22:42+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: fr <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"Generated-By: Babel 2.17.0\n"
+
+#: ../../source/performance.md:1
+msgid "Performance Guide"
+msgstr "# Guide de Performance"
+
+#: ../../source/performance.md:3
+msgid ""
+"Ketu v0.3.0 uses pure NumPy vectorization to achieve massive performance "
+"improvements over the previous version."
+msgstr ""
+"Ketu v0.3.0 utilise la vectorisation NumPy pure pour obtenir des "
+"améliorations de performance massives par rapport à la version précédente."
+
+#: ../../source/performance.md:5
+msgid "Benchmarks"
+msgstr "## Benchmarks"
+
+#: ../../source/performance.md:7
+msgid "Time Series Calculations"
+msgstr "### Utiliser les Fonctions Batch"
+
+#: ../../source/performance.md:9
+msgid "For computing planetary positions over 365 days:"
+msgstr "Pour calculer les positions planétaires sur 365 jours :"
+
+#: ../../source/performance.md:11
+msgid "**208x faster** than loop-based approach"
+msgstr "### Utiliser les Fonctions Batch"
+
+#: ../../source/performance.md:12
+msgid "From ~3.2s to ~15ms for a full year"
+msgstr "```python from functools import lru_cache"
+
+#: ../../source/performance.md:14
+msgid "Aspect Calculations"
+msgstr "### Calculs d'Aspects"
+
+#: ../../source/performance.md:16
+msgid "For detecting all aspects between planets:"
+msgstr "Pour détecter tous les aspects entre planètes :"
+
+#: ../../source/performance.md:18
+msgid "**14.55x faster** with vectorization"
+msgstr "## Fonctions Vectorisées"
+
+#: ../../source/performance.md:19
+msgid "From ~120ms to ~8ms per date"
+msgstr "### Calculs de Positions par Batch"
+
+#: ../../source/performance.md:21
+msgid "Single Position Calculations"
+msgstr "### Calculs de Positions par Batch"
+
+#: ../../source/performance.md:23
+msgid "For computing individual planet positions:"
+msgstr "### Calculs de Positions par Batch"
+
+#: ../../source/performance.md:25
+msgid "**67x faster** for outer planets"
+msgstr "Pour détecter tous les aspects entre planètes :"
+
+#: ../../source/performance.md:26
+msgid "**59x faster** for Moon calculations"
+msgstr "### Utiliser les Fonctions Batch"
+
+#: ../../source/performance.md:27
+msgid "Optimized Kepler solver with Newton-Raphson method"
+msgstr ""
+"Le solveur d'équation de Kepler utilise l'itération Newton-Raphson avec "
+"tolérance adaptive :"
+
+#: ../../source/performance.md:29
+msgid "Vectorized Functions"
+msgstr "## Fonctions Vectorisées"
+
+#: ../../source/performance.md:31
+msgid "Batch Position Calculations"
+msgstr "### Calculs de Positions par Batch"
+
+#: ../../source/performance.md:52
+msgid "Vectorized Aspect Detection"
+msgstr "## Fonctions Vectorisées"
+
+#: ../../source/performance.md:61
+msgid "Optimization Techniques"
+msgstr "## Optimisations Futures"
+
+#: ../../source/performance.md:63
+msgid "LRU Caching"
+msgstr "### Cache LRU"
+
+#: ../../source/performance.md:65
+msgid "The library uses `functools.lru_cache` with optimal cache sizes:"
+msgstr ""
+"La bibliothèque utilise `functools.lru_cache` avec des tailles de cache "
+"optimales :"
+
+#: ../../source/performance.md:77
+msgid "NumPy Broadcasting"
+msgstr "### Broadcasting NumPy"
+
+#: ../../source/performance.md:79
+msgid ""
+"All distance and angle calculations use NumPy broadcasting for efficient "
+"array operations:"
+msgstr ""
+"Tous les calculs de distance et d'angle utilisent le broadcasting NumPy pour"
+" des opérations efficaces sur les tableaux."
+
+#: ../../source/performance.md:88
+msgid "Optimized Kepler Solver"
+msgstr "### Solveur de Kepler Optimisé"
+
+#: ../../source/performance.md:90
+msgid ""
+"The Kepler equation solver uses Newton-Raphson iteration with adaptive "
+"tolerance:"
+msgstr ""
+"Le solveur d'équation de Kepler utilise l'itération Newton-Raphson avec "
+"tolérance adaptive :"
+
+#: ../../source/performance.md:92
+msgid "Typical convergence in 3-5 iterations"
+msgstr "## Bonnes Pratiques"
+
+#: ../../source/performance.md:93
+msgid "Adaptive epsilon based on eccentricity"
+msgstr "### Détection d'Aspects Vectorisée"
+
+#: ../../source/performance.md:94
+msgid "Vectorized for batch calculations"
+msgstr "### Calculs d'Aspects"
+
+#: ../../source/performance.md:96
+msgid "Memory Efficiency"
+msgstr ""
+
+#: ../../source/performance.md:98
+msgid "Structured Arrays"
+msgstr "## Optimisations Futures"
+
+#: ../../source/performance.md:100
+msgid "Aspect results use structured NumPy arrays for efficient storage:"
+msgstr "```python import numpy as np"
+
+#: ../../source/performance.md:109
+msgid "In-Place Operations"
+msgstr "## Techniques d'Optimisation"
+
+#: ../../source/performance.md:111
+msgid ""
+"Most calculations use in-place NumPy operations to minimize memory "
+"allocation."
+msgstr "### Calculs de Séries Temporelles"
+
+#: ../../source/performance.md:113
+msgid "Best Practices"
+msgstr "## Bonnes Pratiques"
+
+#: ../../source/performance.md:115
+msgid "Use Batch Functions"
+msgstr "### Utiliser les Fonctions Batch"
+
+#: ../../source/performance.md:117
+msgid "For time series analysis:"
+msgstr "Pour l'analyse de séries temporelles :"
+
+#: ../../source/performance.md:127
+msgid "Pre-allocate Arrays"
+msgstr "### Pré-allouer les Tableaux"
+
+#: ../../source/performance.md:129
+msgid "For large-scale calculations:"
+msgstr "### Calculs d'Aspects"
+
+#: ../../source/performance.md:141
+msgid "Cache Julian Day Conversions"
+msgstr "### Calculs d'Aspects"
+
+#: ../../source/performance.md:152
+msgid "Performance Tips"
+msgstr "# Guide de Performance"
+
+#: ../../source/performance.md:154
+msgid "**Use vectorized functions** for bulk operations"
+msgstr "### Utiliser les Fonctions Batch"
+
+#: ../../source/performance.md:155
+msgid "**Cache Julian dates** when computing multiple bodies"
+msgstr "### Mettre en Cache les Conversions de Dates Juliennes"
+
+#: ../../source/performance.md:156
+msgid "**Pre-allocate arrays** for large datasets"
+msgstr "### Pré-allouer les Tableaux"
+
+#: ../../source/performance.md:157
+msgid "**Avoid Python loops** over dates - use NumPy arrays"
+msgstr "```python import numpy as np"
+
+#: ../../source/performance.md:158
+msgid "**Reuse calculations** - leverage the LRU cache"
+msgstr "Pour les calculs à grande échelle :"
+
+#: ../../source/performance.md:160
+msgid "Profiling Your Code"
+msgstr "### Broadcasting NumPy"
+
+#: ../../source/performance.md:162
+msgid "To identify bottlenecks:"
+msgstr "## Benchmarks"
+
+#: ../../source/performance.md:180
+msgid "Future Optimizations"
+msgstr "## Optimisations Futures"
+
+#: ../../source/performance.md:182
+msgid "Planned performance improvements:"
+msgstr "Améliorations de performance prévues :"
+
+#: ../../source/performance.md:184
+msgid "JIT compilation with Numba (optional)"
+msgstr "```python import numpy as np"
+
+#: ../../source/performance.md:185
+msgid "Parallel computation for independent bodies"
+msgstr "Pour calculer les positions de planètes individuelles :"
+
+#: ../../source/performance.md:186
+msgid "SIMD optimizations for coordinate transformations"
+msgstr "## Optimisations Futures"
+
+#: ../../source/performance.md:187
+msgid "GPU acceleration for large-scale calculations (optional)"
+msgstr "Pour les calculs à grande échelle :"

@@ -10,24 +10,24 @@ Merci de ton intérêt pour contribuer à Ketu ! Voici comment tu peux aider.
 
 1. Clone le repository :
 
-```bash
-git clone https://github.com/alkimya/ketu.git
-cd ketu
-```
+    ```bash
+    git clone https://github.com/alkimya/ketu.git
+    cd ketu
+    ```
 
 2. Crée un environnement virtuel :
 
-```bash
-python3 -m venv venv
-source venv/bin/activate
-```
+    ```bash
+    python3 -m venv venv
+    source venv/bin/activate
+    ```
 
 3. Installe les dépendances en mode développement :
 
-```bash
-pip install -e .
-pip install pytest pytest-cov
-```
+    ```bash
+    pip install -e .
+    pip install pytest pytest-cov
+    ```
 
 ## Lancer les tests
 
