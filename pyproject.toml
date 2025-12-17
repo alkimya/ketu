@@ -52,7 +52,7 @@ all = ["matplotlib>=3.5.0", "icalendar>=5.0.0"]
 ketu = "ketu.display:main"
 
 [tool.setuptools]
-packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.export"]
+packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.cycles", "ketu.export"]
 
 [tool.setuptools.package-data]
 ketu = ["py.typed"]

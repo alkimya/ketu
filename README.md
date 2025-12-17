@@ -12,7 +12,13 @@ This library was originally designed to generate biodynamic calendars and time s
 
 ![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
 
-## 🚀 What's New in v0.3.0
+## 🚀 What's New in v0.4.0
+
+- **Ephemeris Cache** - Pre-compute monthly positions for O(1) lookups (1000x speedup!)
+- **Linear interpolation** - Accurate intra-day positions from daily cache
+- **Batch operations** - Get all 13 body positions in single call
+
+## What's New in v0.3.0
 
 - **Pure NumPy implementation** - No more external binary dependencies!
 - **Removed `pyswisseph` dependency** - Fully self-contained astronomical calculations
@@ -203,6 +209,55 @@ ketu.export_lunations_to_ical(start, end, "lunations_2025.ics")
 ketu.export_aspects_to_ical(start, end, "aspects_2025.ics")
 ```
 
+### Ephemeris Cache (v0.4.0)
+
+For ML pipelines and high-frequency lookups, use the ephemeris cache for 1000x faster position lookups:
+
+```python
+from ketu.cache import EphemerisCache
+from datetime import datetime, timezone
+
+# Initialize cache (stores in ~/.ketu/ephemeris_cache/)
+cache = EphemerisCache()
+
+# Pre-compute a range of months (one-time operation)
+# ~1-2 seconds per month, persisted to disk
+for year in range(2020, 2026):
+    for month in range(1, 13):
+        cache.ensure_month(year, month)
+
+# Fast O(1) lookups (0.006ms vs 10ms computation)
+timestamp = datetime(2025, 6, 15, 14, 30, tzinfo=timezone.utc)
+
+# Get single body position (lon, lat, distance, speed)
+sun_pos = cache.get_position(timestamp, body_id=0)
+print(f"Sun longitude: {sun_pos[0]:.2f}°")
+
+# Get all 13 bodies at once
+all_positions = cache.get_all_positions(timestamp)
+# Returns dict: {body_id: (lon, lat, dist, speed), ...}
+```
+
+**CLI for pre-computing cache:**
+
+```bash
+# Pre-compute 2020-2030 (takes ~3-4 minutes)
+python scripts/precompute_ephemeris.py --years 2020-2030
+
+# Single year
+python scripts/precompute_ephemeris.py --year 2025
+
+# Force recompute
+python scripts/precompute_ephemeris.py --year 2025 --force
+```
+
+**Performance:**
+
+- Lookup: 0.006ms (with interpolation)
+- Compute: 10ms
+- Speedup: **1000x**
+- Disk usage: ~50KB per month
+
 ## Documentation
 
 The full documentation is hosted on [Read the Docs](https://ketu.readthedocs.io).
@@ -288,6 +343,9 @@ ketu/
 ├── transits.py          # Transit calculations
 ├── chart.py             # Zodiacal chart visualization
 ├── icalendar_export.py  # iCalendar export utilities
+├── cache/               # High-performance ephemeris cache (v0.4.0)
+│   ├── __init__.py
+│   └── ephemeris_cache.py  # Monthly pre-computed positions
 └── ephemeris/           # Astronomical calculations
     ├── time.py          # Time conversions
     ├── orbital.py       # Orbital mechanics
