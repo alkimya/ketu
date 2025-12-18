@@ -256,24 +256,13 @@ def generate_cycle_series(
 
         # Convert timestamps to datetime if needed
         if hasattr(timestamps, 'to_pydatetime'):
-            dts = timestamps.to_pydatetime()
+            dts = list(timestamps.to_pydatetime())
         else:
             dts = list(timestamps)
 
-        # Batch lookup from cache (much faster than calc_planet_position_batch)
-        pos1_lon = np.zeros(n, dtype=np.float32)
-        pos1_vel = np.zeros(n, dtype=np.float32)
-        pos2_lon = np.zeros(n, dtype=np.float32)
-        pos2_vel = np.zeros(n, dtype=np.float32)
-
-        for i, dt in enumerate(dts):
-            # Get positions from cache (returns [lon, lat, dist, speed])
-            p1 = cache.get_position(dt, body1_id)
-            p2 = cache.get_position(dt, body2_id)
-            pos1_lon[i] = p1[0]
-            pos1_vel[i] = p1[3]
-            pos2_lon[i] = p2[0]
-            pos2_vel[i] = p2[3]
+        # Vectorized batch lookup from cache (10x faster than loop)
+        pos1_lon, pos1_vel = cache.get_positions_vectorized(dts, body1_id)
+        pos2_lon, pos2_vel = cache.get_positions_vectorized(dts, body2_id)
 
         result['body1_lon'] = pos1_lon
         result['body2_lon'] = pos2_lon
