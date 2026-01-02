@@ -191,7 +191,33 @@ __all__ = [
     "AspectEvent",
     "AspectTimeline",
     "generate_aspect_timeline",
+
+    # Complex number representation (ML/research)
+    "ZodiacPoint",
+    "CycleRatio",
+    "Aspect",
+    "ASPECTS",
+    "circular_mean",
+    "circular_std",
+    "phase_locking_value",
+    "degrees_to_complex",
+    "cycle_ratio_vectorized",
+    "to_ml_features_vectorized",
 ]
+
+# Complex number representation for cycles
+from ketu.complex import (
+    ZodiacPoint,
+    CycleRatio,
+    Aspect,
+    ASPECTS,
+    circular_mean,
+    circular_std,
+    phase_locking_value,
+    degrees_to_complex,
+    cycle_ratio_vectorized,
+    to_ml_features_vectorized,
+)
 
 # Add export functions if available
 if _EXPORT_AVAILABLE:
