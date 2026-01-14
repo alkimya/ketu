@@ -342,3 +342,34 @@ Entry point for the interactive CLI interface.
 - [Concepts](concepts.md) for theory
 - [Examples](examples.md) for more use cases
 - [Swiss Ephemeris](https://www.astro.com/swisseph/) for technical details
+
+## Complex Analysis
+
+### `ketu.complex`
+
+New in v0.4.0. Provides vector-safe cycle analysis using complex numbers.
+
+```python
+from ketu.complex import ZodiacPoint, CycleRatio
+
+# Represent positions on unit circle
+moon = ZodiacPoint.from_degrees(120)
+sun = ZodiacPoint.from_degrees(90)
+
+# Compute cycle (Moon / Sun)
+cycle = moon / sun
+print(cycle.degrees)  # 30.0
+print(cycle.nearest_aspect) # sextile (60) or semi-sextile(30)? 
+```
+
+### `ZodiacPoint`
+
+- `from_degrees(deg)`: Create from longitude
+- `to_ml_features()`: Export cos/sin components
+
+### `CycleRatio`
+
+- `separation_degrees`: Angular separation [0, 360)
+- `is_waxing`: True if 0-180
+- `nearest_aspect`: Find closest H1-H10 aspect
+
