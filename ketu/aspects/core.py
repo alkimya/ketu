@@ -41,14 +41,14 @@ def get_aspect_index(aspect: Union[str, int, float]) -> int:
         aspect: Aspect name, index, or angle
 
     Returns:
-        Aspect index (0-6)
+        Aspect index (0-13) - now includes harmonics 9 and 10
     """
     if isinstance(aspect, str):
         idx = np.where(aspects["name"] == aspect.encode())[0]
         if len(idx) == 0:
             raise ValueError(f"Unknown aspect name: {aspect}")
         return int(idx[0])
-    elif isinstance(aspect, int) and aspect < 7:
+    elif isinstance(aspect, int) and aspect < len(aspects):
         return aspect
     else:
         idx = np.where(aspects["angle"] == aspect)[0]

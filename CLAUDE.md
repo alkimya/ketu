@@ -17,7 +17,7 @@ Voir [persona-sophie.md](persona-sophie.md) pour le profil complet.
 
 ## État du projet (v0.4.0)
 
-**126 tests passent.**
+**176 tests passent.**
 
 ### Architecture
 

@@ -79,7 +79,7 @@ def test_aspects_correctness():
                 f"Date {i}: invalid body1 IDs"
             assert np.all(aspects['body2'] >= 0) and np.all(aspects['body2'] <= 12), \
                 f"Date {i}: invalid body2 IDs"
-            assert np.all(aspects['i_asp'] >= 0) and np.all(aspects['i_asp'] <= 6), \
+            assert np.all(aspects['i_asp'] >= 0) and np.all(aspects['i_asp'] <= 13), \
                 f"Date {i}: invalid aspect IDs"
 
     print(f"  ✓ All {len(jd_array)} dates have valid structured arrays")

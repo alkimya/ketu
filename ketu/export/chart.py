@@ -209,7 +209,7 @@ def draw_zodiacal_chart(
             idx = np.where(aspects_data["name"] == aspect.encode())[0]
             if len(idx) > 0:
                 aspect_indices.append(int(idx[0]))
-        elif isinstance(aspect, int) and aspect < 7:
+        elif isinstance(aspect, int) and aspect < len(aspects_data):
             # Aspect index
             aspect_indices.append(aspect)
         else:

@@ -29,19 +29,27 @@ bodies = np.array(
     dtype=[("name", "S12"), ("id", "i4"), ("orb", "f4"), ("speed", "f4")],
 )
 
-# Structured array of major aspects (harmonics 1, 2, 3, and 6)
+# Structured array of major aspects (harmonics 1, 2, 3, 6, 9, and 10)
 # Fields: name, angle (degrees), coefficient for orb calculation
 aspects = np.array(
     [
+        # Classical aspects (Harmonics 1, 2, 3, 6)
         ("Conjunction", 0, 1),
         ("Semi-sextile", 30, 1 / 6),
+        ("Decile", 36, 1 / 10),  # H10 - Semi-quintile
+        ("Novile", 40, 1 / 9),  # H9 - Nonagone
         ("Sextile", 60, 1 / 3),
+        ("Quintile", 72, 1 / 5),  # H5 (sub-harmonic of H10)
+        ("Binovile", 80, 2 / 9),  # H9
         ("Square", 90, 1 / 2),
+        ("Tredecile", 108, 3 / 10),  # H10 - Tri-decile
         ("Trine", 120, 2 / 3),
+        ("Biquintile", 144, 2 / 5),  # H5 (sub-harmonic of H10)
         ("Quincunx", 150, 5 / 6),
+        ("Quadrinovile", 160, 4 / 9),  # H9
         ("Opposition", 180, 1),
     ],
-    dtype=[("name", "S12"), ("angle", "f4"), ("coef", "f4")],
+    dtype=[("name", "S16"), ("angle", "f4"), ("coef", "f4")],
 )
 
 # Zodiac signs in order

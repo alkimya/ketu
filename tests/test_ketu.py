@@ -23,11 +23,11 @@ class TestData:
 
     def test_aspects_structure(self):
         """Test aspects array structure and content"""
-        assert len(aspects_data) == 7
+        assert len(aspects_data) == 14
         assert aspects_data["angle"][0] == 0  # Conjunction
-        assert aspects_data["angle"][6] == 180  # Opposition
-        assert aspects_data["name"][3] == b"Square"
-        assert aspects_data["coef"][4] == 2 / 3  # Trine coefficient
+        assert aspects_data["angle"][13] == 180  # Opposition
+        assert aspects_data["name"][7] == b"Square"
+        assert aspects_data["coef"][9] == 2 / 3  # Trine coefficient
 
     def test_signs_list(self):
         """Test zodiac signs list"""
@@ -98,7 +98,7 @@ class TestAngleConversions:
         assert orb == 12.0  # (12+12)/2 * 1
 
         # Mercury-Venus sextile
-        orb = ketu.get_orb(2, 3, 2)  # bodies 2,3, aspect 2 (sextile)
+        orb = ketu.get_orb(2, 3, 4)  # bodies 2,3, aspect 4 (sextile)
         assert orb == 9.0 * (1 / 3)  # (10+8)/2 * 1/3
 
 
@@ -193,7 +193,7 @@ class TestAspects:
             body1, body2, asp_type, orb = aspect
             assert body1 == 0  # Sun
             assert body2 == 1  # Moon
-            assert 0 <= asp_type < 7  # Valid aspect type
+            assert 0 <= asp_type < 14  # Valid aspect type
             assert isinstance(orb, (float, np.floating))
 
     def test_calculate_aspects(self):
