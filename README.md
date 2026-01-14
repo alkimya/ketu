@@ -14,9 +14,10 @@ This library was originally designed to generate biodynamic calendars and time s
 
 ## 🚀 What's New in v0.4.0
 
+- **Expanded Aspect List** - Support for 14 aspects including Harmonics H5, H9, and H10 (Quintile, Decile, Novile, etc.)
+- **Complex Number Engine** - Vectorized cycle analysis using complex math ($e^{i\theta}$) for superior precision
+- **Machine Learning Ready** - Direct feature generation (`cos_phase`, `sin_phase`) for AI models
 - **Ephemeris Cache** - Pre-compute monthly positions for O(1) lookups (1000x speedup!)
-- **Linear interpolation** - Accurate intra-day positions from daily cache
-- **Batch operations** - Get all 13 body positions in single call
 
 ## What's New in v0.3.0
 
@@ -36,7 +37,7 @@ This library was originally designed to generate biodynamic calendars and time s
 ## Features
 
 - **Planetary positions** for 13 bodies (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Rahu/Mean Node, True North Node, Lilith)
-- **Detection of the 7 major aspects** (Conjunction, Semi-sextile, Sextile, Square, Trine, Quincunx, Opposition)
+- **Detection of 14 major/minor aspects** (Conjunction, Opposition, Trine, Square, Sextile, Quintile, Novile, Decile, etc.)
 - **Aspect windows** - Find when aspects begin, peak, and end
 - **Transit calculations** - Track transits to natal positions
 - **Retrogradation detection** and planet motion helpers
