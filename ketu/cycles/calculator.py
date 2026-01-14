@@ -12,6 +12,11 @@ import numpy as np
 from ketu.core import bodies
 from ketu.calculations import long, vlong, utc_to_julian, distance
 from ketu.ephemeris.planets import calc_planet_position_batch
+from ketu.complex import (
+    degrees_to_complex,
+    cycle_ratio_vectorized,
+    complex_to_degrees
+)
 
 # Optional cache import
 try:
@@ -23,8 +28,10 @@ except ImportError:
     get_default_cache = None
 
 
-# Major aspects for proximity calculation
+# Major aspects for proximity calculation (including waning phases)
 MAJOR_ASPECTS = np.array([0, 60, 90, 120, 180, 240, 270, 300, 360], dtype=np.float32)
+# Complex representation of major aspects
+MAJOR_ASPECTS_Z = degrees_to_complex(MAJOR_ASPECTS)
 
 # Structured array dtype for cycle state
 CYCLE_DTYPE = np.dtype([
@@ -98,83 +105,6 @@ def _get_body_id(body: Union[str, int]) -> int:
     if len(body_idx) == 0:
         raise ValueError(f"Unknown body: {body}")
     return int(bodies["id"][body_idx[0]])
-
-
-def _calculate_separation(lon1: float, lon2: float) -> float:
-    """Calculate angular separation in cycle direction (0-360°).
-
-    The separation is measured from body1 to body2 in the direction
-    of the zodiac (counterclockwise). This gives a continuous 0-360° value
-    representing position in the synodic cycle.
-
-    Args:
-        lon1: Longitude of body 1 (typically faster body)
-        lon2: Longitude of body 2 (typically slower body)
-
-    Returns:
-        Separation in degrees (0-360°)
-    """
-    sep = (lon2 - lon1) % 360
-    return sep
-
-
-def _find_nearest_aspect(separation: Union[float, np.ndarray]) -> Tuple[np.ndarray, np.ndarray]:
-    """Find nearest major aspect and signed distance to it.
-
-    Args:
-        separation: Angular separation(s) in degrees
-
-    Returns:
-        Tuple of (nearest_aspect_angle, signed_distance)
-    """
-    sep = np.atleast_1d(separation)
-
-    # Calculate distance to each major aspect
-    distances = np.zeros((len(sep), len(MAJOR_ASPECTS)))
-    for i, aspect in enumerate(MAJOR_ASPECTS):
-        # Signed distance (negative = approaching, positive = separating)
-        diff = sep - aspect
-        # Normalize to -180 to 180
-        diff = ((diff + 180) % 360) - 180
-        distances[:, i] = diff
-
-    # Find nearest (smallest absolute distance)
-    abs_distances = np.abs(distances)
-    nearest_idx = np.argmin(abs_distances, axis=1)
-
-    nearest_aspect = MAJOR_ASPECTS[nearest_idx]
-    signed_distance = distances[np.arange(len(sep)), nearest_idx]
-
-    # Handle 360° = 0° case
-    nearest_aspect = np.where(nearest_aspect == 360, 0, nearest_aspect)
-
-    if len(sep) == 1:
-        return float(nearest_aspect[0]), float(signed_distance[0])
-
-    return nearest_aspect.astype(np.float32), signed_distance.astype(np.float32)
-
-
-def _calculate_orb(body1_id: int, body2_id: int, aspect_angle: float) -> float:
-    """Calculate orb tolerance for aspect.
-
-    Uses traditional orb system based on planetary speeds.
-    """
-    # Get base orbs from bodies array
-    orb1 = float(bodies["orb"][body1_id])
-    orb2 = float(bodies["orb"][body2_id])
-
-    # Average orb, scaled by aspect coefficient
-    # Major aspects (0, 90, 120, 180) get larger orbs
-    if aspect_angle in [0, 180]:
-        coef = 1.0
-    elif aspect_angle in [90, 120, 270, 240]:
-        coef = 0.75
-    elif aspect_angle in [60, 300]:
-        coef = 0.5
-    else:
-        coef = 0.25
-
-    return (orb1 + orb2) / 2 * coef
 
 
 def generate_cycle_series(
@@ -284,30 +214,60 @@ def generate_cycle_series(
     result['body1_retro'] = result['body1_velocity'] < 0
     result['body2_retro'] = result['body2_velocity'] < 0
 
-    # Calculate separation (vectorized)
-    result['angular_separation'] = _calculate_separation(
-        result['body1_lon'],
-        result['body2_lon']
-    )
-
-    # Cycle progress (0-1)
-    result['cycle_progress'] = result['angular_separation'] / 360.0
-
-    # Cycle phase: waxing (1) when 0-180°, waning (-1) when 180-360°
-    result['cycle_phase'] = np.where(
-        result['angular_separation'] <= 180, 1, -1
-    ).astype(np.int8)
-
-    # Aspect proximity
+    # --- VECTORIZED COMPLEX NUMBER CALCULATION ---
+    
+    # 1. Calculate Cycle Ratio using Complex Numbers
+    # z_ratio = z_slower / z_faster = e^(i(θ₂ - θ₁))
+    z_ratios = cycle_ratio_vectorized(result['body1_lon'], result['body2_lon'])
+    
+    # 2. Extract angular separation (0-360) and Cycle Progress
+    separation = complex_to_degrees(z_ratios)
+    result['angular_separation'] = separation
+    result['cycle_progress'] = separation / 360.0
+    
+    # 3. Cycle Phases
+    # Waxing: 0 -> 180, Waning: 180 -> 360
+    result['cycle_phase'] = np.where(separation < 180, 1, -1).astype(np.int8)
+    
+    # 4. Aspect Proximity (Vectorized Complex)
     if include_aspects:
-        nearest, dist = _find_nearest_aspect(result['angular_separation'])
-        result['nearest_aspect'] = nearest
-        result['aspect_distance'] = dist
-
-        # Check if in aspect (within orb)
-        orb = _calculate_orb(body1_id, body2_id, 0)  # Base orb
-        result['in_aspect'] = np.abs(dist) <= orb
-        result['aspect_orb'] = np.where(result['in_aspect'], np.abs(dist), 0)
+        # Calculate angular distance to each aspect in radians
+        # angle(z_ratio / z_aspect) gives signed distance in (-π, π]
+        # MAJOR_ASPECTS_Z is broadcasted
+        dist_matrix_rad = np.angle(z_ratios[:, np.newaxis] / MAJOR_ASPECTS_Z[np.newaxis, :])
+        dist_matrix_deg = np.rad2deg(dist_matrix_rad)
+        
+        # Find index of aspect with minimum absolute distance
+        nearest_indices = np.argmin(np.abs(dist_matrix_deg), axis=1)
+        
+        # Select the values
+        nearest_aspects = MAJOR_ASPECTS[nearest_indices]
+        result['nearest_aspect'] = np.where(nearest_aspects == 360, 0, nearest_aspects)
+        
+        # Signed distances corresponding to nearest aspects
+        # Flattening index approach for performance
+        n_samples = len(z_ratios)
+        flat_indices = nearest_indices + np.arange(n_samples) * len(MAJOR_ASPECTS)
+        result['aspect_distance'] = dist_matrix_deg.ravel()[flat_indices]
+        
+        # 5. Calculate Orbs Vectorized
+        orb1 = float(bodies["orb"][body1_id])
+        orb2 = float(bodies["orb"][body2_id])
+        avg_orb = (orb1 + orb2) / 2
+        
+        # Coefficients based on MAJOR_ASPECTS indices
+        # [0, 60, 90, 120, 180, 240, 270, 300, 360]
+        #  C   S   Sq  As   Op   Wn   Wn   S    C
+        #  1  .5  .75 .75   1   .75  .75  .5    1
+        COEFFS = np.array([1.0, 0.5, 0.75, 0.75, 1.0, 0.75, 0.75, 0.5, 1.0], dtype=np.float32)
+        orb_coeffs = COEFFS[nearest_indices]
+        
+        current_orbs = avg_orb * orb_coeffs
+        
+        # Check in_aspect
+        in_aspect = np.abs(result['aspect_distance']) <= current_orbs
+        result['in_aspect'] = in_aspect
+        result['aspect_orb'] = np.where(in_aspect, current_orbs, 0.0)
 
     return result
 
