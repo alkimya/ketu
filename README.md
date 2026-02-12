@@ -4,8 +4,6 @@
 [![Python Versions](https://img.shields.io/pypi/pyversions/ketu.svg)](https://pypi.org/project/ketu/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
-> Vous préférez le français ? [Consultez README.md](fr/README.md)
-
 **Ketu** is a pure NumPy library for astronomical calculations focused on planetary positions, aspects, and cycle analysis. With no dependencies beyond NumPy, Ketu provides fast, accurate calculations suitable for astrology, biodynamic calendars, and machine learning applications.
 
 This library was originally designed to generate biodynamic calendars and time series based on astrological aspects. It can be used as a basis for building astrology software.
