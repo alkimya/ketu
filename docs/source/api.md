@@ -202,7 +202,7 @@ Calculates all properties of a body (cached function).
 - `jday`: Julian Day
 - `body`: Body ID
 
-**Returns:** array [longitude, latitude, distance, vlong, vlat, vdist]
+**Returns:** array [longitude, latitude, distance, long_velocity, lat_velocity, dist_velocity]
 
 ### `long()`, `lat()`, `dist_au()`
 
@@ -221,12 +221,12 @@ Return respectively the longitude, latitude and distance of a body.
 
 **Returns:** value in degrees or AU
 
-### `vlong()`, `vlat()`, `vdist_au()`
+### `long_velocity()`, `lat_velocity()`, `dist_velocity_au()`
 
 ```python
-def vlong(jday: float, body: int) -> float
-def vlat(jday: float, body: int) -> float
-def vdist_au(jday: float, body: int) -> float
+def long_velocity(jday: float, body: int) -> float
+def lat_velocity(jday: float, body: int) -> float
+def dist_velocity_au(jday: float, body: int) -> float
 ```
 
 Movement speeds (degrees/day or AU/day).

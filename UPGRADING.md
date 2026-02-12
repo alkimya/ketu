@@ -99,6 +99,9 @@ Quick reference for migrating common imports:
 | `from ketu import long` | `from ketu.calculations import long` |
 | `from ketu import positions` | `from ketu.calculations import positions` |
 | `from ketu import body_properties` | `from ketu.calculations import body_properties` |
+| `from ketu import vlong` | `from ketu.calculations import long_velocity` |
+| `from ketu import vlat` | `from ketu.calculations import lat_velocity` |
+| `from ketu import vdist_au` | `from ketu.calculations import dist_velocity_au` |
 | `from ketu import calculate_aspects` | `from ketu.aspects import calculate_aspects` |
 | `from ketu import find_aspect_timing` | `from ketu.aspects import find_aspect_timing` |
 | `from ketu import find_aspect_window` | `from ketu.aspects import find_aspect_window` |
@@ -117,6 +120,30 @@ Quick reference for migrating common imports:
 - `ketu.lunar_calendar` - Lunar calendar generation
 - `ketu.display` - CLI display functions
 
+## Renamed Functions
+
+### Velocity Functions
+
+The ambiguous `vlong()`, `vlat()`, and `vdist_au()` functions have been renamed to explicit names that clearly indicate they return velocity (speed) values, not position values.
+
+| Old name (v0.4.x) | New name (v1.0.0) | Returns |
+|--------------------|-------------------|---------|
+| `vlong(jd, body)` | `long_velocity(jd, body)` | Longitude speed (deg/day) |
+| `vlat(jd, body)` | `lat_velocity(jd, body)` | Latitude speed (deg/day) |
+| `vdist_au(jd, body)` | `dist_velocity_au(jd, body)` | Distance speed (AU/day) |
+
+```python
+# v0.4.x (NO LONGER WORKS)
+from ketu.calculations import vlong, vlat, vdist_au
+moon_speed = vlong(jd, 1)
+
+# v1.0.0 (REQUIRED)
+from ketu.calculations import long_velocity, lat_velocity, dist_velocity_au
+moon_speed = long_velocity(jd, 1)
+```
+
+**Why the rename:** The "v" prefix was ambiguous — it could mean "value" or "velocity." The new names make it explicit that these functions return speed/velocity, not position values.
+
 ## Installation
 
 ```bash
@@ -129,6 +156,7 @@ pip install ketu==1.0.0
 - [ ] Search your codebase for `from ketu import` (functions)
 - [ ] Update all function imports to use submodule paths
 - [ ] Update imports of `bodies`, `aspects`, `signs` (these still work from top level)
+- [ ] Rename `vlong()` → `long_velocity()`, `vlat()` → `lat_velocity()`, `vdist_au()` → `dist_velocity_au()`
 - [ ] Remove `ketu[chart]`, `ketu[icalendar]`, or `ketu[all]` from requirements files
 - [ ] Remove any usage of `ketu.export.chart` or `ketu.export.icalendar`
 - [ ] Test your code in a clean virtual environment
