@@ -10,7 +10,7 @@ Ketu 1.0 consolidates a working astronomical calculation library from v0.4.0 to 
 - [x] **Phase 2: Correctness Fixes** - Fix cache and aspect bugs before 1.0
 - [x] **Phase 2.1: Fix Moon velocity and rename vlong API** (INSERTED)
 - [x] **Phase 3: Dependency Cleanup** - Remove hidden Pandas dependency
-- [ ] **Phase 4: Test Coverage Hardening** - Achieve 70% coverage with module targets
+- [x] **Phase 4: Test Coverage Hardening** - Achieve 70% coverage with module targets
 - [ ] **Phase 5: Complex Math Integration** - Unify complex representation into cycle engine
 - [ ] **Phase 6: Documentation & Type Checking** - Finalize docs and type hints
 - [ ] **Phase 7: Release Preparation** - PyPI publish and GitHub release
@@ -82,8 +82,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 04-01-PLAN.md — Fix pyproject.toml config + comprehensive cache module tests (15% -> 85%)
-- [ ] 04-02-PLAN.md — Cycles calculator tests (72% -> 85%) + re-enable CI
+- [x] 04-01-PLAN.md — Fix pyproject.toml config + comprehensive cache module tests (15% -> 85%)
+- [x] 04-02-PLAN.md — Cycles calculator tests (72% -> 85%) + re-enable CI
 
 ### Phase 5: Complex Math Integration
 **Goal**: Cycle engine uses complex numbers internally, degrees externally
@@ -137,11 +137,11 @@ Plans:
 | 2. Correctness Fixes | 2/2 | ✓ Complete | 2026-02-12 |
 | 2.1 Fix Moon velocity & vlong | 2/2 | ✓ Complete | 2026-02-12 |
 | 3. Dependency Cleanup | 1/1 | ✓ Complete | 2026-02-12 |
-| 4. Test Coverage Hardening | 0/TBD | Not started | - |
+| 4. Test Coverage Hardening | 2/2 | ✓ Complete | 2026-02-12 |
 | 5. Complex Math Integration | 0/TBD | Not started | - |
 | 6. Documentation & Type Checking | 0/TBD | Not started | - |
 | 7. Release Preparation | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-12*
-*Last updated: 2026-02-12 — Phase 3 complete*
+*Last updated: 2026-02-12 — Phase 4 complete*
