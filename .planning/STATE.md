@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 ## Current Position
 
-Phase: 3 of 7 (Dependency Cleanup) — COMPLETE
-Plan: 1/1 (all plans complete)
-Status: Phase 3 complete — Ketu is pure NumPy, no hidden Pandas dependency
-Last activity: 2026-02-12 — Phase 3 execution complete
+Phase: 4 of 7 (Test Coverage Hardening) — IN PROGRESS
+Plan: 1/3 (current plan complete)
+Status: Cache module test coverage hardened (15% → 89%), pytest config fixed, overall coverage 95%
+Last activity: 2026-02-12 — Phase 4 Plan 1 execution complete
 
-Progress: [█████░░░░░] ~50% (Phases 1, 2, 2.1, 3 complete — 7 plans total)
+Progress: [██████░░░░] ~58% (Phases 1, 2, 2.1, 3, 04-01 complete — 8 of 13+ plans total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 7
-- Average duration: 4.3 minutes
-- Total execution time: 0.50 hours
+- Total plans completed: 8
+- Average duration: 3.9 minutes
+- Total execution time: 0.52 hours
 
 **By Phase:**
 
@@ -31,10 +31,11 @@ Progress: [█████░░░░░] ~50% (Phases 1, 2, 2.1, 3 complete �
 | 02      | 2     | 7 min  | 3.5 min  |
 | 02.1    | 2     | 9 min  | 4.5 min  |
 | 03      | 1     | 6 min  | 6 min    |
+| 04      | 1     | 3 min  | 3 min    |
 
 **Recent Trend:**
-- Last 5 plans: 02-02 (4 min), 02.1-01 (2 min), 02.1-02 (7 min), 03-01 (6 min)
-- Trend: Stable execution speed, dependency cleanup efficient
+- Last 5 plans: 02.1-01 (2 min), 02.1-02 (7 min), 03-01 (6 min), 04-01 (3 min)
+- Trend: Fast execution for test-focused plans, stable velocity
 
 **Execution Log:**
 
@@ -47,6 +48,7 @@ Progress: [█████░░░░░] ~50% (Phases 1, 2, 2.1, 3 complete �
 | Phase 02.1 P01| 104            | 2     | 2     | 2026-02-12 |
 | Phase 02.1 P02| 424            | 2     | 13    | 2026-02-12 |
 | Phase 03 P01  | 370            | 2     | 8     | 2026-02-12 |
+| Phase 04 P01  | 170            | 2     | 2     | 2026-02-12 |
 
 *Updated after each plan completion*
 
@@ -94,8 +96,12 @@ Recent decisions affecting current work:
 **From Plan 03-01:**
 - Remove to_pandas entirely (no deprecation) — Heading to 1.0.0, clean break justified; Ketu's contract is NumPy-only
 - Keep duck-typing for pandas DatetimeIndex — Zero-cost interop, no pandas dependency required
-- [Phase 03-01]: Remove to_pandas entirely (no deprecation) — Heading to 1.0.0, clean break justified; Ketu's contract is NumPy-only
-- [Phase 03-01]: Keep duck-typing for pandas DatetimeIndex — Zero-cost interop, no pandas dependency required
+
+**From Plan 04-01:**
+- Use pytest tmp_path fixture for all cache file I/O isolation — Prevents pollution of ~/.ketu cache, ensures test isolation
+- Set fail_under=70 as minimum coverage threshold — Allows gradual improvement without blocking CI
+- Exclude removed/irrelevant modules from coverage calculation — Deleted code shouldn't count against metrics
+- Allow distance=0 for Rahu/Lilith — Calculated points (lunar nodes), not physical bodies, so distance=0 is correct
 
 ### Roadmap Evolution
 
@@ -111,14 +117,15 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (phase 3 execution)
-Stopped at: Phase 3 complete, ready for Phase 4
+Last session: 2026-02-12 (phase 4 plan 1 execution)
+Stopped at: Completed Phase 04-01-PLAN.md
 Resume file: None
 
 **Phase 1 Complete:** API Surface Cleanup finished (2 plans completed, UPGRADING.md created, human verified)
 **Phase 2 Complete:** Correctness Fixes finished (2 bugs fixed, regression tests added, 192 tests pass)
 **Phase 2.1 Complete:** Moon velocity and vlong API fixes finished (2 plans completed, 196 tests pass, breaking API changes documented)
 **Phase 3 Complete:** Dependency cleanup finished (pandas removed, pure NumPy library, 196 tests pass)
+**Phase 4 Plan 1 Complete:** Cache module test coverage hardened (15% → 89%, 21 tests added, pytest config fixed, 240 tests pass)
 
 ---
 *State initialized: 2026-02-12*
