@@ -83,33 +83,33 @@ Deferred to future release. Tracked but not in current roadmap.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| BUG-01 | Phase ? | Pending |
-| BUG-02 | Phase ? | Pending |
-| REM-01 | Phase ? | Pending |
-| REM-02 | Phase ? | Pending |
-| REM-03 | Phase ? | Pending |
-| REM-04 | Phase ? | Pending |
-| CPX-01 | Phase ? | Pending |
-| CPX-02 | Phase ? | Pending |
-| CPX-03 | Phase ? | Pending |
-| QAL-01 | Phase ? | Pending |
-| QAL-02 | Phase ? | Pending |
-| TST-01 | Phase ? | Pending |
-| TST-02 | Phase ? | Pending |
-| TST-03 | Phase ? | Pending |
-| TST-04 | Phase ? | Pending |
-| DOC-01 | Phase ? | Pending |
-| DOC-02 | Phase ? | Pending |
-| DOC-03 | Phase ? | Pending |
-| DOC-04 | Phase ? | Pending |
-| DOC-05 | Phase ? | Pending |
-| DOC-06 | Phase ? | Pending |
+| REM-01 | Phase 1 | Pending |
+| REM-02 | Phase 1 | Pending |
+| REM-04 | Phase 1 | Pending |
+| BUG-01 | Phase 2 | Pending |
+| BUG-02 | Phase 2 | Pending |
+| REM-03 | Phase 3 | Pending |
+| TST-01 | Phase 4 | Pending |
+| TST-02 | Phase 4 | Pending |
+| TST-03 | Phase 4 | Pending |
+| TST-04 | Phase 4 | Pending |
+| QAL-02 | Phase 4 | Pending |
+| CPX-01 | Phase 5 | Pending |
+| CPX-02 | Phase 5 | Pending |
+| CPX-03 | Phase 5 | Pending |
+| QAL-01 | Phase 5 | Pending |
+| DOC-01 | Phase 6 | Pending |
+| DOC-02 | Phase 6 | Pending |
+| DOC-03 | Phase 7 | Pending |
+| DOC-04 | Phase 7 | Pending |
+| DOC-05 | Phase 7 | Pending |
+| DOC-06 | Phase 7 | Pending |
 
 **Coverage:**
 - v1 requirements: 21 total
-- Mapped to phases: 0
-- Unmapped: 21
+- Mapped to phases: 21
+- Unmapped: 0
 
 ---
 *Requirements defined: 2026-02-12*
-*Last updated: 2026-02-12 after initial definition*
+*Last updated: 2026-02-12 after roadmap creation*
