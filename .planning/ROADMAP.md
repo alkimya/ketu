@@ -67,7 +67,7 @@ Plans:
 **Plans:** 1 plan
 
 Plans:
-- [ ] 03-01-PLAN.md — Remove to_pandas() from AspectTimeline, refactor resonance.py to NumPy, update docs and UPGRADING.md
+- [x] 03-01-PLAN.md — Remove to_pandas() from AspectTimeline, refactor resonance.py to NumPy, update docs and UPGRADING.md
 
 ### Phase 4: Test Coverage Hardening
 **Goal**: 70% overall coverage with critical modules above 85%
@@ -135,7 +135,7 @@ Plans:
 | 1. API Surface Cleanup | 2/2 | ✓ Complete | 2026-02-12 |
 | 2. Correctness Fixes | 2/2 | ✓ Complete | 2026-02-12 |
 | 2.1 Fix Moon velocity & vlong | 2/2 | ✓ Complete | 2026-02-12 |
-| 3. Dependency Cleanup | 0/1 | Not started | - |
+| 3. Dependency Cleanup | 1/1 | ✓ Complete | 2026-02-12 |
 | 4. Test Coverage Hardening | 0/TBD | Not started | - |
 | 5. Complex Math Integration | 0/TBD | Not started | - |
 | 6. Documentation & Type Checking | 0/TBD | Not started | - |
@@ -143,4 +143,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-02-12*
-*Last updated: 2026-02-12 — Phase 3 planned*
+*Last updated: 2026-02-12 — Phase 3 complete*
