@@ -7,6 +7,86 @@ All notable changes to Ketu are documented here.
 This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-02-XX
+
+### BREAKING CHANGES
+
+**This is a MAJOR version bump. See [UPGRADING.md](UPGRADING.md) for detailed migration guide.**
+
+#### Removed: Export modules (chart and icalendar)
+
+Ketu 1.0 is a pure calculation library. Visualization and calendar export features have been removed:
+
+- **Removed modules**: `ketu.export.chart`, `ketu.export.icalendar`
+- **Removed functions**:
+  - `draw_zodiacal_chart()` — Chart rendering with matplotlib/svgwrite
+  - `export_lunations_to_ical()` — iCalendar lunation export
+  - `export_aspects_to_ical()` — iCalendar aspect export
+  - `export_transits_to_ical()` — iCalendar transit export
+- **Removed constants**: `PLANETS_DEFAULT`, `BIG_FIVE` (from export module)
+- **Why**: Ketu focuses on numerical calculations. Visualization and export belong in application layers (GUI, web dashboards, etc.)
+- **Migration**: See [UPGRADING.md](UPGRADING.md) for migration paths, or pin to `ketu==0.4.0`
+
+#### Removed: Optional dependencies
+
+- **Removed**: matplotlib, icalendar, svgwrite as optional dependencies
+- **Removed install extras**: `ketu[chart]`, `ketu[icalendar]`, `ketu[all]`
+- **Core is now NumPy-only**: `pip install ketu` has zero optional extras
+- **Why**: Simplifies installation and reinforces Ketu's role as a calculation library
+
+#### Removed: Pandas dependency
+
+- `generate_aspect_timeline()` now returns NumPy structured array (was DataFrame)
+- `AspectTimeline.to_pandas()` method removed
+- **Why**: Ketu's contract is NumPy-only. Pandas conversion is trivial if needed.
+- **Migration**: Use `import pandas as pd; df = pd.DataFrame(timeline)` for manual conversion
+
+#### Renamed: Velocity functions (breaking)
+
+- `vlong()` → `long_velocity()`
+- `vlat()` → `lat_velocity()`
+- `vdist_au()` → `dist_velocity_au()`
+- **Why**: Explicit names prevent confusion. The old "v" prefix was ambiguous.
+- **Migration**: Use find-and-replace in your codebase (see [UPGRADING.md](UPGRADING.md))
+
+#### Changed: Public API surface
+
+- `ketu.__init__.py` exports only metadata + core constants (bodies, aspects, signs)
+- Functions accessed via submodule imports: `from ketu.calculations import long`
+- `ketu.__all__` explicitly lists public API
+- **Why**: Clear public API boundary, better organization
+- **Migration**: Most users won't notice this change. Use public API imports if importing from internal modules.
+
+### Fixed (Correctness)
+
+**IMPORTANT: These fixes change calculation results. Recompute cached 0.4.0 results.**
+
+- **Cache operator precedence bug**: `use_cache=False` was ignored due to missing parentheses in boolean expression
+- **Aspect vectorization non-determinism**: `calculate_aspects_vectorized()` now returns consistent results (pair duplication issue fixed)
+- **Moon velocity wrapping**: Correct velocity at 360°/0° boundary using ±180° wrapping (was showing ±360° spikes)
+
+### Added
+
+- **Numerical precision guarantees**: ±1e-6° for angular separation (documented in docstrings)
+- **Type hints for all public functions**: mypy strict mode compliance
+- **NumPy-style docstrings**: Examples section in all public functions
+- **Vectorized ResonanceField**: `_get_trace()` uses `calc_planet_position_batch()` (10-100x faster)
+- **Standardized error messages**: All `ValueError` messages include received value + valid options
+- **Two-layer caching strategy**: LRU for single-point, EphemerisCache for batch (documented in cache/__init__.py)
+
+### Changed
+
+- **Complex number representation**: Used internally for cycle calculations (degrees externally)
+- **Test coverage**: 91.48% overall (cache 89%, cycles 96%)
+- **Test count**: 250 tests pass across all modules (was 126 in 0.4.0)
+- **Documentation**: Comprehensive migration guide ([UPGRADING.md](UPGRADING.md)) following pandas 3.0 structure
+
+### Performance
+
+- **Vectorized batch ephemeris**: `calc_planet_position_batch()` eliminates Python loops
+- **ResonanceField optimization**: `_get_trace()` uses batch calculations instead of per-point iteration
+- **Cache efficiency**: Two-layer strategy optimizes for both single-point and batch use cases
+
 ## [0.4.0] - 2025-12-10
 
 ### Added
