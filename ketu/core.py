@@ -2,6 +2,56 @@
 
 This module contains the fundamental astronomical and astrological data structures
 used throughout the Ketu library, including planetary bodies, aspects, and zodiac signs.
+
+Data Structures
+---------------
+bodies : numpy.ndarray
+    Structured array of 13 astronomical bodies with fields:
+    - name (str): Body name (e.g., 'Sun', 'Moon', 'Mars')
+    - id (int): Body identifier (0-12)
+    - orb (float): Default orb in degrees for aspect calculations
+    - speed (float): Average daily motion in degrees/day
+
+    Body IDs:
+    0=Sun, 1=Moon, 2=Mercury, 3=Venus, 4=Mars, 5=Jupiter, 6=Saturn,
+    7=Uranus, 8=Neptune, 9=Pluto, 10=Rahu (Mean North Node),
+    11=Ketu (Mean South Node), 12=Lilith (Mean Apogee/Black Moon)
+
+aspects : numpy.ndarray
+    Structured array of 14 major aspects with fields:
+    - name (str): Aspect name (e.g., 'Conjunction', 'Trine')
+    - angle (float): Aspect angle in degrees (0-180)
+    - coef (float): Coefficient for orb calculation
+
+    Aspect angles: 0° (conjunction), 30° (semi-sextile), 36° (decile),
+    40° (novile), 60° (sextile), 72° (quintile), 80° (binovile),
+    90° (square), 108° (tredecile), 120° (trine), 144° (biquintile),
+    150° (quincunx), 160° (quadrinovile), 180° (opposition)
+
+signs : list
+    List of 12 zodiac sign names in order:
+    Aries, Taurus, Gemini, Cancer, Leo, Virgo, Libra, Scorpio,
+    Sagittarius, Capricorn, Aquarius, Pisces
+
+Notes
+-----
+Orb values are inspired by medieval Islamic astronomers Abu Ma'shar (787-886)
+and Al-Biruni (973-1050), adapted for modern precision calculations.
+
+Examples
+--------
+>>> from ketu.core import bodies, aspects, signs
+>>> # Access body data
+>>> sun_id = bodies['id'][bodies['name'] == b'Sun'][0]
+>>> print(sun_id)
+0
+>>> # Access aspect angles
+>>> trine_angle = aspects['angle'][aspects['name'] == b'Trine'][0]
+>>> print(trine_angle)
+120.0
+>>> # Access sign names
+>>> print(signs[0])
+Aries
 """
 
 import numpy as np

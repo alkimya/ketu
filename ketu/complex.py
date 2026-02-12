@@ -54,14 +54,20 @@ __all__ = [
 # Each aspect is e^(iθ) where θ is the aspect angle in radians
 @dataclass(frozen=True)
 class Aspect:
-    """A major aspect defined as a root of unity.
+    """A major aspect defined as a root of unity
 
-    Attributes:
-        name: Human-readable name
-        degrees: Angle in degrees (for display)
-        radians: Angle in radians (for calculation)
-        z: Complex representation on unit circle
-        orb_default: Default orb tolerance in degrees
+    Attributes
+    ----------
+    name : str
+        Human-readable name (e.g., 'conjunction', 'trine')
+    degrees : float
+        Aspect angle in degrees (for display)
+    radians : float
+        Aspect angle in radians (for calculation)
+    z : complex
+        Complex representation on unit circle: e^(iθ)
+    orb_default : float
+        Default orb tolerance in degrees
     """
     name: str
     degrees: float
@@ -71,7 +77,22 @@ class Aspect:
 
     @classmethod
     def from_degrees(cls, name: str, degrees: float, orb: float = 8.0) -> Aspect:
-        """Create an aspect from degrees."""
+        """Create an aspect from degrees
+
+        Parameters
+        ----------
+        name : str
+            Aspect name
+        degrees : float
+            Aspect angle in degrees
+        orb : float, optional
+            Default orb tolerance in degrees (default: 8.0)
+
+        Returns
+        -------
+        Aspect
+            Aspect object with computed complex representation
+        """
         radians = math.radians(degrees)
         z = complex(math.cos(radians), math.sin(radians))
         return cls(name=name, degrees=degrees, radians=radians, z=z, orb_default=orb)
@@ -98,14 +119,23 @@ ASPECTS_EXTENDED = {
 
 @dataclass
 class ZodiacPoint:
-    """A point on the zodiac circle represented as a complex number.
+    """A point on the zodiac circle represented as a complex number
 
     The point is always on the unit circle: |z| = 1.
 
-    Attributes:
-        z: Complex number on unit circle
-        radians: Angle in radians [0, 2π)
-        degrees: Angle in degrees [0, 360) - computed property
+    Attributes
+    ----------
+    z : complex
+        Complex number on unit circle: e^(iθ)
+    radians : float
+        Angle in radians [0, 2π)
+    degrees : float
+        Angle in degrees [0, 360) - computed property
+
+    Notes
+    -----
+    Complex representation eliminates discontinuity at 0°/360° boundary
+    and enables ML-friendly feature encoding as (cos θ, sin θ).
     """
     z: complex
     radians: float
@@ -117,13 +147,17 @@ class ZodiacPoint:
 
     @classmethod
     def from_degrees(cls, degrees: float) -> ZodiacPoint:
-        """Create a ZodiacPoint from degrees.
+        """Create a ZodiacPoint from degrees
 
-        Args:
-            degrees: Longitude in degrees (0-360, or any value - will be normalized)
+        Parameters
+        ----------
+        degrees : float
+            Longitude in degrees (any value - will be normalized to [0, 360))
 
-        Returns:
-            ZodiacPoint on unit circle
+        Returns
+        -------
+        ZodiacPoint
+            Point on unit circle
         """
         # Normalize to [0, 360)
         degrees = degrees % 360
@@ -133,13 +167,17 @@ class ZodiacPoint:
 
     @classmethod
     def from_radians(cls, radians: float) -> ZodiacPoint:
-        """Create a ZodiacPoint from radians.
+        """Create a ZodiacPoint from radians
 
-        Args:
-            radians: Longitude in radians (will be normalized to [0, 2π))
+        Parameters
+        ----------
+        radians : float
+            Longitude in radians (will be normalized to [0, 2π))
 
-        Returns:
-            ZodiacPoint on unit circle
+        Returns
+        -------
+        ZodiacPoint
+            Point on unit circle
         """
         # Normalize to [0, 2π)
         radians = radians % (2 * math.pi)
@@ -148,15 +186,19 @@ class ZodiacPoint:
 
     @classmethod
     def from_complex(cls, z: complex) -> ZodiacPoint:
-        """Create a ZodiacPoint from a complex number.
+        """Create a ZodiacPoint from a complex number
 
         The complex number will be normalized to the unit circle.
 
-        Args:
-            z: Complex number (will be normalized to |z| = 1)
+        Parameters
+        ----------
+        z : complex
+            Complex number (will be normalized to |z| = 1)
 
-        Returns:
-            ZodiacPoint on unit circle
+        Returns
+        -------
+        ZodiacPoint
+            Point on unit circle
         """
         radians = math.atan2(z.imag, z.real)
         if radians < 0:
@@ -165,17 +207,35 @@ class ZodiacPoint:
 
     @property
     def degrees(self) -> float:
-        """Get longitude in degrees [0, 360)."""
+        """Get longitude in degrees [0, 360)
+
+        Returns
+        -------
+        float
+            Longitude in degrees
+        """
         return math.degrees(self.radians)
 
     @property
     def real(self) -> float:
-        """Real part (cosine of angle)."""
+        """Real part (cosine of angle)
+
+        Returns
+        -------
+        float
+            cos(θ)
+        """
         return self.z.real
 
     @property
     def imag(self) -> float:
-        """Imaginary part (sine of angle)."""
+        """Imaginary part (sine of angle)
+
+        Returns
+        -------
+        float
+            sin(θ)
+        """
         return self.z.imag
 
     def __truediv__(self, other: ZodiacPoint) -> CycleRatio:
@@ -190,22 +250,28 @@ class ZodiacPoint:
         return f"ZodiacPoint({self.degrees:.2f}°)"
 
     def to_ml_features(self) -> tuple[float, float]:
-        """Convert to ML-friendly features (cos, sin).
+        """Convert to ML-friendly features (cos, sin)
 
-        Returns:
-            Tuple of (cos(θ), sin(θ)) - linear features without discontinuity
+        Returns
+        -------
+        tuple of float
+            (cos(θ), sin(θ)) - linear features without discontinuity
         """
         return (self.z.real, self.z.imag)
 
     def distance_to(self, other: ZodiacPoint) -> float:
-        """Angular distance to another point in radians [0, π].
+        """Angular distance to another point in radians [0, π]
 
         This is the shortest arc distance on the circle.
 
-        Args:
-            other: Another ZodiacPoint
+        Parameters
+        ----------
+        other : ZodiacPoint
+            Another ZodiacPoint
 
-        Returns:
+        Returns
+        -------
+        float
             Distance in radians [0, π]
         """
         # Use the angle of the ratio
@@ -216,18 +282,28 @@ class ZodiacPoint:
 
 @dataclass
 class CycleRatio:
-    """The ratio between two zodiac points, representing a cycle phase.
+    """The ratio between two zodiac points, representing a cycle phase
 
     For a cycle between body1 (faster) and body2 (slower), the ratio is:
         z_ratio = z_body1 / z_body2 = e^(i(θ₁ - θ₂))
 
     This directly encodes the angular separation and cycle phase.
 
-    Attributes:
-        point1: First zodiac point (typically faster body)
-        point2: Second zodiac point (typically slower body)
-        z: Complex ratio on unit circle
-        radians: Phase angle in radians (-π, π]
+    Attributes
+    ----------
+    point1 : ZodiacPoint
+        First zodiac point (typically faster body)
+    point2 : ZodiacPoint
+        Second zodiac point (typically slower body)
+    z : complex
+        Complex ratio on unit circle
+    radians : float
+        Phase angle in radians (-π, π]
+
+    Notes
+    -----
+    Complex division makes cycle analysis algebraic: separations become
+    phase differences, aspects become roots of unity.
     """
     point1: ZodiacPoint
     point2: ZodiacPoint
@@ -245,12 +321,16 @@ class CycleRatio:
 
     @classmethod
     def from_degrees(cls, separation_degrees: float) -> CycleRatio:
-        """Create a CycleRatio directly from angular separation.
+        """Create a CycleRatio directly from angular separation
 
-        Args:
-            separation_degrees: Angular separation in degrees
+        Parameters
+        ----------
+        separation_degrees : float
+            Angular separation in degrees
 
-        Returns:
+        Returns
+        -------
+        CycleRatio
             CycleRatio representing the separation
         """
         radians = math.radians(separation_degrees)
@@ -262,12 +342,16 @@ class CycleRatio:
 
     @classmethod
     def from_radians(cls, separation_radians: float) -> CycleRatio:
-        """Create a CycleRatio directly from angular separation in radians.
+        """Create a CycleRatio directly from angular separation in radians
 
-        Args:
-            separation_radians: Angular separation in radians
+        Parameters
+        ----------
+        separation_radians : float
+            Angular separation in radians
 
-        Returns:
+        Returns
+        -------
+        CycleRatio
             CycleRatio representing the separation
         """
         z = complex(math.cos(separation_radians), math.sin(separation_radians))
@@ -323,13 +407,22 @@ class CycleRatio:
         return self.separation_degrees / 360
 
     def distance_to_aspect(self, aspect: Union[Aspect, str]) -> float:
-        """Distance to a specific aspect in radians.
+        """Distance to a specific aspect in radians
 
-        Args:
-            aspect: Aspect object or name (e.g., 'conjunction', 'trine')
+        Parameters
+        ----------
+        aspect : Aspect or str
+            Aspect object or name (e.g., 'conjunction', 'trine')
 
-        Returns:
+        Returns
+        -------
+        float
             Signed distance in radians. Negative = approaching, positive = separating.
+
+        Raises
+        ------
+        ValueError
+            If aspect name is not recognized
         """
         if isinstance(aspect, str):
             aspect_name = aspect
@@ -343,13 +436,18 @@ class CycleRatio:
         return math.atan2(ratio.imag, ratio.real)
 
     def is_in_aspect(self, aspect: Union[Aspect, str], orb: Optional[float] = None) -> bool:
-        """Check if currently in aspect within orb.
+        """Check if currently in aspect within orb
 
-        Args:
-            aspect: Aspect object or name
-            orb: Orb tolerance in degrees (uses default if None)
+        Parameters
+        ----------
+        aspect : Aspect or str
+            Aspect object or name
+        orb : float, optional
+            Orb tolerance in degrees (uses default if None)
 
-        Returns:
+        Returns
+        -------
+        bool
             True if within orb of the aspect
         """
         if isinstance(aspect, str):
@@ -368,9 +466,11 @@ class CycleRatio:
 
     @property
     def nearest_aspect(self) -> tuple[Aspect, float]:
-        """Find the nearest major aspect.
+        """Find the nearest major aspect
 
-        Returns:
+        Returns
+        -------
+        tuple of (Aspect, float)
             Tuple of (Aspect, signed_distance_radians)
         """
         nearest = None
@@ -391,9 +491,11 @@ class CycleRatio:
         return aspect.name
 
     def to_ml_features(self) -> dict[str, float]:
-        """Convert to ML-friendly features.
+        """Convert to ML-friendly features
 
-        Returns:
+        Returns
+        -------
+        dict of {str: float}
             Dict with features suitable for ML models:
             - cos_phase: Real part of z (cos of separation)
             - sin_phase: Imaginary part of z (sin of separation)
@@ -423,15 +525,19 @@ class CycleRatio:
 # =============================================================================
 
 def circular_mean(points: Sequence[ZodiacPoint]) -> ZodiacPoint:
-    """Compute the circular mean of multiple zodiac points.
+    """Compute the circular mean of multiple zodiac points
 
     The circular mean is the direction of the resultant vector
     when all unit vectors are summed.
 
-    Args:
-        points: Sequence of ZodiacPoint objects
+    Parameters
+    ----------
+    points : Sequence of ZodiacPoint
+        Sequence of ZodiacPoint objects
 
-    Returns:
+    Returns
+    -------
+    ZodiacPoint
         ZodiacPoint representing the circular mean
     """
     if not points:
@@ -442,15 +548,19 @@ def circular_mean(points: Sequence[ZodiacPoint]) -> ZodiacPoint:
 
 
 def circular_std(points: Sequence[ZodiacPoint]) -> float:
-    """Compute the circular standard deviation.
+    """Compute the circular standard deviation
 
     Based on the resultant length R = |Σzᵢ|/n.
     Circular std = √(-2·ln(R))
 
-    Args:
-        points: Sequence of ZodiacPoint objects
+    Parameters
+    ----------
+    points : Sequence of ZodiacPoint
+        Sequence of ZodiacPoint objects
 
-    Returns:
+    Returns
+    -------
+    float
         Circular standard deviation in radians
     """
     if not points:
@@ -472,16 +582,21 @@ def phase_locking_value(
     series1: Sequence[ZodiacPoint],
     series2: Sequence[ZodiacPoint]
 ) -> float:
-    """Compute Phase Locking Value (PLV) between two series.
+    """Compute Phase Locking Value (PLV) between two series
 
     PLV measures phase synchronization:
     PLV = |⟨e^(i(φ₁-φ₂))⟩| = |mean(z₁/z₂)|
 
-    Args:
-        series1: First time series of ZodiacPoints
-        series2: Second time series of ZodiacPoints
+    Parameters
+    ----------
+    series1 : Sequence of ZodiacPoint
+        First time series of ZodiacPoints
+    series2 : Sequence of ZodiacPoint
+        Second time series of ZodiacPoints
 
-    Returns:
+    Returns
+    -------
+    float
         PLV in range [0, 1]. 0 = no sync, 1 = perfect sync
     """
     if len(series1) != len(series2):
@@ -502,12 +617,16 @@ def phase_locking_value(
 # =============================================================================
 
 def degrees_to_complex(degrees: np.ndarray) -> np.ndarray:
-    """Convert array of degrees to complex numbers on unit circle.
+    """Convert array of degrees to complex numbers on unit circle
 
-    Args:
-        degrees: NumPy array of longitudes in degrees
+    Parameters
+    ----------
+    degrees : numpy.ndarray
+        NumPy array of longitudes in degrees
 
-    Returns:
+    Returns
+    -------
+    numpy.ndarray
         NumPy array of complex numbers
     """
     radians = np.deg2rad(degrees)
@@ -515,36 +634,48 @@ def degrees_to_complex(degrees: np.ndarray) -> np.ndarray:
 
 
 def radians_to_complex(radians: np.ndarray) -> np.ndarray:
-    """Convert array of radians to complex numbers on unit circle.
+    """Convert array of radians to complex numbers on unit circle
 
-    Args:
-        radians: NumPy array of angles in radians
+    Parameters
+    ----------
+    radians : numpy.ndarray
+        NumPy array of angles in radians
 
-    Returns:
+    Returns
+    -------
+    numpy.ndarray
         NumPy array of complex numbers
     """
     return np.exp(1j * radians)
 
 
 def complex_to_degrees(z: np.ndarray) -> np.ndarray:
-    """Convert complex numbers to degrees [0, 360).
+    """Convert complex numbers to degrees [0, 360)
 
-    Args:
-        z: NumPy array of complex numbers
+    Parameters
+    ----------
+    z : numpy.ndarray
+        NumPy array of complex numbers
 
-    Returns:
+    Returns
+    -------
+    numpy.ndarray
         NumPy array of degrees
     """
     return np.rad2deg(np.angle(z)) % 360
 
 
 def complex_to_radians(z: np.ndarray) -> np.ndarray:
-    """Convert complex numbers to radians [0, 2π).
+    """Convert complex numbers to radians [0, 2π)
 
-    Args:
-        z: NumPy array of complex numbers
+    Parameters
+    ----------
+    z : numpy.ndarray
+        NumPy array of complex numbers
 
-    Returns:
+    Returns
+    -------
+    numpy.ndarray
         NumPy array of radians
     """
     angles = np.angle(z)
@@ -555,13 +686,18 @@ def cycle_ratio_vectorized(
     body1_degrees: np.ndarray,
     body2_degrees: np.ndarray
 ) -> np.ndarray:
-    """Compute cycle ratios for arrays of positions.
+    """Compute cycle ratios for arrays of positions
 
-    Args:
-        body1_degrees: Array of body 1 longitudes in degrees
-        body2_degrees: Array of body 2 longitudes in degrees
+    Parameters
+    ----------
+    body1_degrees : numpy.ndarray
+        Array of body 1 longitudes in degrees
+    body2_degrees : numpy.ndarray
+        Array of body 2 longitudes in degrees
 
-    Returns:
+    Returns
+    -------
+    numpy.ndarray
         Array of complex cycle ratios
     """
     z1 = degrees_to_complex(body1_degrees)
@@ -573,13 +709,18 @@ def nearest_aspect_vectorized(
     z_ratios: np.ndarray,
     aspects: dict[str, Aspect] = None
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Find nearest aspect for array of cycle ratios.
+    """Find nearest aspect for array of cycle ratios
 
-    Args:
-        z_ratios: Array of complex cycle ratios
-        aspects: Dict of aspects to check (default: ASPECTS)
+    Parameters
+    ----------
+    z_ratios : numpy.ndarray
+        Array of complex cycle ratios
+    aspects : dict of {str: Aspect}, optional
+        Dict of aspects to check (default: ASPECTS)
 
-    Returns:
+    Returns
+    -------
+    tuple of (numpy.ndarray, numpy.ndarray, numpy.ndarray)
         Tuple of (aspect_indices, aspect_angles_deg, distances_rad)
     """
     if aspects is None:
@@ -603,12 +744,16 @@ def nearest_aspect_vectorized(
 
 
 def to_ml_features_vectorized(z_ratios: np.ndarray) -> np.ndarray:
-    """Convert array of cycle ratios to ML features.
+    """Convert array of cycle ratios to ML features
 
-    Args:
-        z_ratios: Array of complex cycle ratios
+    Parameters
+    ----------
+    z_ratios : numpy.ndarray
+        Array of complex cycle ratios
 
-    Returns:
+    Returns
+    -------
+    numpy.ndarray
         Array of shape (n, 6) with columns:
         [cos_phase, sin_phase, cycle_progress, is_waxing, dist_conj, dist_opp]
     """
