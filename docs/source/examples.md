@@ -88,7 +88,7 @@ class Transit:
     exact: bool = False
 
 def search_transits(natal_date, transit_date, planets_to_follow=None):
-    """Search for today's transits on a natal chart"""
+    """Search for today's transits to natal positions"""
     
     if planets_to_follow is None:
         planets_to_follow = [0, 1, 2, 3, 4, 5, 6]  # Sun to Saturn

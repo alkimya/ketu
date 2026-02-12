@@ -1,256 +1,139 @@
 # Migration Guide
 
-This guide helps you migrate from Ketu v0.2.x (pyswisseph-based) to v0.3.0 (pure NumPy).
+This guide helps you migrate from Ketu v0.4.0 to v1.0.0.
+
+**This is a MAJOR version bump with breaking changes.** See [UPGRADING.md](../../UPGRADING.md) for detailed migration instructions.
 
 ## What Changed
 
-### Dependencies
+### Removed: Export Modules
 
-**Before (v0.2.x):**
+Ketu 1.0 is a pure calculation library. Visualization and calendar export features have been removed:
 
+- **Removed modules**: `ketu.export.chart`, `ketu.export.icalendar`
+- **Removed functions**: `draw_zodiacal_chart()`, `export_lunations_to_ical()`, `export_aspects_to_ical()`, `export_transits_to_ical()`
+- **Why**: Ketu focuses on numerical calculations. Visualization belongs in application layers (GUI, web dashboards, etc.)
+
+**Migration**: If you need these features, pin to `ketu==0.4.0` or implement visualization in your application layer using Ketu's calculation results.
+
+### Removed: Pandas Dependency
+
+- `generate_aspect_timeline()` now returns NumPy structured array (was DataFrame)
+- `AspectTimeline.to_pandas()` removed
+- **Migration**: Use `import pandas as pd; df = pd.DataFrame(timeline)` for manual conversion
+
+### Renamed: Velocity Functions (Breaking)
+
+- `vlong()` → `long_velocity()`
+- `vlat()` → `lat_velocity()`
+- `vdist_au()` → `dist_velocity_au()`
+- **Why**: Explicit names prevent confusion. The old "v" prefix was ambiguous.
+
+**Migration**: Use find-and-replace in your codebase:
 ```bash
-pip install ketu  # Installed pyswisseph + numpy
+sed -i 's/ketu\.vlong(/ketu.long_velocity(/g' *.py
+sed -i 's/ketu\.vlat(/ketu.lat_velocity(/g' *.py
+sed -i 's/ketu\.vdist_au(/ketu.dist_velocity_au(/g' *.py
 ```
 
-**After (v0.3.0):**
+### Changed: Public API Surface
 
-```bash
-pip install ketu  # Only numpy required
-pip install ketu[chart]  # With visualization
-pip install ketu[all]  # With all optional features
-```
+- `ketu.__init__.py` exports only metadata + core constants
+- Functions accessed via submodule imports: `from ketu.calculations import long`
+- `ketu.__all__` explicitly lists public API
 
-### Removed Dependency
+**Migration**: Most users won't notice this change. If you were importing from internal modules, switch to public API imports.
 
-- **pyswisseph**: Completely removed - no more binary dependencies
-- **Platform issues**: Fixed - pure Python + NumPy works everywhere
+## Correctness Fixes
 
-### New Optional Dependencies
+**IMPORTANT: These fixes change calculation results. Recompute cached 0.4.0 results.**
 
-- **matplotlib**: For chart visualization (`ketu[chart]`)
-- **icalendar**: For calendar export (`ketu[icalendar]`)
+### Fixed Issues
 
-## API Compatibility
+1. **Cache operator precedence bug**: `use_cache=False` was ignored due to missing parentheses
+2. **Aspect vectorization non-determinism**: `calculate_aspects_vectorized()` now returns consistent results
+3. **Moon velocity wrapping**: Correct velocity at 360°/0° boundary (was showing ±360° spikes)
 
-### High-Level API (Unchanged)
+**Impact**: If you cached results from 0.4.0, recompute them with 1.0.0 for correctness.
 
-The main API remains fully compatible:
+## New Features
 
-```python
-# This code works identically in v0.2.x and v0.3.0
-from datetime import datetime
-from zoneinfo import ZoneInfo
-import ketu
-
-dtime = datetime(2020, 12, 21, 19, 20, tzinfo=ZoneInfo("Europe/Paris"))
-jday = ketu.utc_to_julian(dtime)
-
-# All these functions work the same
-ketu.print_positions(jday)
-ketu.print_aspects(jday)
-positions = ketu.positions(jday)
-aspects = ketu.calculate_aspects(jday)
-```
-
-### New Functions
-
-v0.3.0 adds new features:
-
-```python
-# Aspect windows
-windows = ketu.find_aspect_window(jd_start, jd_end, body1=0, body2=1, aspect=0)
-
-# Transits
-natal_pos = ketu.get_natal_positions(natal_jd)
-transits = ketu.compare_dates_transits(natal_pos, transit_jd)
-
-# Chart visualization (requires matplotlib)
-ketu.draw_zodiacal_chart(jday, output_file="chart.svg")
-
-# iCalendar export (requires icalendar)
-ketu.export_lunations_to_ical(jd_start, jd_end, "lunations.ics")
-```
-
-## Accuracy Differences
-
-### Swiss Ephemeris (v0.2.x)
-
-- Accuracy: ±0.001° (arc-second precision)
-- Based on JPL ephemeris
-- Full perturbation theory
-
-### Pure NumPy (v0.3.0)
-
-- Accuracy: ±0.1° for inner planets, ±0.5° for outer planets
-- Based on VSOP87/simplified perturbations
-- More than sufficient for astrological purposes
-
-### When to Care
-
-You likely **don't need** Swiss Ephemeris precision if:
-
-- You're doing astrology (orbs are typically 1-12°)
-- You're working with aspects (orb tolerance >> 0.5°)
-- You need aspects exact to the minute (v0.3.0 handles this)
-
-You **might prefer** Swiss Ephemeris if:
-
-- You need arc-second precision for scientific astronomy
-- You're computing asteroid positions (not yet supported in v0.3.0)
-- You need positions for dates outside 1800-2200 CE
-
-## Performance Comparison
-
-### Time Series (365 days)
-
-- v0.2.x: ~3.2 seconds
-- v0.3.0: ~15 milliseconds
-- **Speedup: 208x**
-
-### Aspect Calculations
-
-- v0.2.x: ~120 milliseconds
-- v0.3.0: ~8 milliseconds
-- **Speedup: 14.55x**
+- **Type hints everywhere**: mypy strict mode compliance
+- **NumPy-style docstrings**: Examples section in all public functions
+- **Vectorized ResonanceField**: 10-100x faster `_get_trace()` using batch calculations
+- **Standardized error messages**: All `ValueError` messages include received value + valid options
+- **Numerical precision guarantees**: ±1e-6° for angular separation (documented)
 
 ## Migration Steps
 
-### Step 1: Update Package
+### Step 1: Review Breaking Changes
+
+Read [UPGRADING.md](../../UPGRADING.md) for detailed migration instructions.
+
+### Step 2: Update Package
 
 ```bash
 pip install --upgrade ketu
 ```
 
-### Step 2: Remove pyswisseph (Optional)
+### Step 3: Update Your Code
+
+**Replace velocity function calls:**
+
+```python
+# Before (v0.4.0)
+v = ketu.vlong(jday, body_id)
+
+# After (v1.0.0)
+v = ketu.long_velocity(jday, body_id)
+```
+
+**Replace pandas conversions:**
+
+```python
+# Before (v0.4.0)
+timeline = ketu.generate_aspect_timeline(...)
+df = timeline.to_pandas()
+
+# After (v1.0.0)
+import pandas as pd
+timeline = ketu.generate_aspect_timeline(...)
+df = pd.DataFrame(timeline)
+```
+
+**Remove chart/icalendar calls:**
+
+```python
+# Before (v0.4.0) - REMOVED
+ketu.draw_zodiacal_chart(jday, output_file="chart.svg")
+ketu.export_lunations_to_ical(start, end, "lunations.ics")
+
+# After (v1.0.0) - No replacement
+# Implement visualization in your application layer using ketu calculation results
+```
+
+### Step 4: Test Your Code
+
+Run your test suite to catch any remaining issues.
+
+### Step 5: Recompute Cached Results
+
+If you cached calculation results from 0.4.0, recompute them for correctness.
+
+## Rollback
+
+If you need to rollback to v0.4.0:
 
 ```bash
-pip uninstall pyswisseph
+pip install ketu==0.4.0
 ```
 
-### Step 3: Test Your Code
-
-Run your existing code - it should work without changes:
-
-```python
-# Your existing code
-import ketu
-
-jday = ketu.utc_to_julian(datetime.now())
-ketu.print_positions(jday)
-```
-
-### Step 4: Add Optional Features
-
-If you want new features:
-
-```bash
-# For chart visualization
-pip install ketu[chart]
-
-# For iCalendar export
-pip install ketu[icalendar]
-
-# For everything
-pip install ketu[all]
-```
-
-## Breaking Changes
-
-### None for Public API
-
-The public API (`ketu.*`) has **no breaking changes**.
-
-### Internal Changes
-
-If you were importing from internal modules:
-
-**Before:**
-
-```python
-# Don't do this - internal API
-from ketu.ketu import body_properties
-```
-
-**After:**
-
-```python
-# Use public API instead
-from ketu import body_properties
-```
-
-## Common Issues
-
-### Import Errors
-
-**Problem:**
-
-```python
-ImportError: No module named 'swisseph'
-```
-
-**Solution:**
-This is expected - pyswisseph is no longer used. Your code should still work.
-
-### Accuracy Concerns
-
-**Problem:** "Positions are slightly different from v0.2.x"
-
-**Solution:** This is expected. Differences are typically < 0.5° and negligible for astrology.
-
-### Missing Features
-
-**Problem:** "Can't find function X"
-
-**Solution:** Check if it's a new feature requiring optional dependencies:
-
-```bash
-pip install ketu[all]
-```
-
-## Validation
-
-### Compare Results
-
-To verify migration:
-
-```python
-# Save results from v0.2.x
-import json
-import ketu
-
-jday = ketu.utc_to_julian(datetime(2025, 1, 1))
-old_positions = ketu.positions(jday)
-with open('old_positions.json', 'w') as f:
-    json.dump(old_positions.tolist(), f)
-```
-
-After upgrading:
-
-```python
-# Compare with v0.3.0
-new_positions = ketu.positions(jday)
-with open('old_positions.json', 'r') as f:
-    old_positions = np.array(json.load(f))
-
-diff = np.abs(new_positions - old_positions)
-print(f"Max difference: {diff.max():.4f}°")  # Should be < 0.5°
-```
+Note: v0.4.x will not receive further updates. v1.0.0 is the recommended version.
 
 ## Getting Help
 
 If you encounter issues:
 
-1. Check the [documentation](https://ketu.readthedocs.io)
-2. Review [examples](examples.md)
+1. Check [UPGRADING.md](../../UPGRADING.md) for detailed migration guide
+2. Review [CHANGELOG.md](../../CHANGELOG.md) for complete list of changes
 3. Open an [issue](https://github.com/alkimya/ketu/issues)
-
-## Rollback
-
-If you need to rollback to v0.2.x:
-
-```bash
-pip install ketu==0.2.1
-pip install pyswisseph
-```
-
-Note: v0.2.x will not receive further updates.

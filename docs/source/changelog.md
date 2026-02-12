@@ -22,7 +22,6 @@ and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **Pure NumPy**: Removed dependency on `pyswisseph` binary.
 - **New Modules**: `ketu.ephemeris`, `ketu.cycles`.
 - **Performance**: Significant speedups in time series generation.
-- **Optional Dependencies**: Charting and iCalendar support are now extras.
 
 ## [0.2.1] - 2025-10-27
 

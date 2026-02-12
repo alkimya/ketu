@@ -34,23 +34,7 @@ Calculs d'aspects :
 python examples/02_aspects.py
 ```
 
-### 03 - Thème natal complet
-
-**Fichier**: [`03_natal_chart.py`](03_natal_chart.py)
-
-Génération de thème natal :
-
-- Positions de toutes les planètes
-- Signes zodiacaux et degrés
-- Symboles de rétrogradation (℞)
-- Aspects majeurs groupés par type
-- Marqueurs d'orbe serrés (●/○)
-
-```bash
-python examples/03_natal_chart.py
-```
-
-### 04 - Séries temporelles
+### 03 - Séries temporelles
 
 **Fichier**: [`04_time_series.py`](04_time_series.py)
 
@@ -113,13 +97,6 @@ detect_sign_changes(start_date, 365, 0)  # Soleil sur 1 an
 ```python
 # Voir exemple 02 - Aspects
 tight_aspects = [asp for asp in aspects if abs(asp[3]) < 1]
-```
-
-### Thème natal personnalisé
-
-```python
-# Voir exemple 03 - Thème natal
-theme_natal(1990, 5, 15, 14, 30, "Europe/Paris")
 ```
 
 ## 💡 Conseils

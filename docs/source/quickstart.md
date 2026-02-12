@@ -113,15 +113,15 @@ for aspect in aspects_array:
     print(f"{name1} - {name2}: {asp_name} ({orb:.2f}°)")
 ```
 
-### Complete Example: Natal Chart
+### Complete Example: Natal Positions
 
 ```python
 import ketu
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
-def natal_chart(year, month, day, hour, minute, timezone_str):
-    """Calculate a simple natal chart"""
+def natal_positions(year, month, day, hour, minute, timezone_str):
+    """Calculate planetary positions for a birth moment"""
 
     # Create the date
     tz = ZoneInfo(timezone_str)
@@ -129,7 +129,7 @@ def natal_chart(year, month, day, hour, minute, timezone_str):
     jday = ketu.utc_to_julian(dt)
 
     print(f"\n{'='*50}")
-    print(f"NATAL CHART - {dt.strftime('%d/%m/%Y %H:%M')} {timezone_str}")
+    print(f"NATAL POSITIONS - {dt.strftime('%d/%m/%Y %H:%M')} {timezone_str}")
     print(f"{'='*50}\n")
 
     # Planetary positions
@@ -166,7 +166,7 @@ def natal_chart(year, month, day, hour, minute, timezone_str):
             print(f"{name1:8} {asp_name:12} {name2:8} ({orb:+.2f}°)")
 
 # Usage
-natal_chart(1990, 5, 15, 14, 30, "Europe/Paris")
+natal_positions(1990, 5, 15, 14, 30, "Europe/Paris")
 ```
 
 ### Tips and Tricks

@@ -6,33 +6,23 @@
 
 > Vous préférez le français ? [Consultez README.md](fr/README.md)
 
-**Ketu** is a lightweight Python library for computing the positions of astronomical bodies (Sun, Moon, planets, and the mean Node a.k.a. Rahu) and generating calendars driven by astrological aspects.
+**Ketu** is a pure NumPy library for astronomical calculations focused on planetary positions, aspects, and cycle analysis. With no dependencies beyond NumPy, Ketu provides fast, accurate calculations suitable for astrology, biodynamic calendars, and machine learning applications.
 
 This library was originally designed to generate biodynamic calendars and time series based on astrological aspects. It can be used as a basis for building astrology software.
 
 ![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
 
-## 🚀 What's New in v0.4.0
+## What's New in v1.0.0
 
-- **Expanded Aspect List** - Support for 14 aspects including Harmonics H5, H9, and H10 (Quintile, Decile, Novile, etc.)
-- **Complex Number Engine** - Vectorized cycle analysis using complex math ($e^{i\theta}$) for superior precision
-- **Machine Learning Ready** - Direct feature generation (`cos_phase`, `sin_phase`) for AI models
-- **Ephemeris Cache** - Pre-compute monthly positions for O(1) lookups (1000x speedup!)
+**Major release with breaking changes. See [UPGRADING.md](UPGRADING.md) and [CHANGELOG.md](CHANGELOG.md) for migration guide.**
 
-## What's New in v0.3.0
-
-- **Pure NumPy implementation** - No more external binary dependencies!
-- **Removed `pyswisseph` dependency** - Fully self-contained astronomical calculations
-- **Modular architecture** - New `ketu.ephemeris` package for transparent calculations
-- **Massive performance gains** - 208x faster for time series, 14.55x faster for aspects
-- **New features:**
-  - **Aspect windows** - Find exact aspect timing (beginning, exact, end)
-  - **Transit calculations** - Compare natal positions with transits
-  - **Zodiacal charts** - Beautiful matplotlib visualization (optional)
-  - **iCalendar export** - Export aspects and lunations to .ics format (optional)
-  - **Vectorized calculations** - Batch processing for time series
-- **Better accuracy** - Custom implementations for planetary positions
-- **Optional dependencies** - Install only what you need
+- **Pure calculation library** - NumPy-only dependency, no visualization or export modules
+- **Correctness fixes** - Cache operator precedence bug, aspect vectorization non-determinism, Moon velocity wrapping
+- **Explicit API** - Velocity functions renamed (`vlong()` → `long_velocity()`), pandas dependency removed
+- **Type hints everywhere** - mypy strict mode compliance
+- **Comprehensive docstrings** - NumPy-style documentation with Examples sections
+- **91% test coverage** - 250 tests across all modules
+- **Performance improvements** - Vectorized batch ephemeris calculations, optimized resonance field
 
 ## Features
 
@@ -45,25 +35,14 @@ This library was originally designed to generate biodynamic calendars and time s
 - **Orb system** based on Abu Ma'shar (787-886) and Al-Biruni (973-1050)
 - **Interactive CLI** for a non-programmatic workflow
 - **Python API** that fits into your own tooling
-- **Zodiacal chart visualization** (optional matplotlib integration)
-- **iCalendar export** (optional icalendar integration)
+- **Pure NumPy** - Single dependency for maximum portability and performance
 
 ## Installation
 
 ### From PyPI (recommended)
 
 ```bash
-# Basic installation
 pip install ketu
-
-# With chart visualization support
-pip install ketu[chart]
-
-# With iCalendar export support
-pip install ketu[icalendar]
-
-# With all optional features
-pip install ketu[all]
 ```
 
 ### From source
@@ -167,7 +146,7 @@ for window in windows:
 ```python
 import ketu
 
-# Your natal chart
+# Natal positions
 natal_date = ketu.utc_to_julian(datetime(1990, 1, 15, 12, 0, tzinfo=ZoneInfo("UTC")))
 natal_positions = ketu.get_natal_positions(natal_date)
 
@@ -177,37 +156,6 @@ transits = ketu.compare_dates_transits(natal_positions, transit_date)
 
 for transit in transits:
     print(f"{transit.transiting_body} {transit.aspect} natal {transit.natal_body}")
-```
-
-### Draw zodiacal chart
-
-```python
-import ketu
-
-# Requires: pip install ketu[chart]
-jday = ketu.utc_to_julian(datetime(2025, 11, 22, 12, 0, tzinfo=ZoneInfo("UTC")))
-
-ketu.draw_zodiacal_chart(
-    jday,
-    title="Birth Chart",
-    output_file="chart.svg"
-)
-```
-
-### Export to iCalendar
-
-```python
-import ketu
-
-# Requires: pip install ketu[icalendar]
-start = ketu.utc_to_julian(datetime(2025, 1, 1, tzinfo=ZoneInfo("UTC")))
-end = ketu.utc_to_julian(datetime(2025, 12, 31, tzinfo=ZoneInfo("UTC")))
-
-# Export lunations (New Moon and Full Moon)
-ketu.export_lunations_to_ical(start, end, "lunations_2025.ics")
-
-# Export all aspects
-ketu.export_aspects_to_ical(start, end, "aspects_2025.ics")
 ```
 
 ### Ephemeris Cache (v0.4.0)
@@ -277,10 +225,7 @@ Included sections:
 - Python 3.10 or higher
 - `numpy` ≥ 1.20.0 — numerical routines and arrays
 
-**Optional dependencies:**
-
-- `matplotlib` ≥ 3.5.0 — for chart visualization (`pip install ketu[chart]`)
-- `icalendar` ≥ 5.0.0 — for calendar export (`pip install ketu[icalendar]`)
+**That's it!** Ketu has no other dependencies.
 
 ## Supported bodies
 
@@ -342,9 +287,7 @@ ketu/
 ├── display.py           # CLI and display utilities
 ├── aspect_windows.py    # Aspect timing calculations
 ├── transits.py          # Transit calculations
-├── chart.py             # Zodiacal chart visualization
-├── icalendar_export.py  # iCalendar export utilities
-├── cache/               # High-performance ephemeris cache (v0.4.0)
+├── cache/               # High-performance ephemeris cache
 │   ├── __init__.py
 │   └── ephemeris_cache.py  # Monthly pre-computed positions
 └── ephemeris/           # Astronomical calculations
@@ -361,9 +304,8 @@ ketu/
 - [x] Search for exact aspects between two dates
 - [x] Aspect windows and timing
 - [x] Transit calculations
-- [x] Zodiacal chart visualization
-- [x] iCalendar export
-- [ ] Generation of aspect calendars
+- [x] High-performance ephemeris cache
+- [x] Complex number engine for cycle analysis
 - [ ] API for progressions and directions
 - [ ] Support for more celestial bodies (asteroids, etc.)
 - [ ] House systems

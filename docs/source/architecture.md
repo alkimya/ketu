@@ -12,8 +12,9 @@ ketu/
 ├── display.py           # CLI and display utilities
 ├── aspect_windows.py    # Aspect timing calculations
 ├── transits.py          # Transit calculations
-├── chart.py             # Zodiacal chart visualization
-├── icalendar_export.py  # iCalendar export utilities
+├── cache/               # High-performance ephemeris cache
+│   ├── __init__.py
+│   └── ephemeris_cache.py  # Monthly pre-computed positions
 └── ephemeris/           # Low-level astronomical calculations
     ├── __init__.py      # Ephemeris package API
     ├── time.py          # Time conversions and equation of time
@@ -107,7 +108,7 @@ Uses binary search and gradient descent for precision.
 
 ### Transits (transits.py)
 
-Natal chart and transit calculations:
+Natal position and transit calculations:
 
 - **NatalPosition** - Stores natal planet position
 - **TransitAspect** - Describes transit-to-natal aspect
@@ -115,27 +116,15 @@ Natal chart and transit calculations:
 - `find_transits_to_position()` - Find transits to a point
 - `compare_dates_transits()` - Full transit comparison
 
-### Chart Visualization (chart.py)
+### Ephemeris Cache (cache/)
 
-Matplotlib-based zodiacal charts:
+High-performance position lookups:
 
-- Circular zodiac with 12 signs
-- Planet glyphs at correct positions
-- Aspect lines between planets
-- Customizable colors and styles
-- SVG/PNG/PDF output
-
-Requires optional `matplotlib` dependency.
-
-### iCalendar Export (icalendar_export.py)
-
-Export aspects to calendar format:
-
-- `export_lunations_to_ical()` - New/Full Moon events
-- `export_aspects_to_ical()` - All aspects as events
-- `export_transits_to_ical()` - Transit events
-
-Requires optional `icalendar` dependency.
+- **EphemerisCache** - Monthly pre-computed positions for O(1) lookups
+- `ensure_month()` - Pre-compute and cache a month of positions
+- `get_position()` - Fast position lookup with interpolation
+- `get_all_positions()` - Batch position retrieval for all bodies
+- **Performance**: 1000x faster than computation (0.006ms vs 10ms per lookup)
 
 ## Design Principles
 
@@ -154,18 +143,9 @@ All core functions support both scalar and array inputs via NumPy broadcasting.
 
 All functions are pure - same inputs always produce same outputs.
 
-### Optional Dependencies
+### Pure NumPy Implementation
 
-Advanced features (charts, iCalendar) are optional extras:
-
-```python
-# Optional import with graceful degradation
-try:
-    from ketu.chart import draw_zodiacal_chart
-    _CHART_AVAILABLE = True
-except ImportError:
-    _CHART_AVAILABLE = False
-```
+Ketu has only one dependency (NumPy) for maximum portability and performance. All calculations use vectorized NumPy operations where possible.
 
 ### Backward Compatibility
 
@@ -241,4 +221,4 @@ To add new features:
 2. **New aspects**: Add to `core.aspects`
 3. **New calculations**: Extend `calculations.py`
 4. **New ephemeris functions**: Add to `ephemeris/`
-5. **New export formats**: Follow `icalendar_export.py` pattern
+5. **Visualization/export**: Implement in application layer using Ketu's calculation results

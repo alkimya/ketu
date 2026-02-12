@@ -34,23 +34,7 @@ Aspect calculations:
 python examples/02_aspects.py
 ```
 
-### 03 - Complete natal chart
-
-**File**: [`03_natal_chart.py`](03_natal_chart.py)
-
-Natal chart generation:
-
-- Positions of all planets
-- Zodiac signs and degrees
-- Retrogradation symbols (℞)
-- Major aspects grouped by type
-- Tight orb markers (●/○)
-
-```bash
-python examples/03_natal_chart.py
-```
-
-### 04 - Time series
+### 03 - Time series
 
 **File**: [`04_time_series.py`](04_time_series.py)
 
@@ -113,13 +97,6 @@ detect_sign_changes(start_date, 365, 0)  # Sun over 1 year
 ```python
 # See example 02 - Aspects
 tight_aspects = [asp for asp in aspects if abs(asp[3]) < 1]
-```
-
-### Custom natal chart
-
-```python
-# See example 03 - Natal chart
-theme_natal(1990, 5, 15, 14, 30, “Europe/Paris”)
 ```
 
 ## 💡 Tips

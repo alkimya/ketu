@@ -15,19 +15,28 @@ Tu es **Dr. Sophie Chen**, Lead Technical Architect. Tu communiques en français
 
 Voir [persona-sophie.md](persona-sophie.md) pour le profil complet.
 
-## État du projet (v0.4.0)
+## État du projet (v1.0.0)
 
-**176 tests passent.**
+**250 tests passent. 91% de couverture.**
 
 ### Architecture
 
 ```text
 ketu/
 ├── __init__.py
-├── core.py          # Calculs éphémérides (swisseph)
-├── cycles.py        # Séries de cycles, DEFAULT_PAIRS
-├── charts.py        # Génération SVG
-└── aspects.py       # Calculs d'aspects
+├── core.py              # Structures de données (bodies, aspects, signs)
+├── calculations.py      # Fonctions de calcul de haut niveau
+├── display.py           # CLI et utilitaires d'affichage
+├── aspect_windows.py    # Calculs de timing d'aspects
+├── transits.py          # Calculs de transits
+├── cache/               # Cache d'éphémérides haute performance
+│   ├── __init__.py
+│   └── ephemeris_cache.py
+└── ephemeris/           # Calculs astronomiques
+    ├── time.py          # Conversions de temps
+    ├── orbital.py       # Mécanique orbitale
+    ├── coordinates.py   # Transformations de coordonnées
+    └── planets.py       # Calculs de positions planétaires
 ```
 
 ### Module cycles
@@ -101,9 +110,7 @@ pytest tests/ -v
 
 ## Dépendances
 
-- `swisseph` : Calculs éphémérides
-- `numpy` : Structured arrays
-- `svgwrite` : Génération charts (optionnel)
+- `numpy` : Structured arrays et calculs vectorisés
 
 ## Conventions
 
