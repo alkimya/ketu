@@ -1,6 +1,6 @@
 # Contributing to Ketu
 
-We are happy to welcome your contributions! 🌟
+We are happy to welcome your contributions!
 
 ## How to Contribute
 
@@ -89,7 +89,7 @@ Then open a PR on GitHub.
 
 ## Areas to Contribute
 
-### 🎯 Current Priorities
+### Current Priorities
 
 1. **Pure NumPy migration**: Replace pyswisseph
 2. **Exact aspect timing**: Find the precise moments aspects are exact
@@ -112,11 +112,11 @@ ketu/
 
 ## Review Process
 
-- ✅ Tests: the full suite must pass
-- 📈 Coverage: do not decrease coverage
-- 📝 Documentation: keep it current and clear
-- 🎨 Style: respect the agreed conventions
-- ⚙️ Performance: avoid regressions
+- Tests: the full suite must pass
+- Coverage: do not decrease coverage
+- Documentation: keep it current and clear
+- Style: respect the agreed conventions
+- Performance: avoid regressions
 
 ## Resources
 

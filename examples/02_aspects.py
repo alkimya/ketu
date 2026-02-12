@@ -79,7 +79,7 @@ def main():
             name2 = ketu.body_name(b2)
             asp_name = aspects_data["name"][asp_idx].decode()
 
-            print(f"⭐ {name1:12} - {name2:12} : {asp_name:12} (orbe: {orb:+6.2f}°)")
+            print(f"  {name1:12} - {name2:12} : {asp_name:12} (orbe: {orb:+6.2f}°)")
     else:
         print("Aucun aspect exact trouvé")
 

@@ -24,7 +24,7 @@ msgid "Contributing to Ketu"
 msgstr "# Contribuer à Ketu"
 
 #: ../../source/contributing.md:3
-msgid "We are happy to welcome your contributions! 🌟"
+msgid "We are happy to welcome your contributions!"
 msgstr "## Domaines de contribution"
 
 #: ../../source/contributing.md:5
@@ -153,7 +153,7 @@ msgid "Areas to Contribute"
 msgstr "## Domaines de contribution"
 
 #: ../../source/contributing.md:92
-msgid "🎯 Current Priorities"
+msgid "Current Priorities"
 msgstr "### Documentation ReadTheDocs"
 
 #: ../../source/contributing.md:94
@@ -175,24 +175,24 @@ msgid "Review Process"
 msgstr "## Processus de review"
 
 #: ../../source/contributing.md:115
-msgid "✅ Tests: the full suite must pass"
+msgid "Tests: the full suite must pass"
 msgstr "```bash # Lancer les tests pytest tests/"
 
 #: ../../source/contributing.md:116
-msgid "📈 Coverage: do not decrease coverage"
+msgid "Coverage: do not decrease coverage"
 msgstr "Format des messages de commit :"
 
 #: ../../source/contributing.md:117
-msgid "📝 Documentation: keep it current and clear"
+msgid "Documentation: keep it current and clear"
 msgstr ""
 "-- [Documentation du projet (Read the Docs)](https://ketu.readthedocs.io/)"
 
 #: ../../source/contributing.md:118
-msgid "🎨 Style: respect the agreed conventions"
+msgid "Style: respect the agreed conventions"
 msgstr "### Style de code"
 
 #: ../../source/contributing.md:119
-msgid "⚙️ Performance: avoid regressions"
+msgid "Performance: avoid regressions"
 msgstr "## Processus de review"
 
 #: ../../source/contributing.md:121

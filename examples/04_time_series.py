@@ -73,7 +73,7 @@ def detect_retrogrades(start_date, num_days, body_id, timezone_str="UTC"):
         elif not is_retro and was_retrograde:
             # Fin de rétrogradation
             duration = (dt - retrograde_start).days
-            print(f"{dt.strftime('%d/%m/%Y')} : ➡ Fin rétrogradation (durée: {duration} jours)")
+            print(f"{dt.strftime('%d/%m/%Y')} : Fin rétrogradation (durée: {duration} jours)")
             was_retrograde = False
 
 

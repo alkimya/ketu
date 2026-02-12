@@ -9,23 +9,22 @@ build:
   tools:
     python: "3.12"
   jobs:
-    post_checkout:
-      # Télécharge et installe les éphémérides Swiss Ephemeris si nécessaire
-      - mkdir -p $HOME/.swe_files
     post_install:
       # Install project dependencies
       - pip install -e .
     post_build:
-      # Build French documentation as well
+      # Compile MO files from PO translations
+      - sphinx-intl build -d docs/locale
+      # Build French documentation from same source with -D language=fr
       - mkdir -p ${READTHEDOCS_OUTPUT:-_readthedocs/html}/fr
-      - sphinx-build -b html docs/fr ${READTHEDOCS_OUTPUT:-_readthedocs/html}/fr
+      - sphinx-build -b html -D language=fr docs/source ${READTHEDOCS_OUTPUT:-_readthedocs/html}/fr
 
 # Configuration Sphinx
-# English documentation is the primary version
-# French documentation is available in docs/fr/
+# English documentation is the primary version (built from docs/source/)
+# French documentation is built as post_build step with -D language=fr
 sphinx:
   builder: html
-  configuration: docs/en/conf.py
+  configuration: docs/source/conf.py
   fail_on_warning: false
 
 # Formats de sortie supplémentaires

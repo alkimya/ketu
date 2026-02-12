@@ -49,7 +49,7 @@ Calculs sur plusieurs jours :
 python examples/04_time_series.py
 ```
 
-## 🚀 Utilisation
+## Utilisation
 
 ### Prérequis
 
@@ -74,7 +74,7 @@ chmod +x examples/*.py
 ./examples/01_basic_positions.py
 ```
 
-## 📚 Documentation complète
+## Documentation complète
 
 Pour plus de détails, consulte la documentation :
 
@@ -83,7 +83,7 @@ Pour plus de détails, consulte la documentation :
 - [Concepts astrologiques](../docs/source/concepts.md)
 - [Documentation en ligne](https://ketu.readthedocs.io)
 
-## 🎯 Cas d'usage
+## Cas d'usage
 
 ### Analyse de transit
 
@@ -99,7 +99,7 @@ detect_sign_changes(start_date, 365, 0)  # Soleil sur 1 an
 tight_aspects = [asp for asp in aspects if abs(asp[3]) < 1]
 ```
 
-## 💡 Conseils
+## Conseils
 
 ### Performance
 
