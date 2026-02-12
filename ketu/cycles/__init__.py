@@ -13,10 +13,11 @@ Key concepts:
 - Aspect proximity: Distance to nearest major aspect
 
 Usage:
+    from datetime import datetime, timedelta
     from ketu.cycles import generate_cycle_series, CycleState
 
     # Generate cycle data aligned to timestamps
-    timestamps = pd.date_range("2025-01-01", "2025-12-31", freq="1h")
+    timestamps = [datetime(2025, 1, 1) + timedelta(hours=i) for i in range(8760)]
     cycles = generate_cycle_series(
         body1="Sun",
         body2="Mars",

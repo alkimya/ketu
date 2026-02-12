@@ -6,7 +6,7 @@ optimized for machine learning, deep learning, astro-trading, and research.
 The design follows ETL (Extract, Transform, Load) principles:
 - Extract: Calculate aspect events from ephemeris data
 - Transform: Enrich with cycle info, phase, retrograde status
-- Load: Export to ML-ready formats (NumPy, Pandas, JSON)
+- Load: Export to ML-ready formats (NumPy, JSON)
 
 Key features:
 - Time window approach (aspects between two dates)
@@ -185,55 +185,6 @@ class AspectTimeline:
 
         return np.array(data, dtype=self._get_numpy_dtype())
 
-    def to_pandas(self):
-        """Convert to Pandas DataFrame with datetime index.
-
-        Returns:
-            DataFrame with timestamp as index and all features as columns
-
-        Raises:
-            ImportError: If pandas is not installed
-        """
-        try:
-            import pandas as pd
-        except ImportError:
-            raise ImportError(
-                "Pandas is required for to_pandas(). "
-                "Install with: pip install pandas"
-            )
-
-        if not self.events:
-            # Return empty DataFrame with correct columns
-            return pd.DataFrame(columns=self._get_pandas_columns())
-
-        data = {
-            'timestamp': [e.timestamp for e in self.events],
-            'julian_day': [e.julian_day for e in self.events],
-            'body1_id': [e.body1_id for e in self.events],
-            'body2_id': [e.body2_id for e in self.events],
-            'body1_name': [e.body1_name for e in self.events],
-            'body2_name': [e.body2_name for e in self.events],
-            'aspect_type': [e.aspect_type for e in self.events],
-            'aspect_name': [e.aspect_name for e in self.events],
-            'orb': [e.orb for e in self.events],
-            'orb_tolerance': [e.orb_tolerance for e in self.events],
-            'aspect_strength': [e.aspect_strength for e in self.events],
-            'angular_separation': [e.angular_separation for e in self.events],
-            'phase': [e.phase for e in self.events],
-            'relative_velocity': [e.relative_velocity for e in self.events],
-            'days_to_exact': [e.days_to_exact for e in self.events],
-            'body1_retro': [e.body1_retro for e in self.events],
-            'body2_retro': [e.body2_retro for e in self.events],
-            'retro_intensity': [e.retro_intensity for e in self.events],
-            'window_begin': [e.window_begin for e in self.events],
-            'window_end': [e.window_end for e in self.events],
-            'duration_days': [e.duration_days for e in self.events],
-        }
-
-        df = pd.DataFrame(data)
-        df.set_index('timestamp', inplace=True)
-        return df
-
     def to_json(self) -> Dict[str, Any]:
         """Convert to JSON-serializable dictionary.
 
@@ -274,19 +225,6 @@ class AspectTimeline:
             ('retro_intensity', 'f4'),
             ('duration_days', 'f4'),
         ])
-
-    @staticmethod
-    def _get_pandas_columns():
-        """Get column names for empty Pandas DataFrame."""
-        return [
-            'timestamp', 'julian_day', 'body1_id', 'body2_id',
-            'body1_name', 'body2_name', 'aspect_type', 'aspect_name',
-            'orb', 'orb_tolerance', 'aspect_strength',
-            'angular_separation', 'phase', 'relative_velocity',
-            'days_to_exact', 'body1_retro', 'body2_retro',
-            'retro_intensity', 'window_begin', 'window_end',
-            'duration_days',
-        ]
 
 
 def _enrich_aspect_event(
@@ -395,7 +333,7 @@ def generate_aspect_timeline(
     - Time window approach (all aspects between start and end dates)
     - Full cycle information (phase, velocity, separation)
     - Retrograde detection and intensity calculation
-    - ML-ready export formats (NumPy, Pandas, JSON)
+    - ML-ready export formats (NumPy, JSON)
     - ETL-optimized data structure
 
     Args:
@@ -422,7 +360,6 @@ def generate_aspect_timeline(
         ...     end_date="2024-12-31"
         ... )
         >>> print(f"Found {len(timeline)} aspect events")
-        >>> df = timeline.to_pandas()  # Export to Pandas
         >>> arr = timeline.to_numpy()  # Export to NumPy
         >>>
         >>> # Venus-Neptune with custom aspects

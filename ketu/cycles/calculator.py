@@ -110,7 +110,7 @@ def _get_body_id(body: Union[str, int]) -> int:
 def generate_cycle_series(
     body1: Union[str, int],
     body2: Union[str, int],
-    timestamps: Union[np.ndarray, List[datetime], "pd.DatetimeIndex"],
+    timestamps: Union[np.ndarray, List[datetime]],
     include_aspects: bool = True,
     use_cache: bool = True,
     cache: Optional["EphemerisCache"] = None,
@@ -132,10 +132,10 @@ def generate_cycle_series(
         Structured numpy array with CYCLE_DTYPE
 
     Example:
-        >>> import pandas as pd
+        >>> from datetime import datetime, timedelta
         >>> from ketu.cycles import generate_cycle_series
         >>>
-        >>> timestamps = pd.date_range("2025-01-01", "2025-12-31", freq="1D")
+        >>> timestamps = [datetime(2025, 1, 1) + timedelta(days=i) for i in range(365)]
         >>> cycles = generate_cycle_series("Sun", "Mars", timestamps)
         >>> print(cycles['angular_separation'][:5])
     """
@@ -274,7 +274,7 @@ def generate_cycle_series(
 
 def generate_multi_cycle_series(
     planet_pairs: List[Tuple[Union[str, int], Union[str, int]]],
-    timestamps: Union[np.ndarray, List[datetime], "pd.DatetimeIndex"],
+    timestamps: Union[np.ndarray, List[datetime]],
     include_aspects: bool = True,
     use_cache: bool = True,
     cache: Optional["EphemerisCache"] = None,
@@ -292,8 +292,9 @@ def generate_multi_cycle_series(
         Dict mapping pair names to structured arrays
 
     Example:
+        >>> from datetime import datetime, timedelta
         >>> pairs = [("Sun", "Moon"), ("Sun", "Mars"), ("Jupiter", "Saturn")]
-        >>> timestamps = pd.date_range("2025-01-01", "2025-12-31", freq="1D")
+        >>> timestamps = [datetime(2025, 1, 1) + timedelta(days=i) for i in range(365)]
         >>> cycles = generate_multi_cycle_series(pairs, timestamps)
         >>> sun_moon = cycles["Sun-Moon"]
     """

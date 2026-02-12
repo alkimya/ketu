@@ -207,30 +207,15 @@ class TestExportFormats:
         assert np_array["body1_id"].dtype == np.int32
         assert np_array["aspect_strength"].dtype == np.float32
 
-    def test_to_pandas(self, sample_timeline):
-        """Test conversion to Pandas DataFrame."""
-        pytest.importorskip("pandas")  # Skip if pandas not installed
-
-        df = sample_timeline.to_pandas()
-
-        # Should have timestamp index
-        assert df.index.name == "timestamp"
-        assert len(df) == len(sample_timeline)
-
-        # Check required columns
-        required_columns = [
-            "julian_day",
-            "body1_name",
-            "body2_name",
-            "aspect_name",
-            "orb",
-            "aspect_strength",
-            "relative_velocity",
-            "body1_retro",
-            "body2_retro",
-        ]
-        for col in required_columns:
-            assert col in df.columns
+    def test_no_pandas_import(self):
+        """Verify ketu does not import pandas as a side effect."""
+        import sys
+        # Remove pandas from modules if it was imported by other tests
+        pandas_was_loaded = 'pandas' in sys.modules
+        if not pandas_was_loaded:
+            # Only test if pandas wasn't already loaded by test runner
+            from ketu.aspects.timelines import generate_aspect_timeline
+            assert 'pandas' not in sys.modules, "ketu should not import pandas"
 
     def test_to_json(self, sample_timeline):
         """Test conversion to JSON."""
