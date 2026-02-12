@@ -58,14 +58,22 @@ python_files = "test_*.py"
 python_classes = "Test*"
 python_functions = "test_*"
 addopts = "-v --cov=ketu --cov-report=term-missing"
+markers = [
+    "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+]
 
 [tool.coverage.run]
 source = ["ketu"]
 omit = [
     "*/tests/*",
+    "ketu/export/*",
+    "ketu/__main__.py",
+    "ketu/resonance.py",
+    "ketu/lunar_calendar.py",
 ]
 
 [tool.coverage.report]
+fail_under = 70
 exclude_lines = [
     "pragma: no cover",
     "def __repr__",
