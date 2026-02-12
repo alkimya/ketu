@@ -32,6 +32,12 @@ jobs:
       run: |
         pytest tests/ -v --cov=ketu --cov-report=term-missing
 
+    - name: Type check
+      if: matrix.python-version == '3.11'
+      run: |
+        pip install mypy
+        mypy ketu/ --strict
+
     - name: Check coverage threshold
       if: matrix.python-version == '3.13'
       run: |
