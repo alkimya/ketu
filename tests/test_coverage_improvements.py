@@ -10,8 +10,17 @@ from zoneinfo import ZoneInfo
 from io import StringIO
 import sys
 
-import ketu
-from ketu.core import aspects as aspects_data
+from ketu.core import bodies, aspects as aspects_data
+from ketu.calculations import utc_to_julian, vdist_au, vlat, body_id
+from ketu.aspects import (
+    get_aspect,
+    calculate_aspects,
+    calculate_aspects_vectorized,
+    calculate_aspects_batch,
+    find_aspect_timing,
+    find_aspects_between_dates,
+)
+from ketu.display import main
 
 
 class TestVelocityFunctions:
@@ -20,26 +29,26 @@ class TestVelocityFunctions:
     def setup_method(self):
         """Setup test data"""
         self.test_date = datetime(2020, 12, 21, 19, 20, tzinfo=ZoneInfo("Europe/Paris"))
-        self.jday = ketu.utc_to_julian(self.test_date)
+        self.jday = utc_to_julian(self.test_date)
 
     def test_vdist_au(self):
         """Test distance velocity function"""
         # Test Sun distance velocity
-        sun_vdist = ketu.vdist_au(self.jday, 0)
+        sun_vdist = vdist_au(self.jday, 0)
         assert isinstance(sun_vdist, (float, np.floating))
         # Sun's distance velocity should be relatively small
         assert abs(sun_vdist) < 0.1  # AU/day
 
         # Test Moon distance velocity
-        moon_vdist = ketu.vdist_au(self.jday, 1)
+        moon_vdist = vdist_au(self.jday, 1)
         assert isinstance(moon_vdist, (float, np.floating))
 
     def test_vlat(self):
         """Test latitude velocity function"""
         # Test various bodies
         for body_id in [0, 1, 2, 3, 4]:
-            vlat = ketu.vlat(self.jday, body_id)
-            assert isinstance(vlat, (float, np.floating))
+            vlat_result = vlat(self.jday, body_id)
+            assert isinstance(vlat_result, (float, np.floating))
 
 
 class TestAspectEdgeCases:
@@ -48,13 +57,13 @@ class TestAspectEdgeCases:
     def setup_method(self):
         """Setup test data"""
         self.test_date = datetime(2020, 12, 21, 19, 20, tzinfo=ZoneInfo("Europe/Paris"))
-        self.jday = ketu.utc_to_julian(self.test_date)
+        self.jday = utc_to_julian(self.test_date)
 
     def test_get_aspect_reversed_bodies(self):
         """Test get_aspect with reversed body order (triggers line 274)"""
         # Call with body1 > body2 to trigger the swap
-        aspect1 = ketu.get_aspect(self.jday, 1, 0)  # Moon, Sun (1 > 0)
-        aspect2 = ketu.get_aspect(self.jday, 0, 1)  # Sun, Moon (normal order)
+        aspect1 = get_aspect(self.jday, 1, 0)  # Moon, Sun (1 > 0)
+        aspect2 = get_aspect(self.jday, 0, 1)  # Sun, Moon (normal order)
 
         # Both should return same result with normalized order
         if aspect1 is not None and aspect2 is not None:
@@ -65,10 +74,10 @@ class TestAspectEdgeCases:
     def test_calculate_aspects_vectorized_empty(self):
         """Test vectorized aspect calculation with no matching aspects"""
         # Create a custom bodies array with just one body (no pairs possible)
-        single_body = ketu.bodies[:1]
+        single_body = bodies[:1]
 
         # This should return empty array
-        aspects = ketu.calculate_aspects_vectorized(self.jday, single_body)
+        aspects = calculate_aspects_vectorized(self.jday, single_body)
         assert isinstance(aspects, np.ndarray)
         assert len(aspects) == 0
 
@@ -78,8 +87,8 @@ class TestAspectEdgeCases:
         jd_array = np.array([self.jday, self.jday + 1])
 
         # Use single body to get empty results
-        single_body = ketu.bodies[:1]
-        results = ketu.calculate_aspects_batch(jd_array, single_body)
+        single_body = bodies[:1]
+        results = calculate_aspects_batch(jd_array, single_body)
 
         assert isinstance(results, list)
         assert len(results) == 2
@@ -94,12 +103,12 @@ class TestAspectTiming:
     def setup_method(self):
         """Setup test data"""
         self.test_date = datetime(2020, 12, 21, 19, 20, tzinfo=ZoneInfo("Europe/Paris"))
-        self.jday = ketu.utc_to_julian(self.test_date)
+        self.jday = utc_to_julian(self.test_date)
 
     def test_find_aspect_timing(self):
         """Test finding beginning, exact, and end times for an aspect"""
         # Find a current aspect to test timing
-        aspects = ketu.calculate_aspects(self.jday)
+        aspects = calculate_aspects(self.jday)
 
         if len(aspects) > 0:
             aspect = aspects[0]
@@ -108,7 +117,7 @@ class TestAspectTiming:
             aspect_value = aspects_data["angle"][asp_idx]
 
             # Find timing for this aspect
-            begin_jd, exact_jd, end_jd = ketu.find_aspect_timing(
+            begin_jd, exact_jd, end_jd = find_aspect_timing(
                 self.jday, body1, body2, aspect_value
             )
 
@@ -122,15 +131,15 @@ class TestAspectTiming:
     def test_find_aspect_timing_invalid_aspect(self):
         """Test find_aspect_timing with invalid aspect value"""
         with pytest.raises(ValueError):
-            ketu.find_aspect_timing(self.jday, 0, 1, 999.0)
+            find_aspect_timing(self.jday, 0, 1, 999.0)
 
     def test_find_aspects_between_dates_both_bodies(self):
         """Test finding aspects between dates for specific body pair"""
         # Find aspects between Sun and Moon over 30 days
-        sun_id = ketu.body_id("Sun")
-        moon_id = ketu.body_id("Moon")
+        sun_id = body_id("Sun")
+        moon_id = body_id("Moon")
 
-        aspects = ketu.find_aspects_between_dates(
+        aspects = find_aspects_between_dates(
             self.jday - 15,
             self.jday + 15,
             sun_id,
@@ -152,10 +161,10 @@ class TestAspectTiming:
 
     def test_find_aspects_between_dates_one_body(self):
         """Test finding aspects with only body1 specified"""
-        sun_id = ketu.body_id("Sun")
+        sun_id = body_id("Sun")
 
         # Find all aspects involving the Sun
-        aspects = ketu.find_aspects_between_dates(
+        aspects = find_aspects_between_dates(
             self.jday - 5,
             self.jday + 5,
             body1=sun_id
@@ -169,10 +178,10 @@ class TestAspectTiming:
 
     def test_find_aspects_between_dates_body2_only(self):
         """Test finding aspects with only body2 specified (covers line 536-537)"""
-        moon_id = ketu.body_id("Moon")
+        moon_id = body_id("Moon")
 
         # Find all aspects involving the Moon as body2
-        aspects = ketu.find_aspects_between_dates(
+        aspects = find_aspects_between_dates(
             self.jday - 5,
             self.jday + 5,
             body2=moon_id
@@ -187,7 +196,7 @@ class TestAspectTiming:
     def test_find_aspects_between_dates_all_bodies(self):
         """Test finding all aspects between dates (covers line 538-539)"""
         # Find all aspects between all bodies (no body specified)
-        aspects = ketu.find_aspects_between_dates(
+        aspects = find_aspects_between_dates(
             self.jday - 2,
             self.jday + 2
         )
@@ -202,18 +211,18 @@ class TestAspectTiming:
 
     def test_find_aspects_between_dates_body_swap(self):
         """Test aspect finding with reversed body order (covers line 543-544)"""
-        sun_id = ketu.body_id("Sun")
-        moon_id = ketu.body_id("Moon")
+        sun_id = body_id("Sun")
+        moon_id = body_id("Moon")
 
         # Call with bodies in different orders
-        aspects1 = ketu.find_aspects_between_dates(
+        aspects1 = find_aspects_between_dates(
             self.jday - 10,
             self.jday + 10,
             moon_id,  # body1 > body2
             sun_id
         )
 
-        aspects2 = ketu.find_aspects_between_dates(
+        aspects2 = find_aspects_between_dates(
             self.jday - 10,
             self.jday + 10,
             sun_id,  # body1 < body2
@@ -236,7 +245,7 @@ class TestMainCLI:
         ])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
-        ketu.main()
+        main()
         captured = capsys.readouterr()
 
         # Should show positions
@@ -253,7 +262,7 @@ class TestMainCLI:
         ])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
-        ketu.main()
+        main()
         captured = capsys.readouterr()
 
         # Should complete successfully with default timezone
@@ -267,7 +276,7 @@ class TestMainCLI:
         ])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
-        ketu.main()
+        main()
         captured = capsys.readouterr()
 
         assert "Error" in captured.out
@@ -280,7 +289,7 @@ class TestMainCLI:
         ])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs))
 
-        ketu.main()
+        main()
         captured = capsys.readouterr()
 
         assert "Error" in captured.out

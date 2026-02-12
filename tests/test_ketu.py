@@ -7,6 +7,27 @@ from zoneinfo import ZoneInfo
 
 import ketu
 from ketu.core import bodies, aspects as aspects_data, signs
+from ketu.calculations import (
+    local_to_utc,
+    utc_to_julian,
+    body_name,
+    body_id,
+    body_properties,
+    long,
+    longitude,
+    lat,
+    dist_au,
+    vlong,
+    longitude_velocity,
+    is_retrograde,
+    is_ascending,
+    body_sign,
+    positions,
+    decimal_degrees_to_dms,
+    distance,
+)
+from ketu.aspects import get_aspect, calculate_aspects, get_orb
+from ketu.display import print_positions, print_aspects, main
 
 
 class TestData:
@@ -49,18 +70,18 @@ class TestTimeConversions:
 
     def test_local_to_utc(self):
         """Test local to UTC conversion"""
-        utc_time = ketu.local_to_utc(self.test_date)
+        utc_time = local_to_utc(self.test_date)
         assert utc_time.hour == 18  # Paris is UTC+1 in winter
         assert utc_time.minute == 20
 
     def test_utc_to_julian(self):
         """Test UTC to Julian Day conversion"""
-        jday = ketu.utc_to_julian(self.test_date)
+        jday = utc_to_julian(self.test_date)
         assert isinstance(jday, float)
         assert jday > 2459000  # Approximate JD for 2020
 
         # Test epoch (NumPy implementation uses Gregorian proleptic calendar)
-        jday_epoch = ketu.utc_to_julian(self.day_one)
+        jday_epoch = utc_to_julian(self.day_one)
         assert jday_epoch == 1721423.5
 
 
@@ -69,13 +90,13 @@ class TestAngleConversions:
 
     def test_decimal_degrees_to_dms(self):
         """Test decimal degrees to DMS conversion"""
-        result = ketu.decimal_degrees_to_dms(123.456)
+        result = decimal_degrees_to_dms(123.456)
         assert result[0] == 123  # degrees
         assert result[1] == 27  # minutes
         assert result[2] == 21  # seconds
 
         # Test with exact degrees
-        result = ketu.decimal_degrees_to_dms(90.0)
+        result = decimal_degrees_to_dms(90.0)
         assert result[0] == 90
         assert result[1] == 0
         assert result[2] == 0
@@ -83,22 +104,22 @@ class TestAngleConversions:
     def test_distance(self):
         """Test angular distance calculation"""
         # Simple cases
-        assert ketu.distance(0, 90) == 90
-        assert ketu.distance(0, 180) == 180
-        assert ketu.distance(0, 270) == 90  # Shortest path
+        assert distance(0, 90) == 90
+        assert distance(0, 180) == 180
+        assert distance(0, 270) == 90  # Shortest path
 
         # Wraparound
-        assert ketu.distance(350, 10) == 20
-        assert ketu.distance(10, 350) == 20
+        assert distance(350, 10) == 20
+        assert distance(10, 350) == 20
 
     def test_get_orb(self):
         """Test orb calculation for aspects"""
         # Sun-Moon conjunction
-        orb = ketu.get_orb(0, 1, 0)  # bodies 0,1, aspect 0 (conjunction)
+        orb = get_orb(0, 1, 0)  # bodies 0,1, aspect 0 (conjunction)
         assert orb == 12.0  # (12+12)/2 * 1
 
         # Mercury-Venus sextile
-        orb = ketu.get_orb(2, 3, 4)  # bodies 2,3, aspect 4 (sextile)
+        orb = get_orb(2, 3, 4)  # bodies 2,3, aspect 4 (sextile)
         assert orb == 9.0 * (1 / 3)  # (10+8)/2 * 1/3
 
 
@@ -108,33 +129,33 @@ class TestBodyFunctions:
     def setup_method(self):
         """Setup test data"""
         self.test_date = datetime(2020, 12, 21, 19, 20, tzinfo=ZoneInfo("Europe/Paris"))
-        self.jday = ketu.utc_to_julian(self.test_date)
+        self.jday = utc_to_julian(self.test_date)
 
     def test_body_name(self):
         """Test body name retrieval"""
-        assert ketu.body_name(0) == "Sun"
-        assert ketu.body_name(1) == "Moon"
-        assert ketu.body_name(10) == "Rahu"
-        assert ketu.body_name(12) == "Lilith"
+        assert body_name(0) == "Sun"
+        assert body_name(1) == "Moon"
+        assert body_name(10) == "Rahu"
+        assert body_name(12) == "Lilith"
 
     def test_body_id(self):
         """Test body ID retrieval by name"""
-        assert ketu.body_id("Sun") == 0
-        assert ketu.body_id("Moon") == 1
-        assert ketu.body_id("Mars") == 4
+        assert body_id("Sun") == 0
+        assert body_id("Moon") == 1
+        assert body_id("Mars") == 4
 
     def test_body_properties(self):
         """Test body properties calculation"""
-        props = ketu.body_properties(self.jday, 0)  # Sun
+        props = body_properties(self.jday, 0)  # Sun
         assert isinstance(props, np.ndarray)
         assert len(props) == 6  # long, lat, dist, vlong, vlat, vdist
         assert 0 <= props[0] <= 360  # longitude in range
 
     def test_long_lat_dist(self):
         """Test individual position functions"""
-        sun_long = ketu.long(self.jday, 0)
-        sun_lat = ketu.lat(self.jday, 0)
-        sun_dist = ketu.dist_au(self.jday, 0)
+        sun_long = long(self.jday, 0)
+        sun_lat = lat(self.jday, 0)
+        sun_dist = dist_au(self.jday, 0)
 
         assert 0 <= sun_long <= 360
         assert -90 <= sun_lat <= 90
@@ -142,35 +163,35 @@ class TestBodyFunctions:
 
     def test_velocities(self):
         """Test velocity functions"""
-        moon_vlong = ketu.vlong(self.jday, 1)
+        moon_vlong = vlong(self.jday, 1)
         assert 10 <= abs(moon_vlong) <= 16  # Moon moves 10-16°/day
 
         # Test retrograde detection
-        mars_retro = ketu.is_retrograde(self.jday, 4)
+        mars_retro = is_retrograde(self.jday, 4)
         assert isinstance(mars_retro, bool)
 
     def test_is_ascending(self):
         """Test latitude ascending detection"""
-        moon_ascending = ketu.is_ascending(self.jday, 1)
+        moon_ascending = is_ascending(self.jday, 1)
         assert isinstance(moon_ascending, bool)
 
     def test_body_sign(self):
         """Test zodiac sign calculation"""
         # Test Capricorn (270-300°)
-        sign_data = ketu.body_sign(271.5)
+        sign_data = body_sign(271.5)
         assert sign_data[0] == 9  # Capricorn index
         assert sign_data[1] == 1  # 1 degree
         assert sign_data[2] == 30  # 30 minutes
 
         # Test Aries (0-30°)
-        sign_data = ketu.body_sign(15.25)
+        sign_data = body_sign(15.25)
         assert sign_data[0] == 0  # Aries index
         assert sign_data[1] == 15  # 15 degrees
         assert sign_data[2] == 15  # 15 minutes
 
     def test_positions(self):
         """Test all positions calculation"""
-        all_positions = ketu.positions(self.jday)
+        all_positions = positions(self.jday)
         assert isinstance(all_positions, np.ndarray)
         assert len(all_positions) == len(bodies)
         assert all(0 <= pos <= 360 for pos in all_positions)
@@ -182,12 +203,12 @@ class TestAspects:
     def setup_method(self):
         """Setup test data"""
         self.test_date = datetime(2020, 12, 21, 19, 20, tzinfo=ZoneInfo("Europe/Paris"))
-        self.jday = ketu.utc_to_julian(self.test_date)
+        self.jday = utc_to_julian(self.test_date)
 
     def test_get_aspect(self):
         """Test aspect detection between two bodies"""
         # Test Sun-Moon aspect
-        aspect = ketu.get_aspect(self.jday, 0, 1)
+        aspect = get_aspect(self.jday, 0, 1)
 
         if aspect is not None:
             body1, body2, asp_type, orb = aspect
@@ -198,7 +219,7 @@ class TestAspects:
 
     def test_calculate_aspects(self):
         """Test all aspects calculation"""
-        aspects = ketu.calculate_aspects(self.jday)
+        aspects = calculate_aspects(self.jday)
 
         assert isinstance(aspects, np.ndarray)
 
@@ -220,11 +241,11 @@ class TestDisplay:
     def setup_method(self):
         """Setup test data"""
         self.test_date = datetime(2020, 12, 21, 19, 20, tzinfo=ZoneInfo("Europe/Paris"))
-        self.jday = ketu.utc_to_julian(self.test_date)
+        self.jday = utc_to_julian(self.test_date)
 
     def test_print_positions(self, capsys):
         """Test positions printing"""
-        ketu.print_positions(self.jday)
+        print_positions(self.jday)
         captured = capsys.readouterr()
 
         assert "Bodies Positions" in captured.out
@@ -235,7 +256,7 @@ class TestDisplay:
 
     def test_print_aspects(self, capsys):
         """Test aspects printing"""
-        ketu.print_aspects(self.jday)
+        print_aspects(self.jday)
         captured = capsys.readouterr()
 
         assert "Bodies Aspects" in captured.out
@@ -250,10 +271,133 @@ class TestMain:
         inputs = iter(["invalid-date", ""])
         monkeypatch.setattr("builtins.input", lambda _: next(inputs, ""))
 
-        ketu.main()
+        main()
         captured = capsys.readouterr()
 
         assert "Error" in captured.out or "error" in captured.out
+
+
+class TestPrecision:
+    """Test astronomical precision against known reference values.
+
+    Reference values sourced from JPL Horizons and validated ephemeris.
+    These tests ensure Ketu returns POSITIONS (not velocities) with reasonable accuracy.
+    """
+
+    def setup_method(self):
+        """Setup test data with known reference positions."""
+        from datetime import timezone
+
+        # Reference date: 21 Dec 2020 18:20 UTC (Jupiter-Saturn conjunction)
+        self.ref_date = datetime(2020, 12, 21, 18, 20, 0, tzinfo=timezone.utc)
+        self.ref_jday = utc_to_julian(self.ref_date)
+
+        # Reference positions from JPL Horizons (approximate, ~1° tolerance)
+        # Source: https://ssd.jpl.nasa.gov/horizons/
+        self.ref_positions = {
+            0: 270.0,   # Sun: ~0° Capricorn (270°)
+            1: 340.0,   # Moon: ~10° Pisces (340°) - approximate, moves fast
+            5: 300.0,   # Jupiter: ~0° Aquarius (300°)
+            6: 300.5,   # Saturn: ~0.5° Aquarius (300.5°) - conjunction!
+        }
+
+        # Reference date 2: 23 Jan 2026 12:00 UTC
+        self.ref_date_2 = datetime(2026, 1, 23, 12, 0, 0, tzinfo=timezone.utc)
+        self.ref_jday_2 = utc_to_julian(self.ref_date_2)
+
+        # Reference positions for 23 Jan 2026 (approximate)
+        self.ref_positions_2 = {
+            0: 303.0,   # Sun: ~3° Aquarius
+            5: 108.0,   # Jupiter: ~18° Cancer
+            6: 357.0,   # Saturn: ~27° Pisces
+        }
+
+    def test_long_returns_position_not_velocity(self):
+        """CRITICAL: Verify long() returns position (0-360°), not velocity (~0-15°/day).
+
+        This test catches the bug where vlong (velocity) was used instead of long (position).
+        Velocities are typically 0-15°/day, positions are 0-360°.
+        """
+        # Jupiter and Saturn should be around 300° (Aquarius) on 21 Dec 2020
+        jupiter_long = long(self.ref_jday, 5)  # Jupiter
+        saturn_long = long(self.ref_jday, 6)   # Saturn
+
+        # These MUST be large values (position), not small values (velocity)
+        assert jupiter_long > 200, f"Jupiter longitude {jupiter_long}° is too small - possibly returning velocity instead of position!"
+        assert saturn_long > 200, f"Saturn longitude {saturn_long}° is too small - possibly returning velocity instead of position!"
+
+        # Check they're in the expected range (near 300° Aquarius)
+        assert 290 <= jupiter_long <= 310, f"Jupiter should be near 300° (Aquarius), got {jupiter_long}°"
+        assert 290 <= saturn_long <= 310, f"Saturn should be near 300° (Aquarius), got {saturn_long}°"
+
+    def test_vlong_returns_velocity_not_position(self):
+        """Verify vlong() returns velocity (°/day), not position.
+
+        Velocities are typically:
+        - Sun: ~1°/day
+        - Moon: ~13°/day
+        - Jupiter: ~0.08°/day
+        - Saturn: ~0.03°/day
+        """
+        sun_vlong = vlong(self.ref_jday, 0)
+        moon_vlong = vlong(self.ref_jday, 1)
+        jupiter_vlong = vlong(self.ref_jday, 5)
+        saturn_vlong = vlong(self.ref_jday, 6)
+
+        # Sun velocity ~1°/day
+        assert 0.9 <= abs(sun_vlong) <= 1.1, f"Sun velocity should be ~1°/day, got {sun_vlong}°/day"
+
+        # Moon velocity ~13°/day
+        assert 10 <= abs(moon_vlong) <= 16, f"Moon velocity should be ~13°/day, got {moon_vlong}°/day"
+
+        # Outer planets are slow
+        assert abs(jupiter_vlong) < 0.5, f"Jupiter velocity should be <0.5°/day, got {jupiter_vlong}°/day"
+        assert abs(saturn_vlong) < 0.2, f"Saturn velocity should be <0.2°/day, got {saturn_vlong}°/day"
+
+    def test_alias_consistency(self):
+        """Test that longitude() and long() return identical values."""
+        assert longitude(self.ref_jday, 0) == long(self.ref_jday, 0)
+        assert longitude(self.ref_jday, 5) == long(self.ref_jday, 5)
+
+        assert longitude_velocity(self.ref_jday, 0) == vlong(self.ref_jday, 0)
+        assert longitude_velocity(self.ref_jday, 5) == vlong(self.ref_jday, 5)
+
+    def test_jupiter_saturn_conjunction_2020(self):
+        """Test positions during the famous Jupiter-Saturn conjunction of Dec 2020.
+
+        On 21 Dec 2020, Jupiter and Saturn were in conjunction at ~0° Aquarius (300°).
+        This is a well-documented astronomical event.
+        """
+        jupiter_long = long(self.ref_jday, 5)
+        saturn_long = long(self.ref_jday, 6)
+
+        # They should be very close (within 1°)
+        separation = abs(jupiter_long - saturn_long)
+        assert separation < 2.0, f"Jupiter-Saturn separation should be <2° during conjunction, got {separation}°"
+
+    def test_sun_position_accuracy(self):
+        """Test Sun position accuracy across different dates."""
+        # 21 Dec 2020: Sun at ~0° Capricorn (270°)
+        sun_long = long(self.ref_jday, 0)
+        assert abs(sun_long - self.ref_positions[0]) < 2.0, \
+            f"Sun position error too large: expected ~{self.ref_positions[0]}°, got {sun_long}°"
+
+        # 23 Jan 2026: Sun at ~3° Aquarius (303°)
+        sun_long_2 = long(self.ref_jday_2, 0)
+        assert abs(sun_long_2 - self.ref_positions_2[0]) < 2.0, \
+            f"Sun position error too large: expected ~{self.ref_positions_2[0]}°, got {sun_long_2}°"
+
+    def test_outer_planets_accuracy(self):
+        """Test outer planet positions (Jupiter, Saturn) with wider tolerance."""
+        # Outer planets move slowly, so positions should be fairly stable
+        jupiter_long = long(self.ref_jday_2, 5)
+        saturn_long = long(self.ref_jday_2, 6)
+
+        # Allow 5° tolerance for orbital element calculations
+        assert abs(jupiter_long - self.ref_positions_2[5]) < 5.0, \
+            f"Jupiter position error too large: expected ~{self.ref_positions_2[5]}°, got {jupiter_long}°"
+        assert abs(saturn_long - self.ref_positions_2[6]) < 5.0, \
+            f"Saturn position error too large: expected ~{self.ref_positions_2[6]}°, got {saturn_long}°"
 
 
 class TestEdgeCases:
@@ -263,16 +407,16 @@ class TestEdgeCases:
         """Test LRU cache functionality"""
         # Call function to populate cache
         jday = 2459000.0
-        ketu.body_properties(jday, 0)
+        body_properties(jday, 0)
 
         # Cache info should be available
-        cache_info = ketu.body_properties.cache_info()
+        cache_info = body_properties.cache_info()
         assert cache_info.hits >= 0
         assert cache_info.misses >= 0
 
         # Clear cache
-        ketu.body_properties.cache_clear()
-        cache_info = ketu.body_properties.cache_info()
+        body_properties.cache_clear()
+        cache_info = body_properties.cache_info()
         assert cache_info.currsize == 0
 
 
@@ -290,7 +434,7 @@ class TestPerformance:
 
         # Calculate 100 positions
         for _ in range(100):
-            ketu.positions(jday)
+            positions(jday)
 
         elapsed = time.time() - start
         assert elapsed < 1.0  # Should be under 1 second with cache
@@ -304,7 +448,7 @@ class TestPerformance:
 
         # Calculate aspects 10 times
         for _ in range(10):
-            ketu.calculate_aspects(jday)
+            calculate_aspects(jday)
 
         elapsed = time.time() - start
         assert elapsed < 0.5  # Should be fast
