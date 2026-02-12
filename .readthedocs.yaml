@@ -4,24 +4,13 @@
 version: 2
 
 # Build documentation in the docs/ directory with Sphinx
+# French translation is handled by a linked RTD project (ketu-fr)
 build:
   os: ubuntu-22.04
   tools:
     python: "3.12"
-  jobs:
-    post_install:
-      # Install project dependencies
-      - pip install -e .
-    post_build:
-      # Compile MO files from PO translations
-      - sphinx-intl build -d docs/locale
-      # Build French documentation from same source with -D language=fr
-      - mkdir -p ${READTHEDOCS_OUTPUT:-_readthedocs/html}/fr
-      - sphinx-build -b html -D language=fr docs/source ${READTHEDOCS_OUTPUT:-_readthedocs/html}/fr
 
 # Configuration Sphinx
-# English documentation is the primary version (built from docs/source/)
-# French documentation is built as post_build step with -D language=fr
 sphinx:
   builder: html
   configuration: docs/source/conf.py
