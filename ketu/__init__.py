@@ -52,7 +52,7 @@ Examples
 0.0
 """
 
-__version__ = "0.4.0"
+__version__ = "1.0.0"
 __author__ = "Loc Cosnier"
 __license__ = "MIT"
 
