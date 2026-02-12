@@ -110,10 +110,12 @@ Plans:
   3. All public functions have NumPy-style docstrings with working examples
   4. Mypy runs in strict mode without errors in CI
   5. Numerical precision guarantees are documented (1e-6 degrees for typical use)
-**Plans**: TBD
+**Plans:** 3 plans
 
 Plans:
-- [ ] 06-01: TBD
+- [ ] 06-01-PLAN.md — Purge chart/icalendar references from docs, write CHANGELOG 1.0.0 BREAKING CHANGES
+- [ ] 06-02-PLAN.md — Add NumPy-style docstrings to all public functions (~110 functions)
+- [ ] 06-03-PLAN.md — Configure mypy strict mode, fix type errors, add to CI
 
 ### Phase 7: Release Preparation
 **Goal**: Ketu 1.0.0 is published to PyPI with GitHub release
