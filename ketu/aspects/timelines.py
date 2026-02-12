@@ -237,19 +237,30 @@ def _enrich_aspect_event(
     aspect_name: str,
     orb_tolerance: float,
 ) -> AspectEvent:
-    """Enrich aspect moment with cycle and retrograde information.
+    """Enrich aspect moment with cycle and retrograde information
 
-    Args:
-        moment: AspectMoment from find_aspect_window()
-        body1_id: First body ID
-        body2_id: Second body ID
-        body1_name: First body name
-        body2_name: Second body name
-        aspect_angle: Target aspect angle
-        aspect_name: Aspect name
-        orb_tolerance: Maximum orb allowed
+    Parameters
+    ----------
+    moment : AspectMoment
+        AspectMoment from find_aspect_window()
+    body1_id : int
+        First body ID
+    body2_id : int
+        Second body ID
+    body1_name : str
+        First body name
+    body2_name : str
+        Second body name
+    aspect_angle : float
+        Target aspect angle
+    aspect_name : str
+        Aspect name
+    orb_tolerance : float
+        Maximum orb allowed
 
-    Returns:
+    Returns
+    -------
+    AspectEvent
         Enriched AspectEvent with all ML features
     """
     jd_exact = utc_to_julian(moment.exact)
@@ -323,7 +334,7 @@ def generate_aspect_timeline(
     timezone: Optional[Union[str, ZoneInfo]] = None,
     detect_retrograde: bool = True,
 ) -> AspectTimeline:
-    """Generate aspect timeline between two bodies for ML/research applications.
+    """Generate aspect timeline between two bodies for ML/research applications
 
     This function generates a complete timeline of planetary aspects between two bodies
     within a specified date range. The output is optimized for machine learning,
@@ -336,41 +347,52 @@ def generate_aspect_timeline(
     - ML-ready export formats (NumPy, JSON)
     - ETL-optimized data structure
 
-    Args:
-        body1: First body (name like "Sun" or ID like 0)
-        body2: Second body (name like "Mars" or ID like 4)
-        start_date: Start of timeline (datetime or ISO string like "2024-01-01")
-        end_date: End of timeline (datetime or ISO string like "2024-12-31")
-        aspects_list: List of aspects to include (default: BIG_FIVE)
-                     Can be names ("Conjunction"), IDs (0), or angles (0.0)
-        timezone: Timezone for display (default: UTC)
-                 Can be string like "Europe/Paris" or ZoneInfo object
-        detect_retrograde: Enable retrograde detection (default: True)
-                          When True, finds multiple exact moments during retrogrades
+    Parameters
+    ----------
+    body1 : str or int
+        First body (name like "Sun" or ID like 0)
+    body2 : str or int
+        Second body (name like "Mars" or ID like 4)
+    start_date : datetime or str
+        Start of timeline (datetime or ISO string like "2024-01-01")
+    end_date : datetime or str
+        End of timeline (datetime or ISO string like "2024-12-31")
+    aspects_list : list, optional
+        List of aspects to include (default: BIG_FIVE)
+        Can be names ("Conjunction"), IDs (0), or angles (0.0)
+    timezone : str or ZoneInfo, optional
+        Timezone for display (default: UTC)
+        Can be string like "Europe/Paris" or ZoneInfo object
+    detect_retrograde : bool, optional
+        Enable retrograde detection (default: True)
+        When True, finds multiple exact moments during retrogrades
 
-    Returns:
+    Returns
+    -------
+    AspectTimeline
         AspectTimeline object with events and export methods
 
-    Examples:
-        >>> # Mars-Sun aspects in 2024
-        >>> timeline = generate_aspect_timeline(
-        ...     body1="Sun",
-        ...     body2="Mars",
-        ...     start_date="2024-01-01",
-        ...     end_date="2024-12-31"
-        ... )
-        >>> print(f"Found {len(timeline)} aspect events")
-        >>> arr = timeline.to_numpy()  # Export to NumPy
-        >>>
-        >>> # Venus-Neptune with custom aspects
-        >>> timeline = generate_aspect_timeline(
-        ...     body1="Venus",
-        ...     body2="Neptune",
-        ...     start_date="2025-01-01",
-        ...     end_date="2025-06-30",
-        ...     aspects_list=["Conjunction", "Square", "Opposition"],
-        ...     timezone="America/New_York"
-        ... )
+    Examples
+    --------
+    >>> # Mars-Sun aspects in 2024
+    >>> timeline = generate_aspect_timeline(
+    ...     body1="Sun",
+    ...     body2="Mars",
+    ...     start_date="2024-01-01",
+    ...     end_date="2024-12-31"
+    ... )
+    >>> print(f"Found {len(timeline)} aspect events")
+    >>> arr = timeline.to_numpy()  # Export to NumPy
+    >>>
+    >>> # Venus-Neptune with custom aspects
+    >>> timeline = generate_aspect_timeline(
+    ...     body1="Venus",
+    ...     body2="Neptune",
+    ...     start_date="2025-01-01",
+    ...     end_date="2025-06-30",
+    ...     aspects_list=["Conjunction", "Square", "Opposition"],
+    ...     timezone="America/New_York"
+    ... )
     """
     # Default aspects: BIG_FIVE
     if aspects_list is None:

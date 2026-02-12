@@ -57,26 +57,44 @@ CYCLE_DTYPE = np.dtype([
 
 @dataclass
 class CycleState:
-    """Instantaneous state of a planetary cycle.
+    """Instantaneous state of a planetary cycle
 
-    Attributes:
-        julian_day: Julian date of calculation
-        body1_id: First body ID
-        body2_id: Second body ID
-        body1_lon: Longitude of body 1 (0-360°)
-        body2_lon: Longitude of body 2 (0-360°)
-        angular_separation: Angular distance (0-360°, in direction of cycle)
-        cycle_progress: Normalized progress through cycle (0.0-1.0)
-        cycle_phase: 1 for waxing (0→180°), -1 for waning (180→360°)
-        body1_velocity: Velocity of body 1 (deg/day)
-        body2_velocity: Velocity of body 2 (deg/day)
-        relative_velocity: Relative velocity (deg/day)
-        body1_retro: Is body 1 retrograde
-        body2_retro: Is body 2 retrograde
-        nearest_aspect: Nearest major aspect angle
-        aspect_distance: Signed distance to nearest aspect
-        in_aspect: Whether currently within orb of an aspect
-        aspect_orb: Current orb value if in aspect
+    Attributes
+    ----------
+    julian_day : float
+        Julian date of calculation
+    body1_id : int
+        First body ID
+    body2_id : int
+        Second body ID
+    body1_lon : float
+        Longitude of body 1 (0-360°)
+    body2_lon : float
+        Longitude of body 2 (0-360°)
+    angular_separation : float
+        Angular distance (0-360°, in direction of cycle)
+    cycle_progress : float
+        Normalized progress through cycle (0.0-1.0)
+    cycle_phase : int
+        1 for waxing (0→180°), -1 for waning (180→360°)
+    body1_velocity : float
+        Velocity of body 1 (deg/day)
+    body2_velocity : float
+        Velocity of body 2 (deg/day)
+    relative_velocity : float
+        Relative velocity (deg/day)
+    body1_retro : bool
+        Is body 1 retrograde
+    body2_retro : bool
+        Is body 2 retrograde
+    nearest_aspect : float
+        Nearest major aspect angle
+    aspect_distance : float
+        Signed distance to nearest aspect
+    in_aspect : bool
+        Whether currently within orb of an aspect
+    aspect_orb : float
+        Current orb value if in aspect
     """
     julian_day: float
     body1_id: int
@@ -116,29 +134,39 @@ def generate_cycle_series(
     use_cache: bool = True,
     cache: Optional["EphemerisCache"] = None,
 ) -> np.ndarray:
-    """Generate cycle state series for a planetary pair.
+    """Generate cycle state series for a planetary pair
 
     Calculates the instantaneous state of the cycle between two bodies
     at each provided timestamp. Optimized for vectorized operations.
 
-    Args:
-        body1: First body (name or ID) - typically the faster body
-        body2: Second body (name or ID) - typically the slower body
-        timestamps: Array of timestamps (datetime or Julian dates)
-        include_aspects: Calculate aspect proximity info (default: True)
-        use_cache: Use EphemerisCache for faster lookups (default: True)
-        cache: Optional EphemerisCache instance (uses default if None)
+    Parameters
+    ----------
+    body1 : str or int
+        First body (name or ID) - typically the faster body
+    body2 : str or int
+        Second body (name or ID) - typically the slower body
+    timestamps : numpy.ndarray or list of datetime
+        Array of timestamps (datetime or Julian dates)
+    include_aspects : bool, optional
+        Calculate aspect proximity info (default: True)
+    use_cache : bool, optional
+        Use EphemerisCache for faster lookups (default: True)
+    cache : EphemerisCache, optional
+        Optional EphemerisCache instance (uses default if None)
 
-    Returns:
+    Returns
+    -------
+    numpy.ndarray
         Structured numpy array with CYCLE_DTYPE
 
-    Example:
-        >>> from datetime import datetime, timedelta
-        >>> from ketu.cycles import generate_cycle_series
-        >>>
-        >>> timestamps = [datetime(2025, 1, 1) + timedelta(days=i) for i in range(365)]
-        >>> cycles = generate_cycle_series("Sun", "Mars", timestamps)
-        >>> print(cycles['angular_separation'][:5])
+    Examples
+    --------
+    >>> from datetime import datetime, timedelta
+    >>> from ketu.cycles import generate_cycle_series
+    >>>
+    >>> timestamps = [datetime(2025, 1, 1) + timedelta(days=i) for i in range(365)]
+    >>> cycles = generate_cycle_series("Sun", "Mars", timestamps)
+    >>> print(cycles['angular_separation'][:5])
     """
     # Convert body names to IDs
     body1_id = _get_body_id(body1)
@@ -280,24 +308,33 @@ def generate_multi_cycle_series(
     use_cache: bool = True,
     cache: Optional["EphemerisCache"] = None,
 ) -> dict:
-    """Generate cycle series for multiple planetary pairs.
+    """Generate cycle series for multiple planetary pairs
 
-    Args:
-        planet_pairs: List of (body1, body2) tuples
-        timestamps: Array of timestamps
-        include_aspects: Calculate aspect proximity (default: True)
-        use_cache: Use EphemerisCache for faster lookups (default: True)
-        cache: Optional EphemerisCache instance (uses default if None)
+    Parameters
+    ----------
+    planet_pairs : list of tuple
+        List of (body1, body2) tuples
+    timestamps : numpy.ndarray or list of datetime
+        Array of timestamps
+    include_aspects : bool, optional
+        Calculate aspect proximity (default: True)
+    use_cache : bool, optional
+        Use EphemerisCache for faster lookups (default: True)
+    cache : EphemerisCache, optional
+        Optional EphemerisCache instance (uses default if None)
 
-    Returns:
+    Returns
+    -------
+    dict of {str: numpy.ndarray}
         Dict mapping pair names to structured arrays
 
-    Example:
-        >>> from datetime import datetime, timedelta
-        >>> pairs = [("Sun", "Moon"), ("Sun", "Mars"), ("Jupiter", "Saturn")]
-        >>> timestamps = [datetime(2025, 1, 1) + timedelta(days=i) for i in range(365)]
-        >>> cycles = generate_multi_cycle_series(pairs, timestamps)
-        >>> sun_moon = cycles["Sun-Moon"]
+    Examples
+    --------
+    >>> from datetime import datetime, timedelta
+    >>> pairs = [("Sun", "Moon"), ("Sun", "Mars"), ("Jupiter", "Saturn")]
+    >>> timestamps = [datetime(2025, 1, 1) + timedelta(days=i) for i in range(365)]
+    >>> cycles = generate_multi_cycle_series(pairs, timestamps)
+    >>> sun_moon = cycles["Sun-Moon"]
     """
     result = {}
 

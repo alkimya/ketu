@@ -27,10 +27,12 @@ from .aspects import (
 
 
 def print_positions(jdate: float):
-    """Print formatted positions of all bodies for a given date.
+    """Print formatted positions of all bodies for a given date
 
-    Args:
-        jdate: Julian Date
+    Parameters
+    ----------
+    jdate : float
+        Julian Date
     """
     print("\n")
     print("------------- Bodies Positions -------------")
@@ -41,10 +43,12 @@ def print_positions(jdate: float):
 
 
 def print_aspects(jdate: float):
-    """Print formatted aspects between all bodies for a given date.
+    """Print formatted aspects between all bodies for a given date
 
-    Args:
-        jdate: Julian Date
+    Parameters
+    ----------
+    jdate : float
+        Julian Date
     """
     print("\n")
     print("------------- Bodies Aspects -------------")

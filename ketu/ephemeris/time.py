@@ -10,17 +10,23 @@ from typing import Union, Tuple
 
 
 def utc_to_julian(dtime: datetime) -> float:
-    """Convert UTC datetime to Julian Date.
+    """Convert UTC datetime to Julian Date
 
-    Args:
-        dtime: datetime object (timezone-aware or naive assumed UTC)
+    Parameters
+    ----------
+    dtime : datetime
+        datetime object (timezone-aware or naive assumed UTC)
 
-    Returns:
+    Returns
+    -------
+    float
         Julian Date as float
 
-    Notes:
-        Julian Date is the number of days since January 1, 4713 BCE noon.
-        This implementation follows the standard astronomical convention.
+    Notes
+    -----
+    Julian Date is the number of days since January 1, 4713 BCE noon.
+    This implementation follows the standard astronomical convention.
+    Precision: ±1 second for dates 1800-2200 CE.
     """
     # Ensure we have UTC time
     if dtime.tzinfo is not None:
@@ -54,13 +60,21 @@ def utc_to_julian(dtime: datetime) -> float:
 
 
 def julian_to_utc(jd: float) -> datetime:
-    """Convert Julian Date to UTC datetime.
+    """Convert Julian Date to UTC datetime
 
-    Args:
-        jd: Julian Date
+    Parameters
+    ----------
+    jd : float
+        Julian Date
 
-    Returns:
+    Returns
+    -------
+    datetime
         UTC datetime object
+
+    Notes
+    -----
+    Precision: ±1 second for dates 1800-2200 CE.
     """
     jd = jd + 0.5
     Z = int(jd)
@@ -108,17 +122,22 @@ def julian_to_utc(jd: float) -> datetime:
 
 
 def delta_t(year: float) -> float:
-    """Calculate Delta T (TT - UT1) for a given year.
+    """Calculate Delta T (TT - UT1) for a given year
 
-    Args:
-        year: Year as float (can include fractional year)
+    Parameters
+    ----------
+    year : float
+        Year as float (can include fractional year)
 
-    Returns:
+    Returns
+    -------
+    float
         Delta T in seconds
 
-    Notes:
-        Uses polynomial expressions from Espenak & Meeus (2006)
-        for historical values and extrapolation for future dates.
+    Notes
+    -----
+    Uses polynomial expressions from Espenak & Meeus (2006)
+    for historical values and extrapolation for future dates.
     """
     if year < -500:
         u = (year - 1820) / 100
@@ -194,12 +213,16 @@ def delta_t(year: float) -> float:
 
 
 def terrestrial_to_universal(jd_tt: float) -> float:
-    """Convert Terrestrial Time (TT) to Universal Time (UT).
+    """Convert Terrestrial Time (TT) to Universal Time (UT)
 
-    Args:
-        jd_tt: Julian Date in Terrestrial Time
+    Parameters
+    ----------
+    jd_tt : float
+        Julian Date in Terrestrial Time
 
-    Returns:
+    Returns
+    -------
+    float
         Julian Date in Universal Time
     """
     # Extract year from Julian Date for Delta T calculation
@@ -213,12 +236,16 @@ def terrestrial_to_universal(jd_tt: float) -> float:
 
 
 def universal_to_terrestrial(jd_ut: float) -> float:
-    """Convert Universal Time (UT) to Terrestrial Time (TT).
+    """Convert Universal Time (UT) to Terrestrial Time (TT)
 
-    Args:
-        jd_ut: Julian Date in Universal Time
+    Parameters
+    ----------
+    jd_ut : float
+        Julian Date in Universal Time
 
-    Returns:
+    Returns
+    -------
+    float
         Julian Date in Terrestrial Time
     """
     # Extract year from Julian Date for Delta T calculation
@@ -231,18 +258,23 @@ def universal_to_terrestrial(jd_ut: float) -> float:
 
 
 def equation_of_time(jd: float) -> float:
-    """Calculate the equation of time for a given Julian Date.
+    """Calculate the equation of time for a given Julian Date
 
-    Args:
-        jd: Julian Date
+    Parameters
+    ----------
+    jd : float
+        Julian Date
 
-    Returns:
+    Returns
+    -------
+    float
         Equation of time in minutes
 
-    Notes:
-        The equation of time is the difference between apparent solar time
-        and mean solar time. Positive values indicate the sun is ahead of
-        mean time.
+    Notes
+    -----
+    The equation of time is the difference between apparent solar time
+    and mean solar time. Positive values indicate the sun is ahead of
+    mean time.
     """
     # Days since J2000.0
     n = jd - 2451545.0
@@ -271,14 +303,19 @@ def equation_of_time(jd: float) -> float:
 
 
 def sidereal_time(jd: float, longitude: float = 0.0) -> float:
-    """Calculate Greenwich Mean Sidereal Time (GMST) or Local Sidereal Time.
+    """Calculate Greenwich Mean Sidereal Time (GMST) or Local Sidereal Time
 
-    Args:
-        jd: Julian Date in UT
-        longitude: Observer's longitude in degrees (east positive).
-                  If 0, returns GMST.
+    Parameters
+    ----------
+    jd : float
+        Julian Date in UT
+    longitude : float, optional
+        Observer's longitude in degrees (east positive).
+        If 0, returns GMST. (default: 0.0)
 
-    Returns:
+    Returns
+    -------
+    float
         Sidereal time in degrees (0-360)
     """
     # Days and centuries since J2000.0
@@ -300,17 +337,22 @@ def sidereal_time(jd: float, longitude: float = 0.0) -> float:
 
 
 def local_to_utc(dtime: datetime) -> datetime:
-    """Convert local time to UTC time.
+    """Convert local time to UTC time
 
-    Args:
-        dtime: datetime object (timezone-aware or naive)
+    Parameters
+    ----------
+    dtime : datetime
+        datetime object (timezone-aware or naive)
 
-    Returns:
+    Returns
+    -------
+    datetime
         UTC datetime object
 
-    Notes:
-        If datetime is naive, it's returned as-is with UTC timezone.
-        If datetime is timezone-aware, it's converted to UTC.
+    Notes
+    -----
+    If datetime is naive, it's returned as-is with UTC timezone.
+    If datetime is timezone-aware, it's converted to UTC.
     """
     if dtime.tzinfo is not None:
         return dtime.astimezone(timezone.utc)

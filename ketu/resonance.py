@@ -59,19 +59,26 @@ class ResonanceField:
     Computes continuous resonance scores for planetary configurations.
     """
     
-    def __init__(self, 
+    def __init__(self,
                  bodies: List[str] = DEFAULT_BODIES,
                  harmonics: List[float] = HARMONICS_H9_H10_H12,
                  sigma_lon: float = 3.0,
                  sigma_lat: float = 0.5,
                  sigma_dec: float = 1.0):
-        """
-        Args:
-            bodies: List of body names to include.
-            harmonics: List of aspect angles to score (Longitude).
-            sigma_lon: Std dev for Longitude Gaussian (degrees).
-            sigma_lat: Std dev for Latitude Gaussian (degrees).
-            sigma_dec: Std dev for Declination Gaussian (degrees).
+        """Initialize ResonanceField with configuration parameters
+
+        Parameters
+        ----------
+        bodies : list of str, optional
+            List of body names to include (default: DEFAULT_BODIES)
+        harmonics : list of float, optional
+            List of aspect angles to score for Longitude (default: HARMONICS_H9_H10_H12)
+        sigma_lon : float, optional
+            Std dev for Longitude Gaussian in degrees (default: 3.0)
+        sigma_lat : float, optional
+            Std dev for Latitude Gaussian in degrees (default: 0.5)
+        sigma_dec : float, optional
+            Std dev for Declination Gaussian in degrees (default: 1.0)
         """
         self.bodies = bodies
         self.body_indices = [BODY_INDICES[b] for b in bodies]

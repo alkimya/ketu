@@ -52,17 +52,23 @@ class LunarCalendar(NamedTuple):
 
 def find_new_moons_around_month(year: int, month: int,
                                  timezone: Optional[Union[str, ZoneInfo]] = None) -> List[datetime]:
-    """Find all new moons around a given month (previous, during, and next).
+    """Find all new moons around a given month (previous, during, and next)
 
     Searches for Sun-Moon conjunctions (0° aspect) in the period from 15 days
     before the month to 45 days after the start of the month.
 
-    Args:
-        year: Year
-        month: Month (1-12)
-        timezone: Timezone for results (default: UTC)
+    Parameters
+    ----------
+    year : int
+        Year
+    month : int
+        Month (1-12)
+    timezone : str or ZoneInfo, optional
+        Timezone for results (default: UTC)
 
-    Returns:
+    Returns
+    -------
+    list of datetime
         List of new moon datetimes, sorted chronologically
     """
     if timezone is None:
@@ -127,14 +133,20 @@ def find_new_moons_around_month(year: int, month: int,
 
 
 def select_primary_lunar_cycle(year: int, month: int, new_moons: List[datetime]) -> LunarCycle:
-    """Select the lunar cycle with the most days in the target month.
+    """Select the lunar cycle with the most days in the target month
 
-    Args:
-        year: Year
-        month: Month (1-12)
-        new_moons: List of new moon datetimes (at least 2)
+    Parameters
+    ----------
+    year : int
+        Year
+    month : int
+        Month (1-12)
+    new_moons : list of datetime
+        List of new moon datetimes (at least 2)
 
-    Returns:
+    Returns
+    -------
+    LunarCycle
         LunarCycle with the most overlap with the target month
     """
     if len(new_moons) < 2:
@@ -182,36 +194,44 @@ def generate_lunar_calendar(
     aspects: Optional[List] = None,
     timezone: Optional[Union[str, ZoneInfo]] = None
 ) -> LunarCalendar:
-    """Generate a lunar calendar for a given month.
+    """Generate a lunar calendar for a given month
 
     Finds the lunar cycle (new moon to new moon) with the most days in the
     specified month, then generates a timeline of all Sun-Moon aspects during
     that cycle with their exact windows (begin, exact, end).
 
-    Args:
-        year: Year
-        month: Month (1-12)
-        aspects: List of aspect angles to track (default: BIG_FIVE = [0, 60, 90, 120, 180])
-                 Examples: [0, 90, 180] for conjunction/square/opposition only
-                          [0, 30, 60, 90, 120, 150, 180] for all major aspects
-        timezone: Timezone for datetimes (default: UTC)
+    Parameters
+    ----------
+    year : int
+        Year
+    month : int
+        Month (1-12)
+    aspects : list, optional
+        List of aspect angles to track (default: BIG_FIVE = [0, 60, 90, 120, 180])
+        Examples: [0, 90, 180] for conjunction/square/opposition only
+                 [0, 30, 60, 90, 120, 150, 180] for all major aspects
+    timezone : str or ZoneInfo, optional
+        Timezone for datetimes (default: UTC)
 
-    Returns:
+    Returns
+    -------
+    LunarCalendar
         LunarCalendar containing the cycle info and Sun-Moon aspect windows
 
-    Example:
-        >>> from ketu.lunar_calendar import generate_lunar_calendar
-        >>>
-        >>> # Full lunar calendar (all BIG_FIVE aspects)
-        >>> calendar = generate_lunar_calendar(2024, 1, timezone="Europe/Paris")
-        >>> print(f"Cycle: {calendar.cycle.start} to {calendar.cycle.end}")
-        >>> print(f"Aspects found: {len(calendar.aspect_windows)}")
-        >>>
-        >>> # Only major aspects (New/Full/Quarters)
-        >>> calendar = generate_lunar_calendar(2024, 1, aspects=[0, 90, 180])
-        >>>
-        >>> # All aspects including semi-sextile and quincunx
-        >>> calendar = generate_lunar_calendar(2024, 1, aspects=[0, 30, 60, 90, 120, 150, 180])
+    Examples
+    --------
+    >>> from ketu.lunar_calendar import generate_lunar_calendar
+    >>>
+    >>> # Full lunar calendar (all BIG_FIVE aspects)
+    >>> calendar = generate_lunar_calendar(2024, 1, timezone="Europe/Paris")
+    >>> print(f"Cycle: {calendar.cycle.start} to {calendar.cycle.end}")
+    >>> print(f"Aspects found: {len(calendar.aspect_windows)}")
+    >>>
+    >>> # Only major aspects (New/Full/Quarters)
+    >>> calendar = generate_lunar_calendar(2024, 1, aspects=[0, 90, 180])
+    >>>
+    >>> # All aspects including semi-sextile and quincunx
+    >>> calendar = generate_lunar_calendar(2024, 1, aspects=[0, 30, 60, 90, 120, 150, 180])
     """
     # Default aspects: BIG_FIVE
     if aspects is None:
@@ -334,10 +354,12 @@ def generate_lunar_calendar(
 
 
 def print_lunar_calendar(calendar: LunarCalendar) -> None:
-    """Pretty-print a lunar calendar.
+    """Pretty-print a lunar calendar
 
-    Args:
-        calendar: LunarCalendar to display
+    Parameters
+    ----------
+    calendar : LunarCalendar
+        LunarCalendar to display
     """
     print(f"\n{'='*70}")
     print(f"LUNAR CALENDAR - {calendar.year}-{calendar.month:02d}")
