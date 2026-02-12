@@ -43,16 +43,11 @@ Documentation = "https://ketu.readthedocs.io"
 Repository = "https://github.com/alkimya/ketu"
 Issues = "https://github.com/alkimya/ketu/issues"
 
-[project.optional-dependencies]
-chart = ["matplotlib>=3.5.0"]
-icalendar = ["icalendar>=5.0.0"]
-all = ["matplotlib>=3.5.0", "icalendar>=5.0.0"]
-
 [project.scripts]
 ketu = "ketu.display:main"
 
 [tool.setuptools]
-packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.cycles", "ketu.cache", "ketu.export"]
+packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.cycles", "ketu.cache"]
 
 [tool.setuptools.package-data]
 ketu = ["py.typed"]
