@@ -6,7 +6,7 @@ Ketu 1.0 consolidates a working astronomical calculation library from v0.4.0 to 
 
 ## Phases
 
-- [ ] **Phase 1: API Surface Cleanup** - Define public API, remove export modules
+- [x] **Phase 1: API Surface Cleanup** - Define public API, remove export modules
 - [ ] **Phase 2: Correctness Fixes** - Fix cache and aspect bugs before 1.0
 - [ ] **Phase 3: Dependency Cleanup** - Remove hidden Pandas dependency
 - [ ] **Phase 4: Test Coverage Hardening** - Achieve 70% coverage with module targets
@@ -28,8 +28,8 @@ Ketu 1.0 consolidates a working astronomical calculation library from v0.4.0 to 
 **Plans:** 2 plans
 
 Plans:
-- [ ] 01-01-PLAN.md — Delete export modules, rewrite __init__.py, clean pyproject.toml, update test imports
-- [ ] 01-02-PLAN.md — Write UPGRADING.md migration guide, verify cleanup
+- [x] 01-01-PLAN.md — Delete export modules, rewrite __init__.py, clean pyproject.toml, update test imports
+- [x] 01-02-PLAN.md — Write UPGRADING.md migration guide, verify cleanup
 
 ### Phase 2: Correctness Fixes
 **Goal**: All known CONCERNS.md bugs are resolved with regression tests
@@ -120,7 +120,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. API Surface Cleanup | 0/2 | Planning complete | - |
+| 1. API Surface Cleanup | 2/2 | ✓ Complete | 2026-02-12 |
 | 2. Correctness Fixes | 0/TBD | Not started | - |
 | 3. Dependency Cleanup | 0/TBD | Not started | - |
 | 4. Test Coverage Hardening | 0/TBD | Not started | - |
@@ -130,4 +130,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-02-12*
-*Last updated: 2026-02-12*
+*Last updated: 2026-02-12 — Phase 1 complete*
