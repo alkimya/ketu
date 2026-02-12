@@ -3,14 +3,13 @@
 # This file is distributed under the same license as the Ketu package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-02 22:42+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2026-02-12 22:00+0100\n"
+"Last-Translator: Claude <noreply@anthropic.com>\n"
 "Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -21,36 +20,36 @@ msgstr ""
 
 #: ../../source/examples.md:1
 msgid "Examples"
-msgstr ""
+msgstr "Exemples"
 
 #: ../../source/examples.md:3
 msgid "Moon Phases with Pattern Matching"
-msgstr "## Phases de la Lune avec Pattern Matching"
+msgstr "Phases de la Lune avec Pattern Matching"
 
 #: ../../source/examples.md:70
 msgid "Planetary Transits"
-msgstr "return transits"
+msgstr "Transits planétaires"
 
 #: ../../source/examples.md:144
 msgid "Period Analysis"
-msgstr "return transits"
+msgstr "Analyse de période"
 
 #: ../../source/examples.md:221
 msgid "Advanced pattern matching for configurations"
-msgstr "## Pattern matching avancé pour les configurations"
+msgstr "Pattern matching avancé pour les configurations"
 
 #: ../../source/examples.md:288
 msgid "Next steps"
-msgstr "return transits"
+msgstr "Prochaines étapes"
 
 #: ../../source/examples.md:290
 msgid "Check out the [Concepts](concepts.md) to understand the theory"
-msgstr ""
+msgstr "Consultez les [Concepts](concepts.md) pour comprendre la théorie"
 
 #: ../../source/examples.md:291
 msgid "Refer to the [API](api.md) for technical details"
-msgstr "```python from typing import Optional"
+msgstr "Référez-vous à l'[API](api.md) pour les détails techniques"
 
 #: ../../source/examples.md:292
 msgid "Contribute to the project on [GitHub](https://github.com/alkimya/ketu)"
-msgstr "# Obtenir tous les aspects aspects = ketu.calculate_aspects(jday)"
+msgstr "Contribuez au projet sur [GitHub](https://github.com/alkimya/ketu)"

@@ -3,14 +3,13 @@
 # This file is distributed under the same license as the Ketu package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-12 21:33+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2026-02-12 22:00+0100\n"
+"Last-Translator: Claude <noreply@anthropic.com>\n"
 "Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -21,11 +20,11 @@ msgstr ""
 
 #: ../../source/api.md:1
 msgid "API Reference"
-msgstr "# Référence API"
+msgstr "Référence API"
 
 #: ../../source/api.md:3
 msgid "Overview"
-msgstr "### `body_properties()`"
+msgstr "Vue d'ensemble"
 
 #: ../../source/api.md:9
 msgid "Ketu's API is organized into several categories:"
@@ -33,27 +32,27 @@ msgstr "L'API de Ketu est organisée en plusieurs catégories :"
 
 #: ../../source/api.md:11
 msgid "**Data**: Structured arrays for bodies and aspects"
-msgstr "**Retour :** array structuré des aspects"
+msgstr "**Données** : Arrays structurés pour les corps et aspects"
 
 #: ../../source/api.md:12
 msgid "**Conversions**: Time and coordinates"
-msgstr "## Conversions temporelles"
+msgstr "**Conversions** : Temps et coordonnées"
 
 #: ../../source/api.md:13
 msgid "**Calculations**: Positions and aspects"
-msgstr "## Calculs d'aspects"
+msgstr "**Calculs** : Positions et aspects"
 
 #: ../../source/api.md:14
 msgid "**Utilities**: Display and helpers"
-msgstr "Calcule la distance angulaire entre deux positions."
+msgstr "**Utilitaires** : Affichage et helpers"
 
 #: ../../source/api.md:16
 msgid "Data"
-msgstr "### `distance()`"
+msgstr "Données"
 
 #: ../../source/api.md:18
 msgid "`bodies`"
-msgstr "### `bodies`"
+msgstr "`bodies`"
 
 #: ../../source/api.md:24
 msgid "Structured array containing celestial body information."
@@ -65,19 +64,19 @@ msgstr "**Structure :**"
 
 #: ../../source/api.md:28
 msgid "`name` (S12): Body name"
-msgstr "`body_name()` et `body_id()`"
+msgstr "`name` (S12) : Nom du corps"
 
 #: ../../source/api.md:29
 msgid "`id` (i4): Swiss Ephemeris identifier"
-msgstr "- `pos1`, `pos2` : positions en degrés"
+msgstr "`id` (i4) : Identifiant Swiss Ephemeris"
 
 #: ../../source/api.md:30
 msgid "`orb` (f4): Orb in degrees"
-msgstr "**Retour :** orbe maximum en degrés"
+msgstr "`orb` (f4) : Orbe en degrés"
 
 #: ../../source/api.md:31
 msgid "`speed` (f4): Average speed in °/day"
-msgstr "- `deg` : angle en degrés décimaux"
+msgstr "`speed` (f4) : Vitesse moyenne en °/jour"
 
 #: ../../source/api.md:33 ../../source/api.md:57 ../../source/api.md:99
 #: ../../source/api.md:121 ../../source/api.md:145 ../../source/api.md:167
@@ -87,7 +86,7 @@ msgstr "**Exemple :**"
 
 #: ../../source/api.md:43
 msgid "`aspects`"
-msgstr "### `aspects`"
+msgstr "`aspects`"
 
 #: ../../source/api.md:49
 msgid "Structured array of astrological aspects."
@@ -95,19 +94,19 @@ msgstr "Array structuré des aspects astrologiques."
 
 #: ../../source/api.md:53
 msgid "`name` (S12): Aspect name"
-msgstr "Calcule tous les aspects entre les corps."
+msgstr "`name` (S12) : Nom de l'aspect"
 
 #: ../../source/api.md:54
 msgid "`value` (f4): Angle in degrees"
-msgstr "- `deg` : angle en degrés décimaux"
+msgstr "`value` (f4) : Angle en degrés"
 
 #: ../../source/api.md:55
 msgid "`coef` (f4): Coefficient for orb calculation"
-msgstr "**Retour :** valeur en degrés ou AU"
+msgstr "`coef` (f4) : Coefficient pour le calcul d'orbe"
 
 #: ../../source/api.md:67
 msgid "`signs`"
-msgstr "### `signs`"
+msgstr "`signs`"
 
 #: ../../source/api.md:73
 msgid "List of zodiac signs."
@@ -115,11 +114,11 @@ msgstr "Liste des signes du zodiaque."
 
 #: ../../source/api.md:82
 msgid "Time Conversions"
-msgstr "## Conversions angulaires"
+msgstr "Conversions temporelles"
 
 #: ../../source/api.md:84
 msgid "`local_to_utc()`"
-msgstr "### `local_to_utc()`"
+msgstr "`local_to_utc()`"
 
 #: ../../source/api.md:90
 msgid "Converts a local datetime to UTC."
@@ -133,13 +132,11 @@ msgstr "**Paramètres :**"
 
 #: ../../source/api.md:94
 msgid "`dtime`: datetime to convert"
-msgstr "- `dtime` : datetime (UTC ou avec tzinfo)"
+msgstr "`dtime` : datetime à convertir"
 
 #: ../../source/api.md:95
 msgid "`zoneinfo`: timezone (optional if dtime already has tzinfo)"
-msgstr ""
-"- `dtime` : datetime à convertir - `zoneinfo` : timezone (optionnel si "
-"dtime a déjà tzinfo)"
+msgstr "`zoneinfo` : timezone (optionnel si dtime a déjà tzinfo)"
 
 #: ../../source/api.md:97
 msgid "**Returns:** datetime in UTC"
@@ -147,7 +144,7 @@ msgstr "**Retour :** datetime en UTC"
 
 #: ../../source/api.md:107
 msgid "`utc_to_julian()`"
-msgstr "### `utc_to_julian()`"
+msgstr "`utc_to_julian()`"
 
 #: ../../source/api.md:113
 msgid "Converts a UTC datetime to Julian Day."
@@ -155,7 +152,7 @@ msgstr "Convertit une datetime UTC en Jour Julien."
 
 #: ../../source/api.md:117
 msgid "`dtime`: datetime (UTC or with tzinfo)"
-msgstr "- `dtime` : datetime (UTC ou avec tzinfo)"
+msgstr "`dtime` : datetime (UTC ou avec tzinfo)"
 
 #: ../../source/api.md:119
 msgid "**Returns:** Julian Day (float)"
@@ -163,11 +160,11 @@ msgstr "**Retour :** Jour Julien (float)"
 
 #: ../../source/api.md:129
 msgid "Angular Conversions"
-msgstr "## Conversions angulaires"
+msgstr "Conversions angulaires"
 
 #: ../../source/api.md:131
 msgid "`decimal_degrees_to_dms()`"
-msgstr "### `decimal_degrees_to_dms()`"
+msgstr "`decimal_degrees_to_dms()`"
 
 #: ../../source/api.md:137
 msgid "Converts decimal degrees to degrees, minutes, seconds."
@@ -175,7 +172,7 @@ msgstr "Convertit des degrés décimaux en degrés, minutes, secondes."
 
 #: ../../source/api.md:141
 msgid "`deg`: angle in decimal degrees"
-msgstr "- `deg` : angle en degrés décimaux"
+msgstr "`deg` : angle en degrés décimaux"
 
 #: ../../source/api.md:143
 msgid "**Returns:** array [degrees, minutes, seconds]"
@@ -183,7 +180,7 @@ msgstr "**Retour :** array [degrés, minutes, secondes]"
 
 #: ../../source/api.md:153
 msgid "`distance()`"
-msgstr "### `distance()`"
+msgstr "`distance()`"
 
 #: ../../source/api.md:159
 msgid "Calculates the angular distance between two positions."
@@ -199,7 +196,7 @@ msgstr "**Retour :** distance en degrés (0-180)"
 
 #: ../../source/api.md:174
 msgid "`get_orb()`"
-msgstr "### `get_orb()`"
+msgstr "`get_orb()`"
 
 #: ../../source/api.md:180
 msgid "Calculates the orb for an aspect between two bodies."
@@ -207,11 +204,11 @@ msgstr "Calcule l'orbe pour un aspect entre deux corps."
 
 #: ../../source/api.md:184
 msgid "`body1`, `body2`: body indices"
-msgstr "- `b_long` : longitude en degrés"
+msgstr "`body1`, `body2` : indices de corps"
 
 #: ../../source/api.md:185
 msgid "`asp`: aspect index"
-msgstr "Calcule l'aspect entre deux corps."
+msgstr "`asp` : indice d'aspect"
 
 #: ../../source/api.md:187
 msgid "**Returns:** maximum orb in degrees"
@@ -219,11 +216,11 @@ msgstr "**Retour :** orbe maximum en degrés"
 
 #: ../../source/api.md:189
 msgid "Position Functions"
-msgstr "### `positions()`"
+msgstr "Fonctions de position"
 
 #: ../../source/api.md:191
 msgid "`body_properties()`"
-msgstr "### `body_properties()`"
+msgstr "`body_properties()`"
 
 #: ../../source/api.md:198
 msgid "Calculates all properties of a body (cached function)."
@@ -231,22 +228,21 @@ msgstr "Calcule toutes les propriétés d'un corps (fonction cachée)."
 
 #: ../../source/api.md:202 ../../source/api.md:219
 msgid "`jday`: Julian Day"
-msgstr "**Retour :** Jour Julien (float)"
+msgstr "`jday` : Jour Julien"
 
 #: ../../source/api.md:203
 msgid "`body`: Body ID"
-msgstr "`body_name()` et `body_id()`"
+msgstr "`body` : ID du corps"
 
 #: ../../source/api.md:205
-#, fuzzy
 msgid ""
 "**Returns:** array [longitude, latitude, distance, long_velocity, "
 "lat_velocity, dist_velocity]"
-msgstr "**Retour :** array [longitude, latitude, distance, vlong, vlat, vdist]"
+msgstr "**Retour :** array [longitude, latitude, distance, long_velocity, lat_velocity, dist_velocity]"
 
 #: ../../source/api.md:207
 msgid "`long()`, `lat()`, `dist_au()`"
-msgstr "### `long()`, `lat()`, `dist_au()`"
+msgstr "`long()`, `lat()`, `dist_au()`"
 
 #: ../../source/api.md:215
 msgid "Return respectively the longitude, latitude and distance of a body."
@@ -254,16 +250,15 @@ msgstr "Retournent respectivement la longitude, latitude et distance d'un corps.
 
 #: ../../source/api.md:220
 msgid "`body`: Body ID (0=Sun, 1=Moon, etc.)"
-msgstr "`body_name()` et `body_id()`"
+msgstr "`body` : ID du corps (0=Soleil, 1=Lune, etc.)"
 
 #: ../../source/api.md:222
 msgid "**Returns:** value in degrees or AU"
 msgstr "**Retour :** valeur en degrés ou AU"
 
 #: ../../source/api.md:224
-#, fuzzy
 msgid "`long_velocity()`, `lat_velocity()`, `dist_velocity_au()`"
-msgstr "### `long()`, `lat()`, `dist_au()`"
+msgstr "`long_velocity()`, `lat_velocity()`, `dist_velocity_au()`"
 
 #: ../../source/api.md:232
 msgid "Movement speeds (degrees/day or AU/day)."
@@ -271,11 +266,11 @@ msgstr "Vitesses de déplacement (degrés/jour ou AU/jour)."
 
 #: ../../source/api.md:234
 msgid "Analysis Functions"
-msgstr "## Fonctions d'analyse"
+msgstr "Fonctions d'analyse"
 
 #: ../../source/api.md:236
 msgid "`is_retrograde()`"
-msgstr "### `is_retrograde()`"
+msgstr "`is_retrograde()`"
 
 #: ../../source/api.md:242
 msgid "Checks if a body is retrograde."
@@ -283,7 +278,7 @@ msgstr "Vérifie si un corps est rétrograde."
 
 #: ../../source/api.md:251
 msgid "`is_ascending()`"
-msgstr "### `is_ascending()`"
+msgstr "`is_ascending()`"
 
 #: ../../source/api.md:257
 msgid "Checks if a body's latitude is increasing."
@@ -291,7 +286,7 @@ msgstr "Vérifie si la latitude d'un corps augmente."
 
 #: ../../source/api.md:259
 msgid "`body_sign()`"
-msgstr "### `body_sign()`"
+msgstr "`body_sign()`"
 
 #: ../../source/api.md:265
 msgid "Determines the sign and exact position."
@@ -315,15 +310,15 @@ msgstr "Conversion entre ID et nom d'un corps."
 
 #: ../../source/api.md:282
 msgid "Aspect Calculations"
-msgstr "## Calculs d'aspects"
+msgstr "Calculs d'aspects"
 
 #: ../../source/api.md:284
 msgid "`get_aspect()`"
-msgstr "### `get_aspect()`"
+msgstr "`get_aspect()`"
 
 #: ../../source/api.md:290
 msgid "Calculates the aspect between two bodies."
-msgstr "Calcule tous les aspects entre les corps."
+msgstr "Calcule l'aspect entre deux corps."
 
 #: ../../source/api.md:292
 msgid "**Returns:** tuple (body1, body2, aspect_id, orb) or None"
@@ -331,11 +326,11 @@ msgstr "**Retour :** tuple (body1, body2, aspect_id, orbe) ou None"
 
 #: ../../source/api.md:294
 msgid "`calculate_aspects()`"
-msgstr "### `calculate_aspects()`"
+msgstr "`calculate_aspects()`"
 
 #: ../../source/api.md:300
 msgid "Calculates all aspects between bodies."
-msgstr "Calcule l'aspect entre deux corps."
+msgstr "Calcule tous les aspects entre les corps."
 
 #: ../../source/api.md:302
 msgid "**Returns:** structured array of aspects"
@@ -343,7 +338,7 @@ msgstr "**Retour :** array structuré des aspects"
 
 #: ../../source/api.md:304
 msgid "`positions()`"
-msgstr "### `positions()`"
+msgstr "`positions()`"
 
 #: ../../source/api.md:310
 msgid "Calculates all body longitudes."
@@ -351,11 +346,11 @@ msgstr "Calcule toutes les longitudes des corps."
 
 #: ../../source/api.md:312
 msgid "Display Functions"
-msgstr "## Fonctions d'analyse"
+msgstr "Fonctions d'affichage"
 
 #: ../../source/api.md:314
 msgid "`print_positions()` and `print_aspects()`"
-msgstr "### `print_positions()` et `print_aspects()`"
+msgstr "`print_positions()` et `print_aspects()`"
 
 #: ../../source/api.md:321
 msgid "Display formatted positions and aspects."
@@ -363,11 +358,11 @@ msgstr "Affichent les positions et aspects formatés."
 
 #: ../../source/api.md:323
 msgid "Main Function"
-msgstr "## Fonctions d'analyse"
+msgstr "Fonction principale"
 
 #: ../../source/api.md:325
 msgid "`main()`"
-msgstr "### `main()`"
+msgstr "`main()`"
 
 #: ../../source/api.md:331
 msgid "Entry point for the interactive CLI interface."
@@ -375,79 +370,79 @@ msgstr "Point d'entrée pour l'interface CLI interactive."
 
 #: ../../source/api.md:333
 msgid "Technical Notes"
-msgstr "## Notes techniques"
+msgstr "Notes techniques"
 
 #: ../../source/api.md:335
 msgid "Calculations use `@lru_cache` to optimize performance"
-msgstr "Calcule toutes les longitudes des corps."
+msgstr "Les calculs utilisent `@lru_cache` pour optimiser les performances"
 
 #: ../../source/api.md:336
 msgid "Body IDs follow the Swiss Ephemeris convention"
-msgstr "Calcule toutes les propriétés d'un corps (fonction cachée)."
+msgstr "Les IDs de corps suivent la convention Swiss Ephemeris"
 
 #: ../../source/api.md:337
 msgid "Angles are always in degrees (0-360)"
-msgstr "**Retour :** distance en degrés (0-180)"
+msgstr "Les angles sont toujours en degrés (0-360)"
 
 #: ../../source/api.md:338
 msgid "Time precision is approximately 1 second"
-msgstr "### `print_positions()` et `print_aspects()`"
+msgstr "La précision temporelle est d'environ 1 seconde"
 
 #: ../../source/api.md:340
 msgid "See Also"
-msgstr "**Exemple :**"
+msgstr "Voir aussi"
 
 #: ../../source/api.md:342
 msgid "[Concepts](concepts.md) for theory"
-msgstr "## Conversions temporelles"
+msgstr "[Concepts](concepts.md) pour la théorie"
 
 #: ../../source/api.md:343
 msgid "[Examples](examples.md) for more use cases"
-msgstr "Affichent les positions et aspects formatés."
+msgstr "[Exemples](examples.md) pour plus de cas d'usage"
 
 #: ../../source/api.md:344
 msgid "[Swiss Ephemeris](https://www.astro.com/swisseph/) for technical details"
-msgstr ""
+msgstr "[Swiss Ephemeris](https://www.astro.com/swisseph/) pour les détails techniques"
 
 #: ../../source/api.md:346
 msgid "Complex Analysis"
-msgstr ""
+msgstr "Analyse complexe"
 
 #: ../../source/api.md:348
 msgid "`ketu.complex`"
-msgstr ""
+msgstr "`ketu.complex`"
 
 #: ../../source/api.md:350
 msgid "New in v0.4.0. Provides vector-safe cycle analysis using complex numbers."
-msgstr ""
+msgstr "Nouveau en v0.4.0. Fournit une analyse de cycles vectorielle avec nombres complexes."
 
 #: ../../source/api.md:365
 msgid "`ZodiacPoint`"
-msgstr ""
+msgstr "`ZodiacPoint`"
 
 #: ../../source/api.md:367
 msgid "`from_degrees(deg)`: Create from longitude"
-msgstr ""
+msgstr "`from_degrees(deg)` : Créer à partir d'une longitude"
 
 #: ../../source/api.md:368
 msgid "`to_ml_features()`: Export cos/sin components"
-msgstr ""
+msgstr "`to_ml_features()` : Exporter les composantes cos/sin"
 
 #: ../../source/api.md:370
 msgid "`CycleRatio`"
-msgstr ""
+msgstr "`CycleRatio`"
 
 #: ../../source/api.md:372
 msgid "`separation_degrees`: Angular separation [0, 360)"
-msgstr ""
+msgstr "`separation_degrees` : Séparation angulaire [0, 360)"
 
 #: ../../source/api.md:373
 msgid "`is_waxing`: True if 0-180"
-msgstr ""
+msgstr "`is_waxing` : True si 0-180"
 
 #: ../../source/api.md:374
 msgid "`nearest_aspect`: Find closest H1-H10 aspect"
-msgstr ""
+msgstr "`nearest_aspect` : Trouve l'aspect H1-H10 le plus proche"
 
 #~ msgid "`vlong()`, `vlat()`, `vdist_au()`"
 #~ msgstr "### `vlong()`, `vlat()`, `vdist_au()`"

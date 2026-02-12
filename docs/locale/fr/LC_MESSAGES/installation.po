@@ -3,14 +3,13 @@
 # This file is distributed under the same license as the Ketu package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-02 22:42+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2026-02-12 22:00+0100\n"
+"Last-Translator: Claude <noreply@anthropic.com>\n"
 "Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -21,27 +20,27 @@ msgstr ""
 
 #: ../../source/installation.md:1
 msgid "Installation"
-msgstr "# Installation"
+msgstr "Installation"
 
 #: ../../source/installation.md:3
 msgid "Prerequisites"
-msgstr "## Prérequis"
+msgstr "Prérequis"
 
 #: ../../source/installation.md:5
 msgid "Ketu requires:"
-msgstr "## Prérequis"
+msgstr "Ketu nécessite :"
 
 #: ../../source/installation.md:7
 msgid "Python 3.10 or higher"
-msgstr "### En Python"
+msgstr "Python 3.10 ou supérieur"
 
 #: ../../source/installation.md:8
 msgid "pip (Python package manager)"
-msgstr "### En ligne de commande"
+msgstr "pip (gestionnaire de paquets Python)"
 
 #: ../../source/installation.md:10
 msgid "Stable Installation from PyPI"
-msgstr "# Installation"
+msgstr "Installation stable depuis PyPI"
 
 #: ../../source/installation.md:12
 msgid "The simplest way to install Ketu:"
@@ -53,11 +52,11 @@ msgstr "## Installation depuis les sources"
 
 #: ../../source/installation.md:20
 msgid "Clone the Repository"
-msgstr "### Cloner le dépôt"
+msgstr "Cloner le dépôt"
 
 #: ../../source/installation.md:27
 msgid "Development Mode Installation"
-msgstr "## Vérification de l'installation"
+msgstr "Installation en mode développement"
 
 #: ../../source/installation.md:33
 msgid ""
@@ -73,19 +72,19 @@ msgstr "## Installation dans un environnement virtuel (recommandé)"
 
 #: ../../source/installation.md:37
 msgid "With venv"
-msgstr "### Avec venv"
+msgstr "Avec venv"
 
 #: ../../source/installation.md:47
 msgid "Installation Verification"
-msgstr "# Installation"
+msgstr "Vérification de l'installation"
 
 #: ../../source/installation.md:49
 msgid "Command Line"
-msgstr "### Cloner le dépôt"
+msgstr "En ligne de commande"
 
 #: ../../source/installation.md:56
 msgid "In Python"
-msgstr "### En Python"
+msgstr "En Python"
 
 #: ../../source/installation.md:64
 msgid "Dependencies"
@@ -97,35 +96,35 @@ msgstr "Ketu utilise les bibliothèques suivantes :"
 
 #: ../../source/installation.md
 msgid "Library"
-msgstr ""
+msgstr "Bibliothèque"
 
 #: ../../source/installation.md
 msgid "Version"
-msgstr "# Installation"
+msgstr "Version"
 
 #: ../../source/installation.md
 msgid "Description"
-msgstr "## Désinstallation"
+msgstr "Description"
 
 #: ../../source/installation.md
 msgid "numpy"
-msgstr ""
+msgstr "numpy"
 
 #: ../../source/installation.md
 msgid "≥1.20.0"
-msgstr ""
+msgstr "≥1.20.0"
 
 #: ../../source/installation.md
 msgid "Numerical computations and arrays"
-msgstr "## Installation depuis les sources"
+msgstr "Calculs numériques et tableaux"
 
 #: ../../source/installation.md:72
 msgid "Uninstallation"
-msgstr "# Installation"
+msgstr "Désinstallation"
 
 #: ../../source/installation.md:78
 msgid "Next Steps"
-msgstr "Ketu nécessite :"
+msgstr "Prochaines étapes"
 
 #: ../../source/installation.md:80
 msgid ""

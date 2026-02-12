@@ -3,14 +3,13 @@
 # This file is distributed under the same license as the Ketu package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-12 21:33+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2026-02-12 23:00+0100\n"
+"Last-Translator: Claude Code <noreply@anthropic.com>\n"
 "Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -21,38 +20,40 @@ msgstr ""
 
 #: ../../source/migration.md:1
 msgid "Migration Guide"
-msgstr "# Guide de Migration"
+msgstr "Guide de Migration"
 
 #: ../../source/migration.md:3
-#, fuzzy
 msgid "This guide helps you migrate from Ketu v0.4.0 to v1.0.0."
-msgstr ""
-"Ce guide vous aide à migrer de Ketu v0.2.x (basé sur pyswisseph) vers "
-"v0.3.0 (NumPy pur)."
+msgstr "Ce guide vous aide à migrer de Ketu v0.4.0 vers v1.0.0."
 
 #: ../../source/migration.md:5
 msgid ""
 "**This is a MAJOR version bump with breaking changes.** See "
 "[UPGRADING.md](../../UPGRADING.md) for detailed migration instructions."
 msgstr ""
+"**Il s'agit d'une version MAJEURE avec des changements incompatibles.** "
+"Consultez [UPGRADING.md](../../UPGRADING.md) pour des instructions "
+"détaillées de migration."
 
 #: ../../source/migration.md:7
 msgid "What Changed"
-msgstr "### Changements Internes"
+msgstr "Ce qui a Changé"
 
 #: ../../source/migration.md:9
 msgid "Removed: Export Modules"
-msgstr ""
+msgstr "Suppression : Modules d'Export"
 
 #: ../../source/migration.md:11
 msgid ""
 "Ketu 1.0 is a pure calculation library. Visualization and calendar export"
 " features have been removed:"
 msgstr ""
+"Ketu 1.0 est une bibliothèque de calcul pure. Les fonctionnalités de "
+"visualisation et d'export de calendrier ont été supprimées :"
 
 #: ../../source/migration.md:13
 msgid "**Removed modules**: `ketu.export.chart`, `ketu.export.icalendar`"
-msgstr ""
+msgstr "**Modules supprimés** : `ketu.export.chart`, `ketu.export.icalendar`"
 
 #: ../../source/migration.md:14
 msgid ""
@@ -60,12 +61,18 @@ msgid ""
 "`export_lunations_to_ical()`, `export_aspects_to_ical()`, "
 "`export_transits_to_ical()`"
 msgstr ""
+"**Fonctions supprimées** : `draw_zodiacal_chart()`, "
+"`export_lunations_to_ical()`, `export_aspects_to_ical()`, "
+"`export_transits_to_ical()`"
 
 #: ../../source/migration.md:15
 msgid ""
 "**Why**: Ketu focuses on numerical calculations. Visualization belongs in"
 " application layers (GUI, web dashboards, etc.)"
 msgstr ""
+"**Pourquoi** : Ketu se concentre sur les calculs numériques. La "
+"visualisation appartient aux couches applicatives (interface graphique, "
+"tableaux de bord web, etc.)"
 
 #: ../../source/migration.md:17
 msgid ""
@@ -73,216 +80,243 @@ msgid ""
 "implement visualization in your application layer using Ketu's "
 "calculation results."
 msgstr ""
+"**Migration** : Si vous avez besoin de ces fonctionnalités, fixez la "
+"version à `ketu==0.4.0` ou implémentez la visualisation dans votre couche "
+"applicative en utilisant les résultats de calcul de Ketu."
 
 #: ../../source/migration.md:19
-#, fuzzy
 msgid "Removed: Pandas Dependency"
-msgstr "### Dépendances"
+msgstr "Suppression : Dépendance Pandas"
 
 #: ../../source/migration.md:21
 msgid ""
 "`generate_aspect_timeline()` now returns NumPy structured array (was "
 "DataFrame)"
 msgstr ""
+"`generate_aspect_timeline()` retourne maintenant un tableau structuré "
+"NumPy (était DataFrame)"
 
 #: ../../source/migration.md:22
 msgid "`AspectTimeline.to_pandas()` removed"
-msgstr ""
+msgstr "`AspectTimeline.to_pandas()` supprimée"
 
 #: ../../source/migration.md:23
 msgid ""
 "**Migration**: Use `import pandas as pd; df = pd.DataFrame(timeline)` for"
 " manual conversion"
 msgstr ""
+"**Migration** : Utilisez `import pandas as pd; df = pd.DataFrame(timeline)` "
+"pour une conversion manuelle"
 
 #: ../../source/migration.md:25
 msgid "Renamed: Velocity Functions (Breaking)"
-msgstr ""
+msgstr "Renommage : Fonctions de Vélocité (Incompatible)"
 
 #: ../../source/migration.md:27
 msgid "`vlong()` → `long_velocity()`"
-msgstr ""
+msgstr "`vlong()` → `long_velocity()`"
 
 #: ../../source/migration.md:28
 msgid "`vlat()` → `lat_velocity()`"
-msgstr ""
+msgstr "`vlat()` → `lat_velocity()`"
 
 #: ../../source/migration.md:29
 msgid "`vdist_au()` → `dist_velocity_au()`"
-msgstr ""
+msgstr "`vdist_au()` → `dist_velocity_au()`"
 
 #: ../../source/migration.md:30
 msgid ""
 "**Why**: Explicit names prevent confusion. The old \"v\" prefix was "
 "ambiguous."
 msgstr ""
+"**Pourquoi** : Les noms explicites évitent la confusion. L'ancien préfixe "
+"\"v\" était ambigu."
 
 #: ../../source/migration.md:32
 msgid "**Migration**: Use find-and-replace in your codebase:"
-msgstr ""
+msgstr "**Migration** : Utilisez rechercher-remplacer dans votre code :"
 
 #: ../../source/migration.md:39
 msgid "Changed: Public API Surface"
-msgstr ""
+msgstr "Modification : Surface de l'API Publique"
 
 #: ../../source/migration.md:41
 msgid "`ketu.__init__.py` exports only metadata + core constants"
-msgstr ""
+msgstr "`ketu.__init__.py` exporte uniquement les métadonnées + constantes de base"
 
 #: ../../source/migration.md:42
 msgid ""
 "Functions accessed via submodule imports: `from ketu.calculations import "
 "long`"
 msgstr ""
+"Fonctions accessibles via des imports de sous-modules : `from ketu.calculations "
+"import long`"
 
 #: ../../source/migration.md:43
 msgid "`ketu.__all__` explicitly lists public API"
-msgstr ""
+msgstr "`ketu.__all__` liste explicitement l'API publique"
 
 #: ../../source/migration.md:45
 msgid ""
 "**Migration**: Most users won't notice this change. If you were importing"
 " from internal modules, switch to public API imports."
 msgstr ""
+"**Migration** : La plupart des utilisateurs ne remarqueront pas ce changement. "
+"Si vous importiez depuis des modules internes, passez aux imports de l'API publique."
 
 #: ../../source/migration.md:47
 msgid "Correctness Fixes"
-msgstr ""
+msgstr "Corrections de Justesse"
 
 #: ../../source/migration.md:49
 msgid ""
 "**IMPORTANT: These fixes change calculation results. Recompute cached "
 "0.4.0 results.**"
 msgstr ""
+"**IMPORTANT : Ces corrections modifient les résultats de calcul. Recalculez "
+"les résultats mis en cache de la version 0.4.0.**"
 
 #: ../../source/migration.md:51
 msgid "Fixed Issues"
-msgstr ""
+msgstr "Problèmes Corrigés"
 
 #: ../../source/migration.md:53
 msgid ""
 "**Cache operator precedence bug**: `use_cache=False` was ignored due to "
 "missing parentheses"
 msgstr ""
+"**Bug de précédence d'opérateur du cache** : `use_cache=False` était ignoré "
+"en raison de parenthèses manquantes"
 
 #: ../../source/migration.md:54
 msgid ""
 "**Aspect vectorization non-determinism**: "
 "`calculate_aspects_vectorized()` now returns consistent results"
 msgstr ""
+"**Non-déterminisme de la vectorisation des aspects** : "
+"`calculate_aspects_vectorized()` retourne maintenant des résultats cohérents"
 
 #: ../../source/migration.md:55
 msgid ""
 "**Moon velocity wrapping**: Correct velocity at 360°/0° boundary (was "
 "showing ±360° spikes)"
 msgstr ""
+"**Enroulement de la vélocité lunaire** : Vélocité correcte à la frontière "
+"360°/0° (affichait auparavant des pics de ±360°)"
 
 #: ../../source/migration.md:57
 msgid ""
 "**Impact**: If you cached results from 0.4.0, recompute them with 1.0.0 "
 "for correctness."
 msgstr ""
+"**Impact** : Si vous avez mis en cache des résultats de la version 0.4.0, "
+"recalculez-les avec la version 1.0.0 pour assurer leur justesse."
 
 #: ../../source/migration.md:59
-#, fuzzy
 msgid "New Features"
-msgstr "### Changements Internes"
+msgstr "Nouvelles Fonctionnalités"
 
 #: ../../source/migration.md:61
 msgid "**Type hints everywhere**: mypy strict mode compliance"
-msgstr ""
+msgstr "**Annotations de type partout** : conformité au mode strict de mypy"
 
 #: ../../source/migration.md:62
 msgid "**NumPy-style docstrings**: Examples section in all public functions"
 msgstr ""
+"**Docstrings au style NumPy** : section Exemples dans toutes les fonctions "
+"publiques"
 
 #: ../../source/migration.md:63
 msgid ""
 "**Standardized error messages**: All `ValueError` messages include "
 "received value + valid options"
 msgstr ""
+"**Messages d'erreur standardisés** : Tous les messages `ValueError` incluent "
+"la valeur reçue + les options valides"
 
 #: ../../source/migration.md:64
 msgid ""
 "**Numerical precision guarantees**: ±1e-6° for angular separation "
 "(documented)"
 msgstr ""
+"**Garanties de précision numérique** : ±1e-6° pour la séparation angulaire "
+"(documenté)"
 
 #: ../../source/migration.md:66
 msgid "Migration Steps"
-msgstr "# Guide de Migration"
+msgstr "Étapes de Migration"
 
 #: ../../source/migration.md:68
-#, fuzzy
 msgid "Step 1: Review Breaking Changes"
-msgstr "### Changements Internes"
+msgstr "Étape 1 : Examiner les Changements Incompatibles"
 
 #: ../../source/migration.md:70
 msgid ""
 "Read [UPGRADING.md](../../UPGRADING.md) for detailed migration "
 "instructions."
 msgstr ""
+"Lisez [UPGRADING.md](../../UPGRADING.md) pour des instructions détaillées "
+"de migration."
 
 #: ../../source/migration.md:72
-#, fuzzy
 msgid "Step 2: Update Package"
-msgstr "## Obtenir de l'Aide"
+msgstr "Étape 2 : Mettre à Jour le Paquet"
 
 #: ../../source/migration.md:78
-#, fuzzy
 msgid "Step 3: Update Your Code"
-msgstr "### Étape 3 : Tester Votre Code"
+msgstr "Étape 3 : Mettre à Jour Votre Code"
 
 #: ../../source/migration.md:80
 msgid "**Replace velocity function calls:**"
-msgstr ""
+msgstr "**Remplacez les appels aux fonctions de vélocité :**"
 
 #: ../../source/migration.md:90
 msgid "**Replace pandas conversions:**"
-msgstr ""
+msgstr "**Remplacez les conversions pandas :**"
 
 #: ../../source/migration.md:103
 msgid "**Remove chart/icalendar calls:**"
-msgstr ""
+msgstr "**Supprimez les appels chart/icalendar :**"
 
 #: ../../source/migration.md:114
-#, fuzzy
 msgid "Step 4: Test Your Code"
-msgstr "### Étape 3 : Tester Votre Code"
+msgstr "Étape 4 : Tester Votre Code"
 
 #: ../../source/migration.md:116
 msgid "Run your test suite to catch any remaining issues."
-msgstr ""
+msgstr "Exécutez votre suite de tests pour détecter tout problème restant."
 
 #: ../../source/migration.md:118
 msgid "Step 5: Recompute Cached Results"
-msgstr ""
+msgstr "Étape 5 : Recalculer les Résultats Mis en Cache"
 
 #: ../../source/migration.md:120
 msgid ""
 "If you cached calculation results from 0.4.0, recompute them for "
 "correctness."
 msgstr ""
+"Si vous avez mis en cache des résultats de calcul de la version 0.4.0, "
+"recalculez-les pour assurer leur justesse."
 
 #: ../../source/migration.md:122
 msgid "Rollback"
-msgstr ""
+msgstr "Retour Arrière"
 
 #: ../../source/migration.md:124
-#, fuzzy
 msgid "If you need to rollback to v0.4.0:"
-msgstr "Si vous devez revenir à v0.2.x :"
+msgstr "Si vous devez revenir à la version v0.4.0 :"
 
 #: ../../source/migration.md:130
-#, fuzzy
 msgid ""
 "Note: v0.4.x will not receive further updates. v1.0.0 is the recommended "
 "version."
-msgstr "Note : v0.2.x ne recevra plus de mises à jour."
+msgstr ""
+"Note : v0.4.x ne recevra plus de mises à jour. v1.0.0 est la version "
+"recommandée."
 
 #: ../../source/migration.md:132
 msgid "Getting Help"
-msgstr "### Changements Internes"
+msgstr "Obtenir de l'Aide"
 
 #: ../../source/migration.md:134
 msgid "If you encounter issues:"
@@ -290,15 +324,15 @@ msgstr "Si vous rencontrez des problèmes :"
 
 #: ../../source/migration.md:136
 msgid "Check [UPGRADING.md](../../UPGRADING.md) for detailed migration guide"
-msgstr ""
+msgstr "Consultez [UPGRADING.md](../../UPGRADING.md) pour un guide de migration détaillé"
 
 #: ../../source/migration.md:137
 msgid "Review [CHANGELOG.md](../../CHANGELOG.md) for complete list of changes"
-msgstr ""
+msgstr "Consultez [CHANGELOG.md](../../CHANGELOG.md) pour la liste complète des changements"
 
 #: ../../source/migration.md:138
 msgid "Open an [issue](https://github.com/alkimya/ketu/issues)"
-msgstr ""
+msgstr "Ouvrez une [issue](https://github.com/alkimya/ketu/issues)"
 
 #~ msgid "Dependencies"
 #~ msgstr "### Dépendances"
@@ -516,4 +550,3 @@ msgstr ""
 
 #~ msgid "Review [examples](examples.md)"
 #~ msgstr ""
-

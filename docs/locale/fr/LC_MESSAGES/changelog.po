@@ -3,14 +3,13 @@
 # This file is distributed under the same license as the Ketu package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2026-02-12 21:33+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2026-02-12 22:00+0100\n"
+"Last-Translator: Claude Code <noreply@anthropic.com>\n"
 "Language: fr\n"
 "Language-Team: fr <LL@li.org>\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
@@ -21,7 +20,7 @@ msgstr ""
 
 #: ../../source/changelog.md:1
 msgid "Changelog"
-msgstr "# Changelog"
+msgstr "Journal des modifications"
 
 #: ../../source/changelog.md:3
 msgid "All notable changes to Ketu are documented here."
@@ -38,13 +37,12 @@ msgstr ""
 "[Semantic Versioning](https://semver.org/spec/v2.0.0.html)."
 
 #: ../../source/changelog.md:8
-#, fuzzy
 msgid "[0.4.0] - 2026-01-14"
-msgstr "## [0.1.0] - 2024-01-XX"
+msgstr "[0.4.0] - 2026-01-14"
 
 #: ../../source/changelog.md:10
 msgid "Added 0.4.0"
-msgstr ""
+msgstr "Ajouts 0.4.0"
 
 #: ../../source/changelog.md:12
 #, python-brace-format
@@ -52,294 +50,296 @@ msgid ""
 "**Complex Engine**: New `ketu.complex` module using $e^{i\\theta}$ "
 "representation for cycles."
 msgstr ""
+"**Moteur complexe** : Nouveau module `ketu.complex` utilisant la représentation $e^{i\\theta}$ "
+"pour les cycles."
 
 #: ../../source/changelog.md:13
 msgid "**Expanded Aspects**: Support for 14 aspects (Harmonics H1-H6, H9, H10)."
-msgstr ""
+msgstr "**Aspects étendus** : Support de 14 aspects (Harmoniques H1-H6, H9, H10)."
 
 #: ../../source/changelog.md:14
 msgid "**Ephemeris Cache**: Persistent cache for O(1) position lookups."
-msgstr ""
+msgstr "**Cache d'éphémérides** : Cache persistant pour des recherches de positions en O(1)."
 
 #: ../../source/changelog.md:15
 msgid ""
 "**Vectorized Cycles**: Refactored `ketu.cycles` to use complex vector "
 "operations."
 msgstr ""
+"**Cycles vectorisés** : Refonte de `ketu.cycles` pour utiliser des opérations "
+"vectorielles complexes."
 
 #: ../../source/changelog.md:16
 msgid ""
 "**ML Features**: Direct generation of Machine Learning features "
 "(`cos_phase`, `sin_phase`)."
 msgstr ""
+"**Fonctionnalités ML** : Génération directe de features pour le Machine Learning "
+"(`cos_phase`, `sin_phase`)."
 
 #: ../../source/changelog.md:18
-#, fuzzy
 msgid "[0.3.0] - 2025-12-XX"
-msgstr "## [0.1.0] - 2024-01-XX"
+msgstr "[0.3.0] - 2025-12-XX"
 
 #: ../../source/changelog.md:20
 msgid "Added 0.3.0"
-msgstr ""
+msgstr "Ajouts 0.3.0"
 
 #: ../../source/changelog.md:22
 msgid "**Pure NumPy**: Removed dependency on `pyswisseph` binary."
-msgstr ""
+msgstr "**Pure NumPy** : Suppression de la dépendance au binaire `pyswisseph`."
 
 #: ../../source/changelog.md:23
 msgid "**New Modules**: `ketu.ephemeris`, `ketu.cycles`."
-msgstr ""
+msgstr "**Nouveaux modules** : `ketu.ephemeris`, `ketu.cycles`."
 
 #: ../../source/changelog.md:24
 msgid "**Performance**: Significant speedups in time series generation."
-msgstr ""
+msgstr "**Performance** : Accélérations significatives dans la génération de séries temporelles."
 
 #: ../../source/changelog.md:26
 msgid "[0.2.1] - 2025-10-27"
-msgstr "## [0.2.1] - 2025-10-27"
+msgstr "[0.2.1] - 2025-10-27"
 
 #: ../../source/changelog.md:28
 msgid "Minor fix"
-msgstr "### Modifié"
+msgstr "Correction mineure"
 
 #: ../../source/changelog.md:30
 msgid "[0.2.0] - 2025-10-27"
-msgstr "## [0.2.0] - 2025-10-27"
+msgstr "[0.2.0] - 2025-10-27"
 
 #: ../../source/changelog.md:32
 msgid "Added 0.2.0"
-msgstr ""
+msgstr "Ajouts 0.2.0"
 
 #: ../../source/changelog.md:34
 msgid "Full packaging setup for a PyPI release"
-msgstr "Tous les changements notables de Ketu sont documentés ici."
+msgstr "Configuration complète du packaging pour une publication PyPI"
 
 #: ../../source/changelog.md:35
 msgid "`pyproject.toml` metadata and dependencies"
-msgstr "## Convention de versioning"
+msgstr "Métadonnées et dépendances dans `pyproject.toml`"
 
 #: ../../source/changelog.md:36
 msgid "`requirements.txt` for a minimal install"
-msgstr "Tous les changements notables de Ketu sont documentés ici."
+msgstr "`requirements.txt` pour une installation minimale"
 
 #: ../../source/changelog.md:37
 msgid "Public exports in `ketu/__init__.py`"
-msgstr "- Correction mineure"
+msgstr "Exports publics dans `ketu/__init__.py`"
 
 #: ../../source/changelog.md:38
 msgid "Expanded README with usage examples"
-msgstr ""
+msgstr "README enrichi avec des exemples d'utilisation"
 
 #: ../../source/changelog.md:39
 msgid "PyPI, Python versions, and license badges"
-msgstr "## Convention de versioning"
+msgstr "Badges PyPI, versions Python et licence"
 
 #: ../../source/changelog.md:40
 msgid "`MANIFEST.in` to ship data files"
-msgstr ""
+msgstr "`MANIFEST.in` pour distribuer les fichiers de données"
 
 #: ../../source/changelog.md:41
 msgid "GitHub Actions workflow for automated tests"
-msgstr ""
+msgstr "Workflow GitHub Actions pour les tests automatisés"
 
 #: ../../source/changelog.md:42
 msgid "GitHub Actions workflow for PyPI publishing"
-msgstr "## Convention de versioning"
+msgstr "Workflow GitHub Actions pour la publication PyPI"
 
 #: ../../source/changelog.md:43
 msgid "CI coverage for Python 3.9 through 3.13"
-msgstr ""
+msgstr "Couverture CI pour Python 3.9 à 3.13"
 
 #: ../../source/changelog.md:44
 msgid "`ketu` CLI entry point"
-msgstr "## Convention de versioning"
+msgstr "Point d'entrée CLI `ketu`"
 
 #: ../../source/changelog.md:45
 msgid "Support for 13 celestial bodies (added True Node)"
-msgstr ""
+msgstr "Support de 13 corps célestes (ajout du Nœud Nord vrai)"
 
 #: ../../source/changelog.md:46
 msgid "English and French documentation"
-msgstr "### Fonctionnalités"
+msgstr "Documentation en anglais et en français"
 
 #: ../../source/changelog.md:48
 msgid "Changed"
-msgstr "# Changelog"
+msgstr "Modifications"
 
 #: ../../source/changelog.md:50
 msgid "Fixed and hardened the unit tests"
-msgstr ""
+msgstr "Correction et renforcement des tests unitaires"
 
 #: ../../source/changelog.md:51
 msgid "Renamed `timea.py` to `_timea.py` (private module)"
-msgstr ""
+msgstr "Renommage de `timea.py` en `_timea.py` (module privé)"
 
 #: ../../source/changelog.md:52
 msgid "Optimised package structure for distribution"
-msgstr ""
+msgstr "Optimisation de la structure du package pour la distribution"
 
 #: ../../source/changelog.md:53
 msgid "Aligned the documentation with the new layout"
-msgstr "## Convention de versioning"
+msgstr "Alignement de la documentation avec la nouvelle organisation"
 
 #: ../../source/changelog.md:55
 msgid "Technical PyPi deployment"
-msgstr ""
+msgstr "Déploiement technique PyPI"
 
 #: ../../source/changelog.md:57
 msgid "Official support for Python 3.10–3.13"
-msgstr ""
+msgstr "Support officiel de Python 3.10–3.13"
 
 #: ../../source/changelog.md:58
 msgid "Pytest configuration embedded in `pyproject.toml`"
-msgstr "- Correction mineure"
+msgstr "Configuration Pytest intégrée dans `pyproject.toml`"
 
 #: ../../source/changelog.md:59
 msgid "Coverage configuration for CI analysis"
-msgstr "## Convention de versioning"
+msgstr "Configuration de la couverture pour l'analyse CI"
 
 #: ../../source/changelog.md:60
 msgid "Package installable via `pip install ketu`"
-msgstr "Tous les changements notables de Ketu sont documentés ici."
+msgstr "Package installable via `pip install ketu`"
 
 #: ../../source/changelog.md:61
 msgid "Works seamlessly in virtual environments"
-msgstr ""
+msgstr "Fonctionne parfaitement dans les environnements virtuels"
 
 #: ../../source/changelog.md:63
 msgid "[0.1.0] - 2024-01-XX"
-msgstr "## [0.1.0] - 2024-01-XX"
+msgstr "[0.1.0] - 2024-01-XX"
 
 #: ../../source/changelog.md:65
 msgid "Added 0.1.0"
-msgstr ""
+msgstr "Ajouts 0.1.0"
 
 #: ../../source/changelog.md:67
 msgid "Interactive CLI to calculate positions and aspects"
-msgstr ""
-"- Prototype de base - Calculs simples de positions - Interface ligne de "
-"commande"
+msgstr "CLI interactif pour calculer les positions et les aspects"
 
 #: ../../source/changelog.md:68
 msgid "Planetary position calculations via pyswisseph"
-msgstr "Tous les changements notables de Ketu sont documentés ici."
+msgstr "Calculs de positions planétaires via pyswisseph"
 
 #: ../../source/changelog.md:69
 msgid "Detection of major aspects with orbs"
-msgstr "- Correction mineure"
+msgstr "Détection des aspects majeurs avec orbes"
 
 #: ../../source/changelog.md:70
 msgid "Conversions between time systems (UTC, Julian)"
-msgstr "## Convention de versioning"
+msgstr "Conversions entre systèmes de temps (UTC, Julien)"
 
 #: ../../source/changelog.md:71
 msgid "Retrogradation detection"
-msgstr "## Convention de versioning"
+msgstr "Détection de la rétrogradation"
 
 #: ../../source/changelog.md:72
 msgid "Complete documentation with Sphinx and MyST"
-msgstr "- Correction mineure"
+msgstr "Documentation complète avec Sphinx et MyST"
 
 #: ../../source/changelog.md:73
 msgid "Installable PyPI package"
-msgstr ""
+msgstr "Package PyPI installable"
 
 #: ../../source/changelog.md:74
 msgid "Initial unit tests"
-msgstr "### Initial"
+msgstr "Tests unitaires initiaux"
 
 #: ../../source/changelog.md:76
 msgid "Features"
-msgstr ""
+msgstr "Fonctionnalités"
 
 #: ../../source/changelog.md:78
 msgid "Support for 10 planets + Rahu + Lilith"
-msgstr "Tous les changements notables de Ketu sont documentés ici."
+msgstr "Support de 10 planètes + Rahu + Lilith"
 
 #: ../../source/changelog.md:79
 msgid "7 major aspects (conjunction through opposition)"
-msgstr "## Convention de versioning"
+msgstr "7 aspects majeurs (de la conjonction à l'opposition)"
 
 #: ../../source/changelog.md:80
 msgid "Zodiac sign calculations"
-msgstr "### Fonctionnalités"
+msgstr "Calculs des signes du zodiaque"
 
 #: ../../source/changelog.md:81
 msgid "Orb system based on Abu Ma'shar"
-msgstr "- Correction mineure"
+msgstr "Système d'orbes basé sur Abu Ma'shar"
 
 #: ../../source/changelog.md:82
 msgid "LRU cache to improve performance"
-msgstr "## Convention de versioning"
+msgstr "Cache LRU pour améliorer les performances"
 
 #: ../../source/changelog.md:84
 msgid "Technical"
-msgstr "### Technique"
+msgstr "Technique"
 
 #: ../../source/changelog.md:86
 msgid "Requires Python 3.9+"
-msgstr ""
+msgstr "Nécessite Python 3.9+"
 
 #: ../../source/changelog.md:87
 msgid "Dependencies: numpy, pyswisseph"
-msgstr ""
+msgstr "Dépendances : numpy, pyswisseph"
 
 #: ../../source/changelog.md:88
 msgid "Modular architecture"
-msgstr "- Correction mineure"
+msgstr "Architecture modulaire"
 
 #: ../../source/changelog.md:89
 msgid "Documented, typed code"
-msgstr ""
+msgstr "Code documenté et typé"
 
 #: ../../source/changelog.md:91
 msgid "[0.0.1] - 2023-01-XX"
-msgstr "## [0.0.1] - 2023-01-XX"
+msgstr "[0.0.1] - 2023-01-XX"
 
 #: ../../source/changelog.md:93
 msgid "Initial"
-msgstr "### Initial"
+msgstr "Initial"
 
 #: ../../source/changelog.md:95
 msgid "Prototype"
-msgstr ""
+msgstr "Prototype"
 
 #: ../../source/changelog.md:96
 msgid "Basic position calculations"
-msgstr "### Fonctionnalités"
+msgstr "Calculs de positions basiques"
 
 #: ../../source/changelog.md:97
 msgid "Command-line interface"
-msgstr "- Correction mineure"
+msgstr "Interface en ligne de commande"
 
 #: ../../source/changelog.md:101
 msgid "Versioning Convention"
-msgstr "## Convention de versioning"
+msgstr "Convention de versioning"
 
 #: ../../source/changelog.md:103
 msgid "**MAJOR**: Incompatible API changes"
-msgstr "# Changelog"
+msgstr "**MAJOR** : Changements incompatibles de l'API"
 
 #: ../../source/changelog.md:104
 msgid "**MINOR**: Backward-compatible feature additions"
-msgstr ""
+msgstr "**MINOR** : Ajouts de fonctionnalités rétrocompatibles"
 
 #: ../../source/changelog.md:105
 msgid "**PATCH**: Backward-compatible bug fixes"
-msgstr ""
+msgstr "**PATCH** : Corrections de bugs rétrocompatibles"
 
 #: ../../source/changelog.md:107
 msgid "Links"
-msgstr "## Liens"
+msgstr "Liens"
 
 #: ../../source/changelog.md:109
 msgid "[Version comparison](https://github.com/alkimya/ketu/compare/)"
-msgstr ""
+msgstr "[Comparaison de versions](https://github.com/alkimya/ketu/compare/)"
 
 #: ../../source/changelog.md:110
 msgid "[All releases](https://github.com/alkimya/ketu/releases)"
-msgstr ""
+msgstr "[Toutes les versions](https://github.com/alkimya/ketu/releases)"
 
 #~ msgid "Added"
 #~ msgstr ""
-

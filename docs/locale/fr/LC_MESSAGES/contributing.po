@@ -3,14 +3,13 @@
 # This file is distributed under the same license as the Ketu package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, 2025.
 #
-#, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2025-12-02 22:42+0100\n"
-"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
-"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"PO-Revision-Date: 2026-02-12 22:00+0100\n"
+"Last-Translator: Claude <noreply@anthropic.com>\n"
 "Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
 "MIME-Version: 1.0\n"
@@ -21,71 +20,71 @@ msgstr ""
 
 #: ../../source/contributing.md:1
 msgid "Contributing to Ketu"
-msgstr "# Contribuer à Ketu"
+msgstr "Contribuer à Ketu"
 
 #: ../../source/contributing.md:3
 msgid "We are happy to welcome your contributions!"
-msgstr "## Domaines de contribution"
+msgstr "Nous sommes heureux d'accueillir vos contributions !"
 
 #: ../../source/contributing.md:5
 msgid "How to Contribute"
-msgstr "## Comment contribuer"
+msgstr "Comment contribuer"
 
 #: ../../source/contributing.md:7
 msgid "1. Fork the Project"
-msgstr "### 1. Forker le projet"
+msgstr "1. Forker le projet"
 
 #: ../../source/contributing.md:15
 msgid "2. Set Up a Development Environment"
-msgstr "### 2. Créer un environnement de développement"
+msgstr "2. Créer un environnement de développement"
 
 #: ../../source/contributing.md:25
 msgid "3. Create a Branch"
-msgstr "### 3. Créer une branche"
+msgstr "3. Créer une branche"
 
 #: ../../source/contributing.md:31
 msgid "4. Develop and Test"
-msgstr "### 4. Développer et tester"
+msgstr "4. Développer et tester"
 
 #: ../../source/contributing.md:44
 msgid "5. Commit with a Clear Message"
-msgstr "### 5. Commiter avec un message clair"
+msgstr "5. Commiter avec un message clair"
 
 #: ../../source/contributing.md:51
 msgid "Commit message prefixes:"
-msgstr "Format des messages de commit :"
+msgstr "Préfixes de message de commit :"
 
 #: ../../source/contributing.md:53
 msgid "`feat:` New feature"
-msgstr "# Vérifier le style flake8 ketu/"
+msgstr "`feat:` Nouvelle fonctionnalité"
 
 #: ../../source/contributing.md:54
 msgid "`fix:` Bug fix"
-msgstr ""
+msgstr "`fix:` Correction de bug"
 
 #: ../../source/contributing.md:55
 msgid "`docs:` Documentation"
-msgstr "### Documentation"
+msgstr "`docs:` Documentation"
 
 #: ../../source/contributing.md:56
 msgid "`style:` Formatting or code style"
-msgstr "# Formatter le code black ketu/ ```"
+msgstr "`style:` Formatage ou style de code"
 
 #: ../../source/contributing.md:57
 msgid "`refactor:` Refactoring"
-msgstr "### Documentation ReadTheDocs"
+msgstr "`refactor:` Refactorisation"
 
 #: ../../source/contributing.md:58
 msgid "`test:` Adding tests"
-msgstr "### Tests"
+msgstr "`test:` Ajout de tests"
 
 #: ../../source/contributing.md:59
 msgid "`chore:` Maintenance tasks"
-msgstr "### 3. Créer une branche"
+msgstr "`chore:` Tâches de maintenance"
 
 #: ../../source/contributing.md:61
 msgid "6. Push and Open a Pull Request"
-msgstr "### 6. Pusher et créer une Pull Request"
+msgstr "6. Pusher et créer une Pull Request"
 
 #: ../../source/contributing.md:67
 msgid "Then open a PR on GitHub."
@@ -93,153 +92,147 @@ msgstr "Puis créer une PR sur GitHub."
 
 #: ../../source/contributing.md:69
 msgid "Development Guidelines"
-msgstr "## Directives de développement"
+msgstr "Directives de développement"
 
 #: ../../source/contributing.md:71
 msgid "Code Style"
-msgstr "### Style de code"
+msgstr "Style de code"
 
 #: ../../source/contributing.md:73
 msgid "Follow PEP 8 for Python code"
-msgstr "### Style de code"
+msgstr "Suivre PEP 8 pour le code Python"
 
 #: ../../source/contributing.md:74
 msgid "Google-style docstrings"
-msgstr "### Style de code"
+msgstr "Docstrings de style Google"
 
 #: ../../source/contributing.md:75
 msgid "Type hints where they help readability"
-msgstr ""
-"-- [Documentation du projet (Read the Docs)](https://ketu.readthedocs.io/)"
+msgstr "Annotations de type où elles aident à la lisibilité"
 
 #: ../../source/contributing.md:76
 msgid "Maximum 88 characters per line (Black default)"
-msgstr "# Formatter le code black ketu/ ```"
+msgstr "Maximum 88 caractères par ligne (défaut de Black)"
 
 #: ../../source/contributing.md:78
 msgid "Tests"
-msgstr "### Tests"
+msgstr "Tests"
 
 #: ../../source/contributing.md:80
 msgid "Minimum coverage target: 80%"
-msgstr "### 1. Forker le projet"
+msgstr "Objectif de couverture minimum : 80%"
 
 #: ../../source/contributing.md:81
 msgid "Use pytest for unit tests"
-msgstr "### 6. Pusher et créer une Pull Request"
+msgstr "Utiliser pytest pour les tests unitaires"
 
 #: ../../source/contributing.md:82
 msgid "Mock Swiss Ephemeris calls when needed"
-msgstr "- [Swiss Ephemeris](https://www.astro.com/swisseph/)"
+msgstr "Mocker les appels Swiss Ephemeris lorsque nécessaire"
 
 #: ../../source/contributing.md:84
 msgid "Documentation"
-msgstr "### Documentation"
+msgstr "Documentation"
 
 #: ../../source/contributing.md:86
 msgid "Document every new public function"
-msgstr "### Documentation technique"
+msgstr "Documenter chaque nouvelle fonction publique"
 
 #: ../../source/contributing.md:87
 msgid "Include examples in docstrings"
-msgstr "Nous accueillons avec plaisir les contributions ! 🌟"
+msgstr "Inclure des exemples dans les docstrings"
 
 #: ../../source/contributing.md:88
 msgid "Update the Sphinx docs when relevant"
-msgstr "## Architecture du projet"
+msgstr "Mettre à jour la documentation Sphinx lorsque pertinent"
 
 #: ../../source/contributing.md:90
 msgid "Areas to Contribute"
-msgstr "## Domaines de contribution"
+msgstr "Domaines de contribution"
 
 #: ../../source/contributing.md:92
 msgid "Current Priorities"
-msgstr "### Documentation ReadTheDocs"
+msgstr "Priorités actuelles"
 
 #: ../../source/contributing.md:94
 msgid "**Pure NumPy migration**: Replace pyswisseph"
-msgstr "### Documentation ReadTheDocs"
+msgstr "**Migration vers NumPy pur** : Remplacer pyswisseph"
 
 #: ../../source/contributing.md:95
 msgid "**Exact aspect timing**: Find the precise moments aspects are exact"
-msgstr ""
-"- Couverture minimale : 80% - Tests unitaires avec pytest - Mocks pour les "
-"appels Swiss Ephemeris"
+msgstr "**Timing d'aspects exact** : Trouver les moments précis où les aspects sont exacts"
 
 #: ../../source/contributing.md:97
 msgid "Project Architecture"
-msgstr "## Architecture du projet"
+msgstr "Architecture du projet"
 
 #: ../../source/contributing.md:113
 msgid "Review Process"
-msgstr "## Processus de review"
+msgstr "Processus de revue"
 
 #: ../../source/contributing.md:115
 msgid "Tests: the full suite must pass"
-msgstr "```bash # Lancer les tests pytest tests/"
+msgstr "Tests : la suite complète doit passer"
 
 #: ../../source/contributing.md:116
 msgid "Coverage: do not decrease coverage"
-msgstr "Format des messages de commit :"
+msgstr "Couverture : ne pas diminuer la couverture"
 
 #: ../../source/contributing.md:117
 msgid "Documentation: keep it current and clear"
-msgstr ""
-"-- [Documentation du projet (Read the Docs)](https://ketu.readthedocs.io/)"
+msgstr "Documentation : la garder à jour et claire"
 
 #: ../../source/contributing.md:118
 msgid "Style: respect the agreed conventions"
-msgstr "### Style de code"
+msgstr "Style : respecter les conventions convenues"
 
 #: ../../source/contributing.md:119
 msgid "Performance: avoid regressions"
-msgstr "## Processus de review"
+msgstr "Performance : éviter les régressions"
 
 #: ../../source/contributing.md:121
 msgid "Resources"
-msgstr "## Ressources"
+msgstr "Ressources"
 
 #: ../../source/contributing.md:123
 msgid "Technical Documentation"
-msgstr "### Documentation"
+msgstr "Documentation technique"
 
 #: ../../source/contributing.md:125
 msgid "[Swiss Ephemeris](https://www.astro.com/swisseph/)"
-msgstr "- [Swiss Ephemeris](https://www.astro.com/swisseph/)"
+msgstr "[Swiss Ephemeris](https://www.astro.com/swisseph/)"
 
 #: ../../source/contributing.md:127
 msgid "Issues"
-msgstr "### Issues"
+msgstr "Issues"
 
 #: ../../source/contributing.md:129
 msgid "[GitHub Discussions](https://github.com/alkimya/ketu/discussions)"
-msgstr "- [Swiss Ephemeris](https://www.astro.com/swisseph/)"
+msgstr "[Discussions GitHub](https://github.com/alkimya/ketu/discussions)"
 
 #: ../../source/contributing.md:130
 msgid "[Issues](https://github.com/alkimya/ketu/issues)"
-msgstr ""
+msgstr "[Issues](https://github.com/alkimya/ketu/issues)"
 
 #: ../../source/contributing.md:131
 msgid "Email: [loc.cosnier@pm.me](mailto:loc.cosnier@pm.me)"
-msgstr ""
+msgstr "Email : [loc.cosnier@pm.me](mailto:loc.cosnier@pm.me)"
 
 #: ../../source/contributing.md:133
 msgid "Documentation ReadTheDocs"
-msgstr "### Documentation ReadTheDocs"
+msgstr "Documentation ReadTheDocs"
 
 #: ../../source/contributing.md:135
 msgid "[Project documentation (Read the Docs)](https://ketu.readthedocs.io/)"
-msgstr ""
-"-- [Documentation du projet (Read the Docs)](https://ketu.readthedocs.io/)"
+msgstr "[Documentation du projet (Read the Docs)](https://ketu.readthedocs.io/)"
 
 #: ../../source/contributing.md:137
 msgid "License"
-msgstr "## Licence"
+msgstr "Licence"
 
 #: ../../source/contributing.md:139
 msgid ""
 "By contributing, you agree that your work will be released under the MIT "
 "License."
 msgstr ""
-"- Couverture minimale : 80% - Tests unitaires avec pytest - Mocks pour les "
-"appels Swiss Ephemeris"
+"En contribuant, vous acceptez que votre travail soit publié sous licence MIT."
