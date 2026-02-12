@@ -10,34 +10,35 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 ## Current Position
 
 Phase: 1 of 7 (API Surface Cleanup)
-Plan: 1 of TBD (completed)
-Status: Executing phase 1
-Last activity: 2026-02-12 — Completed plan 01-01
+Plan: 2 of 2 (completed)
+Status: Phase 1 complete
+Last activity: 2026-02-12 — Completed plan 01-02
 
-Progress: [█░░░░░░░░░] ~10% (1 plan completed)
+Progress: [██░░░░░░░░] ~14% (Phase 1 complete: 2 plans)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 1
-- Average duration: 5 minutes
-- Total execution time: 0.08 hours
+- Total plans completed: 2
+- Average duration: 4 minutes
+- Total execution time: 0.13 hours
 
 **By Phase:**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
-| 01 | 1 | 5 min | 5 min |
+| 01 | 2 | 8 min | 4 min |
 
 **Recent Trend:**
-- Last 5 plans: 01-01 (5 min)
-- Trend: Just started
+- Last 5 plans: 01-01 (5 min), 01-02 (3 min)
+- Trend: Consistent execution
 
 **Execution Log:**
 
 | Plan | Duration (sec) | Tasks | Files | Date |
 |------|---------------|-------|-------|------|
 | Phase 01 P01 | 306 | 3 | 10 | 2026-02-12 |
+| Phase 01 P02 | 180 | 2 | 1 | 2026-02-12 |
 
 *Updated after each plan completion*
 
@@ -59,6 +60,11 @@ Recent decisions affecting current work:
 - Remove all optional dependencies — Delete [project.optional-dependencies] entirely, pure calculation library
 - Inline BIG_FIVE constant — Define directly in lunar_calendar.py after export removal
 
+**From Plan 01-02:**
+- No Kala-specific references in UPGRADING.md — Generic migration guide for external PyPI users
+- Pandas migration guide structure — Use pandas 3.0 migration guide as template for breaking releases
+- Professional tone for PyPI release — Concise but professional documentation for external developers
+
 ### Pending Todos
 
 None yet.
@@ -70,9 +76,11 @@ None yet.
 ## Session Continuity
 
 Last session: 2026-02-12 (plan execution)
-Stopped at: Completed Phase 01 Plan 01 (API surface cleanup)
+Stopped at: Completed Phase 01 Plan 02 (migration guide and verification)
 Resume file: None
+
+**Phase 1 Complete:** API Surface Cleanup finished (2 plans completed, UPGRADING.md created, human verified)
 
 ---
 *State initialized: 2026-02-12*
-*Last updated: 2026-02-12T01:17:00Z*
+*Last updated: 2026-02-12T01:59:57Z*
