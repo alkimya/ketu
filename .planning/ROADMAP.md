@@ -13,7 +13,7 @@ Ketu 1.0 consolidates a working astronomical calculation library from v0.4.0 to 
 - [x] **Phase 4: Test Coverage Hardening** - Achieve 70% coverage with module targets
 - [x] **Phase 5: Complex Math Integration** - Unify complex representation into cycle engine
 - [x] **Phase 6: Documentation & Type Checking** - Finalize docs and type hints
-- [ ] **Phase 7: Release Preparation** - PyPI publish and GitHub release
+- [x] **Phase 7: Release Preparation** - PyPI publish and GitHub release
 
 ## Phase Details
 
@@ -130,8 +130,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 07-01-PLAN.md — Version bump to 1.0.0, classifier updates, publish workflow (trusted publishing), version sync test
-- [ ] 07-02-PLAN.md — Build validation (wheel + sdist), fresh venv install test, release readiness checkpoint
+- [x] 07-01-PLAN.md — Version bump to 1.0.0, classifier updates, publish workflow (trusted publishing), version sync test
+- [x] 07-02-PLAN.md — Build validation (wheel + sdist), fresh venv install test, release readiness checkpoint
 
 ## Progress
 
@@ -144,8 +144,8 @@ Plans:
 | 4. Test Coverage Hardening | 2/2 | ✓ Complete | 2026-02-12 |
 | 5. Complex Math Integration | 2/2 | ✓ Complete | 2026-02-12 |
 | 6. Documentation & Type Checking | 3/3 | ✓ Complete | 2026-02-12 |
-| 7. Release Preparation | 0/2 | In progress | - |
+| 7. Release Preparation | 2/2 | ✓ Complete | 2026-02-12 |
 
 ---
 *Roadmap created: 2026-02-12*
-*Last updated: 2026-02-12 — Phase 7 planned*
+*Last updated: 2026-02-12 — All phases complete, v1.0.0 published to PyPI*
