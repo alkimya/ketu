@@ -78,7 +78,7 @@ def calc_planet_position(jd: float, planet_id: int, flags: int = 0) -> np.ndarra
     """
     planet_name = SWE_IDS.get(planet_id)
     if planet_name is None:
-        raise ValueError(f"Unknown planet ID: {planet_id}")
+        raise ValueError(f"unknown planet ID: {planet_id}. Valid range: 0-12")
 
     # Special handling for different bodies
     if planet_name == "Sun":
@@ -436,7 +436,7 @@ def calc_planet_position_batch(jd_array: np.ndarray, planet_id: int, flags: int 
     """
     planet_name = SWE_IDS.get(planet_id)
     if planet_name is None:
-        raise ValueError(f"Unknown planet ID: {planet_id}")
+        raise ValueError(f"unknown planet ID: {planet_id}. Valid range: 0-12")
 
     n_dates = len(jd_array)
     results = np.zeros((n_dates, 6))

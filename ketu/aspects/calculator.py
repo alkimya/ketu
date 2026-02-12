@@ -253,7 +253,7 @@ def find_aspect_timing(jdate: float, body1: int, body2: int, aspect_value: float
     # Get the aspect index
     asp_idx = np.where(aspects["angle"] == aspect_value)[0]
     if len(asp_idx) == 0:
-        raise ValueError(f"Unknown aspect value: {aspect_value}")
+        raise ValueError(f"unknown aspect value: {aspect_value}")
     asp_idx = asp_idx[0]
 
     # Calculate orb

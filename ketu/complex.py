@@ -332,9 +332,11 @@ class CycleRatio:
             Signed distance in radians. Negative = approaching, positive = separating.
         """
         if isinstance(aspect, str):
+            aspect_name = aspect
             aspect = ASPECTS.get(aspect) or ASPECTS_EXTENDED.get(aspect)
             if aspect is None:
-                raise ValueError(f"Unknown aspect: {aspect}")
+                valid_aspects = ', '.join(list(ASPECTS.keys()) + list(ASPECTS_EXTENDED.keys()))
+                raise ValueError(f"unknown aspect: '{aspect_name}'. Valid aspects: {valid_aspects}")
 
         # Distance is the angle between z_ratio and z_aspect
         ratio = self.z / aspect.z
@@ -351,9 +353,11 @@ class CycleRatio:
             True if within orb of the aspect
         """
         if isinstance(aspect, str):
+            aspect_name = aspect
             aspect_obj = ASPECTS.get(aspect) or ASPECTS_EXTENDED.get(aspect)
             if aspect_obj is None:
-                raise ValueError(f"Unknown aspect: {aspect}")
+                valid_aspects = ', '.join(list(ASPECTS.keys()) + list(ASPECTS_EXTENDED.keys()))
+                raise ValueError(f"unknown aspect: '{aspect_name}'. Valid aspects: {valid_aspects}")
             aspect = aspect_obj
 
         if orb is None:

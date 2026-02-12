@@ -46,14 +46,16 @@ def get_aspect_index(aspect: Union[str, int, float]) -> int:
     if isinstance(aspect, str):
         idx = np.where(aspects["name"] == aspect.encode())[0]
         if len(idx) == 0:
-            raise ValueError(f"Unknown aspect name: {aspect}")
+            valid_aspects = ', '.join(a.decode() for a in aspects['name'])
+            raise ValueError(f"unknown aspect name: '{aspect}'. Valid aspects: {valid_aspects}")
         return int(idx[0])
     elif isinstance(aspect, int) and aspect < len(aspects):
         return aspect
     else:
         idx = np.where(aspects["angle"] == aspect)[0]
         if len(idx) == 0:
-            raise ValueError(f"Unknown aspect angle: {aspect}")
+            valid_angles = ', '.join(str(a) for a in aspects['angle'])
+            raise ValueError(f"unknown aspect angle: {aspect}. Valid angles: {valid_angles}")
         return int(idx[0])
 
 
