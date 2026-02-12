@@ -10,7 +10,7 @@
 
 ## Workflow
 
-**[GSD (Get Shit Done)](https://github.com/cdubyoo/gsd)** — The project management workflow that structured the development of Ketu v1.0.0 into phases with research, planning, execution, and verification steps.
+**[GSD (Get Shit Done)](https://github.com/gsd-build/get-shit-done)** — The project management workflow that structured the development of Ketu v1.0.0 into phases with research, planning, execution, and verification steps.
 
 ## Other Influences
 
