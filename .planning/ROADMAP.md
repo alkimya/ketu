@@ -9,7 +9,7 @@ Ketu 1.0 consolidates a working astronomical calculation library from v0.4.0 to 
 - [x] **Phase 1: API Surface Cleanup** - Define public API, remove export modules
 - [x] **Phase 2: Correctness Fixes** - Fix cache and aspect bugs before 1.0
 - [x] **Phase 2.1: Fix Moon velocity and rename vlong API** (INSERTED)
-- [ ] **Phase 3: Dependency Cleanup** - Remove hidden Pandas dependency
+- [x] **Phase 3: Dependency Cleanup** - Remove hidden Pandas dependency
 - [ ] **Phase 4: Test Coverage Hardening** - Achieve 70% coverage with module targets
 - [ ] **Phase 5: Complex Math Integration** - Unify complex representation into cycle engine
 - [ ] **Phase 6: Documentation & Type Checking** - Finalize docs and type hints
@@ -79,10 +79,11 @@ Plans:
   3. All angle comparisons use `numpy.testing.assert_allclose` with documented tolerance (1e-6)
   4. Pytest recognizes `slow` marker without warnings
   5. Edge case tests exist for 0deg/360deg angle boundaries
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 04-01: TBD
+- [ ] 04-01-PLAN.md — Fix pyproject.toml config + comprehensive cache module tests (15% -> 85%)
+- [ ] 04-02-PLAN.md — Cycles calculator tests (72% -> 85%) + re-enable CI
 
 ### Phase 5: Complex Math Integration
 **Goal**: Cycle engine uses complex numbers internally, degrees externally
