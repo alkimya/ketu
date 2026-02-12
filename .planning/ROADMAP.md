@@ -39,10 +39,11 @@ Plans:
   1. User sets `use_cache=False` and cache is verifiably disabled (operator precedence fixed)
   2. User runs `calculate_aspects_vectorized()` across 100 dates and gets consistent aspect count every time
   3. Each bug fix has a regression test that fails on v0.4.0 and passes on v1.0
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 02-01: TBD
+- [ ] 02-01-PLAN.md — Fix cache operator precedence (BUG-01) with regression test
+- [ ] 02-02-PLAN.md — Fix aspect vectorization non-determinism (BUG-02) with regression test
 
 ### Phase 3: Dependency Cleanup
 **Goal**: Ketu is pure NumPy (no hidden Pandas dependency)
@@ -121,7 +122,7 @@ Plans:
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
 | 1. API Surface Cleanup | 2/2 | ✓ Complete | 2026-02-12 |
-| 2. Correctness Fixes | 0/TBD | Not started | - |
+| 2. Correctness Fixes | 0/2 | Planned | - |
 | 3. Dependency Cleanup | 0/TBD | Not started | - |
 | 4. Test Coverage Hardening | 0/TBD | Not started | - |
 | 5. Complex Math Integration | 0/TBD | Not started | - |
@@ -130,4 +131,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-02-12*
-*Last updated: 2026-02-12 — Phase 1 complete*
+*Last updated: 2026-02-12 — Phase 2 planned*
