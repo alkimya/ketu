@@ -8,7 +8,7 @@ Ketu 1.0 consolidates a working astronomical calculation library from v0.4.0 to 
 
 - [x] **Phase 1: API Surface Cleanup** - Define public API, remove export modules
 - [x] **Phase 2: Correctness Fixes** - Fix cache and aspect bugs before 1.0
-- [ ] **Phase 2.1: Fix Moon velocity and rename vlong API** (INSERTED)
+- [x] **Phase 2.1: Fix Moon velocity and rename vlong API** (INSERTED)
 - [ ] **Phase 3: Dependency Cleanup** - Remove hidden Pandas dependency
 - [ ] **Phase 4: Test Coverage Hardening** - Achieve 70% coverage with module targets
 - [ ] **Phase 5: Complex Math Integration** - Unify complex representation into cycle engine
@@ -53,8 +53,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 02.1-01-PLAN.md — Fix Moon velocity wrapping bug (TDD: regression test + fix)
-- [ ] 02.1-02-PLAN.md — Rename vlong/vlat/vdist_au to explicit velocity names
+- [x] 02.1-01-PLAN.md — Fix Moon velocity wrapping bug (TDD: regression test + fix)
+- [x] 02.1-02-PLAN.md — Rename vlong/vlat/vdist_au to explicit velocity names
 
 ### Phase 3: Dependency Cleanup
 **Goal**: Ketu is pure NumPy (no hidden Pandas dependency)
@@ -134,7 +134,7 @@ Plans:
 |-------|----------------|--------|-----------|
 | 1. API Surface Cleanup | 2/2 | ✓ Complete | 2026-02-12 |
 | 2. Correctness Fixes | 2/2 | ✓ Complete | 2026-02-12 |
-| 2.1 Fix Moon velocity & vlong | 0/2 | Planned | - |
+| 2.1 Fix Moon velocity & vlong | 2/2 | ✓ Complete | 2026-02-12 |
 | 3. Dependency Cleanup | 0/TBD | Not started | - |
 | 4. Test Coverage Hardening | 0/TBD | Not started | - |
 | 5. Complex Math Integration | 0/TBD | Not started | - |
@@ -143,4 +143,4 @@ Plans:
 
 ---
 *Roadmap created: 2026-02-12*
-*Last updated: 2026-02-12 — Phase 2 complete*
+*Last updated: 2026-02-12 — Phase 2.1 complete*

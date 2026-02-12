@@ -5,7 +5,7 @@
 See: .planning/PROJECT.md (updated 2026-02-12)
 
 **Core value:** Cycle calculations must be correct, tested, and performant
-**Current focus:** Phase 2 complete — ready for Phase 3
+**Current focus:** Phase 2.1 complete — ready for Phase 3
 
 ## Current Position
 
