@@ -2,6 +2,8 @@
 
 The `aspect_timelines` module provides a framework for generating planetary aspect calendars optimized for machine learning, deep learning, astro-trading, and research applications.
 
+> **Migration Note**: As of v1.0, Ketu no longer provides `to_pandas()`. Use `to_numpy()` for ML workflows or `to_dict_list()` for dict-based workflows. See `UPGRADING.md` for conversion patterns.
+
 ## Overview
 
 Unlike traditional astrological calendars that focus on complete cycles, aspect timelines use a **time window approach** - finding all aspects between two celestial bodies within a specified date range. This makes it ideal for:
@@ -40,20 +42,13 @@ Each event includes full metadata:
 - **Retrograde**: Detection and intensity for both bodies
 
 ### 4. ML-Ready Export Formats
-Three export formats for different workflows:
+Two export formats for different workflows:
 
 #### NumPy (Dense Arrays)
 ```python
 np_array = timeline.to_numpy()
 # Structured array with all numerical features
 # Perfect for scikit-learn, TensorFlow, PyTorch
-```
-
-#### Pandas (DataFrames)
-```python
-df = timeline.to_pandas()
-# Datetime-indexed DataFrame
-# Perfect for time series analysis, visualization
 ```
 
 #### JSON (Interoperability)
@@ -99,9 +94,9 @@ timeline = generate_aspect_timeline(
     aspects_list=["Conjunction", "Square", "Opposition"],
 )
 
-# Export to Pandas for analysis
-df = timeline.to_pandas()
-print(df[['aspect_name', 'orb', 'aspect_strength', 'duration_days']])
+# Export to NumPy for analysis
+data = timeline.to_numpy()
+print(data[['aspect_type', 'orb', 'aspect_strength', 'duration_days']])
 ```
 
 ### Example 3: Lunar Calendar (Moon-Sun)
@@ -174,8 +169,11 @@ data = timeline.to_numpy()
 features = data[['aspect_type', 'aspect_strength', 'relative_velocity',
                  'body1_retro', 'body2_retro', 'duration_days']]
 
-# Or use Pandas for more complex feature engineering
-df = timeline.to_pandas()
+# For more complex analysis, convert to pandas if needed
+import pandas as pd
+df = pd.DataFrame(data)
+df['timestamp'] = pd.to_datetime(df['julian_day'], unit='D', origin='julian')
+df.set_index('timestamp', inplace=True)
 
 # Create derived features
 df['is_retrograde'] = df['body1_retro'] | df['body2_retro']
@@ -248,7 +246,6 @@ class AspectTimeline:
 
     # Export methods
     def to_numpy() -> np.ndarray    # NumPy structured array
-    def to_pandas() -> pd.DataFrame # Pandas DataFrame
     def to_json() -> dict           # JSON-serializable dict
     def to_dict_list() -> list      # List of dicts
 ```
@@ -273,8 +270,8 @@ Enrich raw events with ML-ready features:
 ### Load
 Export to ML-friendly formats:
 - **NumPy**: Dense numerical arrays for training
-- **Pandas**: Rich DataFrames for analysis
 - **JSON**: Interoperable format for APIs/storage
+- **Pandas**: (User-side conversion via `pd.DataFrame(timeline.to_numpy())`)
 
 ## Performance Characteristics
 
@@ -303,7 +300,7 @@ The new framework generalizes the lunar calendar concept:
 | Bodies | Sun-Moon only | Any 2 bodies |
 | Approach | Complete cycle | Time window |
 | Retrograde | N/A (Moon direct) | Full support |
-| Export formats | Print only | NumPy, Pandas, JSON |
+| Export formats | Print only | NumPy, JSON |
 | ML features | Limited | Complete |
 | Use cases | Calendar display | ML/research/trading |
 
@@ -330,22 +327,27 @@ timeline = generate_aspect_timeline(
 To analyze multiple planet pairs, generate separate timelines and merge:
 
 ```python
-import pandas as pd
+from ketu.aspects import generate_aspect_timeline
+import numpy as np
 
 # Generate multiple timelines
 mars_sun = generate_aspect_timeline("Sun", "Mars", "2024-01-01", "2024-12-31")
 venus_jupiter = generate_aspect_timeline("Venus", "Jupiter", "2024-01-01", "2024-12-31")
 mercury_saturn = generate_aspect_timeline("Mercury", "Saturn", "2024-01-01", "2024-12-31")
 
-# Convert to DataFrames
-df_list = [
-    mars_sun.to_pandas().assign(pair="Mars-Sun"),
-    venus_jupiter.to_pandas().assign(pair="Venus-Jupiter"),
-    mercury_saturn.to_pandas().assign(pair="Mercury-Saturn"),
-]
+# Get NumPy arrays
+data_ms = mars_sun.to_numpy()
+data_vj = venus_jupiter.to_numpy()
+data_ms = mercury_saturn.to_numpy()
 
-# Merge and sort by timestamp
-df_all = pd.concat(df_list).sort_index()
+# Combine arrays (or convert to pandas if needed for complex merging)
+import pandas as pd
+df_list = [
+    pd.DataFrame(mars_sun.to_numpy()).assign(pair="Mars-Sun"),
+    pd.DataFrame(venus_jupiter.to_numpy()).assign(pair="Venus-Jupiter"),
+    pd.DataFrame(mercury_saturn.to_numpy()).assign(pair="Mercury-Saturn"),
+]
+df_all = pd.concat(df_list).sort_values('julian_day')
 
 print(f"Total events: {len(df_all)}")
 print(df_all.groupby('pair').size())
@@ -357,7 +359,7 @@ Classify events by cycle phase:
 
 ```python
 timeline = generate_aspect_timeline("Sun", "Mars", "2024-01-01", "2024-12-31")
-df = timeline.to_pandas()
+data = timeline.to_numpy()
 
 # Classify by aspect type (cycle phase)
 def classify_phase(aspect_angle):
@@ -372,8 +374,12 @@ def classify_phase(aspect_angle):
     else:
         return "Other"
 
-df['cycle_phase'] = df['aspect_type'].apply(classify_phase)
-print(df.groupby('cycle_phase').size())
+# Vectorized classification
+import numpy as np
+phases = np.vectorize(classify_phase)(data['aspect_type'])
+unique, counts = np.unique(phases, return_counts=True)
+for phase, count in zip(unique, counts):
+    print(f"{phase}: {count}")
 ```
 
 ### Time Series Resampling
@@ -385,7 +391,12 @@ import pandas as pd
 import numpy as np
 
 timeline = generate_aspect_timeline("Sun", "Moon", "2024-01-01", "2024-12-31")
-df = timeline.to_pandas()
+data = timeline.to_numpy()
+
+# Convert to pandas for time series resampling
+df = pd.DataFrame(data)
+df['timestamp'] = pd.to_datetime(df['julian_day'], unit='D', origin='julian')
+df.set_index('timestamp', inplace=True)
 
 # Create daily time series
 daily_index = pd.date_range("2024-01-01", "2024-12-31", freq='D')

@@ -28,7 +28,7 @@ Aspect window detection with precise timing.
 ### `timelines.py`
 ML-ready aspect timeline generation.
 - `generate_aspect_timeline()`: Generate complete aspect timeline
-- `AspectTimeline`: Timeline with export methods (NumPy, Pandas, JSON)
+- `AspectTimeline`: Timeline with export methods (NumPy, JSON)
 - `AspectEvent`: Rich event data with cycle information
 - Perfect for machine learning and research
 
@@ -55,8 +55,8 @@ timeline = generate_aspect_timeline(
     end_date="2024-12-31",
 )
 
-# Export to Pandas
-df = timeline.to_pandas()
+# Export to NumPy structured array
+data = timeline.to_numpy()
 ```
 
 ## Architecture

@@ -8,6 +8,74 @@ Version 1.0.0 removes visualization and export functionality, making Ketu a pure
 
 ## Removed Features
 
+### Pandas Dependency
+
+**Status:** Removed
+
+Ketu 1.0.0 is a pure NumPy library. The pandas dependency has been removed, and all methods that returned pandas DataFrames have been eliminated.
+
+#### AspectTimeline.to_pandas() Removed
+
+```python
+# v0.4.x (NO LONGER WORKS)
+from ketu.aspects import generate_aspect_timeline
+timeline = generate_aspect_timeline("Sun", "Mars", "2024-01-01", "2024-12-31")
+df = timeline.to_pandas()  # NO LONGER EXISTS
+
+# v1.0.0 - Option 1: Use to_numpy() for ML workflows
+timeline = generate_aspect_timeline("Sun", "Mars", "2024-01-01", "2024-12-31")
+data = timeline.to_numpy()  # NumPy structured array
+
+# v1.0.0 - Option 2: User-side conversion via dict (preserves string fields)
+import pandas as pd
+df = pd.DataFrame(timeline.to_dict_list())
+df.set_index('timestamp', inplace=True)
+
+# v1.0.0 - Option 3: User-side conversion via NumPy (numeric fields)
+df = pd.DataFrame(timeline.to_numpy())
+```
+
+#### ResonanceField.compute_field() Returns NumPy Array
+
+```python
+# v0.4.x (RETURNED DATAFRAME)
+from ketu.resonance import ResonanceField
+field = ResonanceField()
+df = field.compute_field(start, end)  # Returned DataFrame
+print(df['res_lon'])
+
+# v1.0.0 (RETURNS NUMPY STRUCTURED ARRAY)
+from ketu.resonance import ResonanceField
+field = ResonanceField()
+data = field.compute_field(start, end)  # Returns NumPy structured array
+print(data['res_lon'])  # Access fields directly
+
+# Convert to DataFrame if needed
+import pandas as pd
+df = pd.DataFrame(data)
+```
+
+#### Type Hints No Longer Reference pandas
+
+Type hints for `timestamps` parameters no longer include `pd.DatetimeIndex`. However, duck-typing support is preserved — you can still pass pandas DatetimeIndex objects, and they will be handled correctly via `hasattr(timestamps, 'to_pydatetime')`.
+
+```python
+# v0.4.x type hint
+def generate_cycle_series(
+    timestamps: Union[np.ndarray, List[datetime], "pd.DatetimeIndex"]
+) -> np.ndarray: ...
+
+# v1.0.0 type hint (pandas removed from signature)
+def generate_cycle_series(
+    timestamps: Union[np.ndarray, List[datetime]]
+) -> np.ndarray: ...
+
+# But pandas DatetimeIndex still works via duck-typing!
+import pandas as pd
+timestamps = pd.date_range("2025-01-01", "2025-12-31", freq="1D")
+cycles = generate_cycle_series("Sun", "Mars", timestamps)  # Works fine
+```
+
 ### Chart Visualization
 
 **Status:** Removed
