@@ -12,7 +12,7 @@ Ketu 1.0 consolidates a working astronomical calculation library from v0.4.0 to 
 - [x] **Phase 3: Dependency Cleanup** - Remove hidden Pandas dependency
 - [x] **Phase 4: Test Coverage Hardening** - Achieve 70% coverage with module targets
 - [x] **Phase 5: Complex Math Integration** - Unify complex representation into cycle engine
-- [ ] **Phase 6: Documentation & Type Checking** - Finalize docs and type hints
+- [x] **Phase 6: Documentation & Type Checking** - Finalize docs and type hints
 - [ ] **Phase 7: Release Preparation** - PyPI publish and GitHub release
 
 ## Phase Details
@@ -113,9 +113,9 @@ Plans:
 **Plans:** 3 plans
 
 Plans:
-- [ ] 06-01-PLAN.md — Purge chart/icalendar references from docs, write CHANGELOG 1.0.0 BREAKING CHANGES
-- [ ] 06-02-PLAN.md — Add NumPy-style docstrings to all public functions (~110 functions)
-- [ ] 06-03-PLAN.md — Configure mypy strict mode, fix type errors, add to CI
+- [x] 06-01-PLAN.md — Purge chart/icalendar references from docs, write CHANGELOG 1.0.0 BREAKING CHANGES
+- [x] 06-02-PLAN.md — Add NumPy-style docstrings to all public functions (~110 functions)
+- [x] 06-03-PLAN.md — Configure mypy strict mode, fix type errors, add to CI
 
 ### Phase 7: Release Preparation
 **Goal**: Ketu 1.0.0 is published to PyPI with GitHub release
@@ -127,10 +127,11 @@ Plans:
   3. GitHub release v1.0.0 exists with changelog and download links
   4. User installs `pip install ketu==1.0.0` from PyPI and all tests pass
   5. Wheel and sdist both install cleanly in fresh venv without removed modules
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 07-01: TBD
+- [ ] 07-01-PLAN.md — Version bump to 1.0.0, classifier updates, publish workflow (trusted publishing), version sync test
+- [ ] 07-02-PLAN.md — Build validation (wheel + sdist), fresh venv install test, release readiness checkpoint
 
 ## Progress
 
@@ -142,9 +143,9 @@ Plans:
 | 3. Dependency Cleanup | 1/1 | ✓ Complete | 2026-02-12 |
 | 4. Test Coverage Hardening | 2/2 | ✓ Complete | 2026-02-12 |
 | 5. Complex Math Integration | 2/2 | ✓ Complete | 2026-02-12 |
-| 6. Documentation & Type Checking | 0/TBD | Not started | - |
-| 7. Release Preparation | 0/TBD | Not started | - |
+| 6. Documentation & Type Checking | 3/3 | ✓ Complete | 2026-02-12 |
+| 7. Release Preparation | 0/2 | In progress | - |
 
 ---
 *Roadmap created: 2026-02-12*
-*Last updated: 2026-02-12 — Phase 5 complete*
+*Last updated: 2026-02-12 — Phase 7 planned*
