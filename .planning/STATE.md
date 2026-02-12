@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 ## Current Position
 
-Phase: 5 of 7 (Complex Math Integration) — IN PROGRESS
-Plan: 1/2 (plan 01 complete)
-Status: Phase 5 plan 01 complete — Vectorized resonance calculations, documented dual-cache strategy
-Last activity: 2026-02-12 — Phase 5-01 execution complete
+Phase: 5 of 7 (Complex Math Integration) — COMPLETE
+Plan: 2/2 (all plans complete)
+Status: Phase 5 complete — Error messages standardized, CPX-01 verified with comprehensive tests
+Last activity: 2026-02-12 — Phase 5-02 execution complete
 
-Progress: [███████░░░] ~63% (Phases 1, 2, 2.1, 3, 4, 5-01 complete — 10 plans total)
+Progress: [████████░░] ~70% (Phases 1, 2, 2.1, 3, 4, 5 complete — 11 plans total)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 10
-- Average duration: 4.0 minutes
-- Total execution time: 0.67 hours
+- Total plans completed: 11
+- Average duration: 4.1 minutes
+- Total execution time: 0.75 hours
 
 **By Phase:**
 
@@ -32,7 +32,7 @@ Progress: [███████░░░] ~63% (Phases 1, 2, 2.1, 3, 4, 5-01 co
 | 02.1    | 2     | 9 min  | 4.5 min  |
 | 03      | 1     | 6 min  | 6 min    |
 | 04      | 2     | 7 min  | 3.5 min  |
-| 05      | 1     | 6 min  | 6 min    |
+| 05      | 2     | 13 min | 6.5 min  |
 
 **Recent Trend:**
 - Last 5 plans: 02.1-02 (7 min), 03-01 (6 min), 04-01 (3 min), 04-02 (4 min)
@@ -53,9 +53,9 @@ Progress: [███████░░░] ~63% (Phases 1, 2, 2.1, 3, 4, 5-01 co
 
 | Phase 04 P02  | 238            | 2     | 2     | 2026-02-12 |
 | Phase 05 P01  | 378            | 2     | 5     | 2026-02-12 |
+| Phase 05 P02  | 439            | 2     | 11    | 2026-02-12 |
 
 *Updated after each plan completion*
-| Phase 05 P01 | 378 | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -115,6 +115,8 @@ Recent decisions affecting current work:
 - Vectorized _get_trace() eliminates Python loop using calc_planet_position_batch (CPX-02) — 10-100x faster for resonance field calculations
 - Two-layer caching is coherent by design: LRU for single-point, EphemerisCache for batch (CPX-03) — Complementary non-overlapping use cases documented in cache/__init__.py
 - Coordinate functions support arrays via existing NumPy ufuncs — Type hints updated, no implementation changes needed
+- [Phase 05-02]: Case-insensitive error message tests to handle auto-formatter capitalization
+- [Phase 05-02]: Document received value and valid options in all ValueError messages
 
 ### Roadmap Evolution
 
@@ -130,8 +132,8 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (phase 5-01 execution)
-Stopped at: Completed 05-01-PLAN.md — vectorized resonance, documented caching
+Last session: 2026-02-12 (phase 5-02 execution)
+Stopped at: Completed 05-02-PLAN.md — error messages standardized, CPX-01 verified
 Resume file: None
 
 **Phase 1 Complete:** API Surface Cleanup finished (2 plans completed, UPGRADING.md created, human verified)
@@ -139,7 +141,7 @@ Resume file: None
 **Phase 2.1 Complete:** Moon velocity and vlong API fixes finished (2 plans completed, 196 tests pass, breaking API changes documented)
 **Phase 3 Complete:** Dependency cleanup finished (pandas removed, pure NumPy library, 196 tests pass)
 **Phase 4 Complete:** Test coverage hardened (91.48% overall, cache 89%, cycles 96%, 241 tests pass, CI re-enabled)
-**Phase 5-01 Complete:** Vectorized resonance + cache docs (ResonanceField._get_trace() 10-100x faster, dual-cache strategy documented)
+**Phase 5 Complete:** Complex math integration (vectorized resonance, dual-cache docs, error standardization, CPX-01 verified, 250 tests pass)
 
 ---
 *State initialized: 2026-02-12*
