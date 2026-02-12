@@ -103,7 +103,8 @@ def _get_body_id(body: Union[str, int]) -> int:
         return body
     body_idx = np.where(bodies["name"] == body.encode())[0]
     if len(body_idx) == 0:
-        raise ValueError(f"Unknown body: {body}")
+        valid_bodies = ', '.join(bodies['name'].astype(str))
+        raise ValueError(f"Unknown body: '{body}'. Valid bodies: {valid_bodies}")
     return int(bodies["id"][body_idx[0]])
 
 
@@ -156,7 +157,7 @@ def generate_cycle_series(
         elif timestamps.dtype.kind == 'f':  # float (Julian dates)
             jds = timestamps
         else:
-            raise ValueError(f"Unsupported timestamp dtype: {timestamps.dtype}")
+            raise ValueError(f"Unsupported timestamp dtype: {timestamps.dtype}. Expected datetime64 ('M') or float ('f')")
     else:
         # List of datetimes
         jds = np.array([utc_to_julian(dt) for dt in timestamps])

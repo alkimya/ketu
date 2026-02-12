@@ -8,16 +8,23 @@ import numpy as np
 from typing import Tuple, Union
 
 
-def spherical_to_rectangular(lon: float, lat: float, r: float) -> Tuple[float, float, float]:
-    """Convert spherical coordinates to rectangular coordinates.
+def spherical_to_rectangular(
+    lon: Union[float, np.ndarray],
+    lat: Union[float, np.ndarray],
+    r: Union[float, np.ndarray]
+) -> Tuple[Union[float, np.ndarray], Union[float, np.ndarray], Union[float, np.ndarray]]:
+    """Convert spherical coordinates to rectangular coordinates (vectorized).
 
     Args:
-        lon: Longitude in degrees
-        lat: Latitude in degrees
-        r: Distance
+        lon: Longitude in degrees (scalar or array)
+        lat: Latitude in degrees (scalar or array)
+        r: Distance (scalar or array)
 
     Returns:
-        Tuple of (x, y, z) in same units as r
+        Tuple of (x, y, z) in same units as r (scalar or array)
+
+    Note:
+        This function is vectorized and works with both scalars and arrays.
     """
     lon_rad = np.deg2rad(lon)
     lat_rad = np.deg2rad(lat)
@@ -65,15 +72,23 @@ def rectangular_to_spherical(
     return lon, lat, r
 
 
-def ecliptic_to_equatorial(x: float, y: float, z: float, obliquity: float) -> Tuple[float, float, float]:
-    """Convert ecliptic coordinates to equatorial coordinates.
+def ecliptic_to_equatorial(
+    x: Union[float, np.ndarray],
+    y: Union[float, np.ndarray],
+    z: Union[float, np.ndarray],
+    obliquity: Union[float, np.ndarray]
+) -> Tuple[Union[float, np.ndarray], Union[float, np.ndarray], Union[float, np.ndarray]]:
+    """Convert ecliptic coordinates to equatorial coordinates (vectorized).
 
     Args:
-        x, y, z: Ecliptic rectangular coordinates
-        obliquity: Obliquity of ecliptic in degrees
+        x, y, z: Ecliptic rectangular coordinates (scalar or array)
+        obliquity: Obliquity of ecliptic in degrees (scalar or array)
 
     Returns:
-        Tuple of (x_eq, y_eq, z_eq) equatorial rectangular coordinates
+        Tuple of (x_eq, y_eq, z_eq) equatorial rectangular coordinates (scalar or array)
+
+    Note:
+        This function is vectorized and works with both scalars and arrays.
     """
     obl_rad = np.deg2rad(obliquity)
     cos_obl = np.cos(obl_rad)
@@ -207,14 +222,17 @@ def geocentric_to_topocentric(
     return az, alt, dist_topo
 
 
-def mean_obliquity(jd: float) -> float:
-    """Calculate mean obliquity of the ecliptic.
+def mean_obliquity(jd: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
+    """Calculate mean obliquity of the ecliptic (vectorized).
 
     Args:
-        jd: Julian Date
+        jd: Julian Date (scalar or array)
 
     Returns:
-        Mean obliquity in degrees
+        Mean obliquity in degrees (scalar or array)
+
+    Note:
+        This function is vectorized and works with both scalars and arrays.
     """
     # Centuries since J2000.0
     T = (jd - 2451545.0) / 36525.0

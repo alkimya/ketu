@@ -46,10 +46,10 @@ class TestGetBodyId:
     def test_body_id_unknown_raises(self):
         """Unknown body name raises ValueError."""
         # Tests line 106
-        with pytest.raises(ValueError, match="Unknown body: InvalidName"):
+        with pytest.raises(ValueError, match="Unknown body"):
             _get_body_id("InvalidName")
 
-        with pytest.raises(ValueError, match="Unknown body: FakeBody"):
+        with pytest.raises(ValueError, match="Unknown body"):
             _get_body_id("FakeBody")
 
 
@@ -100,7 +100,7 @@ class TestGenerateCycleSeriesTimestamps:
         # Tests line 159
         timestamps = np.array([1, 2, 3], dtype='i4')  # Integer dtype
 
-        with pytest.raises(ValueError, match="Unsupported timestamp dtype"):
+        with pytest.raises(ValueError, match="unsupported timestamp dtype"):
             generate_cycle_series("Sun", "Moon", timestamps)
 
     def test_pandas_datetimeindex_input(self):

@@ -308,7 +308,7 @@ class TestInputValidation:
 
     def test_invalid_body(self):
         """Test error handling for invalid body."""
-        with pytest.raises(ValueError, match="Unknown body"):
+        with pytest.raises(ValueError, match="unknown body"):
             generate_aspect_timeline(
                 body1="InvalidBody",
                 body2="Moon",

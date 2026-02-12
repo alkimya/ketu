@@ -15,7 +15,7 @@ from datetime import datetime, timezone
 from typing import List, Dict, Optional, Union
 
 from .ephemeris.time import utc_to_julian
-from .ephemeris.planets import calc_planet_position, BODY_INDICES
+from .ephemeris.planets import calc_planet_position, calc_planet_position_batch, BODY_INDICES
 from .ephemeris.coordinates import (
     spherical_to_rectangular,
     ecliptic_to_equatorial,
@@ -100,6 +100,7 @@ class ResonanceField:
         # Convert numpy datetime64 to Julian dates
         # timestamps are datetime64, need to convert to python datetime for utc_to_julian
         timestamps_dt = [ts.astype('datetime64[us]').astype(datetime) for ts in timestamps]
+        # Vectorize timestamp conversion
         jds = np.array([utc_to_julian(t) for t in timestamps_dt])
         
         n_points = len(jds)
@@ -168,34 +169,18 @@ class ResonanceField:
         return result
 
     def _get_trace(self, pid: int, jds: np.ndarray):
-        """
-        Calculate 3D trace for a single body over many JDs.
-        """
-        n = len(jds)
-        _lons = np.zeros(n)
-        _lats = np.zeros(n)
-        _decs = np.zeros(n)
-        
-        # Determine if we can use vectorized calc from Ketu
-        # Currently calc_planet_position takes scalar JD in the version I read.
-        # But planets.py usually has batch support or we loop.
-        # Optimizing: imports showed 'calc_planet_position_batch' in aspects/core.py?
-        # Let's stick to the loop for safety unless slow.
-        # The user said "clean", so correct > fast beta.
-        
-        for k, jd in enumerate(jds):
-            # Ecliptic
-            res = calc_planet_position(jd, pid)
-            lon, lat, dist = res[0], res[1], res[2]
-            
-            # Equatorial
-            x, y, z = spherical_to_rectangular(lon, lat, dist)
-            obl = mean_obliquity(jd)
-            xe, ye, ze = ecliptic_to_equatorial(x, y, z, obl)
-            ra, dec, _ = rectangular_to_spherical(xe, ye, ze)
-            
-            _lons[k] = lon
-            _lats[k] = lat
-            _decs[k] = dec
-            
-        return _lons, _lats, _decs
+        """Calculate 3D trace for a single body over many JDs (vectorized)."""
+        # Uses batch API (bypasses LRU cache, faster for arrays)
+        # Batch ephemeris: shape (n, 6) = [lon, lat, dist, lon_speed, lat_speed, dist_speed]
+        positions = calc_planet_position_batch(jds, pid)
+        lons = positions[:, 0]
+        lats = positions[:, 1]
+        dists = positions[:, 2]
+
+        # Vectorized coordinate transformation
+        xs, ys, zs = spherical_to_rectangular(lons, lats, dists)
+        obliquities = mean_obliquity(jds)  # Now accepts arrays
+        xes, yes_, zes = ecliptic_to_equatorial(xs, ys, zs, obliquities)
+        _, decs, _ = rectangular_to_spherical(xes, yes_, zes)
+
+        return lons, lats, decs

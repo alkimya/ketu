@@ -411,7 +411,7 @@ def generate_aspect_timeline(
     if isinstance(body1, str):
         body1_idx = np.where(bodies["name"] == body1.encode())[0]
         if len(body1_idx) == 0:
-            raise ValueError(f"Unknown body: {body1}")
+            raise ValueError(f"Unknown body: '{body1}'. Check BODY_INDICES for valid names")
         body1_id = int(body1_idx[0])
         body1_name = body1
     else:
@@ -421,7 +421,7 @@ def generate_aspect_timeline(
     if isinstance(body2, str):
         body2_idx = np.where(bodies["name"] == body2.encode())[0]
         if len(body2_idx) == 0:
-            raise ValueError(f"Unknown body: {body2}")
+            raise ValueError(f"Unknown body: '{body2}'. Check BODY_INDICES for valid names")
         body2_id = int(body2_idx[0])
         body2_name = body2
     else:
@@ -448,7 +448,7 @@ def generate_aspect_timeline(
             else:
                 aspect_name = f"{aspect_angle}°"
         else:
-            raise ValueError(f"Invalid aspect type: {type(aspect)}")
+            raise ValueError(f"invalid aspect type: {type(aspect).__name__}. Expected str, int, float, or dict")
 
         aspect_info.append(aspect_angle)
 
