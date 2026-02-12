@@ -14,7 +14,7 @@ a distinct, non-overlapping use case:
 **Layer 2: EphemerisCache (Batch Operations)**
     - Location: This module (cache/ephemeris_cache.py)
     - Type: Disk-backed monthly pre-computation
-    - Access Pattern: Large time-series arrays (e.g., cycle generation, resonance fields)
+    - Access Pattern: Large time-series arrays (e.g., cycle generation, batch ephemeris)
     - Performance: ~10x faster than looping calc_planet_position() for arrays
     - Use Case: Timeline generation, multi-body batch calculations, ML training data
     - Explicit: User creates instance and calls ensure_range() before batch workflows

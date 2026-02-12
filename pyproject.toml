@@ -66,9 +66,7 @@ markers = [
 source = ["ketu"]
 omit = [
     "*/tests/*",
-    "ketu/export/*",
     "ketu/__main__.py",
-    "ketu/resonance.py",
     "ketu/lunar_calendar.py",
 ]
 
@@ -94,18 +92,11 @@ ignore_missing_imports = true
 
 [[tool.mypy.overrides]]
 module = [
-    "ketu.export.*",
-]
-ignore_errors = true
-
-[[tool.mypy.overrides]]
-module = [
     "ketu.calculations",
     "ketu.complex",
     "ketu.cycles.*",
     "ketu.ephemeris.*",
     "ketu.aspects.*",
-    "ketu.resonance",
     "ketu.lunar_calendar",
     "ketu.cache.ephemeris_cache",
 ]

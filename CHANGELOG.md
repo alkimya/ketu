@@ -70,7 +70,6 @@ Ketu 1.0 is a pure calculation library. Visualization and calendar export featur
 - **Numerical precision guarantees**: ±1e-6° for angular separation (documented in docstrings)
 - **Type hints for all public functions**: mypy strict mode compliance
 - **NumPy-style docstrings**: Examples section in all public functions
-- **Vectorized ResonanceField**: `_get_trace()` uses `calc_planet_position_batch()` (10-100x faster)
 - **Standardized error messages**: All `ValueError` messages include received value + valid options
 - **Two-layer caching strategy**: LRU for single-point, EphemerisCache for batch (documented in cache/__init__.py)
 
@@ -84,7 +83,6 @@ Ketu 1.0 is a pure calculation library. Visualization and calendar export featur
 ### Performance
 
 - **Vectorized batch ephemeris**: `calc_planet_position_batch()` eliminates Python loops
-- **ResonanceField optimization**: `_get_trace()` uses batch calculations instead of per-point iteration
 - **Cache efficiency**: Two-layer strategy optimizes for both single-point and batch use cases
 
 ## [0.4.0] - 2025-12-10
@@ -100,7 +98,7 @@ Ketu 1.0 is a pure calculation library. Visualization and calendar export featur
   - Pattern discovery tools for aspect clusters and retrograde periods
   - Full documentation in `docs/aspect_timelines.md`
 
-- **Kala Integration**: Perfect pipeline from Ketu (ephemeris) to Kala (trading/ML)
+- **Kala Integration**: Perfect pipeline from Ketu (ephemeris) to Kala (ML)
   - `KetuDataAdapter`: Convert AspectTimeline → enriched DataFrames
   - `AspectPatternDiscovery`: Discover patterns in aspect cycles
   - `generate_full_planetary_calendar()`: Generate all aspects for multiple planet pairs

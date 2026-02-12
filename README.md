@@ -22,7 +22,7 @@ This library was originally designed to generate biodynamic calendars and time s
 - **Type hints everywhere** - mypy strict mode compliance
 - **Comprehensive docstrings** - NumPy-style documentation with Examples sections
 - **91% test coverage** - 250 tests across all modules
-- **Performance improvements** - Vectorized batch ephemeris calculations, optimized resonance field
+- **Performance improvements** - Vectorized batch ephemeris calculations
 
 ## Features
 

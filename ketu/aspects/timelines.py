@@ -1,7 +1,7 @@
 """Generate aspect timelines between celestial bodies for ML/research applications.
 
 This module provides tools to generate time series data of planetary aspects
-optimized for machine learning, deep learning, astro-trading, and research.
+optimized for machine learning, deep learning, and research.
 
 The design follows ETL (Extract, Transform, Load) principles:
 - Extract: Calculate aspect events from ephemeris data
@@ -338,7 +338,7 @@ def generate_aspect_timeline(
 
     This function generates a complete timeline of planetary aspects between two bodies
     within a specified date range. The output is optimized for machine learning,
-    deep learning, astro-trading, and research applications.
+    deep learning, and research applications.
 
     Features:
     - Time window approach (all aspects between start and end dates)

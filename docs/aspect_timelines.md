@@ -1,6 +1,6 @@
 # Aspect Timelines for ML/Research Applications
 
-The `aspect_timelines` module provides a framework for generating planetary aspect calendars optimized for machine learning, deep learning, astro-trading, and research applications.
+The `aspect_timelines` module provides a framework for generating planetary aspect calendars optimized for machine learning, deep learning, and research applications.
 
 > **Migration Note**: As of v1.0, Ketu no longer provides `to_pandas()`. Use `to_numpy()` for ML workflows or `to_dict_list()` for dict-based workflows. See `UPGRADING.md` for conversion patterns.
 
@@ -10,7 +10,6 @@ Unlike traditional astrological calendars that focus on complete cycles, aspect 
 
 - **Machine Learning**: Training data for predictive models
 - **Deep Learning**: Time series analysis with rich feature sets
-- **Astro-Trading**: Market cycle correlation studies
 - **Research**: Statistical analysis of planetary patterns
 
 ## Key Features
@@ -302,7 +301,7 @@ The new framework generalizes the lunar calendar concept:
 | Retrograde | N/A (Moon direct) | Full support |
 | Export formats | Print only | NumPy, JSON |
 | ML features | Limited | Complete |
-| Use cases | Calendar display | ML/research/trading |
+| Use cases | Calendar display | ML/research |
 
 You can recreate lunar calendar functionality:
 

@@ -4,7 +4,6 @@
 This example shows how to use the aspect_timelines module to generate
 planetary aspect calendars for various applications:
 - Machine learning / deep learning
-- Astro-trading
 - Cycle research
 - Time series analysis
 """
@@ -217,4 +216,4 @@ if __name__ == "__main__":
     print("✓ Retrograde detection")
     print("✓ ML-ready exports (NumPy, Pandas, JSON)")
     print("✓ Full cycle information (phase, velocity, strength)")
-    print("\nReady for: ML, deep learning, astro-trading, research!")
+    print("\nReady for: ML, deep learning, research!")

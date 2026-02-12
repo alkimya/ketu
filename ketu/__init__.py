@@ -1,8 +1,7 @@
 """Ketu - Astronomical cycle calculations.
 
 A pure Python library for high-precision planetary ephemeris calculations,
-cycle analysis, and aspect detection. Designed for financial market analysis
-using astronomical cycles.
+cycle analysis, and aspect detection.
 
 Submodules
 ----------
@@ -19,9 +18,7 @@ ketu.ephemeris
 ketu.cache
     Ephemeris caching for fast lookups
 ketu.complex
-    Complex number representations for ML-friendly features
-ketu.resonance
-    Resonance field calculations
+    Complex number representations for cycle features
 ketu.lunar_calendar
     Lunar calendar generation
 ketu.display

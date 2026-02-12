@@ -365,7 +365,7 @@ def generate_multi_cycle_series(
     return result
 
 
-# Default planet pairs for financial astrology
+# Default planet pairs for cycle analysis
 DEFAULT_PAIRS = [
     ("Sun", "Moon"),      # Lunation cycle (~29.5 days)
     ("Sun", "Mercury"),   # Mercury cycle (~116 days)

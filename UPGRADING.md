@@ -35,26 +35,6 @@ df.set_index('timestamp', inplace=True)
 df = pd.DataFrame(timeline.to_numpy())
 ```
 
-#### ResonanceField.compute_field() Returns NumPy Array
-
-```python
-# v0.4.x (RETURNED DATAFRAME)
-from ketu.resonance import ResonanceField
-field = ResonanceField()
-df = field.compute_field(start, end)  # Returned DataFrame
-print(df['res_lon'])
-
-# v1.0.0 (RETURNS NUMPY STRUCTURED ARRAY)
-from ketu.resonance import ResonanceField
-field = ResonanceField()
-data = field.compute_field(start, end)  # Returns NumPy structured array
-print(data['res_lon'])  # Access fields directly
-
-# Convert to DataFrame if needed
-import pandas as pd
-df = pd.DataFrame(data)
-```
-
 #### Type Hints No Longer Reference pandas
 
 Type hints for `timestamps` parameters no longer include `pd.DatetimeIndex`. However, duck-typing support is preserved — you can still pass pandas DatetimeIndex objects, and they will be handled correctly via `hasattr(timestamps, 'to_pydatetime')`.
@@ -184,7 +164,6 @@ Quick reference for migrating common imports:
 - `ketu.ephemeris` - Low-level ephemeris computations
 - `ketu.cache` - Ephemeris caching for fast lookups
 - `ketu.complex` - Complex number representations for ML
-- `ketu.resonance` - Resonance field calculations
 - `ketu.lunar_calendar` - Lunar calendar generation
 - `ketu.display` - CLI display functions
 

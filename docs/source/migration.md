@@ -60,7 +60,6 @@ sed -i 's/ketu\.vdist_au(/ketu.dist_velocity_au(/g' *.py
 
 - **Type hints everywhere**: mypy strict mode compliance
 - **NumPy-style docstrings**: Examples section in all public functions
-- **Vectorized ResonanceField**: 10-100x faster `_get_trace()` using batch calculations
 - **Standardized error messages**: All `ValueError` messages include received value + valid options
 - **Numerical precision guarantees**: ±1e-6° for angular separation (documented)
 

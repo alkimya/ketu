@@ -1,6 +1,6 @@
 # Instructions pour Claude
 
-Projet Ketu - Calculs de cycles planétaires pour analyse financière.
+Projet Ketu - Calculs de cycles planétaires et éphémérides.
 
 ## Règles importantes
 
@@ -122,6 +122,5 @@ pytest tests/ -v
 ## Projets liés
 
 - **Kala** (`solaris/kala`) : Consommateur principal (KetuAdapter)
-- **MarketStream** (`solaris/marketstream`) : Pas de dépendance directe
 
 Voir `solaris/CLAUDE.md` pour la vue d'ensemble.
