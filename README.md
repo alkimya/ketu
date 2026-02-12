@@ -21,7 +21,7 @@ This library was originally designed to generate biodynamic calendars and time s
 - **Explicit API** - Velocity functions renamed (`vlong()` → `long_velocity()`), pandas dependency removed
 - **Type hints everywhere** - mypy strict mode compliance
 - **Comprehensive docstrings** - NumPy-style documentation with Examples sections
-- **91% test coverage** - 250 tests across all modules
+- **98% test coverage** - 408 tests across all modules
 - **Performance improvements** - Vectorized batch ephemeris calculations
 
 ## Features
@@ -306,10 +306,6 @@ ketu/
 - [x] Transit calculations
 - [x] High-performance ephemeris cache
 - [x] Complex number engine for cycle analysis
-- [ ] API for progressions and directions
-- [ ] Support for more celestial bodies (asteroids, etc.)
-- [ ] House systems
-- [ ] Additional coordinate systems
 
 ## Contribution
 
@@ -333,6 +329,8 @@ Project: [https://github.com/alkimya/ketu](https://github.com/alkimya/ketu)
 
 ## Acknowledgments
 
+- **[solarsystem](https://github.com/IoannisNasios/solarsystem)** by Ioannis Nasios — The pure Python astronomy library that inspired and served as the mathematical foundation for Ketu's NumPy ephemeris engine. Kepler's equation solver, perturbation terms, coordinate transformations, and Moon calculations all trace back to this elegant, dependency-free library. Thank you!
+- **[Claude](https://claude.ai)** by Anthropic — The pure NumPy rewrite, from orbital mechanics to aspect detection, was developed in collaboration with Claude. Architecture, algorithms, tests, documentation, and French translation were produced through extensive pair programming sessions.
 - Original orbital calculations based on Paul Schlyter's work
 - Inspired by the accuracy and reliability of Swiss Ephemeris
 - Built with the power of NumPy for scientific computing
