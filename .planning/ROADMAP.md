@@ -94,10 +94,11 @@ Plans:
   2. `ResonanceField._get_trace()` uses vectorized batch calculations (no Python loops)
   3. Single coherent caching strategy exists (not LRU + EphemerisCache in parallel)
   4. Error messages across all modules follow consistent format with context
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 05-01: TBD
+- [ ] 05-01-PLAN.md — Vectorize ResonanceField._get_trace() and document dual-cache architecture
+- [ ] 05-02-PLAN.md — Standardize error messages across all modules and verify complex math integration
 
 ### Phase 6: Documentation & Type Checking
 **Goal**: 1.0 API is fully documented with enforced type hints
@@ -138,10 +139,10 @@ Plans:
 | 2.1 Fix Moon velocity & vlong | 2/2 | ✓ Complete | 2026-02-12 |
 | 3. Dependency Cleanup | 1/1 | ✓ Complete | 2026-02-12 |
 | 4. Test Coverage Hardening | 2/2 | ✓ Complete | 2026-02-12 |
-| 5. Complex Math Integration | 0/TBD | Not started | - |
+| 5. Complex Math Integration | 0/2 | Planned | - |
 | 6. Documentation & Type Checking | 0/TBD | Not started | - |
 | 7. Release Preparation | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-12*
-*Last updated: 2026-02-12 — Phase 4 complete*
+*Last updated: 2026-02-12 — Phase 5 planned*
