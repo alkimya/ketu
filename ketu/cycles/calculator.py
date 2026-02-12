@@ -175,8 +175,8 @@ def generate_cycle_series(
     use_ephemeris_cache = (
         use_cache and
         CACHE_AVAILABLE and
-        hasattr(timestamps, 'to_pydatetime') or
-        (isinstance(timestamps, (list, np.ndarray)) and len(timestamps) > 0)
+        (hasattr(timestamps, 'to_pydatetime') or
+         (isinstance(timestamps, (list, np.ndarray)) and len(timestamps) > 0))
     )
 
     if use_ephemeris_cache and not isinstance(timestamps[0] if len(timestamps) > 0 else None, float):

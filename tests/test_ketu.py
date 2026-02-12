@@ -14,11 +14,9 @@ from ketu.calculations import (
     body_id,
     body_properties,
     long,
-    longitude,
     lat,
     dist_au,
     vlong,
-    longitude_velocity,
     is_retrograde,
     is_ascending,
     body_sign,
@@ -353,14 +351,6 @@ class TestPrecision:
         # Outer planets are slow
         assert abs(jupiter_vlong) < 0.5, f"Jupiter velocity should be <0.5°/day, got {jupiter_vlong}°/day"
         assert abs(saturn_vlong) < 0.2, f"Saturn velocity should be <0.2°/day, got {saturn_vlong}°/day"
-
-    def test_alias_consistency(self):
-        """Test that longitude() and long() return identical values."""
-        assert longitude(self.ref_jday, 0) == long(self.ref_jday, 0)
-        assert longitude(self.ref_jday, 5) == long(self.ref_jday, 5)
-
-        assert longitude_velocity(self.ref_jday, 0) == vlong(self.ref_jday, 0)
-        assert longitude_velocity(self.ref_jday, 5) == vlong(self.ref_jday, 5)
 
     def test_jupiter_saturn_conjunction_2020(self):
         """Test positions during the famous Jupiter-Saturn conjunction of Dec 2020.

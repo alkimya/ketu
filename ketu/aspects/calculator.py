@@ -113,6 +113,9 @@ def calculate_aspects_vectorized(jdate: float, l_bodies=bodies) -> np.ndarray:
 
     # Prepare to collect results
     results = []
+    # Track which pairs have already been matched to an aspect
+    # (to match loop behavior which returns on first aspect found)
+    matched_pairs = set()
 
     # For each aspect type, check all pairs at once (vectorized)
     for i_asp, aspect_angle in enumerate(aspects["angle"]):
@@ -135,8 +138,13 @@ def calculate_aspects_vectorized(jdate: float, l_bodies=bodies) -> np.ndarray:
 
         # Collect results for this aspect
         if np.any(in_orb):
-            for idx in np.where(in_orb)[0]:
-                results.append((body1_ids[idx], body2_ids[idx], i_asp, orb_values[np.where(in_orb)[0] == idx][0]))
+            for i, idx in enumerate(np.where(in_orb)[0]):
+                pair = (body1_ids[idx], body2_ids[idx])
+                # Only add if this pair hasn't been matched yet
+                # (matches loop behavior: first aspect found wins)
+                if pair not in matched_pairs:
+                    results.append((body1_ids[idx], body2_ids[idx], i_asp, orb_values[i]))
+                    matched_pairs.add(pair)
 
     # Convert to structured array
     if len(results) == 0:
