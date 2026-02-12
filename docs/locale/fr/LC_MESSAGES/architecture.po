@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-02 22:42+0100\n"
+"POT-Creation-Date: 2026-02-12 21:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Generated-By: Babel 2.17.0\n"
+"Generated-By: Babel 2.18.0\n"
 
 #: ../../source/architecture.md:1
 msgid "Architecture"
@@ -31,478 +31,513 @@ msgstr "Cette page décrit l'architecture interne de Ketu v0.3.0."
 msgid "Module Structure"
 msgstr "## Structure des Modules"
 
-#: ../../source/architecture.md:25
+#: ../../source/architecture.md:26
 msgid "Core Components"
 msgstr "## Composants Principaux"
 
-#: ../../source/architecture.md:27
+#: ../../source/architecture.md:28
 msgid "Data Structures (core.py)"
 msgstr "### Structures de Données (core.py)"
 
-#: ../../source/architecture.md:29
+#: ../../source/architecture.md:30
 msgid "Defines the fundamental data structures:"
 msgstr "Calculs de thème natal et de transits :"
 
-#: ../../source/architecture.md:31
+#: ../../source/architecture.md:32
 msgid "**bodies**: Dictionary with planet names, IDs, symbols, orbs, speeds"
 msgstr "Conversions de systèmes de coordonnées :"
 
-#: ../../source/architecture.md:32
-msgid ""
-"**aspects**: Dictionary with aspect names, angles, coefficients, symbols"
+#: ../../source/architecture.md:33
+msgid "**aspects**: Dictionary with aspect names, angles, coefficients, symbols"
 msgstr "Calculs de thème natal et de transits :"
 
-#: ../../source/architecture.md:33
+#: ../../source/architecture.md:34
 msgid "**signs**: List of zodiac sign names"
 msgstr "Définit les structures de données fondamentales :"
 
-#: ../../source/architecture.md:35
+#: ../../source/architecture.md:36
 msgid "These are implemented as NumPy structured arrays for efficient access."
-msgstr ""
-"Implémentées comme des tableaux structurés NumPy pour un accès efficace."
+msgstr "Implémentées comme des tableaux structurés NumPy pour un accès efficace."
 
-#: ../../source/architecture.md:37
+#: ../../source/architecture.md:38
 msgid "Calculations (calculations.py)"
 msgstr "### Calculs (calculations.py)"
 
-#: ../../source/architecture.md:39
+#: ../../source/architecture.md:40
 msgid "High-level API wrapping ephemeris functions:"
 msgstr "API de haut niveau enveloppant les fonctions ephemeris :"
 
-#: ../../source/architecture.md:41
+#: ../../source/architecture.md:42
 msgid "`positions()` - Get all planetary positions"
 msgstr "Fonctions de position planétaire de haut niveau :"
 
-#: ../../source/architecture.md:42
+#: ../../source/architecture.md:43
 msgid "`calculate_aspects()` - Detect all aspects"
 msgstr "Suivi temporel des aspects :"
 
-#: ../../source/architecture.md:43
+#: ../../source/architecture.md:44
 msgid "`find_aspect_timing()` - Find exact aspect moments"
 msgstr "Définit les structures de données fondamentales :"
 
-#: ../../source/architecture.md:44
+#: ../../source/architecture.md:45
 msgid "`is_retrograde()` - Check retrograde motion"
 msgstr "## Principes de Conception"
 
-#: ../../source/architecture.md:46
+#: ../../source/architecture.md:47
 msgid "Display (display.py)"
 msgstr "### Affichage (display.py)"
 
-#: ../../source/architecture.md:48
+#: ../../source/architecture.md:49
 msgid "User-facing display functions:"
 msgstr "### Séparation des Préoccupations"
 
-#: ../../source/architecture.md:50
+#: ../../source/architecture.md:51
 msgid "`print_positions()` - Formatted position table"
 msgstr "Fonctions de position planétaire de haut niveau :"
 
-#: ../../source/architecture.md:51
+#: ../../source/architecture.md:52
 msgid "`print_aspects()` - Formatted aspect table"
 msgstr "Définit les structures de données fondamentales :"
 
-#: ../../source/architecture.md:52
+#: ../../source/architecture.md:53
 msgid "`main()` - Interactive CLI entry point"
 msgstr "### Vectorisation en Premier"
 
-#: ../../source/architecture.md:54
+#: ../../source/architecture.md:55
 msgid "Ephemeris Package"
 msgstr "## Package Ephemeris"
 
-#: ../../source/architecture.md:56
+#: ../../source/architecture.md:57
 msgid "Time Conversions (ephemeris/time.py)"
 msgstr "### Conversions de Temps (ephemeris/time.py)"
 
-#: ../../source/architecture.md:58
+#: ../../source/architecture.md:59
 msgid "Handles all time-related calculations:"
 msgstr "### Calculs (calculations.py)"
 
-#: ../../source/architecture.md:60
+#: ../../source/architecture.md:61
 msgid "**UTC ↔ Julian Day** conversions"
 msgstr "## Principes de Conception"
 
-#: ../../source/architecture.md:61
+#: ../../source/architecture.md:62
 msgid "**Equation of time** calculations"
 msgstr "### Séparation des Préoccupations"
 
-#: ../../source/architecture.md:62
+#: ../../source/architecture.md:63
 msgid "**Sidereal time** calculations"
 msgstr "### Calculs (calculations.py)"
 
-#: ../../source/architecture.md:63
+#: ../../source/architecture.md:64
 msgid "**Delta T** corrections for historical dates"
 msgstr "### Transformations de Coordonnées (ephemeris/coordinates.py)"
 
-#: ../../source/architecture.md:65
+#: ../../source/architecture.md:66
 msgid "Uses purely mathematical formulas - no external dependencies."
-msgstr ""
-"Utilise des formules purement mathématiques - pas de dépendances externes."
+msgstr "Utilise des formules purement mathématiques - pas de dépendances externes."
 
-#: ../../source/architecture.md:67
+#: ../../source/architecture.md:68
 msgid "Orbital Mechanics (ephemeris/orbital.py)"
 msgstr "### Mécanique Orbitale (ephemeris/orbital.py)"
 
-#: ../../source/architecture.md:69
+#: ../../source/architecture.md:70
 msgid "Core astronomical calculations:"
 msgstr "### Calculs (calculations.py)"
 
-#: ../../source/architecture.md:71
+#: ../../source/architecture.md:72
 msgid "**Kepler solver** - Solves Kepler's equation using Newton-Raphson"
 msgstr "API de haut niveau enveloppant les fonctions ephemeris :"
 
-#: ../../source/architecture.md:72
+#: ../../source/architecture.md:73
 msgid "**Orbital elements** - Planetary orbital parameters"
 msgstr "### Mécanique Orbitale (ephemeris/orbital.py)"
 
-#: ../../source/architecture.md:73
+#: ../../source/architecture.md:74
 msgid "**Perturbations** - Major planetary perturbations"
 msgstr "Fonctions de position planétaire de haut niveau :"
 
-#: ../../source/architecture.md:74
+#: ../../source/architecture.md:75
 msgid "**Position from elements** - Convert orbital elements to position"
 msgstr ""
-"Toutes les fonctions sont pures - mêmes entrées produisent toujours mêmes "
-"sorties."
+"Toutes les fonctions sont pures - mêmes entrées produisent toujours mêmes"
+" sorties."
 
-#: ../../source/architecture.md:76
+#: ../../source/architecture.md:77
 msgid "Coordinate Transformations (ephemeris/coordinates.py)"
 msgstr "### Transformations de Coordonnées (ephemeris/coordinates.py)"
 
-#: ../../source/architecture.md:78
+#: ../../source/architecture.md:79
 msgid "Coordinate system conversions:"
 msgstr "## Principes de Conception"
 
-#: ../../source/architecture.md:80
+#: ../../source/architecture.md:81
 msgid "**Ecliptic ↔ Equatorial** coordinates"
 msgstr "Conversions de systèmes de coordonnées :"
 
-#: ../../source/architecture.md:81
+#: ../../source/architecture.md:82
 msgid "**Heliocentric ↔ Geocentric** positions"
 msgstr "### Séparation des Préoccupations"
 
-#: ../../source/architecture.md:82
+#: ../../source/architecture.md:83
 msgid "**Rectangular ↔ Spherical** coordinates"
 msgstr "### Transformations de Coordonnées (ephemeris/coordinates.py)"
 
-#: ../../source/architecture.md:83
+#: ../../source/architecture.md:84
 msgid "**Nutation** corrections"
 msgstr "### Séparation des Préoccupations"
 
-#: ../../source/architecture.md:84
+#: ../../source/architecture.md:85
 msgid "**Aberration** corrections"
 msgstr "### Séparation des Préoccupations"
 
-#: ../../source/architecture.md:86
+#: ../../source/architecture.md:87
 msgid "Planetary Calculations (ephemeris/planets.py)"
 msgstr "### Calculs Planétaires (ephemeris/planets.py)"
 
-#: ../../source/architecture.md:88
+#: ../../source/architecture.md:89
 msgid "High-level planetary position functions:"
 msgstr "### Séparation des Préoccupations"
 
-#: ../../source/architecture.md:90
+#: ../../source/architecture.md:91
 msgid "`calc_planet_position()` - Single date calculation"
 msgstr "### Calculs (calculations.py)"
 
-#: ../../source/architecture.md:91
+#: ../../source/architecture.md:92
 msgid "`calc_planet_position_batch()` - Vectorized batch calculation"
 msgstr "### Calculs (calculations.py)"
 
-#: ../../source/architecture.md:92
+#: ../../source/architecture.md:93
 msgid "`find_exact_aspect()` - Binary search for exact aspects"
 msgstr "Suivi temporel des aspects :"
 
-#: ../../source/architecture.md:93
+#: ../../source/architecture.md:94
 msgid "`body_properties()` - Get full position + velocity"
 msgstr "Fonctions de position planétaire de haut niveau :"
 
-#: ../../source/architecture.md:95
+#: ../../source/architecture.md:96
 msgid "Advanced Features"
 msgstr "# Architecture"
 
-#: ../../source/architecture.md:97
+#: ../../source/architecture.md:98
 msgid "Aspect Windows (aspect_windows.py)"
 msgstr "### Fenêtres d'Aspects (aspect_windows.py)"
 
-#: ../../source/architecture.md:99
+#: ../../source/architecture.md:100
 msgid "Temporal tracking of aspects:"
 msgstr "Suivi temporel des aspects :"
 
-#: ../../source/architecture.md:101
+#: ../../source/architecture.md:102
 msgid "**AspectMoment** - Instant when aspect is exact"
 msgstr "Suivi temporel des aspects :"
 
-#: ../../source/architecture.md:102
+#: ../../source/architecture.md:103
 msgid "**AspectWindow** - Duration from begin to end of aspect"
 msgstr "### Transformations de Coordonnées (ephemeris/coordinates.py)"
 
-#: ../../source/architecture.md:103
+#: ../../source/architecture.md:104
 msgid "`find_aspect_window()` - Find all windows in date range"
 msgstr "### Fenêtres d'Aspects (aspect_windows.py)"
 
-#: ../../source/architecture.md:104
+#: ../../source/architecture.md:105
 msgid "`find_aspects_timeline()` - Complete aspect timeline"
 msgstr "### Fenêtres d'Aspects (aspect_windows.py)"
 
-#: ../../source/architecture.md:106
+#: ../../source/architecture.md:107
 msgid "Uses binary search and gradient descent for precision."
 msgstr "Utilise recherche binaire et descente de gradient pour la précision."
 
-#: ../../source/architecture.md:108
+#: ../../source/architecture.md:109
 msgid "Transits (transits.py)"
 msgstr "### Transits (transits.py)"
 
-#: ../../source/architecture.md:110
-msgid "Natal chart and transit calculations:"
-msgstr "Calculs de thème natal et de transits :"
-
-#: ../../source/architecture.md:112
-msgid "**NatalPosition** - Stores natal planet position"
+#: ../../source/architecture.md:111
+#, fuzzy
+msgid "Natal position and transit calculations:"
 msgstr "Calculs de thème natal et de transits :"
 
 #: ../../source/architecture.md:113
+msgid "**NatalPosition** - Stores natal planet position"
+msgstr "Calculs de thème natal et de transits :"
+
+#: ../../source/architecture.md:114
 msgid "**TransitAspect** - Describes transit-to-natal aspect"
 msgstr "### Fenêtres d'Aspects (aspect_windows.py)"
 
-#: ../../source/architecture.md:114
+#: ../../source/architecture.md:115
 msgid "`get_natal_positions()` - Extract natal positions"
 msgstr "### Transits (transits.py)"
 
-#: ../../source/architecture.md:115
+#: ../../source/architecture.md:116
 msgid "`find_transits_to_position()` - Find transits to a point"
 msgstr "Fonctions de position planétaire de haut niveau :"
 
-#: ../../source/architecture.md:116
+#: ../../source/architecture.md:117
 msgid "`compare_dates_transits()` - Full transit comparison"
 msgstr "### Transits (transits.py)"
 
-#: ../../source/architecture.md:118
-msgid "Chart Visualization (chart.py)"
-msgstr "### Calculs (calculations.py)"
+#: ../../source/architecture.md:119
+#, fuzzy
+msgid "Ephemeris Cache (cache/)"
+msgstr "## Package Ephemeris"
 
-#: ../../source/architecture.md:120
-msgid "Matplotlib-based zodiacal charts:"
-msgstr "Suivi temporel des aspects :"
-
-#: ../../source/architecture.md:122
-msgid "Circular zodiac with 12 signs"
-msgstr "Calculs astronomiques principaux :"
+#: ../../source/architecture.md:121
+msgid "High-performance position lookups:"
+msgstr ""
 
 #: ../../source/architecture.md:123
-msgid "Planet glyphs at correct positions"
-msgstr "## Principes de Conception"
+msgid "**EphemerisCache** - Monthly pre-computed positions for O(1) lookups"
+msgstr ""
 
 #: ../../source/architecture.md:124
-msgid "Aspect lines between planets"
-msgstr "### Calculs Planétaires (ephemeris/planets.py)"
+msgid "`ensure_month()` - Pre-compute and cache a month of positions"
+msgstr ""
 
 #: ../../source/architecture.md:125
-msgid "Customizable colors and styles"
-msgstr "Calculs astronomiques principaux :"
+#, fuzzy
+msgid "`get_position()` - Fast position lookup with interpolation"
+msgstr "Fonctions de position planétaire de haut niveau :"
 
 #: ../../source/architecture.md:126
-msgid "SVG/PNG/PDF output"
-msgstr ""
-
-#: ../../source/architecture.md:128
-msgid "Requires optional `matplotlib` dependency."
-msgstr "### Dépendances Optionnelles"
-
-#: ../../source/architecture.md:130
-msgid "iCalendar Export (icalendar_export.py)"
-msgstr "### Fenêtres d'Aspects (aspect_windows.py)"
-
-#: ../../source/architecture.md:132
-msgid "Export aspects to calendar format:"
-msgstr "Suivi temporel des aspects :"
-
-#: ../../source/architecture.md:134
-msgid "`export_lunations_to_ical()` - New/Full Moon events"
-msgstr "### Vectorisation en Premier"
-
-#: ../../source/architecture.md:135
-msgid "`export_aspects_to_ical()` - All aspects as events"
-msgstr "### Fenêtres d'Aspects (aspect_windows.py)"
-
-#: ../../source/architecture.md:136
-msgid "`export_transits_to_ical()` - Transit events"
+#, fuzzy
+msgid "`get_all_positions()` - Batch position retrieval for all bodies"
 msgstr "### Transits (transits.py)"
 
-#: ../../source/architecture.md:138
-msgid "Requires optional `icalendar` dependency."
+#: ../../source/architecture.md:127
+msgid ""
+"**Performance**: 1000x faster than computation (0.006ms vs 10ms per "
+"lookup)"
 msgstr ""
-"Fonctionnalités avancées (cartes, iCalendar) sont des extras optionnels."
 
-#: ../../source/architecture.md:140
+#: ../../source/architecture.md:129
 msgid "Design Principles"
 msgstr "## Composants Principaux"
 
-#: ../../source/architecture.md:142
+#: ../../source/architecture.md:131
 msgid "Separation of Concerns"
 msgstr "### Séparation des Préoccupations"
 
-#: ../../source/architecture.md:144
+#: ../../source/architecture.md:133
 msgid "**ephemeris/**: Pure astronomical calculations"
 msgstr "### Calculs (calculations.py)"
 
-#: ../../source/architecture.md:145
+#: ../../source/architecture.md:134
 msgid "**calculations.py**: Astrological interpretations"
 msgstr "Calculs astronomiques principaux :"
 
-#: ../../source/architecture.md:146
+#: ../../source/architecture.md:135
 msgid "**display.py**: User interface"
 msgstr "### Affichage (display.py)"
 
-#: ../../source/architecture.md:147
+#: ../../source/architecture.md:136
 msgid "**Advanced modules**: Optional features"
 msgstr "### Dépendances Optionnelles"
 
-#: ../../source/architecture.md:149
+#: ../../source/architecture.md:138
 msgid "Vectorization First"
 msgstr "### Vectorisation en Premier"
 
-#: ../../source/architecture.md:151
+#: ../../source/architecture.md:140
 msgid ""
 "All core functions support both scalar and array inputs via NumPy "
 "broadcasting."
 msgstr ""
-"Toutes les fonctions principales supportent entrées scalaires et tableaux "
-"via broadcasting NumPy."
+"Toutes les fonctions principales supportent entrées scalaires et tableaux"
+" via broadcasting NumPy."
 
-#: ../../source/architecture.md:153
+#: ../../source/architecture.md:142
 msgid "No Global State"
 msgstr "### Pas d'État Global"
 
-#: ../../source/architecture.md:155
+#: ../../source/architecture.md:144
 msgid "All functions are pure - same inputs always produce same outputs."
 msgstr ""
-"Toutes les fonctions sont pures - mêmes entrées produisent toujours mêmes "
-"sorties."
+"Toutes les fonctions sont pures - mêmes entrées produisent toujours mêmes"
+" sorties."
 
-#: ../../source/architecture.md:157
-msgid "Optional Dependencies"
-msgstr "## Fonctionnalités Avancées"
-
-#: ../../source/architecture.md:159
-msgid "Advanced features (charts, iCalendar) are optional extras:"
+#: ../../source/architecture.md:146
+msgid "Pure NumPy Implementation"
 msgstr ""
-"Fonctionnalités avancées (cartes, iCalendar) sont des extras optionnels."
 
-#: ../../source/architecture.md:170
+#: ../../source/architecture.md:148
+msgid ""
+"Ketu has only one dependency (NumPy) for maximum portability and "
+"performance. All calculations use vectorized NumPy operations where "
+"possible."
+msgstr ""
+
+#: ../../source/architecture.md:150
 msgid "Backward Compatibility"
 msgstr "## Composants Principaux"
 
-#: ../../source/architecture.md:172
+#: ../../source/architecture.md:152
 msgid ""
 "The public API maintains compatibility with previous versions where "
 "possible."
 msgstr "Utilise recherche binaire et descente de gradient pour la précision."
 
-#: ../../source/architecture.md:174
+#: ../../source/architecture.md:154
 msgid "Data Flow"
 msgstr "### Pas d'État Global"
 
-#: ../../source/architecture.md:176
+#: ../../source/architecture.md:156
 msgid "Position Calculation Flow"
 msgstr "### Calculs (calculations.py)"
 
-#: ../../source/architecture.md:192
+#: ../../source/architecture.md:172
 msgid "Aspect Calculation Flow"
 msgstr "### Calculs (calculations.py)"
 
-#: ../../source/architecture.md:210
+#: ../../source/architecture.md:190
 msgid "Testing Strategy"
 msgstr "### Vectorisation en Premier"
 
-#: ../../source/architecture.md:212
+#: ../../source/architecture.md:192
 msgid "Unit Tests"
 msgstr "### Transits (transits.py)"
 
-#: ../../source/architecture.md:214
+#: ../../source/architecture.md:194
 msgid "Individual functions in `ephemeris/`"
 msgstr "### Conversions de Temps (ephemeris/time.py)"
 
-#: ../../source/architecture.md:215
+#: ../../source/architecture.md:195
 msgid "Isolated calculations"
 msgstr "### Calculs (calculations.py)"
 
-#: ../../source/architecture.md:216
+#: ../../source/architecture.md:196
 msgid "Edge cases and boundary conditions"
 msgstr "## Principes de Conception"
 
-#: ../../source/architecture.md:218
+#: ../../source/architecture.md:198
 msgid "Integration Tests"
 msgstr "### Séparation des Préoccupations"
 
-#: ../../source/architecture.md:220
+#: ../../source/architecture.md:200
 msgid "Full position calculations"
 msgstr "### Calculs (calculations.py)"
 
-#: ../../source/architecture.md:221
+#: ../../source/architecture.md:201
 msgid "Aspect detection"
 msgstr "## Principes de Conception"
 
-#: ../../source/architecture.md:222
+#: ../../source/architecture.md:202
 msgid "Time conversions"
 msgstr "## Principes de Conception"
 
-#: ../../source/architecture.md:224
+#: ../../source/architecture.md:204
 msgid "Validation Tests"
 msgstr "### Séparation des Préoccupations"
 
-#: ../../source/architecture.md:226
+#: ../../source/architecture.md:206
 msgid "Compare against known ephemeris data"
 msgstr "## Package Ephemeris"
 
-#: ../../source/architecture.md:227
+#: ../../source/architecture.md:207
 msgid "Cross-check with historical observations"
 msgstr "### Vectorisation en Premier"
 
-#: ../../source/architecture.md:228
+#: ../../source/architecture.md:208
 msgid "Verify retrograde periods"
 msgstr "### Séparation des Préoccupations"
 
-#: ../../source/architecture.md:230
+#: ../../source/architecture.md:210
 msgid "Benchmark Tests"
 msgstr "# Architecture"
 
-#: ../../source/architecture.md:232
+#: ../../source/architecture.md:212
 msgid "Performance regression detection"
 msgstr "### Séparation des Préoccupations"
 
-#: ../../source/architecture.md:233
+#: ../../source/architecture.md:213
 msgid "Memory usage monitoring"
 msgstr "## Package Ephemeris"
 
-#: ../../source/architecture.md:234
+#: ../../source/architecture.md:214
 msgid "Optimization validation"
 msgstr "### Séparation des Préoccupations"
 
-#: ../../source/architecture.md:236
+#: ../../source/architecture.md:216
 msgid "Extension Points"
 msgstr "### Vectorisation en Premier"
 
-#: ../../source/architecture.md:238
+#: ../../source/architecture.md:218
 msgid "To add new features:"
 msgstr "# Architecture"
 
-#: ../../source/architecture.md:240
+#: ../../source/architecture.md:220
 msgid "**New celestial bodies**: Add to `core.bodies`"
 msgstr "Conversions de systèmes de coordonnées :"
 
-#: ../../source/architecture.md:241
+#: ../../source/architecture.md:221
 msgid "**New aspects**: Add to `core.aspects`"
 msgstr "### Fenêtres d'Aspects (aspect_windows.py)"
 
-#: ../../source/architecture.md:242
+#: ../../source/architecture.md:222
 msgid "**New calculations**: Extend `calculations.py`"
 msgstr "### Calculs (calculations.py)"
 
-#: ../../source/architecture.md:243
+#: ../../source/architecture.md:223
 msgid "**New ephemeris functions**: Add to `ephemeris/`"
 msgstr "### Conversions de Temps (ephemeris/time.py)"
 
-#: ../../source/architecture.md:244
-msgid "**New export formats**: Follow `icalendar_export.py` pattern"
+#: ../../source/architecture.md:224
+msgid ""
+"**Visualization/export**: Implement in application layer using Ketu's "
+"calculation results"
 msgstr ""
-"Utilise des formules purement mathématiques - pas de dépendances externes."
+
+#~ msgid "Chart Visualization (chart.py)"
+#~ msgstr "### Calculs (calculations.py)"
+
+#~ msgid "Matplotlib-based zodiacal charts:"
+#~ msgstr "Suivi temporel des aspects :"
+
+#~ msgid "Circular zodiac with 12 signs"
+#~ msgstr "Calculs astronomiques principaux :"
+
+#~ msgid "Planet glyphs at correct positions"
+#~ msgstr "## Principes de Conception"
+
+#~ msgid "Aspect lines between planets"
+#~ msgstr "### Calculs Planétaires (ephemeris/planets.py)"
+
+#~ msgid "Customizable colors and styles"
+#~ msgstr "Calculs astronomiques principaux :"
+
+#~ msgid "SVG/PNG/PDF output"
+#~ msgstr ""
+
+#~ msgid "Requires optional `matplotlib` dependency."
+#~ msgstr "### Dépendances Optionnelles"
+
+#~ msgid "iCalendar Export (icalendar_export.py)"
+#~ msgstr "### Fenêtres d'Aspects (aspect_windows.py)"
+
+#~ msgid "Export aspects to calendar format:"
+#~ msgstr "Suivi temporel des aspects :"
+
+#~ msgid "`export_lunations_to_ical()` - New/Full Moon events"
+#~ msgstr "### Vectorisation en Premier"
+
+#~ msgid "`export_aspects_to_ical()` - All aspects as events"
+#~ msgstr "### Fenêtres d'Aspects (aspect_windows.py)"
+
+#~ msgid "`export_transits_to_ical()` - Transit events"
+#~ msgstr "### Transits (transits.py)"
+
+#~ msgid "Requires optional `icalendar` dependency."
+#~ msgstr ""
+#~ "Fonctionnalités avancées (cartes, iCalendar) "
+#~ "sont des extras optionnels."
+
+#~ msgid "Optional Dependencies"
+#~ msgstr "## Fonctionnalités Avancées"
+
+#~ msgid "Advanced features (charts, iCalendar) are optional extras:"
+#~ msgstr ""
+#~ "Fonctionnalités avancées (cartes, iCalendar) "
+#~ "sont des extras optionnels."
+
+#~ msgid "**New export formats**: Follow `icalendar_export.py` pattern"
+#~ msgstr ""
+#~ "Utilise des formules purement mathématiques"
+#~ " - pas de dépendances externes."
+

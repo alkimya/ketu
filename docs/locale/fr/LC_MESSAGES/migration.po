@@ -8,351 +8,512 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-02 22:42+0100\n"
+"POT-Creation-Date: 2026-02-12 21:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Generated-By: Babel 2.17.0\n"
+"Generated-By: Babel 2.18.0\n"
 
 #: ../../source/migration.md:1
 msgid "Migration Guide"
 msgstr "# Guide de Migration"
 
 #: ../../source/migration.md:3
-msgid ""
-"This guide helps you migrate from Ketu v0.2.x (pyswisseph-based) to v0.3.0 "
-"(pure NumPy)."
+#, fuzzy
+msgid "This guide helps you migrate from Ketu v0.4.0 to v1.0.0."
 msgstr ""
-"Ce guide vous aide à migrer de Ketu v0.2.x (basé sur pyswisseph) vers v0.3.0"
-" (NumPy pur)."
+"Ce guide vous aide à migrer de Ketu v0.2.x (basé sur pyswisseph) vers "
+"v0.3.0 (NumPy pur)."
 
 #: ../../source/migration.md:5
+msgid ""
+"**This is a MAJOR version bump with breaking changes.** See "
+"[UPGRADING.md](../../UPGRADING.md) for detailed migration instructions."
+msgstr ""
+
+#: ../../source/migration.md:7
 msgid "What Changed"
 msgstr "### Changements Internes"
 
-#: ../../source/migration.md:7
-msgid "Dependencies"
-msgstr "### Dépendances"
-
 #: ../../source/migration.md:9
-msgid "**Before (v0.2.x):**"
-msgstr "### Swiss Ephemeris (v0.2.x)"
+msgid "Removed: Export Modules"
+msgstr ""
+
+#: ../../source/migration.md:11
+msgid ""
+"Ketu 1.0 is a pure calculation library. Visualization and calendar export"
+" features have been removed:"
+msgstr ""
+
+#: ../../source/migration.md:13
+msgid "**Removed modules**: `ketu.export.chart`, `ketu.export.icalendar`"
+msgstr ""
 
 #: ../../source/migration.md:14
-msgid "**After (v0.3.0):**"
-msgstr "### NumPy Pur (v0.3.0)"
+msgid ""
+"**Removed functions**: `draw_zodiacal_chart()`, "
+"`export_lunations_to_ical()`, `export_aspects_to_ical()`, "
+"`export_transits_to_ical()`"
+msgstr ""
 
-#: ../../source/migration.md:21
-msgid "Removed Dependency"
+#: ../../source/migration.md:15
+msgid ""
+"**Why**: Ketu focuses on numerical calculations. Visualization belongs in"
+" application layers (GUI, web dashboards, etc.)"
+msgstr ""
+
+#: ../../source/migration.md:17
+msgid ""
+"**Migration**: If you need these features, pin to `ketu==0.4.0` or "
+"implement visualization in your application layer using Ketu's "
+"calculation results."
+msgstr ""
+
+#: ../../source/migration.md:19
+#, fuzzy
+msgid "Removed: Pandas Dependency"
 msgstr "### Dépendances"
 
+#: ../../source/migration.md:21
+msgid ""
+"`generate_aspect_timeline()` now returns NumPy structured array (was "
+"DataFrame)"
+msgstr ""
+
+#: ../../source/migration.md:22
+msgid "`AspectTimeline.to_pandas()` removed"
+msgstr ""
+
 #: ../../source/migration.md:23
-msgid "**pyswisseph**: Completely removed - no more binary dependencies"
-msgstr "Si vous rencontrez des problèmes :"
+msgid ""
+"**Migration**: Use `import pandas as pd; df = pd.DataFrame(timeline)` for"
+" manual conversion"
+msgstr ""
 
-#: ../../source/migration.md:24
-msgid "**Platform issues**: Fixed - pure Python + NumPy works everywhere"
-msgstr "**Problème :** ```python ImportError: No module named 'swisseph' ```"
+#: ../../source/migration.md:25
+msgid "Renamed: Velocity Functions (Breaking)"
+msgstr ""
 
-#: ../../source/migration.md:26
-msgid "New Optional Dependencies"
-msgstr "## Comparaison de Performance"
+#: ../../source/migration.md:27
+msgid "`vlong()` → `long_velocity()`"
+msgstr ""
 
 #: ../../source/migration.md:28
-msgid "**matplotlib**: For chart visualization (`ketu[chart]`)"
-msgstr "```bash # Pour visualisation de cartes pip install ketu[chart]"
+msgid "`vlat()` → `lat_velocity()`"
+msgstr ""
 
 #: ../../source/migration.md:29
-msgid "**icalendar**: For calendar export (`ketu[icalendar]`)"
-msgstr "# Pour export iCalendar pip install ketu[icalendar]"
+msgid "`vdist_au()` → `dist_velocity_au()`"
+msgstr ""
 
-#: ../../source/migration.md:31
-msgid "API Compatibility"
-msgstr "## Compatibilité API"
+#: ../../source/migration.md:30
+msgid ""
+"**Why**: Explicit names prevent confusion. The old \"v\" prefix was "
+"ambiguous."
+msgstr ""
 
-#: ../../source/migration.md:33
-msgid "High-Level API (Unchanged)"
-msgstr "### API de Haut Niveau (Inchangée)"
+#: ../../source/migration.md:32
+msgid "**Migration**: Use find-and-replace in your codebase:"
+msgstr ""
 
-#: ../../source/migration.md:35
-msgid "The main API remains fully compatible:"
-msgstr "L'API principale reste entièrement compatible :"
+#: ../../source/migration.md:39
+msgid "Changed: Public API Surface"
+msgstr ""
+
+#: ../../source/migration.md:41
+msgid "`ketu.__init__.py` exports only metadata + core constants"
+msgstr ""
+
+#: ../../source/migration.md:42
+msgid ""
+"Functions accessed via submodule imports: `from ketu.calculations import "
+"long`"
+msgstr ""
+
+#: ../../source/migration.md:43
+msgid "`ketu.__all__` explicitly lists public API"
+msgstr ""
+
+#: ../../source/migration.md:45
+msgid ""
+"**Migration**: Most users won't notice this change. If you were importing"
+" from internal modules, switch to public API imports."
+msgstr ""
+
+#: ../../source/migration.md:47
+msgid "Correctness Fixes"
+msgstr ""
+
+#: ../../source/migration.md:49
+msgid ""
+"**IMPORTANT: These fixes change calculation results. Recompute cached "
+"0.4.0 results.**"
+msgstr ""
+
+#: ../../source/migration.md:51
+msgid "Fixed Issues"
+msgstr ""
 
 #: ../../source/migration.md:53
-msgid "New Functions"
-msgstr "### Nouvelles Fonctions"
+msgid ""
+"**Cache operator precedence bug**: `use_cache=False` was ignored due to "
+"missing parentheses"
+msgstr ""
+
+#: ../../source/migration.md:54
+msgid ""
+"**Aspect vectorization non-determinism**: "
+"`calculate_aspects_vectorized()` now returns consistent results"
+msgstr ""
 
 #: ../../source/migration.md:55
-msgid "v0.3.0 adds new features:"
-msgstr "v0.3.0 ajoute de nouvelles fonctionnalités :"
-
-#: ../../source/migration.md:72
-msgid "Accuracy Differences"
-msgstr "## Différences de Précision"
-
-#: ../../source/migration.md:74
-msgid "Swiss Ephemeris (v0.2.x)"
-msgstr "### Swiss Ephemeris (v0.2.x)"
-
-#: ../../source/migration.md:76
-msgid "Accuracy: ±0.001° (arc-second precision)"
-msgstr "### Préoccupations de Précision"
-
-#: ../../source/migration.md:77
-msgid "Based on JPL ephemeris"
-msgstr "### Swiss Ephemeris (v0.2.x)"
-
-#: ../../source/migration.md:78
-msgid "Full perturbation theory"
-msgstr "### Préoccupations de Précision"
-
-#: ../../source/migration.md:80
-msgid "Pure NumPy (v0.3.0)"
-msgstr "### NumPy Pur (v0.3.0)"
-
-#: ../../source/migration.md:82
-msgid "Accuracy: ±0.1° for inner planets, ±0.5° for outer planets"
+msgid ""
+"**Moon velocity wrapping**: Correct velocity at 360°/0° boundary (was "
+"showing ±360° spikes)"
 msgstr ""
 
-#: ../../source/migration.md:83
-msgid "Based on VSOP87/simplified perturbations"
-msgstr "**Problème :** \"Impossible de trouver la fonction X\""
-
-#: ../../source/migration.md:84
-msgid "More than sufficient for astrological purposes"
-msgstr "## Changements Incompatibles"
-
-#: ../../source/migration.md:86
-msgid "When to Care"
-msgstr "## Retour Arrière"
-
-#: ../../source/migration.md:88
-msgid "You likely **don't need** Swiss Ephemeris precision if:"
-msgstr "### Swiss Ephemeris (v0.2.x)"
-
-#: ../../source/migration.md:89
-msgid "You're doing astrology (orbs are typically 1-12°)"
-msgstr "```python # Votre code existant import ketu"
-
-#: ../../source/migration.md:90
-msgid "You're working with aspects (orb tolerance >> 0.5°)"
-msgstr "### Étape 4 : Ajouter Fonctionnalités Optionnelles"
-
-#: ../../source/migration.md:91
-msgid "You need aspects exact to the minute (v0.3.0 handles this)"
+#: ../../source/migration.md:57
+msgid ""
+"**Impact**: If you cached results from 0.4.0, recompute them with 1.0.0 "
+"for correctness."
 msgstr ""
-"- v0.2.x : ~120 millisecondes - v0.3.0 : ~8 millisecondes - **Accélération :"
-" 14,55x**"
 
-#: ../../source/migration.md:93
-msgid "You **might prefer** Swiss Ephemeris if:"
-msgstr "### Swiss Ephemeris (v0.2.x)"
+#: ../../source/migration.md:59
+#, fuzzy
+msgid "New Features"
+msgstr "### Changements Internes"
 
-#: ../../source/migration.md:94
-msgid "You need arc-second precision for scientific astronomy"
-msgstr "## Différences de Précision"
+#: ../../source/migration.md:61
+msgid "**Type hints everywhere**: mypy strict mode compliance"
+msgstr ""
 
-#: ../../source/migration.md:95
-msgid "You're computing asteroid positions (not yet supported in v0.3.0)"
-msgstr "**Problème :** \"Les positions sont légèrement différentes de v0.2.x\""
+#: ../../source/migration.md:62
+msgid "**NumPy-style docstrings**: Examples section in all public functions"
+msgstr ""
 
-#: ../../source/migration.md:96
-msgid "You need positions for dates outside 1800-2200 CE"
-msgstr "**Problème :** \"Les positions sont légèrement différentes de v0.2.x\""
+#: ../../source/migration.md:63
+msgid ""
+"**Standardized error messages**: All `ValueError` messages include "
+"received value + valid options"
+msgstr ""
 
-#: ../../source/migration.md:98
-msgid "Performance Comparison"
-msgstr "### Préoccupations de Précision"
+#: ../../source/migration.md:64
+msgid ""
+"**Numerical precision guarantees**: ±1e-6° for angular separation "
+"(documented)"
+msgstr ""
 
-#: ../../source/migration.md:100
-msgid "Time Series (365 days)"
-msgstr "### Séries Temporelles (365 jours)"
-
-#: ../../source/migration.md:102
-msgid "v0.2.x: ~3.2 seconds"
-msgstr "v0.3.0 ajoute de nouvelles fonctionnalités :"
-
-#: ../../source/migration.md:103
-msgid "v0.3.0: ~15 milliseconds"
-msgstr "v0.3.0 ajoute de nouvelles fonctionnalités :"
-
-#: ../../source/migration.md:104
-msgid "**Speedup: 208x**"
-msgstr "### Swiss Ephemeris (v0.2.x)"
-
-#: ../../source/migration.md:106
-msgid "Aspect Calculations"
-msgstr "### Calculs d'Aspects"
-
-#: ../../source/migration.md:108
-msgid "v0.2.x: ~120 milliseconds"
-msgstr "v0.3.0 ajoute de nouvelles fonctionnalités :"
-
-#: ../../source/migration.md:109
-msgid "v0.3.0: ~8 milliseconds"
-msgstr "v0.3.0 ajoute de nouvelles fonctionnalités :"
-
-#: ../../source/migration.md:110
-msgid "**Speedup: 14.55x**"
-msgstr "### Swiss Ephemeris (v0.2.x)"
-
-#: ../../source/migration.md:112
+#: ../../source/migration.md:66
 msgid "Migration Steps"
 msgstr "# Guide de Migration"
 
-#: ../../source/migration.md:114
-msgid "Step 1: Update Package"
+#: ../../source/migration.md:68
+#, fuzzy
+msgid "Step 1: Review Breaking Changes"
+msgstr "### Changements Internes"
+
+#: ../../source/migration.md:70
+msgid ""
+"Read [UPGRADING.md](../../UPGRADING.md) for detailed migration "
+"instructions."
+msgstr ""
+
+#: ../../source/migration.md:72
+#, fuzzy
+msgid "Step 2: Update Package"
 msgstr "## Obtenir de l'Aide"
 
-#: ../../source/migration.md:120
-msgid "Step 2: Remove pyswisseph (Optional)"
-msgstr "### Étape 2 : Retirer pyswisseph (Optionnel)"
-
-#: ../../source/migration.md:126
-msgid "Step 3: Test Your Code"
+#: ../../source/migration.md:78
+#, fuzzy
+msgid "Step 3: Update Your Code"
 msgstr "### Étape 3 : Tester Votre Code"
 
-#: ../../source/migration.md:128
-msgid "Run your existing code - it should work without changes:"
-msgstr ""
-"Exécutez votre code existant - il devrait fonctionner sans changements :"
-
-#: ../../source/migration.md:138
-msgid "Step 4: Add Optional Features"
-msgstr "### Fonctionnalités Manquantes"
-
-#: ../../source/migration.md:140
-msgid "If you want new features:"
-msgstr "Si vous voulez les nouvelles fonctionnalités :"
-
-#: ../../source/migration.md:153
-msgid "Breaking Changes"
-msgstr "### Changements Internes"
-
-#: ../../source/migration.md:155
-msgid "None for Public API"
-msgstr "## Compatibilité API"
-
-#: ../../source/migration.md:157
-msgid "The public API (`ketu.*`) has **no breaking changes**."
-msgstr "### API de Haut Niveau (Inchangée)"
-
-#: ../../source/migration.md:159
-msgid "Internal Changes"
-msgstr "### Changements Internes"
-
-#: ../../source/migration.md:161
-msgid "If you were importing from internal modules:"
-msgstr "Si vous importiez depuis des modules internes :"
-
-#: ../../source/migration.md:163
-msgid "**Before:**"
+#: ../../source/migration.md:80
+msgid "**Replace velocity function calls:**"
 msgstr ""
 
-#: ../../source/migration.md:169
-msgid "**After:**"
+#: ../../source/migration.md:90
+msgid "**Replace pandas conversions:**"
 msgstr ""
 
-#: ../../source/migration.md:175
-msgid "Common Issues"
-msgstr "### Changements Internes"
-
-#: ../../source/migration.md:177
-msgid "Import Errors"
-msgstr "## Retour Arrière"
-
-#: ../../source/migration.md:179
-msgid "**Problem:**"
+#: ../../source/migration.md:103
+msgid "**Remove chart/icalendar calls:**"
 msgstr ""
 
-#: ../../source/migration.md:184
+#: ../../source/migration.md:114
+#, fuzzy
+msgid "Step 4: Test Your Code"
+msgstr "### Étape 3 : Tester Votre Code"
+
+#: ../../source/migration.md:116
+msgid "Run your test suite to catch any remaining issues."
+msgstr ""
+
+#: ../../source/migration.md:118
+msgid "Step 5: Recompute Cached Results"
+msgstr ""
+
+#: ../../source/migration.md:120
 msgid ""
-"**Solution:** This is expected - pyswisseph is no longer used. Your code "
-"should still work."
-msgstr ""
-"**Solution :** C'est attendu - pyswisseph n'est plus utilisé. Votre code "
-"devrait toujours fonctionner."
-
-#: ../../source/migration.md:187
-msgid "Accuracy Concerns"
-msgstr "### Nouvelles Fonctions"
-
-#: ../../source/migration.md:189
-msgid "**Problem:** \"Positions are slightly different from v0.2.x\""
-msgstr "**Problème :** \"Les positions sont légèrement différentes de v0.2.x\""
-
-#: ../../source/migration.md:191
-msgid ""
-"**Solution:** This is expected. Differences are typically < 0.5° and "
-"negligible for astrology."
-msgstr ""
-"**Solution :** C'est attendu. Les différences sont typiquement < 0,5° et "
-"négligeables pour l'astrologie."
-
-#: ../../source/migration.md:193
-msgid "Missing Features"
-msgstr "### Changements Internes"
-
-#: ../../source/migration.md:195
-msgid "**Problem:** \"Can't find function X\""
-msgstr "**Problème :** \"Impossible de trouver la fonction X\""
-
-#: ../../source/migration.md:197
-msgid ""
-"**Solution:** Check if it's a new feature requiring optional dependencies:"
-msgstr ""
-"**Solution :** Vérifiez si c'est une nouvelle fonctionnalité nécessitant des"
-" dépendances optionnelles :"
-
-#: ../../source/migration.md:203
-msgid "Validation"
+"If you cached calculation results from 0.4.0, recompute them for "
+"correctness."
 msgstr ""
 
-#: ../../source/migration.md:205
-msgid "Compare Results"
-msgstr "## Comparaison de Performance"
-
-#: ../../source/migration.md:207
-msgid "To verify migration:"
-msgstr "## Étapes de Migration"
-
-#: ../../source/migration.md:220
-msgid "After upgrading:"
-msgstr "## Étapes de Migration"
-
-#: ../../source/migration.md:232
-msgid "Getting Help"
-msgstr "### Changements Internes"
-
-#: ../../source/migration.md:234
-msgid "If you encounter issues:"
-msgstr "Si vous rencontrez des problèmes :"
-
-#: ../../source/migration.md:236
-msgid "Check the [documentation](https://ketu.readthedocs.io)"
-msgstr "### Préoccupations de Précision"
-
-#: ../../source/migration.md:237
-msgid "Review [examples](examples.md)"
-msgstr ""
-
-#: ../../source/migration.md:238
-msgid "Open an [issue](https://github.com/alkimya/ketu/issues)"
-msgstr ""
-
-#: ../../source/migration.md:240
+#: ../../source/migration.md:122
 msgid "Rollback"
 msgstr ""
 
-#: ../../source/migration.md:242
-msgid "If you need to rollback to v0.2.x:"
+#: ../../source/migration.md:124
+#, fuzzy
+msgid "If you need to rollback to v0.4.0:"
 msgstr "Si vous devez revenir à v0.2.x :"
 
-#: ../../source/migration.md:249
-msgid "Note: v0.2.x will not receive further updates."
+#: ../../source/migration.md:130
+#, fuzzy
+msgid ""
+"Note: v0.4.x will not receive further updates. v1.0.0 is the recommended "
+"version."
 msgstr "Note : v0.2.x ne recevra plus de mises à jour."
+
+#: ../../source/migration.md:132
+msgid "Getting Help"
+msgstr "### Changements Internes"
+
+#: ../../source/migration.md:134
+msgid "If you encounter issues:"
+msgstr "Si vous rencontrez des problèmes :"
+
+#: ../../source/migration.md:136
+msgid "Check [UPGRADING.md](../../UPGRADING.md) for detailed migration guide"
+msgstr ""
+
+#: ../../source/migration.md:137
+msgid "Review [CHANGELOG.md](../../CHANGELOG.md) for complete list of changes"
+msgstr ""
+
+#: ../../source/migration.md:138
+msgid "Open an [issue](https://github.com/alkimya/ketu/issues)"
+msgstr ""
+
+#~ msgid "Dependencies"
+#~ msgstr "### Dépendances"
+
+#~ msgid "**Before (v0.2.x):**"
+#~ msgstr "### Swiss Ephemeris (v0.2.x)"
+
+#~ msgid "**After (v0.3.0):**"
+#~ msgstr "### NumPy Pur (v0.3.0)"
+
+#~ msgid "**pyswisseph**: Completely removed - no more binary dependencies"
+#~ msgstr "Si vous rencontrez des problèmes :"
+
+#~ msgid "**Platform issues**: Fixed - pure Python + NumPy works everywhere"
+#~ msgstr "**Problème :** ```python ImportError: No module named 'swisseph' ```"
+
+#~ msgid "New Optional Dependencies"
+#~ msgstr "## Comparaison de Performance"
+
+#~ msgid "**matplotlib**: For chart visualization (`ketu[chart]`)"
+#~ msgstr "```bash # Pour visualisation de cartes pip install ketu[chart]"
+
+#~ msgid "**icalendar**: For calendar export (`ketu[icalendar]`)"
+#~ msgstr "# Pour export iCalendar pip install ketu[icalendar]"
+
+#~ msgid "API Compatibility"
+#~ msgstr "## Compatibilité API"
+
+#~ msgid "High-Level API (Unchanged)"
+#~ msgstr "### API de Haut Niveau (Inchangée)"
+
+#~ msgid "The main API remains fully compatible:"
+#~ msgstr "L'API principale reste entièrement compatible :"
+
+#~ msgid "New Functions"
+#~ msgstr "### Nouvelles Fonctions"
+
+#~ msgid "v0.3.0 adds new features:"
+#~ msgstr "v0.3.0 ajoute de nouvelles fonctionnalités :"
+
+#~ msgid "Accuracy Differences"
+#~ msgstr "## Différences de Précision"
+
+#~ msgid "Swiss Ephemeris (v0.2.x)"
+#~ msgstr "### Swiss Ephemeris (v0.2.x)"
+
+#~ msgid "Accuracy: ±0.001° (arc-second precision)"
+#~ msgstr "### Préoccupations de Précision"
+
+#~ msgid "Based on JPL ephemeris"
+#~ msgstr "### Swiss Ephemeris (v0.2.x)"
+
+#~ msgid "Full perturbation theory"
+#~ msgstr "### Préoccupations de Précision"
+
+#~ msgid "Pure NumPy (v0.3.0)"
+#~ msgstr "### NumPy Pur (v0.3.0)"
+
+#~ msgid "Accuracy: ±0.1° for inner planets, ±0.5° for outer planets"
+#~ msgstr ""
+
+#~ msgid "Based on VSOP87/simplified perturbations"
+#~ msgstr "**Problème :** \"Impossible de trouver la fonction X\""
+
+#~ msgid "More than sufficient for astrological purposes"
+#~ msgstr "## Changements Incompatibles"
+
+#~ msgid "When to Care"
+#~ msgstr "## Retour Arrière"
+
+#~ msgid "You likely **don't need** Swiss Ephemeris precision if:"
+#~ msgstr "### Swiss Ephemeris (v0.2.x)"
+
+#~ msgid "You're doing astrology (orbs are typically 1-12°)"
+#~ msgstr "```python # Votre code existant import ketu"
+
+#~ msgid "You're working with aspects (orb tolerance >> 0.5°)"
+#~ msgstr "### Étape 4 : Ajouter Fonctionnalités Optionnelles"
+
+#~ msgid "You need aspects exact to the minute (v0.3.0 handles this)"
+#~ msgstr ""
+#~ "- v0.2.x : ~120 millisecondes - "
+#~ "v0.3.0 : ~8 millisecondes - "
+#~ "**Accélération : 14,55x**"
+
+#~ msgid "You **might prefer** Swiss Ephemeris if:"
+#~ msgstr "### Swiss Ephemeris (v0.2.x)"
+
+#~ msgid "You need arc-second precision for scientific astronomy"
+#~ msgstr "## Différences de Précision"
+
+#~ msgid "You're computing asteroid positions (not yet supported in v0.3.0)"
+#~ msgstr "**Problème :** \"Les positions sont légèrement différentes de v0.2.x\""
+
+#~ msgid "You need positions for dates outside 1800-2200 CE"
+#~ msgstr "**Problème :** \"Les positions sont légèrement différentes de v0.2.x\""
+
+#~ msgid "Performance Comparison"
+#~ msgstr "### Préoccupations de Précision"
+
+#~ msgid "Time Series (365 days)"
+#~ msgstr "### Séries Temporelles (365 jours)"
+
+#~ msgid "v0.2.x: ~3.2 seconds"
+#~ msgstr "v0.3.0 ajoute de nouvelles fonctionnalités :"
+
+#~ msgid "v0.3.0: ~15 milliseconds"
+#~ msgstr "v0.3.0 ajoute de nouvelles fonctionnalités :"
+
+#~ msgid "**Speedup: 208x**"
+#~ msgstr "### Swiss Ephemeris (v0.2.x)"
+
+#~ msgid "Aspect Calculations"
+#~ msgstr "### Calculs d'Aspects"
+
+#~ msgid "v0.2.x: ~120 milliseconds"
+#~ msgstr "v0.3.0 ajoute de nouvelles fonctionnalités :"
+
+#~ msgid "v0.3.0: ~8 milliseconds"
+#~ msgstr "v0.3.0 ajoute de nouvelles fonctionnalités :"
+
+#~ msgid "**Speedup: 14.55x**"
+#~ msgstr "### Swiss Ephemeris (v0.2.x)"
+
+#~ msgid "Step 2: Remove pyswisseph (Optional)"
+#~ msgstr "### Étape 2 : Retirer pyswisseph (Optionnel)"
+
+#~ msgid "Run your existing code - it should work without changes:"
+#~ msgstr ""
+#~ "Exécutez votre code existant - il "
+#~ "devrait fonctionner sans changements :"
+
+#~ msgid "Step 4: Add Optional Features"
+#~ msgstr "### Fonctionnalités Manquantes"
+
+#~ msgid "If you want new features:"
+#~ msgstr "Si vous voulez les nouvelles fonctionnalités :"
+
+#~ msgid "None for Public API"
+#~ msgstr "## Compatibilité API"
+
+#~ msgid "The public API (`ketu.*`) has **no breaking changes**."
+#~ msgstr "### API de Haut Niveau (Inchangée)"
+
+#~ msgid "Internal Changes"
+#~ msgstr "### Changements Internes"
+
+#~ msgid "If you were importing from internal modules:"
+#~ msgstr "Si vous importiez depuis des modules internes :"
+
+#~ msgid "**Before:**"
+#~ msgstr ""
+
+#~ msgid "**After:**"
+#~ msgstr ""
+
+#~ msgid "Common Issues"
+#~ msgstr "### Changements Internes"
+
+#~ msgid "Import Errors"
+#~ msgstr "## Retour Arrière"
+
+#~ msgid "**Problem:**"
+#~ msgstr ""
+
+#~ msgid ""
+#~ "**Solution:** This is expected - "
+#~ "pyswisseph is no longer used. Your "
+#~ "code should still work."
+#~ msgstr ""
+#~ "**Solution :** C'est attendu - "
+#~ "pyswisseph n'est plus utilisé. Votre "
+#~ "code devrait toujours fonctionner."
+
+#~ msgid "Accuracy Concerns"
+#~ msgstr "### Nouvelles Fonctions"
+
+#~ msgid "**Problem:** \"Positions are slightly different from v0.2.x\""
+#~ msgstr "**Problème :** \"Les positions sont légèrement différentes de v0.2.x\""
+
+#~ msgid ""
+#~ "**Solution:** This is expected. Differences"
+#~ " are typically < 0.5° and negligible"
+#~ " for astrology."
+#~ msgstr ""
+#~ "**Solution :** C'est attendu. Les "
+#~ "différences sont typiquement < 0,5° et"
+#~ " négligeables pour l'astrologie."
+
+#~ msgid "**Problem:** \"Can't find function X\""
+#~ msgstr "**Problème :** \"Impossible de trouver la fonction X\""
+
+#~ msgid ""
+#~ "**Solution:** Check if it's a new "
+#~ "feature requiring optional dependencies:"
+#~ msgstr ""
+#~ "**Solution :** Vérifiez si c'est une "
+#~ "nouvelle fonctionnalité nécessitant des "
+#~ "dépendances optionnelles :"
+
+#~ msgid "Validation"
+#~ msgstr ""
+
+#~ msgid "Compare Results"
+#~ msgstr "## Comparaison de Performance"
+
+#~ msgid "To verify migration:"
+#~ msgstr "## Étapes de Migration"
+
+#~ msgid "After upgrading:"
+#~ msgstr "## Étapes de Migration"
+
+#~ msgid "Check the [documentation](https://ketu.readthedocs.io)"
+#~ msgstr "### Préoccupations de Précision"
+
+#~ msgid "Review [examples](examples.md)"
+#~ msgstr ""
+

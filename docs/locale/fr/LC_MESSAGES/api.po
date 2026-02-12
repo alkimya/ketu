@@ -8,16 +8,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-02 22:42+0100\n"
+"POT-Creation-Date: 2026-02-12 21:33+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
-"Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Generated-By: Babel 2.17.0\n"
+"Generated-By: Babel 2.18.0\n"
 
 #: ../../source/api.md:1
 msgid "API Reference"
@@ -138,8 +138,8 @@ msgstr "- `dtime` : datetime (UTC ou avec tzinfo)"
 #: ../../source/api.md:95
 msgid "`zoneinfo`: timezone (optional if dtime already has tzinfo)"
 msgstr ""
-"- `dtime` : datetime à convertir - `zoneinfo` : timezone (optionnel si dtime"
-" a déjà tzinfo)"
+"- `dtime` : datetime à convertir - `zoneinfo` : timezone (optionnel si "
+"dtime a déjà tzinfo)"
 
 #: ../../source/api.md:97
 msgid "**Returns:** datetime in UTC"
@@ -238,9 +238,11 @@ msgid "`body`: Body ID"
 msgstr "`body_name()` et `body_id()`"
 
 #: ../../source/api.md:205
-msgid "**Returns:** array [longitude, latitude, distance, vlong, vlat, vdist]"
-msgstr ""
-"**Retour :** array [longitude, latitude, distance, vlong, vlat, vdist]"
+#, fuzzy
+msgid ""
+"**Returns:** array [longitude, latitude, distance, long_velocity, "
+"lat_velocity, dist_velocity]"
+msgstr "**Retour :** array [longitude, latitude, distance, vlong, vlat, vdist]"
 
 #: ../../source/api.md:207
 msgid "`long()`, `lat()`, `dist_au()`"
@@ -248,8 +250,7 @@ msgstr "### `long()`, `lat()`, `dist_au()`"
 
 #: ../../source/api.md:215
 msgid "Return respectively the longitude, latitude and distance of a body."
-msgstr ""
-"Retournent respectivement la longitude, latitude et distance d'un corps."
+msgstr "Retournent respectivement la longitude, latitude et distance d'un corps."
 
 #: ../../source/api.md:220
 msgid "`body`: Body ID (0=Sun, 1=Moon, etc.)"
@@ -260,8 +261,9 @@ msgid "**Returns:** value in degrees or AU"
 msgstr "**Retour :** valeur en degrés ou AU"
 
 #: ../../source/api.md:224
-msgid "`vlong()`, `vlat()`, `vdist_au()`"
-msgstr "### `vlong()`, `vlat()`, `vdist_au()`"
+#, fuzzy
+msgid "`long_velocity()`, `lat_velocity()`, `dist_velocity_au()`"
+msgstr "### `long()`, `lat()`, `dist_au()`"
 
 #: ../../source/api.md:232
 msgid "Movement speeds (degrees/day or AU/day)."
@@ -404,6 +406,49 @@ msgid "[Examples](examples.md) for more use cases"
 msgstr "Affichent les positions et aspects formatés."
 
 #: ../../source/api.md:344
-msgid ""
-"[Swiss Ephemeris](https://www.astro.com/swisseph/) for technical details"
+msgid "[Swiss Ephemeris](https://www.astro.com/swisseph/) for technical details"
 msgstr ""
+
+#: ../../source/api.md:346
+msgid "Complex Analysis"
+msgstr ""
+
+#: ../../source/api.md:348
+msgid "`ketu.complex`"
+msgstr ""
+
+#: ../../source/api.md:350
+msgid "New in v0.4.0. Provides vector-safe cycle analysis using complex numbers."
+msgstr ""
+
+#: ../../source/api.md:365
+msgid "`ZodiacPoint`"
+msgstr ""
+
+#: ../../source/api.md:367
+msgid "`from_degrees(deg)`: Create from longitude"
+msgstr ""
+
+#: ../../source/api.md:368
+msgid "`to_ml_features()`: Export cos/sin components"
+msgstr ""
+
+#: ../../source/api.md:370
+msgid "`CycleRatio`"
+msgstr ""
+
+#: ../../source/api.md:372
+msgid "`separation_degrees`: Angular separation [0, 360)"
+msgstr ""
+
+#: ../../source/api.md:373
+msgid "`is_waxing`: True if 0-180"
+msgstr ""
+
+#: ../../source/api.md:374
+msgid "`nearest_aspect`: Find closest H1-H10 aspect"
+msgstr ""
+
+#~ msgid "`vlong()`, `vlat()`, `vdist_au()`"
+#~ msgstr "### `vlong()`, `vlat()`, `vdist_au()`"
+
