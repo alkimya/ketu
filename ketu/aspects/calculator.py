@@ -176,7 +176,7 @@ def calculate_aspects_batch(jd_array: np.ndarray, l_bodies=bodies) -> List[np.nd
     n_dates = len(jd_array)
 
     # Calculate all positions for all bodies for all dates (vectorized!)
-    # Shape: (n_bodies, n_dates, 6) where 6 = [lon, lat, dist, vlon, vlat, vdist]
+    # Shape: (n_bodies, n_dates, 6) where 6 = [lon, lat, dist, long_vel, lat_vel, dist_vel]
     all_body_positions = np.zeros((n_bodies, n_dates, 6))
     for i, body_id in enumerate(bodies_id):
         all_body_positions[i] = calc_planet_position_batch(jd_array, body_id)
