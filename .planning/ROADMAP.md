@@ -11,7 +11,7 @@ Ketu 1.0 consolidates a working astronomical calculation library from v0.4.0 to 
 - [x] **Phase 2.1: Fix Moon velocity and rename vlong API** (INSERTED)
 - [x] **Phase 3: Dependency Cleanup** - Remove hidden Pandas dependency
 - [x] **Phase 4: Test Coverage Hardening** - Achieve 70% coverage with module targets
-- [ ] **Phase 5: Complex Math Integration** - Unify complex representation into cycle engine
+- [x] **Phase 5: Complex Math Integration** - Unify complex representation into cycle engine
 - [ ] **Phase 6: Documentation & Type Checking** - Finalize docs and type hints
 - [ ] **Phase 7: Release Preparation** - PyPI publish and GitHub release
 
@@ -97,8 +97,8 @@ Plans:
 **Plans:** 2 plans
 
 Plans:
-- [ ] 05-01-PLAN.md — Vectorize ResonanceField._get_trace() and document dual-cache architecture
-- [ ] 05-02-PLAN.md — Standardize error messages across all modules and verify complex math integration
+- [x] 05-01-PLAN.md — Vectorize ResonanceField._get_trace() and document dual-cache architecture
+- [x] 05-02-PLAN.md — Standardize error messages across all modules and verify complex math integration
 
 ### Phase 6: Documentation & Type Checking
 **Goal**: 1.0 API is fully documented with enforced type hints
@@ -139,10 +139,10 @@ Plans:
 | 2.1 Fix Moon velocity & vlong | 2/2 | ✓ Complete | 2026-02-12 |
 | 3. Dependency Cleanup | 1/1 | ✓ Complete | 2026-02-12 |
 | 4. Test Coverage Hardening | 2/2 | ✓ Complete | 2026-02-12 |
-| 5. Complex Math Integration | 0/2 | Planned | - |
+| 5. Complex Math Integration | 2/2 | ✓ Complete | 2026-02-12 |
 | 6. Documentation & Type Checking | 0/TBD | Not started | - |
 | 7. Release Preparation | 0/TBD | Not started | - |
 
 ---
 *Roadmap created: 2026-02-12*
-*Last updated: 2026-02-12 — Phase 5 planned*
+*Last updated: 2026-02-12 — Phase 5 complete*
