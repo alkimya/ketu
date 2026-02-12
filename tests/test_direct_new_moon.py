@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 from zoneinfo import ZoneInfo
 import time
 
-from ketu.calculations import long, vlong, utc_to_julian, julian_to_utc, distance
+from ketu.calculations import long, long_velocity, utc_to_julian, julian_to_utc, distance
 from ketu.aspects import find_aspect_window
 
 
@@ -21,8 +21,8 @@ def estimate_next_new_moon(jd: float) -> float:
     # Get current Sun and Moon positions and velocities
     sun_pos = long(jd, 0)  # Sun
     moon_pos = long(jd, 1)  # Moon
-    sun_vel = vlong(jd, 0)  # Sun velocity (degrees/day)
-    moon_vel = vlong(jd, 1)  # Moon velocity (degrees/day)
+    sun_vel = long_velocity(jd, 0)  # Sun velocity (degrees/day)
+    moon_vel = long_velocity(jd, 1)  # Moon velocity (degrees/day)
 
     # Calculate signed angular distance (Moon - Sun)
     # Normalize to -180 to +180 range

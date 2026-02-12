@@ -148,7 +148,7 @@ def dist_au(jdate: float, body: int) -> float:
     return body_properties(jdate, body)[2]
 
 
-def vlong(jdate: float, body: int) -> float:
+def long_velocity(jdate: float, body: int) -> float:
     """Get longitude velocity of a body.
 
     Args:
@@ -161,7 +161,7 @@ def vlong(jdate: float, body: int) -> float:
     return body_properties(jdate, body)[3]
 
 
-def vlat(jdate: float, body: int) -> float:
+def lat_velocity(jdate: float, body: int) -> float:
     """Get latitude velocity of a body.
 
     Args:
@@ -174,7 +174,7 @@ def vlat(jdate: float, body: int) -> float:
     return body_properties(jdate, body)[4]
 
 
-def vdist_au(jdate: float, body: int) -> float:
+def dist_velocity_au(jdate: float, body: int) -> float:
     """Get distance velocity of a body.
 
     Args:
@@ -197,7 +197,7 @@ def is_retrograde(jdate: float, body: int) -> bool:
     Returns:
         True if retrograde (negative longitude velocity)
     """
-    return bool(vlong(jdate, body) < 0)
+    return bool(long_velocity(jdate, body) < 0)
 
 
 def is_ascending(jdate: float, body: int) -> bool:
@@ -210,7 +210,7 @@ def is_ascending(jdate: float, body: int) -> bool:
     Returns:
         True if latitude is increasing
     """
-    return bool(vlat(jdate, body) > 0)
+    return bool(lat_velocity(jdate, body) > 0)
 
 
 def body_sign(b_long: float) -> Tuple[int, int, int, int]:
@@ -255,9 +255,9 @@ __all__ = [
     "long",
     "lat",
     "dist_au",
-    "vlong",
-    "vlat",
-    "vdist_au",
+    "long_velocity",
+    "lat_velocity",
+    "dist_velocity_au",
     "is_retrograde",
     "is_ascending",
     "body_sign",

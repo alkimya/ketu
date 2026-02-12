@@ -8,7 +8,7 @@ Verified date: 2024-01-16 05:00 UTC (Moon at 359.87 deg).
 import numpy as np
 import pytest
 from datetime import datetime, timezone
-from ketu.calculations import vlong, utc_to_julian
+from ketu.calculations import long_velocity, utc_to_julian
 from ketu.ephemeris.planets import calc_planet_position, calc_planet_position_batch
 
 # Moon body ID
@@ -67,14 +67,14 @@ class TestMoonVelocityWrapping:
             err_msg="Scalar and vectorized Moon velocity must agree at 360/0 boundary"
         )
 
-    def test_vlong_api_at_boundary(self):
-        """High-level vlong() API returns correct Moon velocity at boundary."""
+    def test_long_velocity_api_at_boundary(self):
+        """High-level long_velocity() API returns correct Moon velocity at boundary."""
         dt = datetime(2024, 1, 16, 5, 0, 0, tzinfo=timezone.utc)
         jd = utc_to_julian(dt)
 
-        moon_vel = vlong(jd, MOON)
+        moon_vel = long_velocity(jd, MOON)
 
         assert 10 <= moon_vel <= 16, (
-            f"vlong(Moon) at 360 deg crossing: {moon_vel} deg/day. "
+            f"long_velocity(Moon) at 360 deg crossing: {moon_vel} deg/day. "
             f"Expected ~14 deg/day."
         )

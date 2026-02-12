@@ -10,7 +10,7 @@ from typing import Union, List, Optional, Tuple
 import numpy as np
 
 from ketu.core import bodies
-from ketu.calculations import long, vlong, utc_to_julian, distance
+from ketu.calculations import long, long_velocity, utc_to_julian, distance
 from ketu.ephemeris.planets import calc_planet_position_batch
 from ketu.complex import (
     degrees_to_complex,

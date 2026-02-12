@@ -11,7 +11,7 @@ from io import StringIO
 import sys
 
 from ketu.core import bodies, aspects as aspects_data
-from ketu.calculations import utc_to_julian, vdist_au, vlat, body_id
+from ketu.calculations import utc_to_julian, dist_velocity_au, lat_velocity, body_id
 from ketu.aspects import (
     get_aspect,
     calculate_aspects,
@@ -31,24 +31,24 @@ class TestVelocityFunctions:
         self.test_date = datetime(2020, 12, 21, 19, 20, tzinfo=ZoneInfo("Europe/Paris"))
         self.jday = utc_to_julian(self.test_date)
 
-    def test_vdist_au(self):
+    def test_dist_velocity_au(self):
         """Test distance velocity function"""
         # Test Sun distance velocity
-        sun_vdist = vdist_au(self.jday, 0)
-        assert isinstance(sun_vdist, (float, np.floating))
+        sun_dist_vel = dist_velocity_au(self.jday, 0)
+        assert isinstance(sun_dist_vel, (float, np.floating))
         # Sun's distance velocity should be relatively small
-        assert abs(sun_vdist) < 0.1  # AU/day
+        assert abs(sun_dist_vel) < 0.1  # AU/day
 
         # Test Moon distance velocity
-        moon_vdist = vdist_au(self.jday, 1)
-        assert isinstance(moon_vdist, (float, np.floating))
+        moon_dist_vel = dist_velocity_au(self.jday, 1)
+        assert isinstance(moon_dist_vel, (float, np.floating))
 
-    def test_vlat(self):
+    def test_lat_velocity(self):
         """Test latitude velocity function"""
         # Test various bodies
         for body_id in [0, 1, 2, 3, 4]:
-            vlat_result = vlat(self.jday, body_id)
-            assert isinstance(vlat_result, (float, np.floating))
+            lat_vel_result = lat_velocity(self.jday, body_id)
+            assert isinstance(lat_vel_result, (float, np.floating))
 
 
 class TestAspectEdgeCases:

@@ -21,7 +21,7 @@ from ..calculations import (
     utc_to_julian,
     is_retrograde,
     long,
-    vlong,
+    long_velocity,
     distance,
 )
 from ..aspects import calculate_aspects

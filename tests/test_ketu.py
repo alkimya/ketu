@@ -16,7 +16,7 @@ from ketu.calculations import (
     long,
     lat,
     dist_au,
-    vlong,
+    long_velocity,
     is_retrograde,
     is_ascending,
     body_sign,
@@ -146,7 +146,7 @@ class TestBodyFunctions:
         """Test body properties calculation"""
         props = body_properties(self.jday, 0)  # Sun
         assert isinstance(props, np.ndarray)
-        assert len(props) == 6  # long, lat, dist, vlong, vlat, vdist
+        assert len(props) == 6  # long, lat, dist, long_velocity, lat_velocity, dist_velocity
         assert 0 <= props[0] <= 360  # longitude in range
 
     def test_long_lat_dist(self):
@@ -161,8 +161,8 @@ class TestBodyFunctions:
 
     def test_velocities(self):
         """Test velocity functions"""
-        moon_vlong = vlong(self.jday, 1)
-        assert 10 <= abs(moon_vlong) <= 16  # Moon moves 10-16°/day
+        moon_long_vel = long_velocity(self.jday, 1)
+        assert 10 <= abs(moon_long_vel) <= 16  # Moon moves 10-16°/day
 
         # Test retrograde detection
         mars_retro = is_retrograde(self.jday, 4)
@@ -328,8 +328,8 @@ class TestPrecision:
         assert 290 <= jupiter_long <= 310, f"Jupiter should be near 300° (Aquarius), got {jupiter_long}°"
         assert 290 <= saturn_long <= 310, f"Saturn should be near 300° (Aquarius), got {saturn_long}°"
 
-    def test_vlong_returns_velocity_not_position(self):
-        """Verify vlong() returns velocity (°/day), not position.
+    def test_long_velocity_returns_velocity_not_position(self):
+        """Verify long_velocity() returns velocity (°/day), not position.
 
         Velocities are typically:
         - Sun: ~1°/day
@@ -337,20 +337,20 @@ class TestPrecision:
         - Jupiter: ~0.08°/day
         - Saturn: ~0.03°/day
         """
-        sun_vlong = vlong(self.ref_jday, 0)
-        moon_vlong = vlong(self.ref_jday, 1)
-        jupiter_vlong = vlong(self.ref_jday, 5)
-        saturn_vlong = vlong(self.ref_jday, 6)
+        sun_long_vel = long_velocity(self.ref_jday, 0)
+        moon_long_vel = long_velocity(self.ref_jday, 1)
+        jupiter_long_vel = long_velocity(self.ref_jday, 5)
+        saturn_long_vel = long_velocity(self.ref_jday, 6)
 
         # Sun velocity ~1°/day
-        assert 0.9 <= abs(sun_vlong) <= 1.1, f"Sun velocity should be ~1°/day, got {sun_vlong}°/day"
+        assert 0.9 <= abs(sun_long_vel) <= 1.1, f"Sun velocity should be ~1°/day, got {sun_long_vel}°/day"
 
         # Moon velocity ~13°/day
-        assert 10 <= abs(moon_vlong) <= 16, f"Moon velocity should be ~13°/day, got {moon_vlong}°/day"
+        assert 10 <= abs(moon_long_vel) <= 16, f"Moon velocity should be ~13°/day, got {moon_long_vel}°/day"
 
         # Outer planets are slow
-        assert abs(jupiter_vlong) < 0.5, f"Jupiter velocity should be <0.5°/day, got {jupiter_vlong}°/day"
-        assert abs(saturn_vlong) < 0.2, f"Saturn velocity should be <0.2°/day, got {saturn_vlong}°/day"
+        assert abs(jupiter_long_vel) < 0.5, f"Jupiter velocity should be <0.5°/day, got {jupiter_long_vel}°/day"
+        assert abs(saturn_long_vel) < 0.2, f"Saturn velocity should be <0.2°/day, got {saturn_long_vel}°/day"
 
     def test_jupiter_saturn_conjunction_2020(self):
         """Test positions during the famous Jupiter-Saturn conjunction of Dec 2020.

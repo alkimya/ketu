@@ -28,7 +28,7 @@ from ketu.calculations import (
     distance,
     body_id,
     long,
-    vlong,
+    long_velocity,
     utc_to_julian,
     julian_to_utc,
     positions,
@@ -338,7 +338,7 @@ def find_transits_to_position(
             dt_end = julian_to_utc(jd_end_orb)
 
             # Check retrograde
-            vel = vlong(jd_exact, body_id_val)
+            vel = long_velocity(jd_exact, body_id_val)
             is_retro = vel < 0
             motion_type = "retrograde" if is_retro else "direct"
 

@@ -24,7 +24,7 @@ import numpy as np
 
 from ketu.core import bodies, aspects
 from ketu.aspects.windows import find_aspect_window, AspectWindow, AspectMoment
-from ketu.calculations import distance, long, vlong, utc_to_julian, julian_to_utc
+from ketu.calculations import distance, long, long_velocity, utc_to_julian, julian_to_utc
 
 
 @dataclass
@@ -319,8 +319,8 @@ def _enrich_aspect_event(
     # Get positions and velocities at exact moment
     lon1 = long(jd_exact, body1_id)
     lon2 = long(jd_exact, body2_id)
-    vel1 = vlong(jd_exact, body1_id)
-    vel2 = vlong(jd_exact, body2_id)
+    vel1 = long_velocity(jd_exact, body1_id)
+    vel2 = long_velocity(jd_exact, body2_id)
 
     # Calculate angular separation
     angular_sep = distance(lon1, lon2)

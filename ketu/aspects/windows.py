@@ -20,7 +20,7 @@ from ketu.core import bodies, aspects
 from ketu.calculations import (
     distance,
     long,
-    vlong,
+    long_velocity,
     utc_to_julian,
     julian_to_utc,
 )
@@ -304,8 +304,8 @@ def find_aspect_window(
 
         # Determine motion type (check if retrograde)
         # A planet is retrograde if its velocity is negative
-        vel1 = vlong(jd_exact, body1_id)
-        vel2 = vlong(jd_exact, body2_id)
+        vel1 = long_velocity(jd_exact, body1_id)
+        vel2 = long_velocity(jd_exact, body2_id)
         is_retro = (vel1 < 0) or (vel2 < 0)
         motion_type = "retrograde" if is_retro else "direct"
 
