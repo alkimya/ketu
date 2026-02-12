@@ -21,13 +21,17 @@ from ketu.ephemeris.planets import calc_planet_position_batch
 # ========== Input Validation ==========
 
 def get_body_id(body: Union[str, int]) -> int:
-    """Convert body name or ID to integer ID.
+    """Convert body name or ID to integer ID
 
-    Args:
-        body: Body name (str) or ID (int)
+    Parameters
+    ----------
+    body : str or int
+        Body name (str) or ID (int).
 
-    Returns:
-        Body ID (0-12)
+    Returns
+    -------
+    int
+        Body ID (0-12).
     """
     if isinstance(body, str):
         return _body_id_lookup(body)
@@ -35,13 +39,17 @@ def get_body_id(body: Union[str, int]) -> int:
 
 
 def get_aspect_index(aspect: Union[str, int, float]) -> int:
-    """Get aspect index from name, index, or angle.
+    """Get aspect index from name, index, or angle
 
-    Args:
-        aspect: Aspect name, index, or angle
+    Parameters
+    ----------
+    aspect : str, int, or float
+        Aspect name, index, or angle.
 
-    Returns:
-        Aspect index (0-13) - now includes harmonics 9 and 10
+    Returns
+    -------
+    int
+        Aspect index (0-13) - now includes harmonics 9 and 10.
     """
     if isinstance(aspect, str):
         idx = np.where(aspects["name"] == aspect.encode())[0]
@@ -72,16 +80,21 @@ def _cached_planet_position_batch(jd_tuple: tuple, planet_id: int) -> np.ndarray
 
 
 def get_cached_positions(jd_array: np.ndarray, planet_id: int) -> np.ndarray:
-    """Get planet positions with caching.
+    """Get planet positions with caching
 
     Caches results for repeated calculations on same time grid.
 
-    Args:
-        jd_array: Array of Julian Dates
-        planet_id: Planet ID
+    Parameters
+    ----------
+    jd_array : np.ndarray
+        Array of Julian Dates.
+    planet_id : int
+        Planet ID.
 
-    Returns:
-        2D array of positions (n_dates, 6)
+    Returns
+    -------
+    np.ndarray
+        2D array of positions (n_dates, 6).
     """
     # Convert to tuple for caching (numpy arrays are not hashable)
     jd_tuple = tuple(jd_array.tolist())
@@ -96,27 +109,36 @@ def refine_exact_moment(
     max_iterations: int = 50,
     tolerance: float = 1e-7,
 ) -> Optional[float]:
-    """Refine exact moment using binary search (bisection method).
+    """Refine exact moment using binary search (bisection method)
 
     Generic function that works for both aspects and transits.
     Uses a callback to calculate the distance/error at any given time.
 
-    Args:
-        distance_callback: Function that takes JD and returns distance error
-        jd_initial: Initial guess for exact moment
-        max_iterations: Maximum iterations
-        tolerance: Convergence tolerance in days (~1 second = 1e-7 days)
+    Parameters
+    ----------
+    distance_callback : callable
+        Function that takes JD and returns distance error.
+    jd_initial : float
+        Initial guess for exact moment.
+    max_iterations : int, optional
+        Maximum iterations.
+    tolerance : float, optional
+        Convergence tolerance in days (~1 second = 1e-7 days).
 
-    Returns:
-        Refined Julian Date of exact moment
+    Returns
+    -------
+    float or None
+        Refined Julian Date of exact moment.
 
-    Example:
-        >>> # For aspect between two bodies:
-        >>> def callback(jd):
-        ...     pos1 = long(jd, body1_id)
-        ...     pos2 = long(jd, body2_id)
-        ...     return distance(pos1, pos2) - aspect_angle
-        >>> exact_jd = refine_exact_moment(callback, initial_jd)
+    Examples
+    --------
+    For aspect between two bodies:
+
+    >>> def callback(jd):
+    ...     pos1 = long(jd, body1_id)
+    ...     pos2 = long(jd, body2_id)
+    ...     return distance(pos1, pos2) - aspect_angle
+    >>> exact_jd = refine_exact_moment(callback, initial_jd)
     """
     error_initial = distance_callback(jd_initial)
 
@@ -164,27 +186,35 @@ def find_orb_boundaries(
     jd_exact: float,
     search_days: float = 30,
 ) -> Tuple[Optional[float], Optional[float]]:
-    """Find orb entry and exit times using binary search.
+    """Find orb entry and exit times using binary search
 
     Generic function that works for both aspects and transits.
     Uses a callback to check if within orb at any given time.
 
-    Args:
-        is_within_orb_callback: Function that takes JD and returns bool
-        jd_exact: Julian Date of exact moment
-        search_days: Maximum days to search in each direction
+    Parameters
+    ----------
+    is_within_orb_callback : callable
+        Function that takes JD and returns bool.
+    jd_exact : float
+        Julian Date of exact moment.
+    search_days : float, optional
+        Maximum days to search in each direction.
 
-    Returns:
-        Tuple of (jd_begin, jd_end)
+    Returns
+    -------
+    tuple of (float or None, float or None)
+        Tuple of (jd_begin, jd_end).
 
-    Example:
-        >>> # For aspect with specific orb:
-        >>> def callback(jd):
-        ...     pos1 = long(jd, body1_id)
-        ...     pos2 = long(jd, body2_id)
-        ...     dist = distance(pos1, pos2)
-        ...     return abs(dist - aspect_angle) <= orb
-        >>> jd_begin, jd_end = find_orb_boundaries(callback, exact_jd)
+    Examples
+    --------
+    For aspect with specific orb:
+
+    >>> def callback(jd):
+    ...     pos1 = long(jd, body1_id)
+    ...     pos2 = long(jd, body2_id)
+    ...     dist = distance(pos1, pos2)
+    ...     return abs(dist - aspect_angle) <= orb
+    >>> jd_begin, jd_end = find_orb_boundaries(callback, exact_jd)
     """
     # Binary search for beginning
     jd_begin = None
@@ -226,16 +256,21 @@ def find_orb_boundaries(
 # ========== Core Algorithm: Local Minima Detection ==========
 
 def find_local_minima(error_array: np.ndarray, threshold: float) -> np.ndarray:
-    """Find indices of local minima in error array.
+    """Find indices of local minima in error array
 
     A local minimum at index i means: error[i-1] > error[i] < error[i+1]
 
-    Args:
-        error_array: Array of errors/distances
-        threshold: Only return minima below this threshold
+    Parameters
+    ----------
+    error_array : np.ndarray
+        Array of errors/distances.
+    threshold : float
+        Only return minima below this threshold.
 
-    Returns:
-        Array of indices where local minima occur
+    Returns
+    -------
+    np.ndarray
+        Array of indices where local minima occur.
     """
     n = len(error_array)
     if n < 3:
@@ -260,19 +295,27 @@ def interpolate_minimum(
     idx: int,
     step_size: float,
 ) -> Tuple[float, float]:
-    """Interpolate exact position of minimum using quadratic fit.
+    """Interpolate exact position of minimum using quadratic fit
 
     Fits a parabola through 3 points to find the minimum.
 
-    Args:
-        error_before: Error at idx-1
-        error_current: Error at idx
-        error_after: Error at idx+1
-        idx: Current index
-        step_size: Step size in the grid
+    Parameters
+    ----------
+    error_before : float
+        Error at idx-1.
+    error_current : float
+        Error at idx.
+    error_after : float
+        Error at idx+1.
+    idx : int
+        Current index.
+    step_size : float
+        Step size in the grid.
 
-    Returns:
-        Tuple of (offset_from_idx, interpolated_error)
+    Returns
+    -------
+    tuple of (float, float)
+        Tuple of (offset_from_idx, interpolated_error).
     """
     # Quadratic interpolation formula
     denominator = 2 * (error_before - 2 * error_current + error_after)
@@ -295,19 +338,27 @@ def calculate_adaptive_step(
     max_step: float = 1.0,
     points_per_orb: int = 10,
 ) -> float:
-    """Calculate adaptive step size based on body speeds.
+    """Calculate adaptive step size based on body speeds
 
     Faster bodies need finer sampling to avoid missing crossings.
 
-    Args:
-        body_speeds: List of body speeds (degrees/day)
-        orb: Orb tolerance (degrees)
-        min_step: Minimum step size (days)
-        max_step: Maximum step size (days)
-        points_per_orb: Desired number of sample points per orb width
+    Parameters
+    ----------
+    body_speeds : list
+        List of body speeds (degrees/day).
+    orb : float
+        Orb tolerance (degrees).
+    min_step : float, optional
+        Minimum step size (days).
+    max_step : float, optional
+        Maximum step size (days).
+    points_per_orb : int, optional
+        Desired number of sample points per orb width.
 
-    Returns:
-        Optimal step size (days)
+    Returns
+    -------
+    float
+        Optimal step size (days).
     """
     # Calculate relative speed
     if len(body_speeds) == 1:
@@ -332,26 +383,35 @@ def calculate_adaptive_step(
 # ========== Utility Functions ==========
 
 def detect_retrograde_motion(velocity: float) -> str:
-    """Detect if motion is direct or retrograde.
+    """Detect if motion is direct or retrograde
 
-    Args:
-        velocity: Longitude velocity (degrees/day)
+    Parameters
+    ----------
+    velocity : float
+        Longitude velocity (degrees/day).
 
-    Returns:
-        "retrograde" or "direct"
+    Returns
+    -------
+    str
+        "retrograde" or "direct".
     """
     return "retrograde" if velocity < 0 else "direct"
 
 
 def estimate_duration_hours(jd_begin: float, jd_end: float) -> float:
-    """Estimate duration in hours between two Julian Dates.
+    """Estimate duration in hours between two Julian Dates
 
-    Args:
-        jd_begin: Start Julian Date
-        jd_end: End Julian Date
+    Parameters
+    ----------
+    jd_begin : float
+        Start Julian Date.
+    jd_end : float
+        End Julian Date.
 
-    Returns:
-        Duration in hours
+    Returns
+    -------
+    float
+        Duration in hours.
     """
     return (jd_end - jd_begin) * 24.0
 

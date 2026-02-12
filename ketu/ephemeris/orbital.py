@@ -171,19 +171,26 @@ def normalize_angle(angle: float) -> float:
 
 
 def solve_kepler_equation(M: Union[float, np.ndarray], e: Union[float, np.ndarray], tolerance: float = 1e-8) -> Union[float, np.ndarray]:
-    """Solve Kepler's equation for eccentric anomaly (vectorized).
+    """Solve Kepler's equation for eccentric anomaly (vectorized)
 
-    Args:
-        M: Mean anomaly in radians (scalar or array)
-        e: Eccentricity (scalar or array)
-        tolerance: Convergence tolerance
+    Parameters
+    ----------
+    M : float or np.ndarray
+        Mean anomaly in radians (scalar or array).
+    e : float or np.ndarray
+        Eccentricity (scalar or array).
+    tolerance : float, optional
+        Convergence tolerance.
 
-    Returns:
-        Eccentric anomaly in radians (scalar or array)
+    Returns
+    -------
+    float or np.ndarray
+        Eccentric anomaly in radians (scalar or array).
 
-    Note:
-        This function is automatically vectorized via numpy broadcasting.
-        It can handle arrays of M and/or e values efficiently.
+    Notes
+    -----
+    This function is automatically vectorized via numpy broadcasting.
+    It can handle arrays of M and/or e values efficiently.
     """
     # Initial guess (broadcasts automatically if M or e are arrays)
     E = M + e * np.sin(M) * (1.0 + e * np.cos(M))
@@ -204,14 +211,19 @@ def solve_kepler_equation(M: Union[float, np.ndarray], e: Union[float, np.ndarra
 
 
 def orbital_elements_at_date(body_id: int, jd: float) -> dict:
-    """Calculate orbital elements for a body at a given Julian Date.
+    """Calculate orbital elements for a body at a given Julian Date
 
-    Args:
-        body_id: Index of body in ORBITAL_ELEMENTS array
-        jd: Julian Date
+    Parameters
+    ----------
+    body_id : int
+        Index of body in ORBITAL_ELEMENTS array.
+    jd : float
+        Julian Date.
 
-    Returns:
-        Dictionary with updated orbital elements
+    Returns
+    -------
+    dict
+        Dictionary with updated orbital elements.
     """
     # Days since J2000.0
     d = jd - 2451545.0
@@ -231,16 +243,20 @@ def orbital_elements_at_date(body_id: int, jd: float) -> dict:
 
 
 def compute_position(elem: dict) -> Tuple[float, float, float, float, float, float]:
-    """Compute heliocentric position from orbital elements.
+    """Compute heliocentric position from orbital elements
 
-    Args:
-        elem: Dictionary of orbital elements
+    Parameters
+    ----------
+    elem : dict
+        Dictionary of orbital elements.
 
-    Returns:
-        Tuple of (x, y, z, lon, lat, r) where:
-        - x, y, z are rectangular coordinates in AU
-        - lon, lat are spherical coordinates in degrees
-        - r is distance in AU
+    Returns
+    -------
+    tuple of (float, float, float, float, float, float)
+        Tuple of (x, y, z, lon, lat, r) where
+        x, y, z are rectangular coordinates in AU,
+        lon, lat are spherical coordinates in degrees,
+        r is distance in AU.
     """
     # Convert to radians
     N_rad = np.deg2rad(elem["N"])
@@ -279,15 +295,25 @@ def compute_position(elem: dict) -> Tuple[float, float, float, float, float, flo
 
 
 def apply_perturbations(body_id: int, jd: float, x: float, y: float, z: float) -> Tuple[float, float, float]:
-    """Apply perturbation corrections to planetary positions.
+    """Apply perturbation corrections to planetary positions
 
-    Args:
-        body_id: Body index
-        jd: Julian Date
-        x, y, z: Unperturbed rectangular coordinates
+    Parameters
+    ----------
+    body_id : int
+        Body index.
+    jd : float
+        Julian Date.
+    x : float
+        Unperturbed X coordinate.
+    y : float
+        Unperturbed Y coordinate.
+    z : float
+        Unperturbed Z coordinate.
 
-    Returns:
-        Perturbed coordinates (x, y, z)
+    Returns
+    -------
+    tuple of (float, float, float)
+        Perturbed coordinates (x, y, z).
     """
     # For now, only apply major perturbations to outer planets
     # This is a simplified version - full implementation would include
@@ -384,14 +410,19 @@ def apply_perturbations(body_id: int, jd: float, x: float, y: float, z: float) -
 
 
 def get_body_position(body_id: int, jd: float) -> Tuple[float, float, float, float, float, float]:
-    """Get heliocentric position of a body at given Julian Date.
+    """Get heliocentric position of a body at given Julian Date
 
-    Args:
-        body_id: Index of body in ORBITAL_ELEMENTS
-        jd: Julian Date
+    Parameters
+    ----------
+    body_id : int
+        Index of body in ORBITAL_ELEMENTS.
+    jd : float
+        Julian Date.
 
-    Returns:
-        Tuple of (x, y, z, lon, lat, r) in AU and degrees
+    Returns
+    -------
+    tuple of (float, float, float, float, float, float)
+        Tuple of (x, y, z, lon, lat, r) in AU and degrees.
     """
     # Get orbital elements at date
     elem = orbital_elements_at_date(body_id, jd)
@@ -412,16 +443,20 @@ def get_body_position(body_id: int, jd: float) -> Tuple[float, float, float, flo
 
 
 def get_moon_position(jd: float) -> Tuple[float, float, float]:
-    """Calculate geocentric position of the Moon.
+    """Calculate geocentric position of the Moon
 
-    Args:
-        jd: Julian Date
+    Parameters
+    ----------
+    jd : float
+        Julian Date.
 
-    Returns:
-        Tuple of (lon, lat, dist) where:
-        - lon: Geocentric longitude in degrees
-        - lat: Geocentric latitude in degrees
-        - dist: Distance from Earth in Earth radii
+    Returns
+    -------
+    tuple of (float, float, float)
+        Tuple of (lon, lat, dist) where
+        lon is geocentric longitude in degrees,
+        lat is geocentric latitude in degrees,
+        dist is distance from Earth in AU.
     """
     # Days since J2000.0
     d = jd - 2451545.0
@@ -504,13 +539,17 @@ def get_moon_position(jd: float) -> Tuple[float, float, float]:
 
 
 def get_lunar_nodes(jd: float) -> Tuple[float, float]:
-    """Calculate positions of lunar nodes.
+    """Calculate positions of lunar nodes
 
-    Args:
-        jd: Julian Date
+    Parameters
+    ----------
+    jd : float
+        Julian Date.
 
-    Returns:
-        Tuple of (mean_node, true_node) in degrees
+    Returns
+    -------
+    tuple of (float, float)
+        Tuple of (mean_node, true_node) in degrees.
     """
     # Days since J2000.0
     d = jd - 2451545.0
@@ -533,13 +572,17 @@ def get_lunar_nodes(jd: float) -> Tuple[float, float]:
 
 
 def get_lilith_position(jd: float) -> float:
-    """Calculate position of Black Moon Lilith (mean lunar apogee).
+    """Calculate position of Black Moon Lilith (mean lunar apogee)
 
-    Args:
-        jd: Julian Date
+    Parameters
+    ----------
+    jd : float
+        Julian Date.
 
-    Returns:
-        Longitude in degrees
+    Returns
+    -------
+    float
+        Longitude in degrees.
     """
     # Days since J2000.0
     d = jd - 2451545.0
@@ -551,17 +594,22 @@ def get_lilith_position(jd: float) -> float:
 
 
 def get_body_position_vectorized(body_id: int, jd_array: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Get heliocentric position of a body for multiple Julian Dates (vectorized).
+    """Get heliocentric position of a body for multiple Julian Dates (vectorized)
 
     This function efficiently computes positions for time series by vectorizing
     the orbital calculations across multiple dates.
 
-    Args:
-        body_id: Index of body in ORBITAL_ELEMENTS
-        jd_array: Array of Julian Dates
+    Parameters
+    ----------
+    body_id : int
+        Index of body in ORBITAL_ELEMENTS.
+    jd_array : np.ndarray
+        Array of Julian Dates.
 
-    Returns:
-        Tuple of arrays (x, y, z, lon, lat, r) in AU and degrees
+    Returns
+    -------
+    tuple of (np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray)
+        Tuple of arrays (x, y, z, lon, lat, r) in AU and degrees.
     """
     # Days since J2000.0 (vectorized)
     d = jd_array - 2451545.0
@@ -614,16 +662,20 @@ def get_body_position_vectorized(body_id: int, jd_array: np.ndarray) -> Tuple[np
 
 
 def get_moon_position_vectorized(jd_array: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Calculate geocentric position of the Moon for multiple dates (vectorized).
+    """Calculate geocentric position of the Moon for multiple dates (vectorized)
 
-    Args:
-        jd_array: Array of Julian Dates
+    Parameters
+    ----------
+    jd_array : np.ndarray
+        Array of Julian Dates.
 
-    Returns:
-        Tuple of arrays (lon, lat, dist) where:
-        - lon: Geocentric longitude in degrees
-        - lat: Geocentric latitude in degrees
-        - dist: Distance from Earth in AU
+    Returns
+    -------
+    tuple of (np.ndarray, np.ndarray, np.ndarray)
+        Tuple of arrays (lon, lat, dist) where
+        lon is geocentric longitude in degrees,
+        lat is geocentric latitude in degrees,
+        dist is distance from Earth in AU.
     """
     # Days since J2000.0 (vectorized)
     d = jd_array - 2451545.0

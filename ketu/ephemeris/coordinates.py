@@ -13,18 +13,25 @@ def spherical_to_rectangular(
     lat: Union[float, np.ndarray],
     r: Union[float, np.ndarray]
 ) -> Tuple[Union[float, np.ndarray], Union[float, np.ndarray], Union[float, np.ndarray]]:
-    """Convert spherical coordinates to rectangular coordinates (vectorized).
+    """Convert spherical coordinates to rectangular coordinates (vectorized)
 
-    Args:
-        lon: Longitude in degrees (scalar or array)
-        lat: Latitude in degrees (scalar or array)
-        r: Distance (scalar or array)
+    Parameters
+    ----------
+    lon : float or np.ndarray
+        Longitude in degrees (scalar or array).
+    lat : float or np.ndarray
+        Latitude in degrees (scalar or array).
+    r : float or np.ndarray
+        Distance (scalar or array).
 
-    Returns:
-        Tuple of (x, y, z) in same units as r (scalar or array)
+    Returns
+    -------
+    tuple of (float or np.ndarray, float or np.ndarray, float or np.ndarray)
+        Tuple of (x, y, z) in same units as r (scalar or array).
 
-    Note:
-        This function is vectorized and works with both scalars and arrays.
+    Notes
+    -----
+    This function is vectorized and works with both scalars and arrays.
     """
     lon_rad = np.deg2rad(lon)
     lat_rad = np.deg2rad(lat)
@@ -41,16 +48,25 @@ def rectangular_to_spherical(
     y: Union[float, np.ndarray],
     z: Union[float, np.ndarray]
 ) -> Tuple[Union[float, np.ndarray], Union[float, np.ndarray], Union[float, np.ndarray]]:
-    """Convert rectangular coordinates to spherical coordinates (vectorized).
+    """Convert rectangular coordinates to spherical coordinates (vectorized)
 
-    Args:
-        x, y, z: Rectangular coordinates (scalar or array)
+    Parameters
+    ----------
+    x : float or np.ndarray
+        X coordinate (scalar or array).
+    y : float or np.ndarray
+        Y coordinate (scalar or array).
+    z : float or np.ndarray
+        Z coordinate (scalar or array).
 
-    Returns:
-        Tuple of (lon, lat, r) where angles are in degrees (scalar or array)
+    Returns
+    -------
+    tuple of (float or np.ndarray, float or np.ndarray, float or np.ndarray)
+        Tuple of (lon, lat, r) where angles are in degrees (scalar or array).
 
-    Note:
-        This function is vectorized and works with both scalars and arrays.
+    Notes
+    -----
+    This function is vectorized and works with both scalars and arrays.
     """
     r = np.sqrt(x**2 + y**2 + z**2)
 
@@ -78,17 +94,27 @@ def ecliptic_to_equatorial(
     z: Union[float, np.ndarray],
     obliquity: Union[float, np.ndarray]
 ) -> Tuple[Union[float, np.ndarray], Union[float, np.ndarray], Union[float, np.ndarray]]:
-    """Convert ecliptic coordinates to equatorial coordinates (vectorized).
+    """Convert ecliptic coordinates to equatorial coordinates (vectorized)
 
-    Args:
-        x, y, z: Ecliptic rectangular coordinates (scalar or array)
-        obliquity: Obliquity of ecliptic in degrees (scalar or array)
+    Parameters
+    ----------
+    x : float or np.ndarray
+        Ecliptic X coordinate (scalar or array).
+    y : float or np.ndarray
+        Ecliptic Y coordinate (scalar or array).
+    z : float or np.ndarray
+        Ecliptic Z coordinate (scalar or array).
+    obliquity : float or np.ndarray
+        Obliquity of ecliptic in degrees (scalar or array).
 
-    Returns:
-        Tuple of (x_eq, y_eq, z_eq) equatorial rectangular coordinates (scalar or array)
+    Returns
+    -------
+    tuple of (float or np.ndarray, float or np.ndarray, float or np.ndarray)
+        Tuple of (x_eq, y_eq, z_eq) equatorial rectangular coordinates (scalar or array).
 
-    Note:
-        This function is vectorized and works with both scalars and arrays.
+    Notes
+    -----
+    This function is vectorized and works with both scalars and arrays.
     """
     obl_rad = np.deg2rad(obliquity)
     cos_obl = np.cos(obl_rad)
@@ -102,14 +128,23 @@ def ecliptic_to_equatorial(
 
 
 def equatorial_to_ecliptic(x: float, y: float, z: float, obliquity: float) -> Tuple[float, float, float]:
-    """Convert equatorial coordinates to ecliptic coordinates.
+    """Convert equatorial coordinates to ecliptic coordinates
 
-    Args:
-        x, y, z: Equatorial rectangular coordinates
-        obliquity: Obliquity of ecliptic in degrees
+    Parameters
+    ----------
+    x : float
+        Equatorial X coordinate.
+    y : float
+        Equatorial Y coordinate.
+    z : float
+        Equatorial Z coordinate.
+    obliquity : float
+        Obliquity of ecliptic in degrees.
 
-    Returns:
-        Tuple of (x_ecl, y_ecl, z_ecl) ecliptic rectangular coordinates
+    Returns
+    -------
+    tuple of (float, float, float)
+        Tuple of (x_ecl, y_ecl, z_ecl) ecliptic rectangular coordinates.
     """
     obl_rad = np.deg2rad(obliquity)
     cos_obl = np.cos(obl_rad)
@@ -130,14 +165,27 @@ def heliocentric_to_geocentric(
     y_earth: Union[float, np.ndarray],
     z_earth: Union[float, np.ndarray]
 ) -> Tuple[Union[float, np.ndarray], Union[float, np.ndarray], Union[float, np.ndarray]]:
-    """Convert heliocentric coordinates to geocentric coordinates (vectorized).
+    """Convert heliocentric coordinates to geocentric coordinates (vectorized)
 
-    Args:
-        x_planet, y_planet, z_planet: Heliocentric coordinates of planet (scalar or array)
-        x_earth, y_earth, z_earth: Heliocentric coordinates of Earth (scalar or array)
+    Parameters
+    ----------
+    x_planet : float or np.ndarray
+        Planet heliocentric X coordinate (scalar or array).
+    y_planet : float or np.ndarray
+        Planet heliocentric Y coordinate (scalar or array).
+    z_planet : float or np.ndarray
+        Planet heliocentric Z coordinate (scalar or array).
+    x_earth : float or np.ndarray
+        Earth heliocentric X coordinate (scalar or array).
+    y_earth : float or np.ndarray
+        Earth heliocentric Y coordinate (scalar or array).
+    z_earth : float or np.ndarray
+        Earth heliocentric Z coordinate (scalar or array).
 
-    Returns:
-        Tuple of (x_geo, y_geo, z_geo) geocentric coordinates (scalar or array)
+    Returns
+    -------
+    tuple of (float or np.ndarray, float or np.ndarray, float or np.ndarray)
+        Tuple of (x_geo, y_geo, z_geo) geocentric coordinates (scalar or array).
     """
     x_geo = x_planet - x_earth
     y_geo = y_planet - y_earth
@@ -149,22 +197,32 @@ def heliocentric_to_geocentric(
 def geocentric_to_topocentric(
     lon: float, lat: float, dist: float, observer_lat: float, observer_lon: float, lst: float, height: float = 0.0
 ) -> Tuple[float, float, float]:
-    """Convert geocentric coordinates to topocentric coordinates.
+    """Convert geocentric coordinates to topocentric coordinates
 
-    Args:
-        lon: Geocentric longitude in degrees
-        lat: Geocentric latitude in degrees
-        dist: Distance in AU
-        observer_lat: Observer's latitude in degrees
-        observer_lon: Observer's longitude in degrees
-        lst: Local sidereal time in degrees
-        height: Observer's height above sea level in meters
+    Parameters
+    ----------
+    lon : float
+        Geocentric longitude in degrees.
+    lat : float
+        Geocentric latitude in degrees.
+    dist : float
+        Distance in AU.
+    observer_lat : float
+        Observer's latitude in degrees.
+    observer_lon : float
+        Observer's longitude in degrees.
+    lst : float
+        Local sidereal time in degrees.
+    height : float, optional
+        Observer's height above sea level in meters.
 
-    Returns:
-        Tuple of (az, alt, dist) where:
-        - az: Azimuth in degrees (0 = North, 90 = East)
-        - alt: Altitude in degrees above horizon
-        - dist: Topocentric distance in AU
+    Returns
+    -------
+    tuple of (float, float, float)
+        Tuple of (az, alt, dist) where
+        az is azimuth in degrees (0 = North, 90 = East),
+        alt is altitude in degrees above horizon,
+        dist is topocentric distance in AU.
     """
     # Earth's equatorial radius in AU
     earth_radius_au = 4.26352e-5
@@ -223,16 +281,21 @@ def geocentric_to_topocentric(
 
 
 def mean_obliquity(jd: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
-    """Calculate mean obliquity of the ecliptic (vectorized).
+    """Calculate mean obliquity of the ecliptic (vectorized)
 
-    Args:
-        jd: Julian Date (scalar or array)
+    Parameters
+    ----------
+    jd : float or np.ndarray
+        Julian Date (scalar or array).
 
-    Returns:
-        Mean obliquity in degrees (scalar or array)
+    Returns
+    -------
+    float or np.ndarray
+        Mean obliquity in degrees (scalar or array).
 
-    Note:
-        This function is vectorized and works with both scalars and arrays.
+    Notes
+    -----
+    This function is vectorized and works with both scalars and arrays.
     """
     # Centuries since J2000.0
     T = (jd - 2451545.0) / 36525.0
@@ -251,13 +314,17 @@ def mean_obliquity(jd: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
 
 
 def nutation(jd: float) -> Tuple[float, float]:
-    """Calculate nutation in longitude and obliquity.
+    """Calculate nutation in longitude and obliquity
 
-    Args:
-        jd: Julian Date
+    Parameters
+    ----------
+    jd : float
+        Julian Date.
 
-    Returns:
-        Tuple of (nut_lon, nut_obl) in degrees
+    Returns
+    -------
+    tuple of (float, float)
+        Tuple of (nut_lon, nut_obl) in degrees.
     """
     # Days since J2000.0
     d = jd - 2451545.0
@@ -301,13 +368,17 @@ def nutation(jd: float) -> Tuple[float, float]:
 
 
 def true_obliquity(jd: float) -> float:
-    """Calculate true obliquity of the ecliptic.
+    """Calculate true obliquity of the ecliptic
 
-    Args:
-        jd: Julian Date
+    Parameters
+    ----------
+    jd : float
+        Julian Date.
 
-    Returns:
-        True obliquity in degrees
+    Returns
+    -------
+    float
+        True obliquity in degrees.
     """
     mean_obl = mean_obliquity(jd)
     _, nut_obl = nutation(jd)
@@ -316,15 +387,21 @@ def true_obliquity(jd: float) -> float:
 
 
 def aberration_correction(lon: float, lat: float, jd: float) -> Tuple[float, float]:
-    """Apply stellar aberration correction.
+    """Apply stellar aberration correction
 
-    Args:
-        lon: Longitude in degrees
-        lat: Latitude in degrees
-        jd: Julian Date
+    Parameters
+    ----------
+    lon : float
+        Longitude in degrees.
+    lat : float
+        Latitude in degrees.
+    jd : float
+        Julian Date.
 
-    Returns:
-        Tuple of (dlon, dlat) corrections in degrees
+    Returns
+    -------
+    tuple of (float, float)
+        Tuple of (dlon, dlat) corrections in degrees.
     """
     # Days since J2000.0
     d = jd - 2451545.0

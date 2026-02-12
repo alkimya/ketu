@@ -123,20 +123,29 @@ def _find_transit_crossings(
     jd_start: float,
     jd_end: float,
 ) -> List[Tuple[float, float, str]]:
-    """Find all transit crossing candidates using vectorized search.
+    """Find all transit crossing candidates using vectorized search
 
     Similar to _adaptive_grid_search but for transits (one moving body vs fixed position).
 
-    Args:
-        body_id: Transiting body ID
-        reference_lon: Reference longitude (degrees)
-        aspect_angle: Target aspect angle (degrees)
-        orb: Orb tolerance (degrees)
-        jd_start: Start Julian Date
-        jd_end: End Julian Date
+    Parameters
+    ----------
+    body_id : int
+        Transiting body ID.
+    reference_lon : float
+        Reference longitude (degrees).
+    aspect_angle : float
+        Target aspect angle (degrees).
+    orb : float
+        Orb tolerance (degrees).
+    jd_start : float
+        Start Julian Date.
+    jd_end : float
+        End Julian Date.
 
-    Returns:
-        List of (jd_crossing, error, motion) tuples
+    Returns
+    -------
+    list of tuple
+        List of (jd_crossing, error, motion) tuples.
     """
     # Calculate adaptive step size using refactored function
     avg_speed = bodies["speed"][body_id]
@@ -184,15 +193,21 @@ def _find_transit_crossings(
 
 
 def _make_transit_distance_callback(body_id: int, reference_lon: float, aspect_angle: float):
-    """Create callback for transit distance calculation (for refinement).
+    """Create callback for transit distance calculation (for refinement)
 
-    Args:
-        body_id: Transiting body ID
-        reference_lon: Reference longitude
-        aspect_angle: Target aspect angle
+    Parameters
+    ----------
+    body_id : int
+        Transiting body ID.
+    reference_lon : float
+        Reference longitude.
+    aspect_angle : float
+        Target aspect angle.
 
-    Returns:
-        Callback function that takes JD and returns distance error
+    Returns
+    -------
+    callable
+        Callback function that takes JD and returns distance error.
     """
     def callback(jd: float) -> float:
         pos = long(jd, body_id)
@@ -202,16 +217,23 @@ def _make_transit_distance_callback(body_id: int, reference_lon: float, aspect_a
 
 
 def _make_transit_orb_callback(body_id: int, reference_lon: float, aspect_angle: float, orb: float):
-    """Create callback to check if within orb (for boundary finding).
+    """Create callback to check if within orb (for boundary finding)
 
-    Args:
-        body_id: Transiting body ID
-        reference_lon: Reference longitude
-        aspect_angle: Target aspect angle
-        orb: Orb tolerance
+    Parameters
+    ----------
+    body_id : int
+        Transiting body ID.
+    reference_lon : float
+        Reference longitude.
+    aspect_angle : float
+        Target aspect angle.
+    orb : float
+        Orb tolerance.
 
-    Returns:
-        Callback function that takes JD and returns bool (within orb?)
+    Returns
+    -------
+    callable
+        Callback function that takes JD and returns bool (within orb?).
     """
     def callback(jd: float) -> bool:
         pos = long(jd, body_id)
@@ -232,32 +254,44 @@ def find_transits_to_position(
     custom_orb: Optional[float] = None,
     detect_retrograde: bool = True,
 ) -> List[TransitWindow]:
-    """Find transits of a moving body to a fixed longitude.
+    """Find transits of a moving body to a fixed longitude
 
     This function finds when a transiting planet forms aspects with a fixed
     reference position (e.g., natal planet position).
 
-    Args:
-        transiting_body: Moving body (name or ID)
-        reference_longitude: Fixed reference position (0-360 degrees)
-        aspects_list: List of aspects to find (default: major aspects)
-        start_date: Start date (datetime, ISO string, or Julian Date)
-        end_date: End date (datetime, ISO string, or Julian Date)
-        custom_orb: Custom orb in degrees (default: use calculated orb)
-        detect_retrograde: Enable multi-pass retrograde detection
+    Parameters
+    ----------
+    transiting_body : str or int
+        Moving body (name or ID).
+    reference_longitude : float
+        Fixed reference position (0-360 degrees).
+    aspects_list : list of (str or int), optional
+        List of aspects to find (default: major aspects).
+    start_date : datetime, str, or float, optional
+        Start date (datetime, ISO string, or Julian Date).
+    end_date : datetime, str, or float, optional
+        End date (datetime, ISO string, or Julian Date).
+    custom_orb : float, optional
+        Custom orb in degrees (default: use calculated orb).
+    detect_retrograde : bool, optional
+        Enable multi-pass retrograde detection.
 
-    Returns:
-        List of TransitWindow objects sorted by exact time
+    Returns
+    -------
+    list of TransitWindow
+        List of TransitWindow objects sorted by exact time.
 
-    Examples:
-        >>> # When does Mars transit 120° (0° Leo)?
-        >>> transits = find_transits_to_position(
-        ...     transiting_body="Mars",
-        ...     reference_longitude=120.0,
-        ...     aspects_list=["Conjunction", "Square", "Trine", "Opposition"],
-        ...     start_date="2024-01-01",
-        ...     end_date="2024-12-31"
-        ... )
+    Examples
+    --------
+    When does Mars transit 120° (0° Leo)?
+
+    >>> transits = find_transits_to_position(
+    ...     transiting_body="Mars",
+    ...     reference_longitude=120.0,
+    ...     aspects_list=["Conjunction", "Square", "Trine", "Opposition"],
+    ...     start_date="2024-01-01",
+    ...     end_date="2024-12-31"
+    ... )
     """
     # Convert inputs
     body_id_val = _get_body_id(transiting_body)
@@ -388,18 +422,24 @@ def get_natal_positions(
     reference_date: Union[datetime, str, float],
     bodies_list: Optional[List[Union[str, int]]] = None,
 ) -> Dict[str, NatalPosition]:
-    """Get planetary positions at a reference date (e.g., natal chart).
+    """Get planetary positions at a reference date (e.g., natal chart)
 
-    Args:
-        reference_date: Reference date (datetime, ISO string, or Julian Date)
-        bodies_list: List of bodies (default: all planets)
+    Parameters
+    ----------
+    reference_date : datetime, str, or float
+        Reference date (datetime, ISO string, or Julian Date).
+    bodies_list : list of (str or int), optional
+        List of bodies (default: all planets).
 
-    Returns:
-        Dictionary mapping body names to NatalPosition objects
+    Returns
+    -------
+    dict of {str: NatalPosition}
+        Dictionary mapping body names to NatalPosition objects.
 
-    Examples:
-        >>> natal = get_natal_positions("1990-05-15 14:30")
-        >>> print(f"Natal Sun: {natal['Sun'].longitude}°")
+    Examples
+    --------
+    >>> natal = get_natal_positions("1990-05-15 14:30")
+    >>> print(f"Natal Sun: {natal['Sun'].longitude}°")
     """
     # Convert date
     if isinstance(reference_date, str):
@@ -439,28 +479,37 @@ def compare_dates_transits(
     aspects_list: Optional[List[Union[str, int]]] = None,
     custom_orb: Optional[float] = None,
 ) -> List[TransitAspect]:
-    """Compare two dates and find all transiting aspects.
+    """Compare two dates and find all transiting aspects
 
     This function compares all planetary positions at two different dates
     and finds which transiting planets are forming aspects with natal positions.
 
-    Args:
-        natal_date: Natal/reference date
-        transit_date: Transit/current date
-        aspects_list: List of aspects to check (default: major aspects)
-        custom_orb: Custom orb in degrees
+    Parameters
+    ----------
+    natal_date : datetime, str, or float
+        Natal/reference date.
+    transit_date : datetime, str, or float
+        Transit/current date.
+    aspects_list : list of (str or int), optional
+        List of aspects to check (default: major aspects).
+    custom_orb : float, optional
+        Custom orb in degrees.
 
-    Returns:
-        List of TransitAspect objects
+    Returns
+    -------
+    list of TransitAspect
+        List of TransitAspect objects.
 
-    Examples:
-        >>> # Compare birth chart with current transits
-        >>> transits = compare_dates_transits(
-        ...     natal_date="1990-05-15 14:30",
-        ...     transit_date="2024-11-21"
-        ... )
-        >>> for t in transits:
-        ...     print(f"{t.transiting_body} {t.aspect} natal {t.natal_body}")
+    Examples
+    --------
+    Compare birth chart with current transits:
+
+    >>> transits = compare_dates_transits(
+    ...     natal_date="1990-05-15 14:30",
+    ...     transit_date="2024-11-21"
+    ... )
+    >>> for t in transits:
+    ...     print(f"{t.transiting_body} {t.aspect} natal {t.natal_body}")
     """
     # Get natal positions
     natal_positions = get_natal_positions(natal_date)

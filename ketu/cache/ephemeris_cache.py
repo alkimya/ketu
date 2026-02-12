@@ -54,10 +54,12 @@ class EphemerisCache:
     """
 
     def __init__(self, cache_dir: Optional[Union[str, Path]] = None):
-        """Initialize the ephemeris cache.
+        """Initialize the ephemeris cache
 
-        Args:
-            cache_dir: Directory for cache files. Defaults to ~/.ketu/ephemeris_cache
+        Parameters
+        ----------
+        cache_dir : str or Path, optional
+            Directory for cache files. Defaults to ~/.ketu/ephemeris_cache.
         """
         if cache_dir is None:
             cache_dir = Path.home() / ".ketu" / "ephemeris_cache"
@@ -75,15 +77,20 @@ class EphemerisCache:
         return self.cache_dir / f"{year:04d}-{month:02d}-ephemeris.npy"
 
     def _compute_month(self, year: int, month: int) -> np.ndarray:
-        """Compute ephemeris data for an entire month.
+        """Compute ephemeris data for an entire month
 
-        Args:
-            year: Year (e.g., 2025)
-            month: Month (1-12)
+        Parameters
+        ----------
+        year : int
+            Year (e.g., 2025).
+        month : int
+            Month (1-12).
 
-        Returns:
+        Returns
+        -------
+        np.ndarray
             Array of shape (days_in_month, BODY_COUNT, POSITION_FIELDS)
-            where POSITION_FIELDS = [lon, lat, dist, lon_speed, lat_speed, dist_speed]
+            where POSITION_FIELDS = [lon, lat, dist, lon_speed, lat_speed, dist_speed].
         """
         days_in_month = calendar.monthrange(year, month)[1]
 
@@ -108,12 +115,16 @@ class EphemerisCache:
         return result
 
     def ensure_month(self, year: int, month: int, force_recompute: bool = False) -> None:
-        """Ensure a month is cached (compute if needed).
+        """Ensure a month is cached (compute if needed)
 
-        Args:
-            year: Year
-            month: Month (1-12)
-            force_recompute: If True, recompute even if cached
+        Parameters
+        ----------
+        year : int
+            Year.
+        month : int
+            Month (1-12).
+        force_recompute : bool, optional
+            If True, recompute even if cached.
         """
         cache_key = (year, month)
         cache_path = self._cache_path(year, month)
@@ -142,14 +153,20 @@ class EphemerisCache:
         end_month: int,
         force_recompute: bool = False,
     ) -> None:
-        """Ensure a range of months is cached.
+        """Ensure a range of months is cached
 
-        Args:
-            start_year: Start year
-            start_month: Start month (1-12)
-            end_year: End year
-            end_month: End month (1-12)
-            force_recompute: If True, recompute all months
+        Parameters
+        ----------
+        start_year : int
+            Start year.
+        start_month : int
+            Start month (1-12).
+        end_year : int
+            End year.
+        end_month : int
+            End month (1-12).
+        force_recompute : bool, optional
+            If True, recompute all months.
         """
         current = datetime(start_year, start_month, 1)
         end = datetime(end_year, end_month, 1)
@@ -168,15 +185,21 @@ class EphemerisCache:
         body_id: int,
         interpolate: bool = True,
     ) -> np.ndarray:
-        """Get position for a single body at a specific time.
+        """Get position for a single body at a specific time
 
-        Args:
-            timestamp: UTC datetime
-            body_id: Body ID (0-12)
-            interpolate: If True, interpolate between daily values
+        Parameters
+        ----------
+        timestamp : datetime
+            UTC datetime.
+        body_id : int
+            Body ID (0-12).
+        interpolate : bool, optional
+            If True, interpolate between daily values.
 
-        Returns:
-            Array of [lon, lat, dist, lon_speed, lat_speed, dist_speed]
+        Returns
+        -------
+        np.ndarray
+            Array of [lon, lat, dist, lon_speed, lat_speed, dist_speed].
         """
         # Ensure UTC
         if timestamp.tzinfo is None:
@@ -243,14 +266,19 @@ class EphemerisCache:
         timestamp: datetime,
         interpolate: bool = True,
     ) -> np.ndarray:
-        """Get positions for all bodies at a specific time.
+        """Get positions for all bodies at a specific time
 
-        Args:
-            timestamp: UTC datetime
-            interpolate: If True, interpolate between daily values
+        Parameters
+        ----------
+        timestamp : datetime
+            UTC datetime.
+        interpolate : bool, optional
+            If True, interpolate between daily values.
 
-        Returns:
-            Array of shape (BODY_COUNT, POSITION_FIELDS)
+        Returns
+        -------
+        np.ndarray
+            Array of shape (BODY_COUNT, POSITION_FIELDS).
         """
         result = np.zeros((BODY_COUNT, POSITION_FIELDS), dtype=np.float32)
         for body_id in range(BODY_COUNT):
@@ -263,17 +291,23 @@ class EphemerisCache:
         body_id: int,
         interpolate: bool = True,
     ) -> np.ndarray:
-        """Get positions for a single body across multiple timestamps (slow path).
+        """Get positions for a single body across multiple timestamps (slow path)
 
         For better performance, use get_positions_vectorized().
 
-        Args:
-            timestamps: List of UTC datetimes
-            body_id: Body ID (0-12)
-            interpolate: If True, interpolate between daily values
+        Parameters
+        ----------
+        timestamps : list
+            List of UTC datetimes.
+        body_id : int
+            Body ID (0-12).
+        interpolate : bool, optional
+            If True, interpolate between daily values.
 
-        Returns:
-            Array of shape (len(timestamps), POSITION_FIELDS)
+        Returns
+        -------
+        np.ndarray
+            Array of shape (len(timestamps), POSITION_FIELDS).
         """
         result = np.zeros((len(timestamps), POSITION_FIELDS), dtype=np.float32)
         for i, ts in enumerate(timestamps):
@@ -285,17 +319,22 @@ class EphemerisCache:
         timestamps: list,
         body_id: int,
     ) -> Tuple[np.ndarray, np.ndarray]:
-        """Get longitude and velocity for a body across timestamps (vectorized).
+        """Get longitude and velocity for a body across timestamps (vectorized)
 
         This is the fast path - uses numpy vectorized operations instead of
         Python loops. ~10x faster than get_positions_batch for large arrays.
 
-        Args:
-            timestamps: List/array of UTC datetimes
-            body_id: Body ID (0-12)
+        Parameters
+        ----------
+        timestamps : list or array-like
+            List/array of UTC datetimes.
+        body_id : int
+            Body ID (0-12).
 
-        Returns:
-            Tuple of (longitudes, velocities) arrays, each shape (n,)
+        Returns
+        -------
+        tuple of (np.ndarray, np.ndarray)
+            Tuple of (longitudes, velocities) arrays, each shape (n,).
         """
         n = len(timestamps)
         if n == 0:
@@ -391,14 +430,19 @@ class EphemerisCache:
         timestamps: list,
         body_id: int,
     ) -> np.ndarray:
-        """Get longitudes only for a single body (fast path).
+        """Get longitudes only for a single body (fast path)
 
-        Args:
-            timestamps: List of UTC datetimes
-            body_id: Body ID (0-12)
+        Parameters
+        ----------
+        timestamps : list
+            List of UTC datetimes.
+        body_id : int
+            Body ID (0-12).
 
-        Returns:
-            Array of longitudes (len(timestamps),)
+        Returns
+        -------
+        np.ndarray
+            Array of longitudes (len(timestamps),).
         """
         longitudes, _ = self.get_positions_vectorized(timestamps, body_id)
         return longitudes

@@ -66,15 +66,21 @@ SWE_IDS = {
 
 @lru_cache(maxsize=128)
 def calc_planet_position(jd: float, planet_id: int, flags: int = 0) -> np.ndarray:
-    """Calculate planet position compatible with pyswisseph interface.
+    """Calculate planet position compatible with pyswisseph interface
 
-    Args:
-        jd: Julian Date
-        planet_id: Planet ID (0-12)
-        flags: Calculation flags (for compatibility, not fully implemented)
+    Parameters
+    ----------
+    jd : float
+        Julian Date.
+    planet_id : int
+        Planet ID (0-12).
+    flags : int, optional
+        Calculation flags (for compatibility, not fully implemented).
 
-    Returns:
-        Array of [longitude, latitude, distance, lon_speed, lat_speed, dist_speed]
+    Returns
+    -------
+    np.ndarray
+        Array of [longitude, latitude, distance, lon_speed, lat_speed, dist_speed].
     """
     planet_name = SWE_IDS.get(planet_id)
     if planet_name is None:
@@ -187,13 +193,17 @@ def calc_planet_position(jd: float, planet_id: int, flags: int = 0) -> np.ndarra
 
 
 def get_planet_name(planet_id: int) -> str:
-    """Get planet name from ID (Swiss Ephemeris compatible).
+    """Get planet name from ID (Swiss Ephemeris compatible)
 
-    Args:
-        planet_id: Planet ID (0-12)
+    Parameters
+    ----------
+    planet_id : int
+        Planet ID (0-12).
 
-    Returns:
-        Planet name string
+    Returns
+    -------
+    str
+        Planet name string.
     """
     names = {
         0: "Sun",
@@ -214,13 +224,17 @@ def get_planet_name(planet_id: int) -> str:
 
 
 def calculate_all_positions(jd: float) -> Dict[str, np.ndarray]:
-    """Calculate positions for all bodies.
+    """Calculate positions for all bodies
 
-    Args:
-        jd: Julian Date
+    Parameters
+    ----------
+    jd : float
+        Julian Date.
 
-    Returns:
-        Dictionary mapping body names to position arrays
+    Returns
+    -------
+    dict of {str: np.ndarray}
+        Dictionary mapping body names to position arrays.
     """
     positions = {}
 
@@ -236,29 +250,41 @@ def calculate_all_positions(jd: float) -> Dict[str, np.ndarray]:
 
 
 def body_properties(jd: float, body_id: int) -> np.ndarray:
-    """Get body properties compatible with ketu interface.
+    """Get body properties compatible with ketu interface
 
-    Args:
-        jd: Julian Date
-        body_id: Body ID (0-12)
+    Parameters
+    ----------
+    jd : float
+        Julian Date.
+    body_id : int
+        Body ID (0-12).
 
-    Returns:
-        Array of [longitude, latitude, distance, lon_speed, lat_speed, dist_speed]
+    Returns
+    -------
+    np.ndarray
+        Array of [longitude, latitude, distance, lon_speed, lat_speed, dist_speed].
     """
     return calc_planet_position(jd, body_id)
 
 
 def calculate_house_cusps(jd: float, lat: float, lon: float, house_system: str = "P") -> Tuple[np.ndarray, np.ndarray]:
-    """Calculate house cusps (simplified implementation).
+    """Calculate house cusps (simplified implementation)
 
-    Args:
-        jd: Julian Date
-        lat: Geographic latitude
-        lon: Geographic longitude
-        house_system: House system code (P=Placidus, K=Koch, etc.)
+    Parameters
+    ----------
+    jd : float
+        Julian Date.
+    lat : float
+        Geographic latitude.
+    lon : float
+        Geographic longitude.
+    house_system : str, optional
+        House system code (P=Placidus, K=Koch, etc.).
 
-    Returns:
-        Tuple of (cusps, ascmc) arrays
+    Returns
+    -------
+    tuple of (np.ndarray, np.ndarray)
+        Tuple of (cusps, ascmc) arrays.
     """
     # This is a simplified implementation
     # Full implementation would require complex house calculations
@@ -285,18 +311,27 @@ def calculate_house_cusps(jd: float, lat: float, lon: float, house_system: str =
 def find_exact_aspect(
     jd_start: float, jd_end: float, body1_id: int, body2_id: int, aspect_angle: float, orb: float = 1.0
 ) -> Optional[float]:
-    """Find exact aspect between two bodies within time range.
+    """Find exact aspect between two bodies within time range
 
-    Args:
-        jd_start: Start Julian Date
-        jd_end: End Julian Date
-        body1_id: First body ID
-        body2_id: Second body ID
-        aspect_angle: Aspect angle in degrees (0, 60, 90, 120, 180)
-        orb: Orb tolerance in degrees
+    Parameters
+    ----------
+    jd_start : float
+        Start Julian Date.
+    jd_end : float
+        End Julian Date.
+    body1_id : int
+        First body ID.
+    body2_id : int
+        Second body ID.
+    aspect_angle : float
+        Aspect angle in degrees (0, 60, 90, 120, 180).
+    orb : float, optional
+        Orb tolerance in degrees.
 
-    Returns:
-        Julian Date of exact aspect or None if not found
+    Returns
+    -------
+    float or None
+        Julian Date of exact aspect or None if not found.
     """
     # Binary search for exact aspect
     max_iterations = 50
@@ -346,17 +381,25 @@ def find_exact_aspect(
 
 
 def find_all_aspects(jd_start: float, jd_end: float, body1_id: int, body2_id: int, aspects: list = []) -> list:
-    """Find all aspects between two bodies in time range.
+    """Find all aspects between two bodies in time range
 
-    Args:
-        jd_start: Start Julian Date
-        jd_end: End Julian Date
-        body1_id: First body ID
-        body2_id: Second body ID
-        aspects: List of aspect angles to check (default: major aspects)
+    Parameters
+    ----------
+    jd_start : float
+        Start Julian Date.
+    jd_end : float
+        End Julian Date.
+    body1_id : int
+        First body ID.
+    body2_id : int
+        Second body ID.
+    aspects : list, optional
+        List of aspect angles to check (default: major aspects).
 
-    Returns:
-        List of tuples (jd, aspect_angle)
+    Returns
+    -------
+    list of tuple
+        List of tuples (jd, aspect_angle).
     """
     if aspects == []:
         aspects = [0, 30, 60, 90, 120, 150, 180]  # Major aspects
@@ -381,14 +424,19 @@ def find_all_aspects(jd_start: float, jd_end: float, body1_id: int, body2_id: in
 
 
 def calculate_speed_ratio(jd: float, body_id: int) -> float:
-    """Calculate speed ratio compared to average speed.
+    """Calculate speed ratio compared to average speed
 
-    Args:
-        jd: Julian Date
-        body_id: Body ID
+    Parameters
+    ----------
+    jd : float
+        Julian Date.
+    body_id : int
+        Body ID.
 
-    Returns:
-        Speed ratio (1.0 = average speed)
+    Returns
+    -------
+    float
+        Speed ratio (1.0 = average speed).
     """
     pos = calc_planet_position(jd, body_id)
     current_speed = pos[3]  # Longitude speed
@@ -419,20 +467,26 @@ def calculate_speed_ratio(jd: float, body_id: int) -> float:
 
 
 def calc_planet_position_batch(jd_array: np.ndarray, planet_id: int, flags: int = 0) -> np.ndarray:
-    """Calculate planet positions for multiple Julian Dates (vectorized/batch).
+    """Calculate planet positions for multiple Julian Dates (vectorized/batch)
 
     This function is optimized for calculating time series by vectorizing
     calculations across multiple dates.
 
-    Args:
-        jd_array: Array of Julian Dates
-        planet_id: Planet ID (0-12)
-        flags: Calculation flags (for compatibility)
+    Parameters
+    ----------
+    jd_array : np.ndarray
+        Array of Julian Dates.
+    planet_id : int
+        Planet ID (0-12).
+    flags : int, optional
+        Calculation flags (for compatibility).
 
-    Returns:
-        2D array of shape (n_dates, 6) containing:
+    Returns
+    -------
+    np.ndarray
+        2D array of shape (n_dates, 6) containing
         [longitude, latitude, distance, lon_speed, lat_speed, dist_speed]
-        for each Julian Date
+        for each Julian Date.
     """
     planet_name = SWE_IDS.get(planet_id)
     if planet_name is None:

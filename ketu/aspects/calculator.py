@@ -21,30 +21,42 @@ from ketu.calculations import long, positions, distance
 
 
 def get_orb(body1: int, body2: int, asp: int) -> float:
-    """Calculate the orb tolerance for two bodies and an aspect.
+    """Calculate the orb tolerance for two bodies and an aspect
 
-    Args:
-        body1: First body ID (0-12)
-        body2: Second body ID (0-12)
-        asp: Aspect index (0-6)
+    Parameters
+    ----------
+    body1 : int
+        First body ID (0-12).
+    body2 : int
+        Second body ID (0-12).
+    asp : int
+        Aspect index (0-6).
 
-    Returns:
-        Orb in degrees
+    Returns
+    -------
+    float
+        Orb in degrees.
     """
     orbs, coef = bodies["orb"], aspects["coef"]
     return (orbs[body1] + orbs[body2]) / 2 * coef[asp]
 
 
 def get_aspect(jdate: float, body1: int, body2: int) -> Optional[Tuple]:
-    """Find aspect between two bodies at a given date.
+    """Find aspect between two bodies at a given date
 
-    Args:
-        jdate: Julian Date
-        body1: First body ID
-        body2: Second body ID
+    Parameters
+    ----------
+    jdate : float
+        Julian Date.
+    body1 : int
+        First body ID.
+    body2 : int
+        Second body ID.
 
-    Returns:
-        Tuple of (body1, body2, aspect_index, orb) or None if no aspect
+    Returns
+    -------
+    tuple or None
+        Tuple of (body1, body2, aspect_index, orb) or None if no aspect.
     """
     if body1 > body2:
         body1, body2 = body2, body1
@@ -59,14 +71,19 @@ def get_aspect(jdate: float, body1: int, body2: int) -> Optional[Tuple]:
 
 
 def calculate_aspects(jdate: float, l_bodies=bodies) -> np.ndarray:
-    """Calculate all aspects between bodies at a given date.
+    """Calculate all aspects between bodies at a given date
 
-    Args:
-        jdate: Julian Date
-        l_bodies: Bodies array (default: all bodies)
+    Parameters
+    ----------
+    jdate : float
+        Julian Date.
+    l_bodies : np.ndarray, optional
+        Bodies array (default: all bodies).
 
-    Returns:
-        Structured array with fields: body1, body2, i_asp, orb
+    Returns
+    -------
+    np.ndarray
+        Structured array with fields: body1, body2, i_asp, orb.
     """
     bodies_id = l_bodies["id"]
     aspects_data = [get_aspect(jdate, *comb) for comb in combs(bodies_id, 2)]
@@ -78,17 +95,22 @@ def calculate_aspects(jdate: float, l_bodies=bodies) -> np.ndarray:
 
 
 def calculate_aspects_vectorized(jdate: float, l_bodies=bodies) -> np.ndarray:
-    """Calculate all aspects using vectorized operations (faster).
+    """Calculate all aspects using vectorized operations (faster)
 
     This function computes all planetary aspects in parallel using NumPy
     broadcasting, which is significantly faster than the loop-based approach.
 
-    Args:
-        jdate: Julian Date
-        l_bodies: Array of bodies (default: all bodies)
+    Parameters
+    ----------
+    jdate : float
+        Julian Date.
+    l_bodies : np.ndarray, optional
+        Array of bodies (default: all bodies).
 
-    Returns:
-        Structured array of aspects with fields: body1, body2, i_asp, orb
+    Returns
+    -------
+    np.ndarray
+        Structured array of aspects with fields: body1, body2, i_asp, orb.
     """
     bodies_id = l_bodies["id"]
     n_bodies = len(bodies_id)
@@ -157,17 +179,22 @@ def calculate_aspects_vectorized(jdate: float, l_bodies=bodies) -> np.ndarray:
 
 
 def calculate_aspects_batch(jd_array: np.ndarray, l_bodies=bodies) -> List[np.ndarray]:
-    """Calculate aspects for multiple dates (batch processing).
+    """Calculate aspects for multiple dates (batch processing)
 
     This function efficiently computes aspects for multiple dates by leveraging
     vectorized position calculations.
 
-    Args:
-        jd_array: Array of Julian Dates
-        l_bodies: Array of bodies (default: all bodies)
+    Parameters
+    ----------
+    jd_array : np.ndarray
+        Array of Julian Dates.
+    l_bodies : np.ndarray, optional
+        Array of bodies (default: all bodies).
 
-    Returns:
-        List of structured arrays, one for each date, containing aspects
+    Returns
+    -------
+    list of np.ndarray
+        List of structured arrays, one for each date, containing aspects.
     """
     from ketu.ephemeris.planets import calc_planet_position_batch
 
@@ -239,16 +266,23 @@ def calculate_aspects_batch(jd_array: np.ndarray, l_bodies=bodies) -> List[np.nd
 
 
 def find_aspect_timing(jdate: float, body1: int, body2: int, aspect_value: float) -> Tuple[float, float, float]:
-    """Find beginning, exact, and end times for an aspect.
+    """Find beginning, exact, and end times for an aspect
 
-    Args:
-        jdate: Reference Julian Date
-        body1: First body ID
-        body2: Second body ID
-        aspect_value: Aspect angle in degrees
+    Parameters
+    ----------
+    jdate : float
+        Reference Julian Date.
+    body1 : int
+        First body ID.
+    body2 : int
+        Second body ID.
+    aspect_value : float
+        Aspect angle in degrees.
 
-    Returns:
-        Tuple of (begin_jd, exact_jd, end_jd)
+    Returns
+    -------
+    tuple of (float, float, float)
+        Tuple of (begin_jd, exact_jd, end_jd).
     """
     # Get the aspect index
     asp_idx = np.where(aspects["angle"] == aspect_value)[0]
@@ -297,16 +331,23 @@ def find_aspect_timing(jdate: float, body1: int, body2: int, aspect_value: float
 def find_aspects_between_dates(
     jdate_start: float, jdate_end: float, body1: Optional[int] = None, body2: Optional[int] = None
 ) -> List[Tuple]:
-    """Find all aspects between two dates.
+    """Find all aspects between two dates
 
-    Args:
-        jdate_start: Start Julian Date
-        jdate_end: End Julian Date
-        body1: First body ID (optional, if None check all)
-        body2: Second body ID (optional, if None check all)
+    Parameters
+    ----------
+    jdate_start : float
+        Start Julian Date.
+    jdate_end : float
+        End Julian Date.
+    body1 : int, optional
+        First body ID (optional, if None check all).
+    body2 : int, optional
+        Second body ID (optional, if None check all).
 
-    Returns:
-        List of tuples (jdate, body1, body2, aspect_type, aspect_value)
+    Returns
+    -------
+    list of tuple
+        List of tuples (jdate, body1, body2, aspect_type, aspect_value).
     """
     results = []
 

@@ -86,21 +86,30 @@ def _adaptive_grid_search(
     jd_start: float,
     jd_end: float,
 ) -> List[Tuple[float, float, str]]:
-    """Vectorized grid search to find all aspect crossing candidates.
+    """Vectorized grid search to find all aspect crossing candidates
 
     Uses adaptive sampling based on relative velocity of the two bodies.
     Automatically detects retrograde motion and multiple crossings.
 
-    Args:
-        body1_id: First body ID
-        body2_id: Second body ID
-        aspect_angle: Target aspect angle (degrees)
-        orb: Orb tolerance (degrees)
-        jd_start: Start Julian Date
-        jd_end: End Julian Date
+    Parameters
+    ----------
+    body1_id : int
+        First body ID.
+    body2_id : int
+        Second body ID.
+    aspect_angle : float
+        Target aspect angle (degrees).
+    orb : float
+        Orb tolerance (degrees).
+    jd_start : float
+        Start Julian Date.
+    jd_end : float
+        End Julian Date.
 
-    Returns:
-        List of (jd_crossing, orb_value, motion) tuples for refinement
+    Returns
+    -------
+    list of tuple
+        List of (jd_crossing, orb_value, motion) tuples for refinement.
     """
     # Calculate adaptive step size using refactored function
     avg_speed1 = bodies["speed"][body1_id]
@@ -153,15 +162,21 @@ def _adaptive_grid_search(
 
 
 def _make_aspect_distance_callback(body1_id: int, body2_id: int, aspect_angle: float):
-    """Create callback for aspect distance calculation (for refinement).
+    """Create callback for aspect distance calculation (for refinement)
 
-    Args:
-        body1_id: First body ID
-        body2_id: Second body ID
-        aspect_angle: Target aspect angle
+    Parameters
+    ----------
+    body1_id : int
+        First body ID.
+    body2_id : int
+        Second body ID.
+    aspect_angle : float
+        Target aspect angle.
 
-    Returns:
-        Callback function that takes JD and returns distance error
+    Returns
+    -------
+    callable
+        Callback function that takes JD and returns distance error.
     """
     def callback(jd: float) -> float:
         pos1 = long(jd, body1_id)
@@ -172,16 +187,23 @@ def _make_aspect_distance_callback(body1_id: int, body2_id: int, aspect_angle: f
 
 
 def _make_aspect_orb_callback(body1_id: int, body2_id: int, aspect_angle: float, orb: float):
-    """Create callback to check if within orb (for boundary finding).
+    """Create callback to check if within orb (for boundary finding)
 
-    Args:
-        body1_id: First body ID
-        body2_id: Second body ID
-        aspect_angle: Target aspect angle
-        orb: Orb tolerance
+    Parameters
+    ----------
+    body1_id : int
+        First body ID.
+    body2_id : int
+        Second body ID.
+    aspect_angle : float
+        Target aspect angle.
+    orb : float
+        Orb tolerance.
 
-    Returns:
-        Callback function that takes JD and returns bool (within orb?)
+    Returns
+    -------
+    callable
+        Callback function that takes JD and returns bool (within orb?).
     """
     def callback(jd: float) -> bool:
         pos1 = long(jd, body1_id)
@@ -204,34 +226,47 @@ def find_aspect_window(
     custom_orb: Optional[float] = None,
     detect_retrograde: bool = True,
 ) -> AspectWindow:
-    """Find aspect window with begin, exact, and end times.
+    """Find aspect window with begin, exact, and end times
 
     This is the main API function for finding aspect timing windows.
     It automatically handles retrograde motion and can detect up to 3
     exact moments when a planet retrogrades during the aspect.
 
-    Args:
-        body1: First body (name or ID)
-        body2: Second body (name or ID)
-        aspect: Aspect (name, index, or angle)
-        around_date: Reference date (datetime, ISO string, or Julian Date)
-        search_days: Days to search before/after reference (default: 30)
-        custom_orb: Custom orb in degrees (default: use calculated orb)
-        detect_retrograde: Enable multi-pass retrograde detection (default: True)
+    Parameters
+    ----------
+    body1 : str or int
+        First body (name or ID).
+    body2 : str or int
+        Second body (name or ID).
+    aspect : str, int, or float
+        Aspect (name, index, or angle).
+    around_date : datetime, str, or float
+        Reference date (datetime, ISO string, or Julian Date).
+    search_days : float, optional
+        Days to search before/after reference (default: 30).
+    custom_orb : float, optional
+        Custom orb in degrees (default: use calculated orb).
+    detect_retrograde : bool, optional
+        Enable multi-pass retrograde detection (default: True).
 
-    Returns:
-        AspectWindow with all timing information
+    Returns
+    -------
+    AspectWindow
+        AspectWindow with all timing information.
 
-    Examples:
-        >>> # Full Moon (Sun-Moon opposition)
-        >>> result = find_aspect_window("Sun", "Moon", "Opposition", "2025-11-15")
-        >>> print(result.moments[0].exact)
+    Examples
+    --------
+    Full Moon (Sun-Moon opposition):
 
-        >>> # Mars-Jupiter square with retrograde
-        >>> result = find_aspect_window("Mars", "Jupiter", "Square",
-        ...                              "2025-08-15", search_days=180,
-        ...                              detect_retrograde=True)
-        >>> print(f"Found {len(result.moments)} exact moments")
+    >>> result = find_aspect_window("Sun", "Moon", "Opposition", "2025-11-15")
+    >>> print(result.moments[0].exact)
+
+    Mars-Jupiter square with retrograde:
+
+    >>> result = find_aspect_window("Mars", "Jupiter", "Square",
+    ...                              "2025-08-15", search_days=180,
+    ...                              detect_retrograde=True)
+    >>> print(f"Found {len(result.moments)} exact moments")
     """
     # Convert inputs
     body1_id = _get_body_id(body1)
@@ -351,33 +386,45 @@ def find_aspects_timeline(
     custom_orb: Optional[float] = None,
     detect_retrograde: bool = True,
 ) -> List[AspectWindow]:
-    """Find timeline of multiple aspects between two bodies.
+    """Find timeline of multiple aspects between two bodies
 
     This function finds all specified aspects between two bodies within
     a date range, sorted chronologically by exact aspect time.
 
-    Args:
-        body1: First body (name or ID)
-        body2: Second body (name or ID)
-        aspects_list: List of aspects to find (default: all major aspects)
-        start_date: Start date (datetime, ISO string, or Julian Date)
-        end_date: End date (datetime, ISO string, or Julian Date)
-        custom_orb: Custom orb in degrees (default: use calculated orbs)
-        detect_retrograde: Enable multi-pass retrograde detection (default: True)
+    Parameters
+    ----------
+    body1 : str or int
+        First body (name or ID).
+    body2 : str or int
+        Second body (name or ID).
+    aspects_list : list of (str or int), optional
+        List of aspects to find (default: all major aspects).
+    start_date : datetime, str, or float, optional
+        Start date (datetime, ISO string, or Julian Date).
+    end_date : datetime, str, or float, optional
+        End date (datetime, ISO string, or Julian Date).
+    custom_orb : float, optional
+        Custom orb in degrees (default: use calculated orbs).
+    detect_retrograde : bool, optional
+        Enable multi-pass retrograde detection (default: True).
 
-    Returns:
-        List of AspectWindow objects sorted by exact time
+    Returns
+    -------
+    list of AspectWindow
+        List of AspectWindow objects sorted by exact time.
 
-    Examples:
-        >>> # All Sun-Moon aspects in 2025
-        >>> timeline = find_aspects_timeline(
-        ...     "Sun", "Moon",
-        ...     aspects_list=["Conjunction", "Sextile", "Square", "Trine", "Opposition"],
-        ...     start_date="2025-01-01",
-        ...     end_date="2025-12-31"
-        ... )
-        >>> for window in timeline:
-        ...     print(f"{window.aspect}: {window.moments[0].exact}")
+    Examples
+    --------
+    All Sun-Moon aspects in 2025:
+
+    >>> timeline = find_aspects_timeline(
+    ...     "Sun", "Moon",
+    ...     aspects_list=["Conjunction", "Sextile", "Square", "Trine", "Opposition"],
+    ...     start_date="2025-01-01",
+    ...     end_date="2025-12-31"
+    ... )
+    >>> for window in timeline:
+    ...     print(f"{window.aspect}: {window.moments[0].exact}")
     """
     # Default to all major aspects
     if aspects_list is None:
