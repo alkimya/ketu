@@ -25,10 +25,11 @@ Ketu 1.0 consolidates a working astronomical calculation library from v0.4.0 to 
   2. `ketu.__all__` explicitly lists every public function and type
   3. User installs fresh wheel in clean venv without matplotlib/icalendar dependencies
   4. UPGRADING.md provides migration examples for removed export modules
-**Plans**: TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 01-01: TBD
+- [ ] 01-01-PLAN.md — Delete export modules, rewrite __init__.py, clean pyproject.toml, update test imports
+- [ ] 01-02-PLAN.md — Write UPGRADING.md migration guide, verify cleanup
 
 ### Phase 2: Correctness Fixes
 **Goal**: All known CONCERNS.md bugs are resolved with regression tests
@@ -119,7 +120,7 @@ Plans:
 
 | Phase | Plans Complete | Status | Completed |
 |-------|----------------|--------|-----------|
-| 1. API Surface Cleanup | 0/TBD | Not started | - |
+| 1. API Surface Cleanup | 0/2 | Planning complete | - |
 | 2. Correctness Fixes | 0/TBD | Not started | - |
 | 3. Dependency Cleanup | 0/TBD | Not started | - |
 | 4. Test Coverage Hardening | 0/TBD | Not started | - |
