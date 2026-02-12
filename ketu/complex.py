@@ -307,8 +307,8 @@ class CycleRatio:
     """
     point1: ZodiacPoint
     point2: ZodiacPoint
-    z: complex = None
-    radians: float = None
+    z: Optional[complex] = None
+    radians: Optional[float] = None
 
     def __post_init__(self):
         if self.z is None:

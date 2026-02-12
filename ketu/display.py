@@ -26,7 +26,7 @@ from .aspects import (
 )
 
 
-def print_positions(jdate: float):
+def print_positions(jdate: float) -> None:
     """Print formatted positions of all bodies for a given date
 
     Parameters
@@ -42,7 +42,7 @@ def print_positions(jdate: float):
         print(f"{body_name(*index):10}: " f"{signs[sign]:15}{degs:>2}º{mins:>2}'{secs:>2}\"{retro}")
 
 
-def print_aspects(jdate: float):
+def print_aspects(jdate: float) -> None:
     """Print formatted aspects between all bodies for a given date
 
     Parameters
@@ -64,7 +64,7 @@ def print_aspects(jdate: float):
         )
 
 
-def main():
+def main() -> None:
     """Main CLI entry point for interactive astronomical calculations."""
     try:
         year, month, day = map(int, input("Give a date with ISO format, ex: 2020-12-21\n").split("-"))

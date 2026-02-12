@@ -191,7 +191,7 @@ def select_primary_lunar_cycle(year: int, month: int, new_moons: List[datetime])
 def generate_lunar_calendar(
     year: int,
     month: int,
-    aspects: Optional[List] = None,
+    aspects: Optional[List[int]] = None,
     timezone: Optional[Union[str, ZoneInfo]] = None
 ) -> LunarCalendar:
     """Generate a lunar calendar for a given month

@@ -17,7 +17,7 @@ Storage:
 import calendar
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
-from typing import Optional, Dict, Tuple, Union
+from typing import Optional, Dict, Tuple, Union, List
 import numpy as np
 
 from ketu.ephemeris.time import utc_to_julian
@@ -70,7 +70,7 @@ class EphemerisCache:
         self._memory_cache: Dict[Tuple[int, int], np.ndarray] = {}
 
         # Track which months are loaded
-        self._loaded_months: set = set()
+        self._loaded_months: set[Tuple[int, int]] = set()
 
     def _cache_path(self, year: int, month: int) -> Path:
         """Get path to cache file for a given month."""
@@ -287,7 +287,7 @@ class EphemerisCache:
 
     def get_positions_batch(
         self,
-        timestamps: list,
+        timestamps: List[datetime],
         body_id: int,
         interpolate: bool = True,
     ) -> np.ndarray:
@@ -316,7 +316,7 @@ class EphemerisCache:
 
     def get_positions_vectorized(
         self,
-        timestamps: list,
+        timestamps: List[datetime],
         body_id: int,
     ) -> Tuple[np.ndarray, np.ndarray]:
         """Get longitude and velocity for a body across timestamps (vectorized)
@@ -427,7 +427,7 @@ class EphemerisCache:
 
     def get_longitudes_batch(
         self,
-        timestamps: list,
+        timestamps: List[datetime],
         body_id: int,
     ) -> np.ndarray:
         """Get longitudes only for a single body (fast path)
@@ -452,7 +452,7 @@ class EphemerisCache:
         self._memory_cache.clear()
         self._loaded_months.clear()
 
-    def cache_stats(self) -> Dict:
+    def cache_stats(self) -> Dict[str, Union[int, float, List[str]]]:
         """Get cache statistics."""
         disk_files = list(self.cache_dir.glob("*-ephemeris.npy"))
         memory_size = sum(

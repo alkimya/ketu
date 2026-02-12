@@ -12,7 +12,7 @@ using Gaussian scoring, providing a fluid signal for the AI agent.
 
 import numpy as np
 from datetime import datetime, timezone
-from typing import List, Dict, Optional, Union
+from typing import List, Dict, Optional, Union, Tuple
 
 from .ephemeris.time import utc_to_julian
 from .ephemeris.planets import calc_planet_position, calc_planet_position_batch, BODY_INDICES
@@ -175,7 +175,7 @@ class ResonanceField:
 
         return result
 
-    def _get_trace(self, pid: int, jds: np.ndarray):
+    def _get_trace(self, pid: int, jds: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
         """Calculate 3D trace for a single body over many JDs (vectorized)."""
         # Uses batch API (bypasses LRU cache, faster for arrays)
         # Batch ephemeris: shape (n, 6) = [lon, lat, dist, lon_speed, lat_speed, dist_speed]

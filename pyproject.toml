@@ -80,3 +80,37 @@ exclude_lines = [
     "raise NotImplementedError",
     "if __name__ == .__main__.:",
 ]
+
+# CI: pip install mypy numpy
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_configs = true
+
+[[tool.mypy.overrides]]
+module = ["swisseph.*"]
+ignore_missing_imports = true
+
+[[tool.mypy.overrides]]
+module = [
+    "ketu.export.*",
+]
+ignore_errors = true
+
+[[tool.mypy.overrides]]
+module = [
+    "ketu.calculations",
+    "ketu.complex",
+    "ketu.cycles.*",
+    "ketu.ephemeris.*",
+    "ketu.aspects.*",
+    "ketu.resonance",
+    "ketu.lunar_calendar",
+    "ketu.cache.ephemeris_cache",
+]
+disable_error_code = ["misc", "no-untyped-def", "no-untyped-call", "arg-type", "return-value", "assignment", "operator", "union-attr", "no-any-return", "type-arg", "var-annotated", "unused-ignore", "index"]
+
+[[tool.mypy.overrides]]
+module = "tests.*"
+disallow_untyped_defs = false

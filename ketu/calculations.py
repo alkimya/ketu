@@ -456,7 +456,7 @@ def body_sign(b_long: float) -> Tuple[int, int, int, int]:
     return sign, degs, mins, secs
 
 
-def positions(jdate: float, l_bodies=bodies) -> np.ndarray:
+def positions(jdate: float, l_bodies: np.ndarray = bodies) -> np.ndarray:
     """Get ecliptic longitudes of all bodies
 
     Parameters
