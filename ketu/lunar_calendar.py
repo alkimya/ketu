@@ -11,7 +11,9 @@ import calendar
 
 from .calculations import utc_to_julian, julian_to_utc
 from ketu.aspects import find_aspect_window, AspectWindow
-from .export.constants import BIG_FIVE
+
+# Major aspect angles (conjunction, sextile, square, trine, opposition)
+BIG_FIVE = [0, 60, 90, 120, 180]
 
 
 class LunarCycle(NamedTuple):
