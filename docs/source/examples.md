@@ -104,7 +104,7 @@ def search_transits(natal_date, transit_date, planets_to_follow=None):
     transits = []
     
     for i_transit in planets_to_follow:
-        transit_pos = ketu.long(transit_jday, transit_i)
+        transit_pos = ketu.long(transit_jday, i_transit)
         
         for natal_i, natal_pos in natal_positions.items():
             # Calculate the aspect
@@ -114,15 +114,15 @@ def search_transits(natal_date, transit_date, planets_to_follow=None):
             
             # Check each aspect type
             for j, angle in enumerate(ketu.aspects[“value”]):
-                max_orb = ketu.get_orb(i_transit, i_natal, j)
+                max_orb = ketu.get_orb(i_transit, natal_i, j)
                 orb = abs(diff - angle)
                 
                 if orb <= max_orb:
                     transit = Transit(
                         planet=ketu.body_name(i_transit),
                         aspect=ketu.aspects[“name”][j].decode(),
-                        natal_planet=ketu.body_name(i_natal),
-                        date=date_transit,
+                        natal_planet=ketu.body_name(natal_i),
+                        date=transit_date,
                         orb=orb,
                         exact=(orb < 1.0)
                     )
@@ -184,7 +184,7 @@ def analyze_period(start_date, end_date, step_days=1):
         if prev_retros is not None:
             for i, (r1, r2) in enumerate(zip(prev_retros, retros)):
                 if r1 != r2:
-                    results[“retrogradations”].append({
+                    results["retrogrades"].append({
                         “date”: current,
                         “planet”: ketu.body_name(i),
                         “status”: ‘Retrograde’ if r2 else “Direct”
@@ -204,7 +204,7 @@ def analyze_period(start_date, end_date, step_days=1):
         
         prev_signs = signs
         prev_retros = retros
-        current += timedelta(days=days_per_month)
+        current += timedelta(days=step_days)
     
     return results
 
@@ -214,7 +214,7 @@ end = (start + timedelta(days=32)).replace(day=1) - timedelta(days=1)
 
 analysis = analyze_period(start, end)
 print(f“Sign changes: {len(analysis[‘sign_changes’])}”)
-print(f“Direction changes: {len(analysis[‘retrogradations’])}”)
+print(f"Direction changes: {len(analysis['retrogrades'])}")
 print(f“Exact aspects: {len(analysis[‘exact_aspects’])}”)
 ```
 
@@ -274,9 +274,9 @@ def detect_configuration(jday) -> Optional[str]:
                             return f“Yod with apex {ketu.body_name(apex)}”
         
         case _:
-    return None
+            return None
 
-return None
+    return None
 
 # Test
 jday = ketu.utc_to_julian(datetime.now())

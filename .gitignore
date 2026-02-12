@@ -1,6 +1,7 @@
 /.vscode
 /.pytest_cache
 /docs/build/
+/docs/_build/
 /docs/RELEASE.md
 /scripts/
 /.venv/

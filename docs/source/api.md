@@ -26,7 +26,7 @@ Structured array containing celestial body information.
 **Structure:**
 
 - `name` (S12): Body name
-- `id` (i4): Swiss Ephemeris identifier
+- `id` (i4): Body identifier
 - `orb` (f4): Orb in degrees
 - `speed` (f4): Average speed in °/day
 
@@ -333,7 +333,7 @@ Entry point for the interactive CLI interface.
 ## Technical Notes
 
 - Calculations use `@lru_cache` to optimize performance
-- Body IDs follow the Swiss Ephemeris convention
+- Body IDs follow Ketu's convention (0=Sun through 12=Lilith)
 - Angles are always in degrees (0-360)
 - Time precision is approximately 1 second
 
@@ -341,7 +341,7 @@ Entry point for the interactive CLI interface.
 
 - [Concepts](concepts.md) for theory
 - [Examples](examples.md) for more use cases
-- [Swiss Ephemeris](https://www.astro.com/swisseph/) for technical details
+- [Architecture](architecture.md) for implementation details
 
 ## Complex Analysis
 

@@ -58,12 +58,12 @@ ketu
 ```python
 import ketu
 print(ketu.__version__)
-# Output: 0.3.0
+# Output: 1.0.0
 ```
 
 ## Dependencies
 
-Ketu uses thefollowing libraries:
+Ketu uses the following libraries:
 
 Library         |   Version |   Description
 ----------------|-----------|--------------

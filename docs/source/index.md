@@ -34,6 +34,7 @@ migration
 architecture
 performance
 contributing
+acknowledgments
 ```
 
 ## Main Features
@@ -92,7 +93,7 @@ ketu.print_aspects(jday)
 
 ## License
 
-MIT License - Copyright (c) 2021-2025 Loc Cosnier
+MIT License - Copyright (c) 2021-2026 Loc Cosnier
 
 ## Contact
 

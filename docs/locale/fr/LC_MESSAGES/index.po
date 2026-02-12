@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-02 22:42+0100\n"
+"POT-Creation-Date: 2026-02-12 23:04+0100\n"
 "PO-Revision-Date: 2026-02-12 00:00+0000\n"
 "Last-Translator: Claude Code <noreply@anthropic.com>\n"
-"Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Generated-By: Babel 2.17.0\n"
+"Generated-By: Babel 2.18.0\n"
 
 #: ../../source/index.md:19
 msgid "API"
@@ -39,18 +39,19 @@ msgid ""
 "**Ketu** is a Python library for calculating planetary positions and "
 "planetary aspects using pure NumPy."
 msgstr ""
-"**Ketu** est une bibliothèque Python pour calculer les positions planétaires "
-"et les aspects planétaires en utilisant NumPy pur."
+"**Ketu** est une bibliothèque Python pour calculer les positions "
+"planétaires et les aspects planétaires en utilisant NumPy pur."
 
 #: ../../source/index.md:5
 msgid ""
-"The library was originally designed to produce biodynamic calendars and time"
-" series driven by planetary aspects, and it can serve as a foundation for "
-"building astrology software."
+"The library was originally designed to produce biodynamic calendars and "
+"time series driven by planetary aspects, and it can serve as a foundation"
+" for building astrology software."
 msgstr ""
 "La bibliothèque a été conçue à l'origine pour produire des calendriers "
-"biodynamiques et des séries temporelles basées sur les aspects planétaires, "
-"et elle peut servir de fondation pour développer des logiciels d'astrologie."
+"biodynamiques et des séries temporelles basées sur les aspects "
+"planétaires, et elle peut servir de fondation pour développer des "
+"logiciels d'astrologie."
 
 #: ../../source/index.md:7
 msgid "Overview"
@@ -62,11 +63,11 @@ msgstr "Ketu vous permet de :"
 
 #: ../../source/index.md:11
 msgid ""
-"Calculate precise positions of celestial bodies (Sun, Moon, planets, Nodes, "
-"Lilith)"
+"Calculate precise positions of celestial bodies (Sun, Moon, planets, "
+"Nodes, Lilith)"
 msgstr ""
-"Calculer les positions précises des corps célestes (Soleil, Lune, planètes, "
-"Nœuds, Lilith)"
+"Calculer les positions précises des corps célestes (Soleil, Lune, "
+"planètes, Nœuds, Lilith)"
 
 #: ../../source/index.md:12
 msgid "Determine aspects between planets"
@@ -88,11 +89,11 @@ msgstr "Générer des séries temporelles d'aspects"
 msgid "Navigation"
 msgstr "Navigation"
 
-#: ../../source/index.md:39
+#: ../../source/index.md:40
 msgid "Main Features"
 msgstr "Fonctionnalités principales"
 
-#: ../../source/index.md:41
+#: ../../source/index.md:42
 msgid "Supported Celestial Bodies"
 msgstr "Corps célestes supportés"
 
@@ -280,7 +281,7 @@ msgstr "⚸"
 msgid "-0.113°/day"
 msgstr "-0.113°/jour"
 
-#: ../../source/index.md:58
+#: ../../source/index.md:59
 msgid "Major Aspects"
 msgstr "Aspects majeurs"
 
@@ -404,48 +405,49 @@ msgstr "180°"
 msgid "☍"
 msgstr "☍"
 
-#: ../../source/index.md:70
+#: ../../source/index.md:71
 msgid "Quick Example"
 msgstr "Exemple rapide"
 
-#: ../../source/index.md:87
+#: ../../source/index.md:88
 msgid "Indices and Tables"
 msgstr "Indices et tables"
 
-#: ../../source/index.md:89
+#: ../../source/index.md:90
 #, python-brace-format
 msgid "{ref}`genindex`"
 msgstr "{ref}`genindex`"
 
-#: ../../source/index.md:91
+#: ../../source/index.md:92
 #, python-brace-format
 msgid "{ref}`search`"
 msgstr "{ref}`search`"
 
-#: ../../source/index.md:93
+#: ../../source/index.md:94
 msgid "License"
 msgstr "Licence"
 
-#: ../../source/index.md:95
-msgid "MIT License - Copyright (c) 2021-2025 Loc Cosnier"
-msgstr "Licence MIT - Copyright (c) 2021-2025 Loc Cosnier"
+#: ../../source/index.md:96
+msgid "MIT License - Copyright (c) 2021-2026 Loc Cosnier"
+msgstr "Licence MIT - Copyright (c) 2021-2026 Loc Cosnier"
 
-#: ../../source/index.md:97
+#: ../../source/index.md:98
 msgid "Contact"
 msgstr "Contact"
 
-#: ../../source/index.md:99
+#: ../../source/index.md:100
 msgid "Author: Loc Cosnier"
 msgstr "Auteur : Loc Cosnier"
 
-#: ../../source/index.md:100
+#: ../../source/index.md:101
 msgid "Email: <loc.cosnier@pm.me>"
 msgstr "Email : <loc.cosnier@pm.me>"
 
-#: ../../source/index.md:101
+#: ../../source/index.md:102
 msgid "GitHub: alkimya/ketu"
 msgstr "GitHub : alkimya/ketu"
 
-#: ../../source/index.md:102
+#: ../../source/index.md:103
 msgid "PyPI: pypi.org/project/ketu"
 msgstr "PyPI : pypi.org/project/ketu"
+

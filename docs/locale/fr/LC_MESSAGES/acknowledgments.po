@@ -1,0 +1,92 @@
+# French translations for Ketu package.
+# Copyright (C) 2026, Loc Cosnier
+# This file is distributed under the same license as the Ketu package.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Ketu 1.0.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2026-02-12 23:04+0100\n"
+"PO-Revision-Date: 2026-02-12 23:30+0100\n"
+"Last-Translator: Loc Cosnier <loc.cosnier@pm.me>\n"
+"Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.18.0\n"
+
+#: ../../source/acknowledgments.md:1
+msgid "Acknowledgments"
+msgstr "Remerciements"
+
+#: ../../source/acknowledgments.md:3
+msgid "Mathematical Foundation"
+msgstr "Fondation mathématique"
+
+#: ../../source/acknowledgments.md:5
+msgid ""
+"**[solarsystem](https://github.com/IoannisNasios/solarsystem)** by "
+"Ioannis Nasios — The pure Python astronomy library that inspired and "
+"served as the mathematical foundation for Ketu's NumPy ephemeris engine. "
+"Kepler's equation solver, perturbation terms, coordinate transformations,"
+" and Moon calculations all trace back to this elegant, dependency-free "
+"library. Thank you!"
+msgstr ""
+"**[solarsystem](https://github.com/IoannisNasios/solarsystem)** par "
+"Ioannis Nasios — La bibliothèque Python pure d'astronomie qui a inspiré "
+"et servi de fondation mathématique au moteur d'éphémérides NumPy de Ketu. "
+"Le solveur de l'équation de Kepler, les termes de perturbation, les "
+"transformations de coordonnées et les calculs lunaires sont tous issus de "
+"cette bibliothèque élégante et sans dépendance. Merci !"
+
+#: ../../source/acknowledgments.md:7
+msgid "Collaboration"
+msgstr "Collaboration"
+
+#: ../../source/acknowledgments.md:9
+msgid ""
+"**[Claude](https://claude.ai)** by Anthropic — The pure NumPy rewrite, "
+"from orbital mechanics to aspect detection, was developed in "
+"collaboration with Claude. Architecture, algorithms, tests, and "
+"documentation were produced through extensive pair programming sessions."
+msgstr ""
+"**[Claude](https://claude.ai)** par Anthropic — La réécriture NumPy pure, "
+"de la mécanique orbitale à la détection d'aspects, a été développée en "
+"collaboration avec Claude. Architecture, algorithmes, tests et "
+"documentation ont été produits au cours de sessions de pair programming."
+
+#: ../../source/acknowledgments.md:11
+msgid "Workflow"
+msgstr "Workflow"
+
+#: ../../source/acknowledgments.md:13
+msgid ""
+"**[GSD (Get Shit Done)](https://github.com/cdubyoo/gsd)** — The project "
+"management workflow that structured the development of Ketu v1.0.0 into "
+"phases with research, planning, execution, and verification steps."
+msgstr ""
+"**[GSD (Get Shit Done)](https://github.com/cdubyoo/gsd)** — Le workflow "
+"de gestion de projet qui a structuré le développement de Ketu v1.0.0 en "
+"phases de recherche, planification, exécution et vérification."
+
+#: ../../source/acknowledgments.md:15
+msgid "Other Influences"
+msgstr "Autres influences"
+
+#: ../../source/acknowledgments.md:17
+msgid "Original orbital calculations based on Paul Schlyter's work"
+msgstr "Calculs orbitaux originaux basés sur les travaux de Paul Schlyter"
+
+#: ../../source/acknowledgments.md:18
+msgid "Inspired by the accuracy and reliability of Swiss Ephemeris"
+msgstr "Inspiré par la précision et la fiabilité de Swiss Ephemeris"
+
+#: ../../source/acknowledgments.md:19
+msgid "Orb system based on Abu Ma'shar (787-886) and Al-Biruni (973-1050)"
+msgstr "Système d'orbes basé sur Abu Ma'shar (787-886) et Al-Biruni (973-1050)"
+
+#: ../../source/acknowledgments.md:20
+msgid "Built with the power of NumPy for scientific computing"
+msgstr "Construit avec la puissance de NumPy pour le calcul scientifique"

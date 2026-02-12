@@ -85,6 +85,22 @@ Aspects lean on the geometry of the zodiac circle: we often slice it into twelve
 - Semi-sextile (30°): 1/6 of semi-circle
 - Quincunx (150°): 5/6 of semi-circle
 
+#### Harmonic 5 (360°/5 = 72°)
+
+- Quintile (72°): 1/5 of circle
+- Biquintile (144°): 2/5 of circle
+
+#### Harmonic 9 (360°/9 = 40°)
+
+- Novile (40°): 1/9 of circle
+- Binovile (80°): 2/9 of circle
+- Quadrinovile (160°): 4/9 of circle
+
+#### Harmonic 10 (360°/10 = 36°)
+
+- Decile (36°): 1/10 of circle (semi-quintile)
+- Tredecile (108°): 3/10 of circle (tri-decile)
+
 ### Summary Table
 
 Harmonic | Division | Aspects
@@ -92,9 +108,12 @@ Harmonic | Division | Aspects
 1        | 180°/1   | Conjunction (0°), Opposition (180°)
 2        | 180°/2   | Square (90°)
 3        | 180°/3   | Sextile (60°), Trine (120°)
+5        | 360°/5   | Quintile (72°), Biquintile (144°)
 6        | 180°/6   | Semi-sextile (30°), Quincunx (150°)
+9        | 360°/9   | Novile (40°), Binovile (80°), Quadrinovile (160°)
+10       | 360°/10  | Decile (36°), Tredecile (108°)
 
-In practice, we use mainly harmonics 1, 2 and 3.
+Ketu v1.0.0 supports all 14 aspects across harmonics 1, 2, 3, 5, 6, 9, and 10.
 
 ## Orbs
 
@@ -120,17 +139,24 @@ Rahu, Lilith            | 0°
 
 ### Aspect Types and Harmonic Coefficients
 
-Ketu calculates 7 major aspects based on harmonics 1, 2, 3, and 6:
+Ketu calculates 14 aspects across harmonics 1, 2, 3, 5, 6, 9, and 10:
 
-Aspect       | Angle | Symbol | Harmonic | Coefficient
--------------|-------|--------|----------|------------
-Conjunction  | 0°    | ☌      | 1        | 1
-Semi-sextile | 30°   | ⚺      | 6        | 1/6
-Sextile      | 60°   | ⚹      | 3        | 1/3
-Square       | 90°   | □      | 2        | 1/2
-Trine        | 120°  | △      | 3        | 2/3
-Quincunx     | 150°  | ⚻      | 6        | 5/6
-Opposition   | 180°  | ☍      | 1        | 1
+Aspect         | Angle | Symbol | Harmonic | Coefficient
+---------------|-------|--------|----------|------------
+Conjunction    | 0°    | ☌      | 1        | 1
+Semi-sextile   | 30°   | ⚺      | 6        | 1/6
+Decile         | 36°   |        | 10       | 1/10
+Novile         | 40°   |        | 9        | 1/9
+Sextile        | 60°   | ⚹      | 3        | 1/3
+Quintile       | 72°   |        | 5        | 1/5
+Binovile       | 80°   |        | 9        | 2/9
+Square         | 90°   | □      | 2        | 1/2
+Tredecile      | 108°  |        | 10       | 3/10
+Trine          | 120°  | △      | 3        | 2/3
+Biquintile     | 144°  |        | 5        | 2/5
+Quincunx       | 150°  | ⚻      | 6        | 5/6
+Quadrinovile   | 160°  |        | 9        | 4/9
+Opposition     | 180°  | ☍      | 1        | 1
 
 ### Calculation Examples
 

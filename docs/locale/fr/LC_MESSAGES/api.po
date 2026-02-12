@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 21:33+0100\n"
+"POT-Creation-Date: 2026-02-12 23:04+0100\n"
 "PO-Revision-Date: 2026-02-12 22:00+0100\n"
 "Last-Translator: Claude <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -67,8 +67,8 @@ msgid "`name` (S12): Body name"
 msgstr "`name` (S12) : Nom du corps"
 
 #: ../../source/api.md:29
-msgid "`id` (i4): Swiss Ephemeris identifier"
-msgstr "`id` (i4) : Identifiant Swiss Ephemeris"
+msgid "`id` (i4): Body identifier"
+msgstr "`id` (i4) : Identifiant du corps"
 
 #: ../../source/api.md:30
 msgid "`orb` (f4): Orb in degrees"
@@ -238,7 +238,9 @@ msgstr "`body` : ID du corps"
 msgid ""
 "**Returns:** array [longitude, latitude, distance, long_velocity, "
 "lat_velocity, dist_velocity]"
-msgstr "**Retour :** array [longitude, latitude, distance, long_velocity, lat_velocity, dist_velocity]"
+msgstr ""
+"**Retour :** array [longitude, latitude, distance, long_velocity, "
+"lat_velocity, dist_velocity]"
 
 #: ../../source/api.md:207
 msgid "`long()`, `lat()`, `dist_au()`"
@@ -377,8 +379,8 @@ msgid "Calculations use `@lru_cache` to optimize performance"
 msgstr "Les calculs utilisent `@lru_cache` pour optimiser les performances"
 
 #: ../../source/api.md:336
-msgid "Body IDs follow the Swiss Ephemeris convention"
-msgstr "Les IDs de corps suivent la convention Swiss Ephemeris"
+msgid "Body IDs follow Ketu's convention (0=Sun through 12=Lilith)"
+msgstr "Les IDs de corps suivent la convention de Ketu (0=Soleil à 12=Lilith)"
 
 #: ../../source/api.md:337
 msgid "Angles are always in degrees (0-360)"
@@ -401,8 +403,8 @@ msgid "[Examples](examples.md) for more use cases"
 msgstr "[Exemples](examples.md) pour plus de cas d'usage"
 
 #: ../../source/api.md:344
-msgid "[Swiss Ephemeris](https://www.astro.com/swisseph/) for technical details"
-msgstr "[Swiss Ephemeris](https://www.astro.com/swisseph/) pour les détails techniques"
+msgid "[Architecture](architecture.md) for implementation details"
+msgstr "[Architecture](architecture.md) pour les détails d'implémentation"
 
 #: ../../source/api.md:346
 msgid "Complex Analysis"
@@ -414,7 +416,9 @@ msgstr "`ketu.complex`"
 
 #: ../../source/api.md:350
 msgid "New in v0.4.0. Provides vector-safe cycle analysis using complex numbers."
-msgstr "Nouveau en v0.4.0. Fournit une analyse de cycles vectorielle avec nombres complexes."
+msgstr ""
+"Nouveau en v0.4.0. Fournit une analyse de cycles vectorielle avec nombres"
+" complexes."
 
 #: ../../source/api.md:365
 msgid "`ZodiacPoint`"
@@ -446,4 +450,14 @@ msgstr "`nearest_aspect` : Trouve l'aspect H1-H10 le plus proche"
 
 #~ msgid "`vlong()`, `vlat()`, `vdist_au()`"
 #~ msgstr "### `vlong()`, `vlat()`, `vdist_au()`"
+
+#~ msgid "Body IDs follow the Swiss Ephemeris convention"
+#~ msgstr "Les IDs de corps suivent la convention Swiss Ephemeris"
+
+#~ msgid ""
+#~ "[Swiss Ephemeris](https://www.astro.com/swisseph/) for "
+#~ "technical details"
+#~ msgstr ""
+#~ "[Swiss Ephemeris](https://www.astro.com/swisseph/) pour"
+#~ " les détails techniques"
 

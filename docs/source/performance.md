@@ -1,6 +1,6 @@
 # Performance Guide
 
-Ketu v0.3.0 uses pure NumPy vectorization to achieve massive performance improvements over the previous version.
+Ketu uses pure NumPy vectorization to achieve massive performance improvements over the previous version.
 
 ## Benchmarks
 
@@ -177,11 +177,3 @@ stats.sort_stats('cumulative')
 stats.print_stats(10)
 ```
 
-## Future Optimizations
-
-Planned performance improvements:
-
-- [ ] JIT compilation with Numba (optional)
-- [ ] Parallel computation for independent bodies
-- [ ] SIMD optimizations for coordinate transformations
-- [ ] GPU acceleration for large-scale calculations (optional)

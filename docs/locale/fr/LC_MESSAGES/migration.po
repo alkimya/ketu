@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 21:33+0100\n"
+"POT-Creation-Date: 2026-02-12 23:04+0100\n"
 "PO-Revision-Date: 2026-02-12 23:00+0100\n"
 "Last-Translator: Claude Code <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -76,12 +76,10 @@ msgstr ""
 
 #: ../../source/migration.md:17
 msgid ""
-"**Migration**: If you need these features, pin to `ketu==0.4.0` or "
-"implement visualization in your application layer using Ketu's "
-"calculation results."
+"**Migration**: Implement visualization in your application layer using "
+"Ketu's calculation results."
 msgstr ""
-"**Migration** : Si vous avez besoin de ces fonctionnalités, fixez la "
-"version à `ketu==0.4.0` ou implémentez la visualisation dans votre couche "
+"**Migration** : Implémentez la visualisation dans votre couche "
 "applicative en utilisant les résultats de calcul de Ketu."
 
 #: ../../source/migration.md:19
@@ -105,8 +103,8 @@ msgid ""
 "**Migration**: Use `import pandas as pd; df = pd.DataFrame(timeline)` for"
 " manual conversion"
 msgstr ""
-"**Migration** : Utilisez `import pandas as pd; df = pd.DataFrame(timeline)` "
-"pour une conversion manuelle"
+"**Migration** : Utilisez `import pandas as pd; df = "
+"pd.DataFrame(timeline)` pour une conversion manuelle"
 
 #: ../../source/migration.md:25
 msgid "Renamed: Velocity Functions (Breaking)"
@@ -129,8 +127,8 @@ msgid ""
 "**Why**: Explicit names prevent confusion. The old \"v\" prefix was "
 "ambiguous."
 msgstr ""
-"**Pourquoi** : Les noms explicites évitent la confusion. L'ancien préfixe "
-"\"v\" était ambigu."
+"**Pourquoi** : Les noms explicites évitent la confusion. L'ancien préfixe"
+" \"v\" était ambigu."
 
 #: ../../source/migration.md:32
 msgid "**Migration**: Use find-and-replace in your codebase:"
@@ -149,8 +147,8 @@ msgid ""
 "Functions accessed via submodule imports: `from ketu.calculations import "
 "long`"
 msgstr ""
-"Fonctions accessibles via des imports de sous-modules : `from ketu.calculations "
-"import long`"
+"Fonctions accessibles via des imports de sous-modules : `from "
+"ketu.calculations import long`"
 
 #: ../../source/migration.md:43
 msgid "`ketu.__all__` explicitly lists public API"
@@ -161,8 +159,9 @@ msgid ""
 "**Migration**: Most users won't notice this change. If you were importing"
 " from internal modules, switch to public API imports."
 msgstr ""
-"**Migration** : La plupart des utilisateurs ne remarqueront pas ce changement. "
-"Si vous importiez depuis des modules internes, passez aux imports de l'API publique."
+"**Migration** : La plupart des utilisateurs ne remarqueront pas ce "
+"changement. Si vous importiez depuis des modules internes, passez aux "
+"imports de l'API publique."
 
 #: ../../source/migration.md:47
 msgid "Correctness Fixes"
@@ -173,8 +172,8 @@ msgid ""
 "**IMPORTANT: These fixes change calculation results. Recompute cached "
 "0.4.0 results.**"
 msgstr ""
-"**IMPORTANT : Ces corrections modifient les résultats de calcul. Recalculez "
-"les résultats mis en cache de la version 0.4.0.**"
+"**IMPORTANT : Ces corrections modifient les résultats de calcul. "
+"Recalculez les résultats mis en cache de la version 0.4.0.**"
 
 #: ../../source/migration.md:51
 msgid "Fixed Issues"
@@ -185,8 +184,8 @@ msgid ""
 "**Cache operator precedence bug**: `use_cache=False` was ignored due to "
 "missing parentheses"
 msgstr ""
-"**Bug de précédence d'opérateur du cache** : `use_cache=False` était ignoré "
-"en raison de parenthèses manquantes"
+"**Bug de précédence d'opérateur du cache** : `use_cache=False` était "
+"ignoré en raison de parenthèses manquantes"
 
 #: ../../source/migration.md:54
 msgid ""
@@ -194,23 +193,24 @@ msgid ""
 "`calculate_aspects_vectorized()` now returns consistent results"
 msgstr ""
 "**Non-déterminisme de la vectorisation des aspects** : "
-"`calculate_aspects_vectorized()` retourne maintenant des résultats cohérents"
+"`calculate_aspects_vectorized()` retourne maintenant des résultats "
+"cohérents"
 
 #: ../../source/migration.md:55
 msgid ""
 "**Moon velocity wrapping**: Correct velocity at 360°/0° boundary (was "
 "showing ±360° spikes)"
 msgstr ""
-"**Enroulement de la vélocité lunaire** : Vélocité correcte à la frontière "
-"360°/0° (affichait auparavant des pics de ±360°)"
+"**Enroulement de la vélocité lunaire** : Vélocité correcte à la frontière"
+" 360°/0° (affichait auparavant des pics de ±360°)"
 
 #: ../../source/migration.md:57
 msgid ""
 "**Impact**: If you cached results from 0.4.0, recompute them with 1.0.0 "
 "for correctness."
 msgstr ""
-"**Impact** : Si vous avez mis en cache des résultats de la version 0.4.0, "
-"recalculez-les avec la version 1.0.0 pour assurer leur justesse."
+"**Impact** : Si vous avez mis en cache des résultats de la version 0.4.0,"
+" recalculez-les avec la version 1.0.0 pour assurer leur justesse."
 
 #: ../../source/migration.md:59
 msgid "New Features"
@@ -223,24 +223,24 @@ msgstr "**Annotations de type partout** : conformité au mode strict de mypy"
 #: ../../source/migration.md:62
 msgid "**NumPy-style docstrings**: Examples section in all public functions"
 msgstr ""
-"**Docstrings au style NumPy** : section Exemples dans toutes les fonctions "
-"publiques"
+"**Docstrings au style NumPy** : section Exemples dans toutes les "
+"fonctions publiques"
 
 #: ../../source/migration.md:63
 msgid ""
 "**Standardized error messages**: All `ValueError` messages include "
 "received value + valid options"
 msgstr ""
-"**Messages d'erreur standardisés** : Tous les messages `ValueError` incluent "
-"la valeur reçue + les options valides"
+"**Messages d'erreur standardisés** : Tous les messages `ValueError` "
+"incluent la valeur reçue + les options valides"
 
 #: ../../source/migration.md:64
 msgid ""
 "**Numerical precision guarantees**: ±1e-6° for angular separation "
 "(documented)"
 msgstr ""
-"**Garanties de précision numérique** : ±1e-6° pour la séparation angulaire "
-"(documenté)"
+"**Garanties de précision numérique** : ±1e-6° pour la séparation "
+"angulaire (documenté)"
 
 #: ../../source/migration.md:66
 msgid "Migration Steps"
@@ -255,8 +255,8 @@ msgid ""
 "Read [UPGRADING.md](../../UPGRADING.md) for detailed migration "
 "instructions."
 msgstr ""
-"Lisez [UPGRADING.md](../../UPGRADING.md) pour des instructions détaillées "
-"de migration."
+"Lisez [UPGRADING.md](../../UPGRADING.md) pour des instructions détaillées"
+" de migration."
 
 #: ../../source/migration.md:72
 msgid "Step 2: Update Package"
@@ -303,34 +303,44 @@ msgid "Rollback"
 msgstr "Retour Arrière"
 
 #: ../../source/migration.md:124
-msgid "If you need to rollback to v0.4.0:"
-msgstr "Si vous devez revenir à la version v0.4.0 :"
-
-#: ../../source/migration.md:130
 msgid ""
-"Note: v0.4.x will not receive further updates. v1.0.0 is the recommended "
-"version."
+"Versions 0.3.0 and 0.4.0 were not published to PyPI, so `pip install "
+"ketu==0.4.0` will not work. If you need the previous behavior, install "
+"from source:"
 msgstr ""
-"Note : v0.4.x ne recevra plus de mises à jour. v1.0.0 est la version "
-"recommandée."
+"Les versions 0.3.0 et 0.4.0 n'ont pas été publiées sur PyPI, donc "
+"`pip install ketu==0.4.0` ne fonctionnera pas. Si vous avez besoin du "
+"comportement précédent, installez depuis les sources :"
 
-#: ../../source/migration.md:132
+#: ../../source/migration.md:133
+msgid ""
+"Note: v1.0.0 is the first NumPy-based release on PyPI. The previous PyPI "
+"version is v0.2.1 (pyswisseph-based)."
+msgstr ""
+"Note : v1.0.0 est la première version basée sur NumPy publiée sur PyPI. La "
+"version PyPI précédente est v0.2.1 (basée sur pyswisseph)."
+
+#: ../../source/migration.md:135
 msgid "Getting Help"
 msgstr "Obtenir de l'Aide"
 
-#: ../../source/migration.md:134
+#: ../../source/migration.md:137
 msgid "If you encounter issues:"
 msgstr "Si vous rencontrez des problèmes :"
 
-#: ../../source/migration.md:136
+#: ../../source/migration.md:139
 msgid "Check [UPGRADING.md](../../UPGRADING.md) for detailed migration guide"
-msgstr "Consultez [UPGRADING.md](../../UPGRADING.md) pour un guide de migration détaillé"
+msgstr ""
+"Consultez [UPGRADING.md](../../UPGRADING.md) pour un guide de migration "
+"détaillé"
 
-#: ../../source/migration.md:137
+#: ../../source/migration.md:140
 msgid "Review [CHANGELOG.md](../../CHANGELOG.md) for complete list of changes"
-msgstr "Consultez [CHANGELOG.md](../../CHANGELOG.md) pour la liste complète des changements"
+msgstr ""
+"Consultez [CHANGELOG.md](../../CHANGELOG.md) pour la liste complète des "
+"changements"
 
-#: ../../source/migration.md:138
+#: ../../source/migration.md:141
 msgid "Open an [issue](https://github.com/alkimya/ketu/issues)"
 msgstr "Ouvrez une [issue](https://github.com/alkimya/ketu/issues)"
 
@@ -550,3 +560,16 @@ msgstr "Ouvrez une [issue](https://github.com/alkimya/ketu/issues)"
 
 #~ msgid "Review [examples](examples.md)"
 #~ msgstr ""
+
+#~ msgid "If you need to rollback to v0.4.0:"
+#~ msgstr "Si vous devez revenir à la version v0.4.0 :"
+
+#~ msgid ""
+#~ "Note: v0.4.x will not receive further"
+#~ " updates. v1.0.0 is the recommended "
+#~ "version."
+#~ msgstr ""
+#~ "Note : v0.4.x ne recevra plus de"
+#~ " mises à jour. v1.0.0 est la "
+#~ "version recommandée."
+

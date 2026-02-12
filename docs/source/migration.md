@@ -14,7 +14,7 @@ Ketu 1.0 is a pure calculation library. Visualization and calendar export featur
 - **Removed functions**: `draw_zodiacal_chart()`, `export_lunations_to_ical()`, `export_aspects_to_ical()`, `export_transits_to_ical()`
 - **Why**: Ketu focuses on numerical calculations. Visualization belongs in application layers (GUI, web dashboards, etc.)
 
-**Migration**: If you need these features, pin to `ketu==0.4.0` or implement visualization in your application layer using Ketu's calculation results.
+**Migration**: Implement visualization in your application layer using Ketu's calculation results.
 
 ### Removed: Pandas Dependency
 
@@ -121,13 +121,16 @@ If you cached calculation results from 0.4.0, recompute them for correctness.
 
 ## Rollback
 
-If you need to rollback to v0.4.0:
+Versions 0.3.0 and 0.4.0 were not published to PyPI, so `pip install ketu==0.4.0` will not work. If you need the previous behavior, install from source:
 
 ```bash
-pip install ketu==0.4.0
+git clone https://github.com/alkimya/ketu.git
+cd ketu
+git checkout v0.2.1  # Last published pre-NumPy version
+pip install .
 ```
 
-Note: v0.4.x will not receive further updates. v1.0.0 is the recommended version.
+Note: v1.0.0 is the first NumPy-based release on PyPI. The previous PyPI version is v0.2.1 (pyswisseph-based).
 
 ## Getting Help
 

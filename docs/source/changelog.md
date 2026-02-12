@@ -5,6 +5,29 @@ All notable changes to Ketu are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.0] - 2026-02-12
+
+### Breaking Changes
+
+- **Removed export modules**: `ketu.export.chart`, `ketu.export.icalendar` — Ketu is now a pure calculation library
+- **Removed pandas dependency**: `generate_aspect_timeline()` returns NumPy structured array; use `pd.DataFrame(timeline)` for manual conversion
+- **Renamed velocity functions**: `vlong()` → `long_velocity()`, `vlat()` → `lat_velocity()`, `vdist_au()` → `dist_velocity_au()`
+- **Public API surface**: `ketu.__init__.py` exports only metadata + core constants; functions accessed via submodule imports
+
+### Fixed
+
+- **Cache operator precedence bug**: `use_cache=False` was ignored due to missing parentheses
+- **Aspect vectorization non-determinism**: `calculate_aspects_vectorized()` now returns consistent results
+- **Moon velocity wrapping**: Correct velocity at 360°/0° boundary (was showing ±360° spikes)
+
+### Added
+
+- **Type hints everywhere**: mypy strict mode compliance
+- **NumPy-style docstrings**: Examples section in all public functions
+- **Standardized error messages**: All `ValueError` messages include received value and valid options
+- **Numerical precision guarantees**: ±1e-6° for angular separation (documented)
+- **98% test coverage**: 408 tests across all modules
+
 ## [0.4.0] - 2026-01-14
 
 ### Added 0.4.0

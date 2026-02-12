@@ -330,7 +330,8 @@ Project: [https://github.com/alkimya/ketu](https://github.com/alkimya/ketu)
 ## Acknowledgments
 
 - **[solarsystem](https://github.com/IoannisNasios/solarsystem)** by Ioannis Nasios — The pure Python astronomy library that inspired and served as the mathematical foundation for Ketu's NumPy ephemeris engine. Kepler's equation solver, perturbation terms, coordinate transformations, and Moon calculations all trace back to this elegant, dependency-free library. Thank you!
-- **[Claude](https://claude.ai)** by Anthropic — The pure NumPy rewrite, from orbital mechanics to aspect detection, was developed in collaboration with Claude. Architecture, algorithms, tests, documentation, and French translation were produced through extensive pair programming sessions.
+- **[Claude](https://claude.ai)** by Anthropic — The pure NumPy rewrite, from orbital mechanics to aspect detection, was developed in collaboration with Claude. Architecture, algorithms, tests, documentation were produced through extensive pair programming sessions.
+- **[GSD (Get Shit Done)](https://github.com/cdubyoo/gsd)** — The project management workflow that structured the development of Ketu v1.0.0 into phases with research, planning, execution, and verification steps.
 - Original orbital calculations based on Paul Schlyter's work
 - Inspired by the accuracy and reliability of Swiss Ephemeris
 - Built with the power of NumPy for scientific computing

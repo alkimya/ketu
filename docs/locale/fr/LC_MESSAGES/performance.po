@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-02 22:42+0100\n"
+"POT-Creation-Date: 2026-02-12 23:04+0100\n"
 "PO-Revision-Date: 2026-02-12 22:00+0100\n"
 "Last-Translator: Claude <noreply@anthropic.com>\n"
-"Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Generated-By: Babel 2.17.0\n"
+"Generated-By: Babel 2.18.0\n"
 
 #: ../../source/performance.md:1
 msgid "Performance Guide"
@@ -24,11 +24,12 @@ msgstr "# Guide de Performance"
 
 #: ../../source/performance.md:3
 msgid ""
-"Ketu v0.3.0 uses pure NumPy vectorization to achieve massive performance "
+"Ketu uses pure NumPy vectorization to achieve massive performance "
 "improvements over the previous version."
 msgstr ""
-"Ketu v0.3.0 utilise la vectorisation NumPy pure pour obtenir des "
-"améliorations de performance massives par rapport à la version précédente."
+"Ketu utilise la vectorisation NumPy pure pour obtenir des "
+"améliorations de performance massives par rapport à la version "
+"précédente."
 
 #: ../../source/performance.md:5
 msgid "Benchmarks"
@@ -123,8 +124,8 @@ msgid ""
 "All distance and angle calculations use NumPy broadcasting for efficient "
 "array operations:"
 msgstr ""
-"Tous les calculs de distance et d'angle utilisent le broadcasting NumPy pour"
-" des opérations efficaces sur les tableaux."
+"Tous les calculs de distance et d'angle utilisent le broadcasting NumPy "
+"pour des opérations efficaces sur les tableaux."
 
 #: ../../source/performance.md:88
 msgid "Optimized Kepler Solver"
@@ -160,7 +161,9 @@ msgstr "Tableaux structurés"
 
 #: ../../source/performance.md:100
 msgid "Aspect results use structured NumPy arrays for efficient storage:"
-msgstr "Les résultats d'aspects utilisent des tableaux NumPy structurés pour un stockage efficace :"
+msgstr ""
+"Les résultats d'aspects utilisent des tableaux NumPy structurés pour un "
+"stockage efficace :"
 
 #: ../../source/performance.md:109
 msgid "In-Place Operations"
@@ -171,8 +174,8 @@ msgid ""
 "Most calculations use in-place NumPy operations to minimize memory "
 "allocation."
 msgstr ""
-"La plupart des calculs utilisent des opérations NumPy en place pour minimiser "
-"l'allocation mémoire."
+"La plupart des calculs utilisent des opérations NumPy en place pour "
+"minimiser l'allocation mémoire."
 
 #: ../../source/performance.md:113
 msgid "Best Practices"
@@ -230,26 +233,21 @@ msgstr "Profiler votre code"
 msgid "To identify bottlenecks:"
 msgstr "Pour identifier les goulots d'étranglement :"
 
-#: ../../source/performance.md:180
-msgid "Future Optimizations"
-msgstr "Optimisations futures"
+#~ msgid "Future Optimizations"
+#~ msgstr "Optimisations futures"
 
-#: ../../source/performance.md:182
-msgid "Planned performance improvements:"
-msgstr "Améliorations de performance prévues :"
+#~ msgid "Planned performance improvements:"
+#~ msgstr "Améliorations de performance prévues :"
 
-#: ../../source/performance.md:184
-msgid "JIT compilation with Numba (optional)"
-msgstr "Compilation JIT avec Numba (optionnel)"
+#~ msgid "JIT compilation with Numba (optional)"
+#~ msgstr "Compilation JIT avec Numba (optionnel)"
 
-#: ../../source/performance.md:185
-msgid "Parallel computation for independent bodies"
-msgstr "Calcul parallèle pour les corps indépendants"
+#~ msgid "Parallel computation for independent bodies"
+#~ msgstr "Calcul parallèle pour les corps indépendants"
 
-#: ../../source/performance.md:186
-msgid "SIMD optimizations for coordinate transformations"
-msgstr "Optimisations SIMD pour les transformations de coordonnées"
+#~ msgid "SIMD optimizations for coordinate transformations"
+#~ msgstr "Optimisations SIMD pour les transformations de coordonnées"
 
-#: ../../source/performance.md:187
-msgid "GPU acceleration for large-scale calculations (optional)"
-msgstr "Accélération GPU pour les calculs à grande échelle (optionnel)"
+#~ msgid "GPU acceleration for large-scale calculations (optional)"
+#~ msgstr "Accélération GPU pour les calculs à grande échelle (optionnel)"
+
