@@ -105,7 +105,13 @@ def calc_planet_position(jd: float, planet_id: int, flags: int = 0) -> np.ndarra
         jd_delta = 0.01
         lon2, lat2, dist2 = get_moon_position(jd + jd_delta)
 
-        lon_speed = (lon2 - lon) / jd_delta
+        # Handle longitude wrapping at 360/0 boundary
+        lon_diff = lon2 - lon
+        if lon_diff > 180:
+            lon_diff -= 360
+        elif lon_diff < -180:
+            lon_diff += 360
+        lon_speed = lon_diff / jd_delta
         lat_speed = (lat2 - lat) / jd_delta
         dist_speed = (dist2 - dist) / jd_delta
 
@@ -467,7 +473,11 @@ def calc_planet_position_batch(jd_array: np.ndarray, planet_id: int, flags: int 
         jd_delta = 0.01
         lon2, lat2, dist2 = get_moon_position_vectorized(jd_array + jd_delta)
 
-        lon_speed = (lon2 - lon) / jd_delta
+        # Handle longitude wrapping at 360/0 boundary (vectorized)
+        lon_diff = lon2 - lon
+        lon_diff = np.where(lon_diff > 180, lon_diff - 360, lon_diff)
+        lon_diff = np.where(lon_diff < -180, lon_diff + 360, lon_diff)
+        lon_speed = lon_diff / jd_delta
         lat_speed = (lat2 - lat) / jd_delta
         dist_speed = (dist2 - dist) / jd_delta
 
