@@ -51,6 +51,7 @@ Progress: [██████░░░░] ~58% (Phases 1, 2, 2.1, 3, 04-01 comp
 | Phase 04 P01  | 170            | 2     | 2     | 2026-02-12 |
 
 *Updated after each plan completion*
+| Phase 04 P02 | 238 | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -102,6 +103,8 @@ Recent decisions affecting current work:
 - Set fail_under=70 as minimum coverage threshold — Allows gradual improvement without blocking CI
 - Exclude removed/irrelevant modules from coverage calculation — Deleted code shouldn't count against metrics
 - Allow distance=0 for Rahu/Lilith — Calculated points (lunar nodes), not physical bodies, so distance=0 is correct
+- [Phase 04-02]: Use pytest tmp_path fixture for cache tests
+- [Phase 04-02]: Test pandas DatetimeIndex with skip if unavailable
 
 ### Roadmap Evolution
 
