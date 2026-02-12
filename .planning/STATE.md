@@ -9,19 +9,19 @@ See: .planning/PROJECT.md (updated 2026-02-12)
 
 ## Current Position
 
-Phase: 2.1 of 7 (Fix Moon Velocity and Rename vlong API) — COMPLETE
-Plan: 2/2 (all plans complete)
-Status: Phase 2.1 complete — Moon velocity fixed, vlong API renamed
-Last activity: 2026-02-12 — Phase 2.1-02 execution complete
+Phase: 03 of 7 (Dependency Cleanup)
+Plan: 1/? (plan 01 complete)
+Status: Phase 03-01 complete — Pandas dependency removed, pure NumPy library
+Last activity: 2026-02-12 — Phase 03-01 execution complete
 
-Progress: [████░░░░░░] ~40% (Phase 1: 2 plans, Phase 2: 2 plans, Phase 2.1: 2/2 plans complete)
+Progress: [█████░░░░░] ~50% (Phase 1: 2 plans, Phase 2: 2 plans, Phase 2.1: 2 plans, Phase 03: 1/? plans complete)
 
 ## Performance Metrics
 
 **Velocity:**
-- Total plans completed: 6
-- Average duration: 3.5 minutes
-- Total execution time: 0.35 hours
+- Total plans completed: 7
+- Average duration: 4.3 minutes
+- Total execution time: 0.50 hours
 
 **By Phase:**
 
@@ -30,10 +30,11 @@ Progress: [████░░░░░░] ~40% (Phase 1: 2 plans, Phase 2: 2 pl
 | 01      | 2     | 8 min  | 4 min    |
 | 02      | 2     | 7 min  | 3.5 min  |
 | 02.1    | 2     | 9 min  | 4.5 min  |
+| 03      | 1     | 6 min  | 6 min    |
 
 **Recent Trend:**
-- Last 5 plans: 02-01 (3 min), 02-02 (4 min), 02.1-01 (2 min), 02.1-02 (7 min)
-- Trend: Stable execution speed, comprehensive refactoring takes longer
+- Last 5 plans: 02-02 (4 min), 02.1-01 (2 min), 02.1-02 (7 min), 03-01 (6 min)
+- Trend: Stable execution speed, dependency cleanup efficient
 
 **Execution Log:**
 
@@ -45,8 +46,10 @@ Progress: [████░░░░░░] ~40% (Phase 1: 2 plans, Phase 2: 2 pl
 | Phase 02 P02  | 253            | 2     | 1     | 2026-02-12 |
 | Phase 02.1 P01| 104            | 2     | 2     | 2026-02-12 |
 | Phase 02.1 P02| 424            | 2     | 13    | 2026-02-12 |
+| Phase 03 P01  | 370            | 2     | 8     | 2026-02-12 |
 
 *Updated after each plan completion*
+| Phase 03 P01 | 370 | 2 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -89,6 +92,12 @@ Recent decisions affecting current work:
 - Remove old names entirely (no deprecation) — Heading to 1.0.0, clean break justified; old "v" prefix was ambiguous
 - Use full _velocity suffix instead of _vel — Maximally explicit naming prevents confusion; "long_velocity" is unambiguous
 
+**From Plan 03-01:**
+- Remove to_pandas entirely (no deprecation) — Heading to 1.0.0, clean break justified; Ketu's contract is NumPy-only
+- Keep duck-typing for pandas DatetimeIndex — Zero-cost interop, no pandas dependency required
+- [Phase 03-01]: Remove to_pandas entirely (no deprecation) — Heading to 1.0.0, clean break justified; Ketu's contract is NumPy-only
+- [Phase 03-01]: Keep duck-typing for pandas DatetimeIndex — Zero-cost interop, no pandas dependency required
+
 ### Roadmap Evolution
 
 - Phase 2.1 inserted after Phase 2: Fix Moon velocity and rename vlong API (URGENT)
@@ -103,13 +112,14 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-02-12 (phase 2.1 execution)
-Stopped at: Phase 2.1-02 complete, all Phase 2.1 plans finished
+Last session: 2026-02-12 (phase 03 execution)
+Stopped at: Phase 03-01 complete — Pandas dependency removed
 Resume file: None
 
 **Phase 1 Complete:** API Surface Cleanup finished (2 plans completed, UPGRADING.md created, human verified)
 **Phase 2 Complete:** Correctness Fixes finished (2 bugs fixed, regression tests added, 192 tests pass)
 **Phase 2.1 Complete:** Moon velocity and vlong API fixes finished (2 plans completed, 196 tests pass, breaking API changes documented)
+**Phase 3 In Progress:** Dependency cleanup (1 plan completed — pandas removed, pure NumPy library)
 
 ---
 *State initialized: 2026-02-12*
