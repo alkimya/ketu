@@ -8,6 +8,50 @@ import numpy as np
 from typing import Tuple, Union
 
 
+# -----------------------------------------------------------------------------
+# Lilith (Mean Black Moon Lilith = mean lunar apogee) constants.
+#
+# Fitted in v1.1 (Phase 8) by joint nonlinear least squares against
+# ``swe.calc_ut(jd, swe.MEAN_APOG)`` over 1900-2050 (daily sampling, 55K
+# points). The model is a linear secular term plus a single sinusoidal
+# perturbation:
+#
+#   lilith = (EPOCH + RATE * d
+#            + PERTURB_AMP * sin(deg(PERTURB_RATE * d + PERTURB_PHASE))) mod 360
+#
+# where ``d = JD_UT - 2451545.0`` (days since J2000.0).
+#
+# Empirical residual versus ``swe.MEAN_APOG``:
+#   - max  |delta| over the 5 cross-check dates : 0.002693 deg
+#   - max  |delta| over the 55K daily samples   : 0.007815 deg
+#   - mean |delta| over the 55K daily samples   : 0.003190 deg
+#
+# All values comfortably below the 0.01 deg tolerance defined in
+# docs/LILITH_DEFINITION.md Section 7.
+#
+# v1.0 legacy constants (pre-Phase-8) were:
+#   epoch = 83.3532 deg          (off by ~180 deg: was perigee, not apogee)
+#   rate  = 0.1114040803 deg/day (off in 7th+ decimal; rate-correction tiny)
+# Pre-fix max |delta| against ``swe.MEAN_APOG`` was 179.94 deg on every date.
+#
+# These constants are PRIVATE (single source of truth). The same numerical
+# values flow into:
+#   - ``get_lilith_position`` body (this module, by name)
+#   - ``ORBITAL_ELEMENTS`` Lilith row (this module, M_dot column = RATE)
+#   - ``ketu/ephemeris/planets.py`` ``calc_planet_position`` Lilith branch
+#     (lon_speed = RATE)
+#   - ``ketu/ephemeris/planets.py`` ``avg_speeds[12]`` (= round(RATE, 6))
+#
+# See docs/LILITH_DEFINITION.md History section for the full v1.0 -> v1.1
+# story and ``tests/test_lilith_cross_check.py`` for the regression baseline.
+# -----------------------------------------------------------------------------
+_LILITH_MEAN_EPOCH_DEG: float = 263.3521188770
+_LILITH_MEAN_RATE_DEG_PER_DAY: float = 0.1114036699
+_LILITH_PERTURB_AMP_DEG: float = 0.1156754590
+_LILITH_PERTURB_RATE_DEG_PER_DAY: float = 0.3287143373
+_LILITH_PERTURB_PHASE_DEG: float = 96.6084061482
+
+
 # Orbital elements for planets (J2000.0 epoch)
 # Format: name, N, i, w, a, e, M, N_dot, i_dot, w_dot, e_dot, M_dot
 # Where:
@@ -142,8 +186,9 @@ ORBITAL_ELEMENTS = np.array(
         # Lunar nodes
         ("Rahu", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0529538083),  # Mean node
         ("NorthNode", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, -0.0529538083),  # True node
-        # Lilith (Mean lunar apogee)
-        ("Lilith", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.1114040803),
+        # Lilith (Mean lunar apogee) -- M_dot = mean motion in deg/day; v1.1 value
+        # sourced from _LILITH_MEAN_RATE_DEG_PER_DAY (see module-level constant).
+        ("Lilith", 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, _LILITH_MEAN_RATE_DEG_PER_DAY),
     ],
     dtype=[
         ("name", "U12"),
@@ -572,25 +617,52 @@ def get_lunar_nodes(jd: float) -> Tuple[float, float]:
 
 
 def get_lilith_position(jd: float) -> float:
-    """Calculate position of Black Moon Lilith (mean lunar apogee)
+    """Calculate position of Black Moon Lilith (mean lunar apogee).
+
+    Returns the geocentric ecliptic longitude (mean ecliptic of date,
+    tropical, mean motion) of the Moon's Mean Apogee, in degrees in
+    [0, 360). This corresponds exactly to Swiss Ephemeris's
+    ``SE_MEAN_APOG`` (body index 12) within 0.01 deg over 1900-2050.
+
+    The formula is a linear secular term plus a single sinusoidal
+    perturbation, with constants fitted in v1.1 (Phase 8) by joint
+    nonlinear least squares against ``swe.calc_ut(jd, swe.MEAN_APOG)``
+    over 1900-2050 (daily sampling, 55K points). Empirical max |delta|
+    versus ``swe.MEAN_APOG`` is 0.0078 deg over the dense window and
+    0.0027 deg on the five Plan 03 cross-check dates -- well below the
+    0.01 deg tolerance documented in ``docs/LILITH_DEFINITION.md``
+    Section 7.
 
     Parameters
     ----------
     jd : float
-        Julian Date.
+        Julian Date in UT (matches ``swe.calc_ut`` convention).
 
     Returns
     -------
     float
-        Longitude in degrees.
+        Longitude in degrees in [0, 360).
+
+    See Also
+    --------
+    docs/LILITH_DEFINITION.md : Frame, formula, tolerance, history.
+    tests/test_lilith_cross_check.py : Regression harness vs. Swiss
+        Ephemeris ``SE_MEAN_APOG``.
     """
     # Days since J2000.0
     d = jd - 2451545.0
 
-    # Mean longitude of lunar apogee
-    lilith = normalize_angle(83.3532 + 0.1114040803 * d)
+    # Mean longitude of lunar apogee = secular linear term + dominant
+    # 1095-day perturbation (~0.116 deg amplitude, period ~3 sidereal
+    # years). Constants are module-level singletons; see header.
+    lilith = normalize_angle(
+        _LILITH_MEAN_EPOCH_DEG
+        + _LILITH_MEAN_RATE_DEG_PER_DAY * d
+        + _LILITH_PERTURB_AMP_DEG
+        * np.sin(np.deg2rad(_LILITH_PERTURB_RATE_DEG_PER_DAY * d + _LILITH_PERTURB_PHASE_DEG))
+    )
 
-    return lilith
+    return float(lilith)
 
 
 def get_body_position_vectorized(body_id: int, jd_array: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
