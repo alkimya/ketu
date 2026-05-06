@@ -1,5 +1,7 @@
 """Tests for Ketu library v0.1.0"""
 
+import hashlib
+
 import pytest
 import numpy as np
 from datetime import datetime
@@ -7,6 +9,78 @@ from zoneinfo import ZoneInfo
 
 import ketu
 from ketu.core import bodies, aspects as aspects_data, signs
+
+
+# ---------------------------------------------------------------------------
+# core.aspects v1.0 invariant — Phase 9, plan 09-03 (ASP-01)
+#
+# Pinning the v1.0 row order, length, and byte-level fingerprint of
+# `core.aspects` because Kala (the consumer) and v1.1 presets (Phase 9)
+# rely on positional indexing. Any drift in row order, coefficients, or
+# dtype encoding would silently break downstream code. Tests below act as
+# defense-in-depth: length + dtype.names + per-row name + per-row angle
+# + per-row coef + sha256 byte fingerprint.
+# ---------------------------------------------------------------------------
+
+EXPECTED_ASPECT_NAMES = (
+    b"Conjunction",
+    b"Semi-sextile",
+    b"Decile",
+    b"Novile",
+    b"Sextile",
+    b"Quintile",
+    b"Binovile",
+    b"Square",
+    b"Tredecile",
+    b"Trine",
+    b"Biquintile",
+    b"Quincunx",
+    b"Quadrinovile",
+    b"Opposition",
+)
+
+EXPECTED_ASPECT_ANGLES = (
+    0.0,
+    30.0,
+    36.0,
+    40.0,
+    60.0,
+    72.0,
+    80.0,
+    90.0,
+    108.0,
+    120.0,
+    144.0,
+    150.0,
+    160.0,
+    180.0,
+)
+
+# Coefficients per ketu/core.py:84-103
+EXPECTED_ASPECT_COEFS = (
+    1.0,
+    1 / 6,
+    1 / 10,
+    1 / 9,
+    1 / 3,
+    1 / 5,
+    2 / 9,
+    1 / 2,
+    3 / 10,
+    2 / 3,
+    2 / 5,
+    5 / 6,
+    4 / 9,
+    1.0,
+)
+
+# Pin v1.0 byte-level fingerprint — captured during Plan 09-03 Step A.
+# If `test_aspects_byte_fingerprint` fails, core.aspects bytes changed.
+# Verify the change is APPEND-ONLY (rows 0-13 unchanged) per Phase 9
+# invariant before updating this constant.
+EXPECTED_ASPECT_FINGERPRINT_V1 = (
+    "c5bd177316ce98d428bee011a5b0f17ae247d1dee1e478c2389af51d39afb359"
+)
 from ketu.calculations import (
     local_to_utc,
     utc_to_julian,
@@ -40,13 +114,51 @@ class TestData:
         assert bodies["orb"][0] == 12.0
         assert bodies["speed"][1] > 13.0  # Moon speed ~13°/day
 
+    def test_aspects_length(self):
+        """ASP-01: core.aspects must remain length 14 (append-only invariant)."""
+        assert len(aspects_data) == 14, (
+            f"core.aspects length changed to {len(aspects_data)}; "
+            "v1.1 invariant pins it at 14 (append-only)"
+        )
+
+    def test_aspects_dtype_names(self):
+        """ASP-01: core.aspects field names must match v1.0 schema."""
+        assert aspects_data.dtype.names == ("name", "angle", "coef"), (
+            f"core.aspects dtype.names changed to {aspects_data.dtype.names}; "
+            "v1.1 invariant pins it at ('name', 'angle', 'coef')"
+        )
+
     def test_aspects_structure(self):
-        """Test aspects array structure and content"""
+        """ASP-01: per-row name + angle + coef checks (strengthened from v1.0)."""
         assert len(aspects_data) == 14
-        assert aspects_data["angle"][0] == 0  # Conjunction
-        assert aspects_data["angle"][13] == 180  # Opposition
-        assert aspects_data["name"][7] == b"Square"
-        assert aspects_data["coef"][9] == 2 / 3  # Trine coefficient
+        for i, expected_name in enumerate(EXPECTED_ASPECT_NAMES):
+            assert aspects_data["name"][i] == expected_name, (
+                f"row {i} name drifted: got {aspects_data['name'][i]!r}, "
+                f"expected {expected_name!r}"
+            )
+        for i, expected_angle in enumerate(EXPECTED_ASPECT_ANGLES):
+            assert aspects_data["angle"][i] == pytest.approx(expected_angle, abs=1e-6), (
+                f"row {i} angle drifted: got {aspects_data['angle'][i]}, "
+                f"expected {expected_angle}"
+            )
+        for i, expected_coef in enumerate(EXPECTED_ASPECT_COEFS):
+            assert aspects_data["coef"][i] == pytest.approx(expected_coef, abs=1e-6), (
+                f"row {i} coef drifted: got {aspects_data['coef'][i]}, "
+                f"expected {expected_coef}"
+            )
+
+    def test_aspects_byte_fingerprint(self):
+        """ASP-01: sha256 fingerprint catches dtype/encoding drift that field-by-field tests miss."""
+        h = hashlib.sha256()
+        h.update(aspects_data["name"].tobytes())
+        h.update(aspects_data["angle"].tobytes())
+        h.update(aspects_data["coef"].tobytes())
+        fingerprint = h.hexdigest()
+        assert fingerprint == EXPECTED_ASPECT_FINGERPRINT_V1, (
+            f"core.aspects bytes changed (got {fingerprint}); "
+            "verify the change is an APPEND (rows 0-13 unchanged) per Phase 9 "
+            "invariant, then update EXPECTED_ASPECT_FINGERPRINT_V1"
+        )
 
     def test_signs_list(self):
         """Test zodiac signs list"""
