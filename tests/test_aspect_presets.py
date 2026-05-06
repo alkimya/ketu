@@ -16,18 +16,39 @@ returns mask).
 """
 from __future__ import annotations
 
+from datetime import datetime, timedelta, timezone
 from typing import Any, List
 
 import numpy as np
 import pytest
 
+from ketu.aspects import (
+    calculate_aspects,
+    calculate_aspects_batch,
+    calculate_aspects_vectorized,
+    find_aspects_between_dates,
+)
 from ketu.aspects.presets import (
     CLASSICAL,
     EXTENDED,
     TRADITIONAL,
     resolve_aspect_set,
 )
+from ketu.calculations import utc_to_julian
 from ketu.core import aspects as _CORE_ASPECTS
+
+# ---------------------------------------------------------------------------
+# Integration test constants — canonical 0-13 i_asp index sets per preset
+# ---------------------------------------------------------------------------
+
+CLASSICAL_INDICES = {0, 4, 7, 9, 13}  # 5 majors
+TRADITIONAL_INDICES = {0, 1, 4, 7, 9, 11, 13}  # 7
+NON_CLASSICAL_INDICES = set(range(14)) - CLASSICAL_INDICES
+NON_TRADITIONAL_INDICES = set(range(14)) - TRADITIONAL_INDICES
+
+# CLASSICAL aspect names (find_aspects_between_dates returns aspect_name str,
+# not an i_asp index)
+CLASSICAL_NAMES = {"Conjunction", "Sextile", "Square", "Trine", "Opposition"}
 
 # ---------------------------------------------------------------------------
 # Constants tests
@@ -355,3 +376,148 @@ def test_resolved_indices_mask_is_frozen() -> None:
     result = resolve_aspect_set([0, 7])
     with pytest.raises(ValueError):
         result[0] = False
+
+
+# ---------------------------------------------------------------------------
+# ASP-07 Integration tests — public aspect APIs honor the preset
+# ---------------------------------------------------------------------------
+
+
+class TestAspectPresetsIntegration:
+    """ASP-07: integration tests verify CLASSICAL/TRADITIONAL/EXTENDED defaults
+    propagate correctly through all public aspect APIs (calculator family +
+    find_aspects_between_dates) and never leak non-set aspects into results."""
+
+    def setup_method(self) -> None:
+        self.jd = utc_to_julian(datetime(2025, 1, 1, tzinfo=timezone.utc))
+        self.jd_array = np.array(
+            [
+                utc_to_julian(datetime(2025, 1, 1, tzinfo=timezone.utc) + timedelta(days=i))
+                for i in range(7)
+            ]
+        )
+        # Wide-enough window for find_aspects_between_dates to find SOME aspects
+        # (Sun-Moon hits every major aspect at least once per lunar cycle).
+        self.jd_window_start = utc_to_julian(datetime(2025, 1, 1, tzinfo=timezone.utc))
+        self.jd_window_end = utc_to_julian(datetime(2025, 1, 30, tzinfo=timezone.utc))
+
+    def test_calculate_aspects_classical_no_leak(self) -> None:
+        """ASP-07: calculate_aspects(jd, aspects=CLASSICAL) returns no row with non-classical i_asp."""
+        result = calculate_aspects(self.jd, aspects=CLASSICAL)
+        leaked = set(int(x) for x in result["i_asp"]) & NON_CLASSICAL_INDICES
+        assert not leaked, f"CLASSICAL preset leaked non-classical i_asp: {leaked}"
+
+    def test_calculate_aspects_vectorized_classical_no_leak(self) -> None:
+        """ASP-07: calculate_aspects_vectorized(jd, aspects=CLASSICAL) returns no non-classical i_asp."""
+        result = calculate_aspects_vectorized(self.jd, aspects=CLASSICAL)
+        leaked = set(int(x) for x in result["i_asp"]) & NON_CLASSICAL_INDICES
+        assert not leaked, f"CLASSICAL preset leaked non-classical i_asp: {leaked}"
+
+    def test_calculate_aspects_batch_classical_no_leak(self) -> None:
+        """ASP-07: calculate_aspects_batch(jd_array, aspects=CLASSICAL) returns no non-classical i_asp on any date."""
+        results_per_date = calculate_aspects_batch(self.jd_array, aspects=CLASSICAL)
+        all_leaked: set[int] = set()
+        for result in results_per_date:
+            if len(result):
+                leaked = set(int(x) for x in result["i_asp"]) & NON_CLASSICAL_INDICES
+                if leaked:
+                    all_leaked |= leaked
+        assert not all_leaked, f"CLASSICAL leaked non-classical i_asp across batch: {all_leaked}"
+
+    def test_find_aspects_between_dates_classical_no_leak(self) -> None:
+        """ASP-07 / Blocker-1: find_aspects_between_dates(..., aspects=CLASSICAL) returns no
+        row whose aspect_name is outside the 5-major set."""
+        rows = find_aspects_between_dates(
+            self.jd_window_start,
+            self.jd_window_end,
+            body1=0,
+            body2=1,  # Sun-Moon — frequent aspects
+            aspects=CLASSICAL,
+        )
+        # Each row is (jd, b1, b2, aspect_name, aspect_angle)
+        names = {row[3] for row in rows}
+        leaked = names - CLASSICAL_NAMES
+        assert not leaked, f"find_aspects_between_dates with CLASSICAL leaked: {leaked}"
+
+    def test_find_aspects_between_dates_default_equals_classical(self) -> None:
+        """ASP-04 / Blocker-1: find_aspects_between_dates with no aspects= kwarg behaves
+        identically to aspects=CLASSICAL."""
+        r_default = find_aspects_between_dates(
+            self.jd_window_start, self.jd_window_end, body1=0, body2=1
+        )
+        r_classical = find_aspects_between_dates(
+            self.jd_window_start,
+            self.jd_window_end,
+            body1=0,
+            body2=1,
+            aspects=CLASSICAL,
+        )
+        assert r_default == r_classical, (
+            "find_aspects_between_dates default diverges from explicit aspects=CLASSICAL"
+        )
+
+    def test_find_aspects_between_dates_extended_superset(self) -> None:
+        """ASP-07 / Blocker-1: aspects=EXTENDED returns a SUPERSET of CLASSICAL rows
+        (every CLASSICAL row also appears in EXTENDED — find_aspects_between_dates does
+        NOT use first-match-wins; it iterates each angle independently)."""
+        r_classical = find_aspects_between_dates(
+            self.jd_window_start,
+            self.jd_window_end,
+            body1=0,
+            body2=1,
+            aspects=CLASSICAL,
+        )
+        r_extended = find_aspects_between_dates(
+            self.jd_window_start,
+            self.jd_window_end,
+            body1=0,
+            body2=1,
+            aspects=EXTENDED,
+        )
+        # Every CLASSICAL row must appear in EXTENDED:
+        cl_set = set(r_classical)
+        ext_set = set(r_extended)
+        missing = cl_set - ext_set
+        assert not missing, (
+            f"EXTENDED missing CLASSICAL rows that should appear: {missing}"
+        )
+        # Sanity: EXTENDED should have at least as many rows as CLASSICAL
+        assert len(r_extended) >= len(r_classical), (
+            f"EXTENDED ({len(r_extended)}) should have >= CLASSICAL ({len(r_classical)}) rows"
+        )
+
+    def test_default_equals_classical(self) -> None:
+        """ASP-04: aspects=None default behaves identically to aspects=CLASSICAL on calculate_aspects."""
+        r_default = calculate_aspects(self.jd)
+        r_classical = calculate_aspects(self.jd, aspects=CLASSICAL)
+
+        # Sort by (body1, body2, i_asp, orb) tuple for stable comparison
+        def keyed(arr: Any) -> list[tuple[int, int, int, float]]:
+            return sorted(
+                (int(r["body1"]), int(r["body2"]), int(r["i_asp"]), float(r["orb"]))
+                for r in arr
+            )
+
+        assert keyed(r_default) == keyed(r_classical), (
+            "default (aspects=None) result diverges from explicit aspects=CLASSICAL"
+        )
+
+    def test_traditional_no_leak(self) -> None:
+        """ASP-07: TRADITIONAL preset returns no row outside {0,1,4,7,9,11,13}."""
+        result = calculate_aspects_vectorized(self.jd, aspects=TRADITIONAL)
+        leaked = set(int(x) for x in result["i_asp"]) & NON_TRADITIONAL_INDICES
+        assert not leaked, f"TRADITIONAL preset leaked: {leaked}"
+
+    def test_classical_results_use_canonical_iasp(self) -> None:
+        """ASP-05/Pitfall 1: i_asp emitted under CLASSICAL is the canonical 0-13 index,
+        NOT a position 0..4 within the filtered subset. Verifies Kala contract."""
+        result = calculate_aspects_vectorized(self.jd, aspects=CLASSICAL)
+        if len(result):
+            # All emitted i_asp must be in CLASSICAL_INDICES (subset of {0,4,7,9,13}).
+            # If renumbered to subset positions, we'd see {0,1,2,3,4} instead.
+            emitted = set(int(x) for x in result["i_asp"])
+            assert emitted <= CLASSICAL_INDICES, (
+                f"i_asp not canonical — got {emitted}, "
+                f"expected subset of {CLASSICAL_INDICES} (0,4,7,9,13). "
+                f"Renumbering bug per RESEARCH.md Pitfall 1."
+            )
