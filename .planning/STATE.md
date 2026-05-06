@@ -9,26 +9,26 @@ See: .planning/PROJECT.md (updated 2026-05-06)
 
 ## Current Position
 
-Phase: 9 of 12 (Configurable Aspects) — **IN PROGRESS**
-Plan: 5 of 6 complete (09-01, 09-02, 09-03 done — Wave 1; 09-04a calculator-refactor + 09-04b default-migration done — Wave 2 complete; 09-05 remaining)
-Status: Wave 2 complete — Plan 09-04a refactored `ketu/aspects/calculator.py` (4 public APIs gain `aspects: AspectSetSpec = None`, defaults to CLASSICAL via resolver, hot loops emit canonical `int(i_asp)`, Kala positional contract preserved); Plan 09-04b migrated four hardcoded default-list literals in `ketu/aspects/{windows,timelines,transits}.py` to derive from CLASSICAL preset (single source of truth — when CLASSICAL changes, all four call sites pick up the change automatically). Wave 2 disjoint-file invariant honored: 04a touched calculator.py only, 04b touched windows/timelines/transits.py only. 479 tests pass; mypy --strict clean. Plan 09-05 (integration & benchmark) now unblocked.
-Last activity: 2026-05-07 — Plan 09-04b executed; commit `787a3e5` (windows/timelines/transits default migration) on `gsd/v1.1-milestone`
+Phase: 9 of 12 (Configurable Aspects) — **COMPLETE (awaiting /gsd:check-phase)**
+Plan: 6 of 6 complete (09-01, 09-02, 09-03 — Wave 1; 09-04a + 09-04b — Wave 2; 09-05 — Wave 3 closing)
+Status: Wave 3 closed — Plan 09-05 verified ASP-07 (9 integration tests across all four public aspect APIs: `calculate_aspects` / `calculate_aspects_vectorized` / `calculate_aspects_batch` / `find_aspects_between_dates` — CLASSICAL/TRADITIONAL/EXTENDED/None all behave correctly, no leak, canonical i_asp preserved, default-flip observed) and ASP-08 (benchmark-comparison.json shows -10% to -15% improvement on EXTENDED across 30/90/365 batch sizes — HARD GATE PASSED with margin; CLASSICAL -33% to -41%). Hot-loop perf bug introduced by Plan 09-04a auto-fixed (Rule 1) by hoisting per-aspect Python-scalar casts and orb-array computation above the per-date loop. 488 tests pass (was 479; +9 integration); mypy --strict clean; presets.py 100% / calculator.py 99% coverage. Phase 9 acceptance criteria 1-5 all GREEN.
+Last activity: 2026-05-07 — Plan 09-05 executed; commits `3499b28` (test) + `b847176` (perf hoist) + `c974322` (benchmark-comparison.json) on `gsd/v1.1-milestone`
 
-Progress: [█████░░░░░] v1.0 complete; v1.1 1/5 phases complete (Phase 8: 5/5 plans), Phase 9: 5/6 plans
+Progress: [██████░░░░] v1.0 complete; v1.1 1/5 phases complete (Phase 8: 5/5 plans), Phase 9: 6/6 plans (awaiting check-phase)
 
 ## Performance Metrics
 
 **Velocity (v1.0 reference baseline):**
 
 - Total plans completed (v1.0): 16
-- v1.1 plans completed: 10 (Phase 8: 08-01, 08-02, 08-03, 08-04, 08-05; Phase 9: 09-01, 09-02, 09-03, 09-04a, 09-04b)
+- v1.1 plans completed: 11 (Phase 8: 08-01, 08-02, 08-03, 08-04, 08-05; Phase 9: 09-01, 09-02, 09-03, 09-04a, 09-04b, 09-05)
 
 **By Phase (v1.1):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 8. Lilith Verification & Fix | 5 | ~22m 18s | ~4m 28s |
-| 9. Configurable Aspects | 5 | ~25m 37s | ~5m 7s |
+| 9. Configurable Aspects | 6 | ~44m 58s | ~7m 30s |
 | 10. Houses Module | 0 | — | — |
 | 11. CLI Refactor & Integration | 0 | — | — |
 | 12. Release Preparation v1.1.0 | 0 | — | — |
@@ -44,6 +44,7 @@ Progress: [█████░░░░░] v1.0 complete; v1.1 1/5 phases comple
 | Phase 09 P01 | 6m 00s | 2 tasks | 1 files |
 | Phase 09 P04a | 6m 34s | 2 tasks | 1 files |
 | Phase 09 P04b | 6m 3s | 1 tasks | 3 files |
+| Phase 09 P05 | 19m 21s | 2 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -72,6 +73,8 @@ Decisions are logged in PROJECT.md Key Decisions table. Recent decisions affecti
 - [Phase 09]: [Phase 09-01]: ASP-08 v1.0 baseline frozen at `.planning/phases/09-configurable-aspects/baseline-v1.0.json` (git_sha=049a9e7, aspect_set=extended, mean[365]=200.87ms cv=1.62%, 50 iter × 3 batch sizes, drift=3.56% PASS <5% gate). `tests/benchmark_aspects_batch.py` ships --aspect-set flag from day 1 and mismatch-rejection in --compare mode (no silent baseline-vs-comparison drift). Wave-1 parallel collision: identical script content authored independently by Plan 09-01 and committed via Plan 09-02 commit `78085d1` — md5 verified byte-identical, no merge needed.
 - [Phase 09]: [Phase 09-04a]: `ketu/aspects/calculator.py` refactor threads `aspects: AspectSetSpec = None` (default → CLASSICAL via resolver) through 4 public multi-aspect APIs. Module-level `from ketu.core import aspects` renamed to `aspects as _CORE_ASPECTS` to free the parameter name. 2 hot loops rewritten to `for k, i_asp_val in enumerate(selected_indices)` emitting canonical `int(i_asp)` (NOT `k`) — Kala positional contract preserved. Resolver runs ONCE per API call; in `calculate_aspects_batch` ABOVE the per-date loop (never per-date). `find_aspects_between_dates` passes filtered `selected_angles` to downstream `find_all_aspects` (no leak of unselected aspects). LRU-cache audit: 2 sites (`_cached_planet_position_batch`, `body_properties`), both safe — neither materializes filtered aspect output. `calculate_aspects` reuses out-of-scope scanner `get_aspect` with post-hoc filter via `selected_indices_set` — preserves single source of truth for scalar match logic without rewriting scanner. 479 tests pass with NO retrofit needed (all assertions use loose count/structure checks or sibling-parity); mypy --strict clean; interrogate 100%.
 - [Phase 09]: [Phase 09-04b]: Four hardcoded `["Conjunction", "Sextile", "Square", "Trine", "Opposition"]` literal default lists (1 in windows.py find_aspects_timeline, 1 in timelines.py generate_aspect_timeline, 2 in transits.py find_transits_to_position + compare_dates_transits) replaced with `list(_CLASSICAL_NAMES)` derivation from CLASSICAL preset. Per file: ONE module-level import block + `_CLASSICAL_NAMES = tuple(aspects["name"][i].decode() for i in np.where(_CLASSICAL_MASK)[0])`. Approach A locked (preserve `aspects_list: list[str]` shape; do NOT widen to AspectSetSpec — v1.2+ scope). `find_aspect_window` (single-aspect API) and `lunar_calendar.BIG_FIVE` untouched. Single-source-of-truth invariant verified by provenance smoke test: all three modules resolve to canonical 5-major tuple. 479 tests pass; mypy --strict clean. Pre-existing interrogate gap (85.2% < 90% in nested callbacks) verified unrelated to this plan via git-stash baseline comparison.
+- [Phase 09]: [Phase 09-05]: ASP-07 verified by 9-test `TestAspectPresetsIntegration` class extending `tests/test_aspect_presets.py` — covers `calculate_aspects` / `_vectorized` / `_batch` / `find_aspects_between_dates` with CLASSICAL/TRADITIONAL/EXTENDED + default-flip + canonical-i_asp + EXTENDED-superset assertions. ASP-08 verified by `benchmark-comparison.json`: Phase 9 EXTENDED is -10% to -15% FASTER than v1.0 baseline on every batch size (30/90/365); CLASSICAL is -33% to -41% faster (matches research's 30-65% inner-loop speedup prediction). HARD GATE passed with margin; no CONDITIONAL band needed.
+- [Phase 09]: [Phase 09-05]: Hot-loop perf regression discovered and auto-fixed (deviation Rule 1). Plan 09-04a's calculator refactor introduced per-date Python-scalar casts (`int(i_asp)` / `float(angle)` / `float(coef)`) AND per-date orb-array recomputation `(orbs_body1+orbs_body2)/2 * coef` — paid `n_dates × n_aspects` times instead of `n_aspects` times. Initial 200-iter benchmark showed +6-7% regression on EXTENDED. Fix: hoist all per-aspect work above per-date loop — pre-cast lists `selected_iasp_ints` / `selected_angles_f` / `selected_coefs_f` + pre-multiplied `selected_orbs_per_aspect = [pair_orb_sums * c for c in selected_coefs_f]` (date-independent). Result: regression turned into -8% to -15% improvement. Pattern locked: any future hot-loop refactor of `calculate_aspects_batch` MUST be benchmarked at ≥200 iterations against baseline-v1.0.json before merging — the 50-iter compare default is noise-dominated at 5% gate width. Fix commit `b847176`.
 
 ### From v1.0 milestone (carried context)
 
@@ -99,10 +102,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-07 (Plan 09-04b execution; Wave 2 closing)
-Stopped at: Completed `09-04b-default-migration-PLAN.md`. Four hardcoded default-list literals across `ketu/aspects/{windows,timelines,transits}.py` (4 sites total: 1+1+2) migrated to derive from CLASSICAL preset via `list(_CLASSICAL_NAMES)`. Single source of truth: each file gains ONE module-level import block + `_CLASSICAL_NAMES = tuple(aspects["name"][i].decode() for i in np.where(_CLASSICAL_MASK)[0])`; each call site does `list(_CLASSICAL_NAMES)` for fresh mutable list. `aspects_list: list[str] | None = None` shape preserved across all four functions (Approach A locked, no AspectSetSpec widening). `find_aspect_window` and `lunar_calendar.BIG_FIVE` untouched (locked OUT OF SCOPE). Wave 2 disjoint-file invariant honored: 09-04a touched calculator.py only, 09-04b touched windows/timelines/transits.py only — zero merge conflict despite parallel execution. 479 tests pass, mypy --strict clean, single commit `787a3e5` (refactor scope, 3 files, 38 insertions / 14 deletions). Wave 2 closed; Plan 09-05 (integration & benchmark using `--aspect-set classical`) is the only remaining Phase 9 plan.
-Resume file: None
+Last session: 2026-05-07 (Plan 09-05 execution; Wave 3 / Phase 9 closing)
+Stopped at: Completed `09-05-integration-and-benchmark-PLAN.md`. ASP-07 verified — 9 integration tests in `TestAspectPresetsIntegration` (extension of tests/test_aspect_presets.py) cover all 4 public aspect APIs with CLASSICAL/TRADITIONAL/EXTENDED/None: 3 calculator-family no-leak + 3 find_aspects_between_dates (no-leak / default-flip / EXTENDED-superset) + default-flip on calculate_aspects + TRADITIONAL no-leak + canonical-i_asp (Pitfall 1 / Kala contract). ASP-08 verified — `benchmark-comparison.json` records v1.0 baseline vs Phase 9 EXTENDED vs Phase 9 CLASSICAL at 200 iterations per batch size; EXTENDED is -10.10% / -15.62% / -13.48% (faster) on 30/90/365 batches; CLASSICAL is -33.19% / -39.65% / -40.63% (faster). HARD GATE PASSED with margin. Hot-loop perf regression introduced by 09-04a auto-fixed (commit `b847176`) — hoisted per-aspect Python-scalar casts and orb-array computation above the per-date loop. 488 tests pass; mypy --strict clean; presets.py 100% / calculator.py 99% coverage. Phase 9 acceptance criteria 1-5 all GREEN. tests/benchmark_aspects_batch.py and baseline-v1.0.json have empty git-diff (Blocker 2 enforcement). LRU-cache audit final-checked — 2 cache sites both SAFE. Phase 9 ready for `/gsd:check-phase`. Cross-repo blocker remains: "Kala aspect-count dependency unverified" — pre-merge action.
+Resume file: None (Phase 9 complete; next is `/gsd:check-phase` then Phase 10 houses-module)
 
 ---
 *State initialized: 2026-02-12*
-*Last updated: 2026-05-07 — Plan 09-04b complete; Phase 9: 5/6 plans (Wave 2 closed). Four hardcoded default-list literals in windows/timelines/transits migrated to CLASSICAL preset; single-source-of-truth invariant established; 09-05 remaining (integration & benchmark)*
+*Last updated: 2026-05-07 — Plan 09-05 complete; Phase 9: 6/6 plans (Wave 3 closed). ASP-07 (9 integration tests) + ASP-08 (HARD GATE PASS, EXTENDED -10% to -15% faster) verified. Hot-loop perf regression auto-fixed. Phase 9 awaiting check-phase.*
