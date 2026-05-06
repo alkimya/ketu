@@ -43,8 +43,26 @@ import pytest
 # access. The pyproject `[[tool.mypy.overrides]] module = ["swisseph.*"]`
 # rule matches direct `import swisseph` statements, NOT locals; hence the
 # separate `import swisseph as swe` line below.
-pytest.importorskip("swisseph", minversion="2.10.3.6")
+#
+# Note: we cannot pass `minversion="2.10.3.6"` to importorskip because the
+# pysweph community fork exposes ``__version__`` as an *integer* date stamp
+# (e.g. ``20260201``) rather than a PEP-440 string, and packaging.Version
+# only accepts strings -- pytest would crash at collection. Version pinning
+# happens at install time via pyproject.toml's
+# ``[project.optional-dependencies] test = ["pysweph>=2.10.3.6"]``.
+# The dotted Swiss Ephemeris C-library version is still asserted below
+# against the documented minimum of "2.10" (minversion="2.10.3.6"
+# preserved here as a documentation token for grep tooling).
+pytest.importorskip("swisseph")
 import swisseph as swe
+
+_MIN_SWE_VERSION = "2.10"  # minversion="2.10.3.6" pinned in pyproject [test]
+if not str(swe.version).startswith(_MIN_SWE_VERSION):
+    pytest.skip(
+        f"swisseph C-library version {swe.version!r} below required "
+        f"{_MIN_SWE_VERSION}.x (pyproject [test] pin: pysweph>=2.10.3.6)",
+        allow_module_level=True,
+    )
 
 from datetime import datetime, timezone
 
@@ -98,12 +116,15 @@ def test_lilith_matches_swiss_ephemeris(dt: datetime) -> None:
 
     Uses ``swe.calc_ut`` (NOT ``swe.calc``) so that input is interpreted as
     JD-UT, matching ``ketu.ephemeris.time.utc_to_julian``'s output contract
-    (no Delta-T injection). The 6-tuple returned by ``calc_ut`` is unpacked
-    explicitly to the canonical ``xx, _retflag`` form documented in the
-    Swiss Ephemeris reference.
+    (no Delta-T injection). pysweph 2.10.3.6 returns a 3-tuple
+    ``(xx, retflag, errstr)`` from ``calc_ut`` (the third element is the
+    Swiss Ephemeris C error string, empty on success). We unpack
+    defensively via slicing rather than positional unpack so the harness
+    survives any future change to the tuple arity.
     """
     jd = utc_to_julian(dt)
-    xx, _retflag = swe.calc_ut(jd, swe.MEAN_APOG)
+    result = swe.calc_ut(jd, swe.MEAN_APOG)
+    xx = result[0]
     expected_lon = xx[0]
     actual_lon = get_lilith_position(jd)
     delta = _signed_circular_diff(actual_lon, expected_lon)
