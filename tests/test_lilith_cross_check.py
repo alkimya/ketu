@@ -133,3 +133,48 @@ def test_lilith_matches_swiss_ephemeris(dt: datetime) -> None:
         f"Ketu={actual_lon:.6f} deg, swe={expected_lon:.6f} deg, "
         f"delta={delta:+.6f} deg (tolerance {TOLERANCE_DEG} deg)"
     )
+
+
+# Regression tolerance: tighter than the user-facing 0.01 deg contract.
+# After the v1.1 Phase 8 formula correction, post-fit max |delta| versus
+# ``swe.MEAN_APOG`` on the 5 cross-check dates is 0.002693 deg (joint NLS
+# over 1900-2050 daily samples). We pin the regression tolerance at
+# 0.005 deg (~1.85x post-fit max with safety margin) so that any future
+# accidental edit to the v1.1 constants in ``ketu/ephemeris/orbital.py``
+# (``_LILITH_MEAN_EPOCH_DEG``, ``_LILITH_MEAN_RATE_DEG_PER_DAY``,
+# ``_LILITH_PERTURB_*_DEG``) is caught immediately.
+#
+# REQUIREMENTS LIL-03 ("pin new values with explicit pysweph cross-check")
+# is satisfied by computing the reference at test time from
+# ``swe.calc_ut(jd, swe.MEAN_APOG)`` -- NOT by hardcoding numeric Ketu
+# values into the test (research §"Anti-patterns" -- a Ketu-tests-Ketu
+# loop). The cross-check IS the pinning. The constant pinned here is
+# the *agreement margin* between Ketu and swe, the only externally
+# anchored quantity worth pinning.
+REGRESSION_TOLERANCE_DEG = 0.005
+
+
+@pytest.mark.parametrize("dt", CROSS_CHECK_DATES, ids=lambda d: d.isoformat())
+def test_lilith_regression_baseline(dt: datetime) -> None:
+    """Pin the post-v1.1 fit to a tighter tolerance than the user-facing 0.01 deg.
+
+    A widening of error here implies an unintended change to the v1.1
+    constants in ``ketu/ephemeris/orbital.py`` (epoch / rate / perturbation
+    triple). The reference longitude is computed at test time from
+    ``swe.calc_ut(jd, swe.MEAN_APOG)`` -- never hardcoded -- so this is
+    not a Ketu-tests-Ketu loop. Plan 03's anti-pattern guard is preserved.
+    """
+    jd = utc_to_julian(dt)
+    result = swe.calc_ut(jd, swe.MEAN_APOG)
+    xx = result[0]
+    expected_lon = xx[0]
+    actual_lon = get_lilith_position(jd)
+    delta = _signed_circular_diff(actual_lon, expected_lon)
+    assert abs(delta) < REGRESSION_TOLERANCE_DEG, (
+        f"Regression baseline broken on {dt.isoformat()}: "
+        f"delta={delta:+.6f} deg exceeds tighter regression tolerance "
+        f"{REGRESSION_TOLERANCE_DEG} deg (set after v1.1 Phase 8 fit; "
+        f"widening indicates unintended edit to _LILITH_MEAN_EPOCH_DEG, "
+        f"_LILITH_MEAN_RATE_DEG_PER_DAY, or the _LILITH_PERTURB_* triple "
+        f"in ketu/ephemeris/orbital.py)"
+    )
