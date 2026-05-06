@@ -7,6 +7,7 @@ planetary aspects, including:
 - Aspect windows (entry/exit times, exact moments)
 - Aspect timelines (ML-ready time series data)
 - Transit calculations (transits to natal positions)
+- Aspect set presets and resolver (Phase 9)
 
 Submodules:
 - core: Low-level aspect calculations
@@ -14,6 +15,7 @@ Submodules:
 - windows: Aspect window detection with precise timing
 - timelines: ML-ready aspect timeline generation
 - transits: Transit calculations to natal positions
+- presets: CLASSICAL/TRADITIONAL/EXTENDED masks + resolve_aspect_set
 """
 
 # Aspect calculator (high-level API)
@@ -53,6 +55,15 @@ from ketu.aspects.transits import (
     compare_dates_transits,
 )
 
+# Aspect set presets and resolver (Phase 9)
+from ketu.aspects.presets import (
+    CLASSICAL,
+    TRADITIONAL,
+    EXTENDED,
+    AspectSetSpec,
+    resolve_aspect_set,
+)
+
 __all__ = [
     # Calculator (high-level API)
     "get_aspect",
@@ -82,4 +93,11 @@ __all__ = [
     "find_transits_to_position",
     "get_natal_positions",
     "compare_dates_transits",
+
+    # Presets (Phase 9 — configurable aspects)
+    "CLASSICAL",
+    "TRADITIONAL",
+    "EXTENDED",
+    "AspectSetSpec",
+    "resolve_aspect_set",
 ]
