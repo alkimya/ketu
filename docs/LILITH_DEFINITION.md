@@ -29,47 +29,75 @@ v1.1** (deferred to v2 per requirement LIL2-01):
 
 ## Formula
 
-The exact formula currently shipping in Ketu, quoted verbatim from
-`ketu/ephemeris/orbital.py:591`:
+The exact formula currently shipping in Ketu (v1.1, Phase 8), quoted
+from `ketu/ephemeris/orbital.py` `get_lilith_position`:
 
 ```python
-# ketu/ephemeris/orbital.py:591
-lilith = normalize_angle(83.3532 + 0.1114040803 * d)
+# ketu/ephemeris/orbital.py
+lilith = normalize_angle(
+    _LILITH_MEAN_EPOCH_DEG
+    + _LILITH_MEAN_RATE_DEG_PER_DAY * d
+    + _LILITH_PERTURB_AMP_DEG
+    * np.sin(np.deg2rad(_LILITH_PERTURB_RATE_DEG_PER_DAY * d
+                        + _LILITH_PERTURB_PHASE_DEG))
+)
 # where d = jd - 2451545.0  (days since J2000.0)
 ```
 
 In algebraic form:
 
 ```text
-lilith_lon = (83.3532 + 0.1114040803 * d) mod 360 degrees
-where d = JD_UT - 2451545.0  (days since J2000.0)
+lilith_lon = (E + R * d + A * sin(omega * d + phi)) mod 360 degrees
+where
+  E     = 263.3521188770 deg     (mean longitude at J2000.0)
+  R     = 0.1114036699  deg/day  (mean motion)
+  A     = 0.1156754590  deg      (perturbation amplitude)
+  omega = 0.3287143373  deg/day  (perturbation rate, period ~1095 days)
+  phi   = 96.6084061482 deg      (perturbation phase at J2000.0)
+  d     = JD_UT - 2451545.0      (days since J2000.0)
 ```
 
 Constants explained:
 
-- `83.3532 deg`: mean longitude at J2000.0 (1 January 2000 12:00 UT).
-- `0.1114040803 deg/day`: mean prograde rate, approximately `40.69 deg/year`.
-- Full revolution period: approximately `8.85 years` (about `3232.6 days`),
-  matching the canonical anomalistic month period of the lunar perigee/apogee
-  axis.
+- `E = 263.3521188770 deg`: mean longitude of the lunar apogee at J2000.0
+  (1 January 2000 12:00 UT). The legacy v1.0 value `83.3532 deg` was the
+  *perigee* longitude (apogee + 180 deg, mod 360); this caused a 180 deg
+  systematic offset on every date until v1.1.
+- `R = 0.1114036699 deg/day`: mean prograde rate, approximately
+  `40.69 deg/year`. Full revolution period: approximately `8.85 years`
+  (about `3232.6 days`), matching the anomalistic period of the lunar
+  perigee/apogee axis.
+- `A = 0.1156754590 deg`, `omega = 0.3287143373 deg/day`,
+  `phi = 96.6084061482 deg`: a single sinusoidal perturbation with period
+  approximately `1095 days` (3 sidereal years). Without this term the pure
+  linear formula deviates from `swe.MEAN_APOG` by up to `0.124 deg` on
+  long baselines (12x the user-facing tolerance); with it the residual
+  drops to `0.0078 deg` (max) over 1900-2050 daily samples and `0.0027 deg`
+  (max) on the five Plan 03 cross-check dates.
 
-### Where the rate `0.1114040803` appears in the codebase
+Constants were derived in v1.1 (Phase 8) by joint nonlinear least squares
+against `swe.calc_ut(jd, swe.MEAN_APOG)` over `1900-2050` daily samples
+(55K points). See `tests/test_lilith_cross_check.py` for the empirical
+regression harness.
 
-The same rate constant is duplicated across three call sites. Any future
-correction (Plan 04) must update all three to keep `calc_planet_position`,
-`get_lilith_position`, and the structured `ORBITAL_ELEMENTS` table consistent:
+### Where the rate constant appears in the codebase
 
-1. `ketu/ephemeris/orbital.py:591` -- the longitude formula itself
-   (`0.1114040803 * d`).
-2. `ketu/ephemeris/orbital.py:146` -- the `ORBITAL_ELEMENTS` row for Lilith
-   (last column, `0.1114040803`).
-3. `ketu/ephemeris/planets.py:153` -- the `lon_speed` returned by
-   `calc_planet_position` for `planet_name == "Lilith"` (`0.1114040803`).
-4. `ketu/ephemeris/planets.py:458` -- the truncated `avg_speeds[12]` entry
-   used by speed-ratio code (`0.111404`, six digits).
+The same rate constant is referenced from a single private source of
+truth, `_LILITH_MEAN_RATE_DEG_PER_DAY` defined at module scope in
+`ketu/ephemeris/orbital.py`. Four call sites consume it:
 
-The truncation in site 4 (`0.111404` vs `0.1114040803`) is acceptable for
-its purpose (heuristic average speed); it is **not** the longitude formula.
+1. `ketu/ephemeris/orbital.py` -- `get_lilith_position` formula
+   (named-constant reference, full precision).
+2. `ketu/ephemeris/orbital.py` -- the `ORBITAL_ELEMENTS` row for Lilith
+   (M_dot column, named-constant reference, full precision).
+3. `ketu/ephemeris/planets.py` -- the `lon_speed` returned by
+   `calc_planet_position` for `planet_name == "Lilith"` (named-constant
+   reference, full precision).
+4. `ketu/ephemeris/planets.py` -- `avg_speeds[12]` for the speed-ratio
+   heuristic (six-digit rounding `round(_LILITH_MEAN_RATE_DEG_PER_DAY, 6)`).
+
+Single source of truth: any future correction edits only the constant
+declaration in `orbital.py`; sites 2-4 inherit automatically.
 
 ## Reference Frame
 
@@ -202,8 +230,34 @@ pattern for AGPL-licensed verification tools).
   approximations consistent with ELP-2000; the formula was **never
   externally verified** against an independent reference implementation
   (Swiss Ephemeris or otherwise).
-- **v1.1 (Phase 8)**: formula verified against Swiss Ephemeris's
-  `SE_MEAN_APOG` on five dates spanning 1900-2050.
-  **Result: [TO BE FILLED BY PLAN 04 -- either "agreement within X.XXXX deg
-  on all sampled dates, no formula change" or "formula corrected to
-  A + B*d, max error reduced from M to N deg"]**.
+- **v1.1 (Phase 8)**: formula corrected after Swiss Ephemeris cross-check
+  revealed `MAX |delta| = 179.936579 deg` on every date in the 1900-2050
+  window (Plan 03 harness, `tests/test_lilith_cross_check.py`). The
+  primary signature was a constant ~180 deg offset: the v1.0 epoch
+  `83.3532 deg` was the *perigee* longitude at J2000.0, while
+  `swe.MEAN_APOG` returns the *apogee* (perigee + 180 deg). After the
+  +180 deg correction a secondary residual of ~0.11 deg remained,
+  oscillating with a period of ~1095 days (3 sidereal years). The v1.1
+  fix replaces all four duplicated rate-constant call sites with a
+  single private source of truth in `ketu/ephemeris/orbital.py` and
+  adds one trigonometric perturbation term, fitted by joint nonlinear
+  least squares over 55K daily samples spanning 1900-2050. Constants
+  updated:
+  - epoch:    `83.3532 deg`        -> `263.3521188770 deg`
+  - rate:     `0.1114040803 deg/d` -> `0.1114036699 deg/d`
+  - perturb:  (none)               -> `A=0.1156754590 deg`,
+    `omega=0.3287143373 deg/d`, `phi=96.6084061482 deg`
+
+  Four code sites updated for consistency:
+  - `ketu/ephemeris/orbital.py` (formula + ORBITAL_ELEMENTS row + private
+    module-level constants `_LILITH_MEAN_*` + `_LILITH_PERTURB_*`)
+  - `ketu/ephemeris/planets.py` (`lon_speed` for `Lilith` branch and
+    `avg_speeds[12]`)
+
+  Post-fix verdict (`tests/test_lilith_cross_check.py`):
+  - `MAX |delta|` over the 5 cross-check dates: `0.002693 deg`
+  - `MAX |delta|` over 55K daily samples 1900-2050: `0.007815 deg`
+
+  Both values comfortably under the `0.01 deg` tolerance defined in
+  Section 7. Concrete v1.0 -> v1.1 numerical change examples are
+  tabulated in `UPGRADING.md` (see Plan 05).
