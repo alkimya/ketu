@@ -1,151 +1,168 @@
-# Roadmap: Ketu 1.0
+# Roadmap: Ketu v1.1 Flexibility & Houses
 
 ## Overview
 
-Ketu 1.0 consolidates a working astronomical calculation library from v0.4.0 to production stability. This is not feature development but surgical refinement: fix known bugs, remove anti-features (chart/icalendar exports), eliminate hidden dependencies, harden tests, integrate complex math, and document the stable API. Seven phases move from API cleanup through release, ensuring every v1 requirement ships with correctness guarantees and 70% test coverage.
+Ketu v1.1 evolves the library from a pure astronomical engine into an astronomical-astrological framework. Building on the stable v1.0 foundation (250 tests, 91% coverage, PyPI-published), this milestone delivers three orthogonal capabilities: a verified Lilith calculation, configurable aspect sets (5 majors by default with opt-in harmonics), and an extensible houses module starting with Placidus and Koch. Five phases (8 through 12) ship the work, with phases 8/9/10 fully parallelizable, phase 11 integrating CLI on top of phases 9+10, and phase 12 closing with a v1.1.0 PyPI release.
+
+## Milestones
+
+- ✅ **v1.0 Production Stability** — Phases 1-7 (shipped 2026-02-12, archived to `.planning/milestones/v1.0-ROADMAP.md`)
+- 🚧 **v1.1 Flexibility & Houses** — Phases 8-12 (in progress)
 
 ## Phases
 
-- [x] **Phase 1: API Surface Cleanup** - Define public API, remove export modules
-- [x] **Phase 2: Correctness Fixes** - Fix cache and aspect bugs before 1.0
-- [x] **Phase 2.1: Fix Moon velocity and rename vlong API** (INSERTED)
-- [x] **Phase 3: Dependency Cleanup** - Remove hidden Pandas dependency
-- [x] **Phase 4: Test Coverage Hardening** - Achieve 70% coverage with module targets
-- [x] **Phase 5: Complex Math Integration** - Unify complex representation into cycle engine
-- [x] **Phase 6: Documentation & Type Checking** - Finalize docs and type hints
-- [x] **Phase 7: Release Preparation** - PyPI publish and GitHub release
+**Phase Numbering:**
+- Integer phases (8, 9, 10, 11, 12): Planned milestone work
+- Decimal phases (e.g. 9.1): Reserved for urgent insertions (none yet)
+
+**Execution Order & Parallelization:**
+- Phases 8, 9, 10 are mutually independent (disjoint modules) — can execute in parallel
+- Phase 11 hard-blocks on Phases 9 AND 10 (CLI surfaces the new aspect + houses APIs)
+- Phase 12 is last (depends on all prior phases)
+
+- [ ] **Phase 8: Lilith Verification & Fix** — Document Lilith definition, audit formula vs Swiss Ephemeris, fix if needed
+- [ ] **Phase 9: Configurable Aspects** — 5-major default with `CLASSICAL`/`TRADITIONAL`/`EXTENDED` presets; append-only `core.aspects`
+- [ ] **Phase 10: Houses Module** — Placidus + Koch with extensible registry, polar fallback, LST precision audit
+- [ ] **Phase 11: CLI Refactor & Integration** — argparse subcommands, `--harmonics SPEC`, `ketu houses` subcommand, introspection flags
+- [ ] **Phase 12: Release Preparation v1.1.0** — Version bump, CHANGELOG, UPGRADING.md, GitHub release, PyPI publish
+
+## Cross-Cutting Constraints
+
+These apply to every phase below (not just one) and originate from research/SUMMARY.md:
+
+- `core.aspects` array remains length 14 and append-only (Kala uses positional indexing)
+- No new runtime dependencies — pure NumPy contract preserved (`pysweph` is test-only, AGPL-safe)
+- All new code must pass mypy strict, numpydoc-style docstrings, interrogate ≥95%
+- All new calculations vectorized over date arrays (no Python loops in hot paths)
+- DateTime inputs always UTC
+- Cache keys include configuration hashes (aspect set, house system) — no stale results after config change
+- Coverage gate: ≥90% project, ≥85% per module, target 95% on new modules
 
 ## Phase Details
 
-### Phase 1: API Surface Cleanup
-**Goal**: Ketu has a clean, explicit public API with removed anti-features
-**Depends on**: Nothing (first phase)
-**Requirements**: REM-01, REM-02, REM-04
+### Phase 8: Lilith Verification & Fix
+
+**Goal**: Lilith longitude is provably correct against Swiss Ephemeris over 1900-2050, with the formula's definition documented before any code change.
+
+**Depends on**: Nothing (parallelizable with Phases 9 and 10)
+
+**Parallelizable with**: Phase 9, Phase 10
+
+**Requirements**: LIL-01, LIL-02, LIL-03, LIL-04, LIL-05
+
 **Success Criteria** (what must be TRUE):
-  1. User imports from `ketu` fail for chart and icalendar modules with clear error messages
-  2. `ketu.__all__` explicitly lists every public function and type
-  3. User installs fresh wheel in clean venv without matplotlib/icalendar dependencies
-  4. UPGRADING.md provides migration examples for removed export modules
-**Plans:** 2 plans
+  1. `LILITH_DEFINITION.md` exists and documents Mean Apogee, tropical longitude convention, and Chapront-Touz/Francou source citation BEFORE any formula code changes
+  2. User runs the test harness and sees `pysweph SE_MEAN_APOG` cross-check pass on 5+ dates spanning 1900, 1950, 2000, 2025, 2050 within an explicit tolerance documented in the test
+  3. If empirical error >0.01°, user sees the corrected formula land with regression tests pinning new values; if error ≤0.01°, definition document closes the loop without code change
+  4. User installs `ketu[test]` and `pysweph>=2.10.3.6` is present as a test-only dependency (NOT pulled into the runtime wheel)
+  5. CHANGELOG and UPGRADING.md document any Lilith value changes with explicit magnitude (e.g. "Lilith differs by X° vs v1.0 on 2025-01-01")
 
-Plans:
-- [x] 01-01-PLAN.md — Delete export modules, rewrite __init__.py, clean pyproject.toml, update test imports
-- [x] 01-02-PLAN.md — Write UPGRADING.md migration guide, verify cleanup
+**Plans**: TBD
 
-### Phase 2: Correctness Fixes
-**Goal**: All known CONCERNS.md bugs are resolved with regression tests
-**Depends on**: Phase 1
-**Requirements**: BUG-01, BUG-02
+### Phase 9: Configurable Aspects
+
+**Goal**: User can select an aspect set (5 majors default, 7 traditional, 14 extended) via Python API or named preset, with `core.aspects` remaining length-14 append-only and Kala's positional indexing preserved.
+
+**Depends on**: Nothing (parallelizable with Phases 8 and 10)
+
+**Parallelizable with**: Phase 8, Phase 10
+
+**Requirements**: ASP-01, ASP-02, ASP-03, ASP-04, ASP-05, ASP-06, ASP-07, ASP-08
+
 **Success Criteria** (what must be TRUE):
-  1. User sets `use_cache=False` and cache is verifiably disabled (operator precedence fixed)
-  2. User runs `calculate_aspects_vectorized()` across 100 dates and gets consistent aspect count every time
-  3. Each bug fix has a regression test that fails on v0.4.0 and passes on v1.0
-**Plans:** 2 plans
+  1. User imports `core.aspects` and sees length 14 with the same row order as v1.0; an invariant test fails on any reorder, deletion, or shape change
+  2. User imports `from ketu.aspects.presets import CLASSICAL, TRADITIONAL, EXTENDED` and the three constants resolve to 5, 7, and 14 aspects respectively
+  3. User calls `calculate_aspects(...)` (and `_vectorized`, `_batch` variants) with `aspects=CLASSICAL` and the result contains zero non-classical aspects (integration test)
+  4. User calls any aspect API with `aspects=None` and gets `CLASSICAL` (5 majors) — the default change is explicit and observable; downstream consumers like Kala must opt into `EXTENDED`
+  5. User runs `pytest -k benchmark` and `calculate_aspects_batch()` shows ≤5% regression vs the v1.0 baseline (filter mask resolved once at API entry, not in hot loops); LRU caches include `aspect_set` hash so config changes never return stale results
 
-Plans:
-- [x] 02-01-PLAN.md — Fix cache operator precedence (BUG-01) with regression test
-- [x] 02-02-PLAN.md — Fix aspect vectorization non-determinism (BUG-02) with regression test
+**Plans**: TBD
 
-### Phase 02.1: Fix Moon velocity and rename vlong API (INSERTED)
+### Phase 10: Houses Module
 
-**Goal:** Moon velocity is correct at 360/0 boundary and velocity functions have explicit, unambiguous names
-**Depends on:** Phase 2
-**Plans:** 2 plans
+**Goal**: User can compute Placidus or Koch house cusps over batched `(jd, lat, lon)` inputs with polar safety, returning a structured `HOUSES_DTYPE` array and a `house_of(planet_lon, cusps)` helper.
 
-Plans:
-- [x] 02.1-01-PLAN.md — Fix Moon velocity wrapping bug (TDD: regression test + fix)
-- [x] 02.1-02-PLAN.md — Rename vlong/vlat/vdist_au to explicit velocity names
+**Depends on**: Nothing (parallelizable with Phases 8 and 9)
 
-### Phase 3: Dependency Cleanup
-**Goal**: Ketu is pure NumPy (no hidden Pandas dependency)
-**Depends on**: Phase 2
-**Requirements**: REM-03
+**Parallelizable with**: Phase 8, Phase 9
+
+**Requirements**: HOU-01, HOU-02, HOU-03, HOU-04, HOU-05, HOU-06, HOU-07, HOU-08, HOU-09, HOU-10
+
 **Success Criteria** (what must be TRUE):
-  1. User calls `generate_aspect_timeline()` and receives NumPy structured array (not DataFrame)
-  2. User installs ketu in fresh venv and Pandas is not installed as transitive dependency
-  3. All aspect timeline tests pass with NumPy structured arrays instead of DataFrames
-**Plans:** 1 plan
+  1. User calls `calculate_houses(jd, lat, lon, system="placidus")` (or `"koch"`) and receives a `HOUSES_DTYPE` structured array with 12 cusps + ASC + MC + ARMC + Vertex; vectorized inputs return arrays with leading shape preserved
+  2. User computes a chart at any latitude in (-66.56°, +66.56°) and the Ascendant matches Astro.com / Swiss Ephemeris within <1 arcmin (LST/obliquity precision audit completed BEFORE algorithm implementation, per HOU-01)
+  3. User passes lat ≥ 66.56° (e.g. 70°, 80°) and either receives `HighLatitudeError` (default) or, with `polar_fallback="porphyry"`, gets a Porphyry-derived cusp set — never silent NaN
+  4. User adds a new house system by registering it in `houses/registry.py` (`SYSTEMS = {"placidus": ..., "koch": ..., "myhouse": ...}`) without touching dispatch code; the broken `calculate_house_cusps` stub in `ephemeris/planets.py` is gone
+  5. User runs `pytest tests/houses/` and sees ≥95% module coverage with ≥10 reference fixtures vs Astro.com/Swiss Ephemeris (including polar latitudes 70°/80° and Placidus iteration cap at 50 with explicit non-convergence handling); `house_of(planet_lon, cusps)` returns a 1-12 integer for any longitude
 
-Plans:
-- [x] 03-01-PLAN.md — Remove to_pandas() from AspectTimeline, refactor resonance.py to NumPy, update docs and UPGRADING.md
+**Plans**: TBD
 
-### Phase 4: Test Coverage Hardening
-**Goal**: 70% overall coverage with critical modules above 85%
-**Depends on**: Phase 3
-**Requirements**: TST-01, TST-02, TST-03, TST-04, QAL-02
+### Phase 11: CLI Refactor & Integration
+
+**Goal**: User invokes `ketu` via argparse subcommands, opts into harmonics through `--harmonics SPEC`, computes houses through `ketu houses ...`, and sees the resolved configuration echoed in output — backward compat preserved via `--harmonics all`.
+
+**Depends on**: Phase 9 AND Phase 10 (needs both new APIs to surface them)
+
+**Parallelizable with**: — (sequential after 9+10)
+
+**Requirements**: CLI-01, CLI-02, CLI-03, CLI-04, CLI-05, CLI-06
+
 **Success Criteria** (what must be TRUE):
-  1. Coverage report shows overall 70% with cycles >85%, cache >85%, aspects >85%
-  2. Tests run successfully on Python 3.10, 3.11, 3.12, 3.13 in CI
-  3. All angle comparisons use `numpy.testing.assert_allclose` with documented tolerance (1e-6)
-  4. Pytest recognizes `slow` marker without warnings
-  5. Edge case tests exist for 0deg/360deg angle boundaries
-**Plans:** 2 plans
+  1. User runs `ketu --help` and sees argparse subcommands (no interactive `input()` prompt anywhere); each subcommand has its own `--help`
+  2. User runs `ketu --harmonics classical` (or `traditional`, `extended`, `all`, or explicit list `9,10,11`) and the aspect output matches the requested set; bare integer `--harmonics 12` is rejected with a clear error pointing to named presets
+  3. User runs `ketu --harmonics all ...` against a v1.0-captured reference output and the result is byte-identical (legacy escape hatch regression-tested in CI)
+  4. User runs `ketu houses --date 2026-05-06T12:00:00Z --lat 48.85 --lon 2.35 --system placidus` and receives the same house cusps the Python API returns for the same inputs
+  5. User runs `ketu --list-aspect-sets` and `ketu --list-house-systems` and sees the available options with descriptions; every CLI invocation echoes a resolved-config header (e.g. `# Aspect set: classical [0°, 60°, 90°, 120°, 180°]` and the chosen house system if applicable)
 
-Plans:
-- [x] 04-01-PLAN.md — Fix pyproject.toml config + comprehensive cache module tests (15% -> 85%)
-- [x] 04-02-PLAN.md — Cycles calculator tests (72% -> 85%) + re-enable CI
+**Plans**: TBD
 
-### Phase 5: Complex Math Integration
-**Goal**: Cycle engine uses complex numbers internally, degrees externally
-**Depends on**: Phase 4
-**Requirements**: CPX-01, CPX-02, CPX-03, QAL-01
+### Phase 12: Release Preparation v1.1.0
+
+**Goal**: Ketu 1.1.0 is published to PyPI with a GitHub release, breaking-behavior changes documented, and a working migration guide for v1.0 users.
+
+**Depends on**: Phase 8, Phase 9, Phase 10, Phase 11
+
+**Parallelizable with**: — (sequential, last phase)
+
+**Requirements**: REL-01, REL-02, REL-03, REL-04
+
 **Success Criteria** (what must be TRUE):
-  1. User calls cycle functions and receives degree outputs while engine uses complex math internally
-  2. `ResonanceField._get_trace()` uses vectorized batch calculations (no Python loops)
-  3. Single coherent caching strategy exists (not LRU + EphemerisCache in parallel)
-  4. Error messages across all modules follow consistent format with context
-**Plans:** 2 plans
+  1. User checks `pyproject.toml` and `ketu/__init__.py` and sees version `1.1.0`; the version sync test passes in CI
+  2. User reads CHANGELOG.md and finds a "BREAKING / Numerical Behavior Changes" section listing: CLI default change (5 majors), Lilith correction (with magnitude if any), new houses module
+  3. User reads UPGRADING.md v1.0 → v1.1 section and finds explicit migration recipes for script users (CLI), Kala adapter (request `EXTENDED` for legacy 14), and any Lilith consumers
+  4. User runs `pip install ketu==1.1.0` from PyPI in a fresh venv and the test suite passes (250+ tests, mypy strict, numpydoc, interrogate ≥95%); the GitHub release v1.1.0 is published with notes pointing to CHANGELOG and UPGRADING
 
-Plans:
-- [x] 05-01-PLAN.md — Vectorize ResonanceField._get_trace() and document dual-cache architecture
-- [x] 05-02-PLAN.md — Standardize error messages across all modules and verify complex math integration
+**Plans**: TBD
 
-### Phase 6: Documentation & Type Checking
-**Goal**: 1.0 API is fully documented with enforced type hints
-**Depends on**: Phase 5
-**Requirements**: DOC-01, DOC-02
-**Success Criteria** (what must be TRUE):
-  1. User reads documentation and finds no references to chart, icalendar, matplotlib, or removed functions
-  2. CHANGELOG.md has detailed BREAKING CHANGES section explaining 0.4.0 to 1.0.0 migration
-  3. All public functions have NumPy-style docstrings with working examples
-  4. Mypy runs in strict mode without errors in CI
-  5. Numerical precision guarantees are documented (1e-6 degrees for typical use)
-**Plans:** 3 plans
+## Coverage Validation
 
-Plans:
-- [x] 06-01-PLAN.md — Purge chart/icalendar references from docs, write CHANGELOG 1.0.0 BREAKING CHANGES
-- [x] 06-02-PLAN.md — Add NumPy-style docstrings to all public functions (~110 functions)
-- [x] 06-03-PLAN.md — Configure mypy strict mode, fix type errors, add to CI
+**v1.1 requirements: 33 total — all mapped, no orphans**
 
-### Phase 7: Release Preparation
-**Goal**: Ketu 1.0.0 is published to PyPI with GitHub release
-**Depends on**: Phase 6
-**Requirements**: DOC-03, DOC-04, DOC-05, DOC-06
-**Success Criteria** (what must be TRUE):
-  1. Version is 1.0.0 in pyproject.toml, `ketu/__init__.py`, and all docs
-  2. PyPI classifiers show "Development Status :: 5 - Production/Stable"
-  3. GitHub release v1.0.0 exists with changelog and download links
-  4. User installs `pip install ketu==1.0.0` from PyPI and all tests pass
-  5. Wheel and sdist both install cleanly in fresh venv without removed modules
-**Plans:** 2 plans
+| Requirement | Phase |
+|-------------|-------|
+| LIL-01, LIL-02, LIL-03, LIL-04, LIL-05 | Phase 8 |
+| ASP-01, ASP-02, ASP-03, ASP-04, ASP-05, ASP-06, ASP-07, ASP-08 | Phase 9 |
+| HOU-01, HOU-02, HOU-03, HOU-04, HOU-05, HOU-06, HOU-07, HOU-08, HOU-09, HOU-10 | Phase 10 |
+| CLI-01, CLI-02, CLI-03, CLI-04, CLI-05, CLI-06 | Phase 11 |
+| REL-01, REL-02, REL-03, REL-04 | Phase 12 |
 
-Plans:
-- [x] 07-01-PLAN.md — Version bump to 1.0.0, classifier updates, publish workflow (trusted publishing), version sync test
-- [x] 07-02-PLAN.md — Build validation (wheel + sdist), fresh venv install test, release readiness checkpoint
+**Coverage:** 33/33 requirements mapped ✓ (no orphans, no duplicates)
 
 ## Progress
 
-| Phase | Plans Complete | Status | Completed |
-|-------|----------------|--------|-----------|
-| 1. API Surface Cleanup | 2/2 | ✓ Complete | 2026-02-12 |
-| 2. Correctness Fixes | 2/2 | ✓ Complete | 2026-02-12 |
-| 2.1 Fix Moon velocity & vlong | 2/2 | ✓ Complete | 2026-02-12 |
-| 3. Dependency Cleanup | 1/1 | ✓ Complete | 2026-02-12 |
-| 4. Test Coverage Hardening | 2/2 | ✓ Complete | 2026-02-12 |
-| 5. Complex Math Integration | 2/2 | ✓ Complete | 2026-02-12 |
-| 6. Documentation & Type Checking | 3/3 | ✓ Complete | 2026-02-12 |
-| 7. Release Preparation | 2/2 | ✓ Complete | 2026-02-12 |
+**Execution Order:** 8 → (8, 9, 10 parallel) → 11 → 12
+
+| Phase | Milestone | Plans Complete | Status | Completed |
+|-------|-----------|----------------|--------|-----------|
+| 1-7 (collapsed) | v1.0 | 16/16 | ✓ Complete | 2026-02-12 |
+| 8. Lilith Verification & Fix | v1.1 | 0/TBD | Not started | - |
+| 9. Configurable Aspects | v1.1 | 0/TBD | Not started | - |
+| 10. Houses Module | v1.1 | 0/TBD | Not started | - |
+| 11. CLI Refactor & Integration | v1.1 | 0/TBD | Not started | - |
+| 12. Release Preparation v1.1.0 | v1.1 | 0/TBD | Not started | - |
+
+v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`.
 
 ---
-*Roadmap created: 2026-02-12*
-*Last updated: 2026-02-12 — All phases complete, v1.0.0 published to PyPI*
+*Roadmap v1.1 created: 2026-05-06*
+*v1.0 roadmap archived to .planning/milestones/v1.0-ROADMAP.md*
