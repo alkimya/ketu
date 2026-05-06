@@ -57,7 +57,15 @@ These apply to every phase below (not just one) and originate from research/SUMM
   4. User installs `ketu[test]` and `pysweph>=2.10.3.6` is present as a test-only dependency (NOT pulled into the runtime wheel)
   5. CHANGELOG and UPGRADING.md document any Lilith value changes with explicit magnitude (e.g. "Lilith differs by X° vs v1.0 on 2025-01-01")
 
-**Plans**: TBD
+**Plans:** 5 plans (4 if Plan 03 harness passes — Plan 04 is conditional)
+
+Plans:
+
+- [ ] 08-01-lilith-definition-PLAN.md — Write `docs/LILITH_DEFINITION.md` (formula, frame, Chapront citation, tolerance derivation, history placeholder) BEFORE any code is touched (LIL-01)
+- [ ] 08-02-test-only-dependency-PLAN.md — Add `pysweph>=2.10.3.6` to `[project.optional-dependencies].test`; verify two-venv runtime isolation (AGPL non-contamination) (LIL-04)
+- [ ] 08-03-cross-check-harness-PLAN.md — `tests/test_lilith_cross_check.py` parametrized over 5 dates spanning 1900-2050; record empirical max |delta|; gate Plan 04 branch (LIL-02)
+- [ ] 08-04-conditional-formula-fix-PLAN.md — Branched: NO-OP if max|delta| ≤ 0.01° / FORMULA-CORRECTION updates all THREE plumbing sites (orbital.py:591/146, planets.py:153/458) + regression baselines (LIL-03)
+- [ ] 08-05-release-notes-PLAN.md — Update CHANGELOG.md and UPGRADING.md with explicit magnitude (zero allowed) and per-date table on FORMULA-CORRECTION branch (LIL-05)
 
 ### Phase 9: Configurable Aspects
 
@@ -155,7 +163,7 @@ These apply to every phase below (not just one) and originate from research/SUMM
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-7 (collapsed) | v1.0 | 16/16 | ✓ Complete | 2026-02-12 |
-| 8. Lilith Verification & Fix | v1.1 | 0/TBD | Not started | - |
+| 8. Lilith Verification & Fix | v1.1 | 0/5 | Planned | - |
 | 9. Configurable Aspects | v1.1 | 0/TBD | Not started | - |
 | 10. Houses Module | v1.1 | 0/TBD | Not started | - |
 | 11. CLI Refactor & Integration | v1.1 | 0/TBD | Not started | - |
@@ -165,4 +173,5 @@ v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`.
 
 ---
 *Roadmap v1.1 created: 2026-05-06*
+*Phase 8 plans created: 2026-05-06*
 *v1.0 roadmap archived to .planning/milestones/v1.0-ROADMAP.md*
