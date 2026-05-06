@@ -20,7 +20,7 @@ Ketu v1.1 evolves the library from a pure astronomical engine into an astronomic
 - Phase 11 hard-blocks on Phases 9 AND 10 (CLI surfaces the new aspect + houses APIs)
 - Phase 12 is last (depends on all prior phases)
 
-- [ ] **Phase 8: Lilith Verification & Fix** — Document Lilith definition, audit formula vs Swiss Ephemeris, fix if needed
+- [x] **Phase 8: Lilith Verification & Fix** — Document Lilith definition, audit formula vs Swiss Ephemeris, fix if needed (completed 2026-05-06)
 - [ ] **Phase 9: Configurable Aspects** — 5-major default with `CLASSICAL`/`TRADITIONAL`/`EXTENDED` presets; append-only `core.aspects`
 - [ ] **Phase 10: Houses Module** — Placidus + Koch with extensible registry, polar fallback, LST precision audit
 - [ ] **Phase 11: CLI Refactor & Integration** — argparse subcommands, `--harmonics SPEC`, `ketu houses` subcommand, introspection flags
@@ -163,7 +163,7 @@ Plans:
 | Phase | Milestone | Plans Complete | Status | Completed |
 |-------|-----------|----------------|--------|-----------|
 | 1-7 (collapsed) | v1.0 | 16/16 | ✓ Complete | 2026-02-12 |
-| 8. Lilith Verification & Fix | v1.1 | 0/5 | Planned | - |
+| 8. Lilith Verification & Fix | v1.1 | 5/5 | ✓ Complete | 2026-05-06 |
 | 9. Configurable Aspects | v1.1 | 0/TBD | Not started | - |
 | 10. Houses Module | v1.1 | 0/TBD | Not started | - |
 | 11. CLI Refactor & Integration | v1.1 | 0/TBD | Not started | - |
@@ -174,4 +174,5 @@ v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`.
 ---
 *Roadmap v1.1 created: 2026-05-06*
 *Phase 8 plans created: 2026-05-06*
+*Phase 8 executed: 2026-05-06 (FORMULA-CORRECTION branch — Lilith formula fixed at 4 sites, max |delta| 0.002693° vs Swiss Ephemeris)*
 *v1.0 roadmap archived to .planning/milestones/v1.0-ROADMAP.md*
