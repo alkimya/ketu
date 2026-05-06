@@ -1,940 +1,347 @@
-# Pitfalls Research: Python Library 1.0 Consolidation
+# Pitfalls Research: Ketu v1.1 — Configurable Aspects, Houses, Lilith Fix
 
-**Domain:** Python scientific library (astronomical calculations)
-**Researched:** 2026-02-12
-**Confidence:** HIGH (based on codebase analysis + established Python packaging practices)
+**Domain:** Python scientific library (astronomy/astrology), v1.0.0 published on PyPI, downstream consumers (Kala, Surya)
+**Researched:** 2026-05-06
+**Confidence:** HIGH (codebase inspection + Swiss Ephemeris docs + community sources verified across 2+ sources)
+
+---
 
 ## Critical Pitfalls
 
-### Pitfall 1: Breaking Public API Without Deprecation Path
+### Pitfall 1: Silent Breaking Change in NumPy Structured Array Shape
 
 **What goes wrong:**
-Users upgrade from 0.4.0 to 1.0.0 and their code breaks immediately with ImportError or AttributeError. No warning, no migration guide, just broken imports.
+Kala's `KetuAdapter` consumes `aspects` as a 14-element `np.ndarray` (verified in `ketu/core.py:84` — 14 rows). If v1.1 changes the *shape* of `aspects` (e.g., adds harmonic 12 → 21 rows), Kala's ML feature pipeline silently produces wrong features (different column count, NaN-padded rows, or index-shifted lookups). NumPy doesn't raise — it just gives wrong numbers.
 
 **Why it happens:**
-When removing export modules (chart, icalendar), the natural approach is to delete them and update `__all__`. But users importing `from ketu import draw_zodiacal_chart` will face hard failures.
+Configurable aspect sets feel "additive." Developer adds 7 new aspects to the `aspects` array thinking "more options is fine." But `aspects` is a *public global* that downstream code indexes by position (`aspects[7]` = Square in v1.0). Any reordering or expansion shifts those indexes.
 
 **How to avoid:**
-1. **Before removal**: Add deprecation warnings in 0.5.0 release
-   ```python
-   # ketu/__init__.py in 0.5.0
-   try:
-       from ketu.export import draw_zodiacal_chart
-       import warnings
-       warnings.warn(
-           "draw_zodiacal_chart will be removed in ketu 1.0. "
-           "Chart exports are deprecated.",
-           DeprecationWarning,
-           stacklevel=2
-       )
-   except ImportError:
-       pass
-   ```
-
-2. **In 1.0**: Provide clear ImportError messages
-   ```python
-   # ketu/__init__.py in 1.0.0
-   def draw_zodiacal_chart(*args, **kwargs):
-       raise ImportError(
-           "ketu.draw_zodiacal_chart was removed in 1.0.0. "
-           "Chart rendering is no longer supported. "
-           "Use ketu 0.4.x for chart exports."
-       )
-   ```
-
-3. **Migration guide**: Document in CHANGELOG.md and GitHub release notes
-   - What was removed
-   - Why it was removed
-   - Alternatives (stay on 0.4.x or use separate charting library)
+1. Treat the `aspects` constant as a **frozen, append-only** structured array. Document the order as part of the public contract.
+2. New aspects must be appended at the end, never inserted in the middle.
+3. Add a runtime invariant test: `assert aspects['name'][7] == b'Square'` — this fails loudly if anyone reorders.
+4. Provide aspect sets as *named filters*, not by mutating the global: `get_aspect_set("traditional")` returns a view/copy with stable indexing.
+5. Coordinate with Kala maintainer: if 14-element shape is essential, expose `LEGACY_14_ASPECTS` constant explicitly.
 
 **Warning signs:**
-- No 0.5.0 deprecation release between 0.4.0 and 1.0.0
-- CHANGELOG doesn't have "BREAKING CHANGES" section
-- No migration guide in README or docs
 
-**Phase to address:**
-Phase 1 (Deprecation) + Phase 7 (Release Preparation)
+- PR diff modifies the order of rows in `ketu/core.py:aspects`
+- Test suite passes but Kala integration test fails
+- `len(ketu.core.aspects) != 14` in v1.1 without a major version bump
+
+**Phase to address:** Phase 1 (configurable aspects design) — *before any code is written*, decide: append-only or named-views? Documented in DESIGN.md.
 
 ---
 
-### Pitfall 2: SemVer Confusion - Users Expect Stability After 1.0
+### Pitfall 2: LRU Cache Keys Don't Include Aspect Set / House System
 
 **What goes wrong:**
-After 1.0.0 release, users expect rock-solid stability. Any breaking change in 1.1.0 or bug that changes calculation results violates their trust. Scientific libraries are particularly sensitive because downstream users cache results and expect reproducibility.
+`ketu/aspects/core.py:73` uses `@lru_cache(maxsize=256)` on `_cached_planet_position_batch(jd_tuple, planet_id)`. Position cache is fine. But if v1.1 adds caches for *aspect calculations* or *house cusps* keyed only on `(jd, lat, lon)`, then changing the active aspect set or house system mid-session returns stale results computed against the *previous* configuration.
 
 **Why it happens:**
-Pre-1.0 projects can break things freely. 1.0.0 signals "production ready" and "stable API." Breaking changes after 1.0 require major version bump (2.0). Teams underestimate this commitment.
+Configuration feels orthogonal to inputs. Developer caches `compute_aspects(jd, body1, body2)` and forgets that "which aspects are valid" is part of the result.
 
 **How to avoid:**
-1. **Fix ALL known bugs before 1.0.0**
-   - Operator precedence bug in cache logic (CONCERNS.md line 140-165)
-   - Aspect non-determinism (30 vs 31 aspects, CONCERNS.md line 167-174)
-   - These are correctness bugs — must be fixed, even if behavior changes
-
-2. **Document behavior precisely**
-   - Exact orb calculation formula (currently undocumented, CONCERNS.md line 268-274)
-   - Aspect ordering guarantees (or explicitly "undefined order")
-   - Numerical precision guarantees (e.g., "positions accurate to 0.001 degrees")
-
-3. **Add "Correctness" section to CHANGELOG**
-   ```markdown
-   ## [1.0.0] - Breaking Changes
-
-   ### Correctness Fixes (may change results from 0.4.0)
-   - Fixed operator precedence bug in cache logic - cache now respects use_cache=False
-   - Fixed aspect vectorization non-determinism - always returns same number of aspects
-   - Orb calculations now documented and standardized
-
-   **Impact**: If you relied on v0.4.0 results, recompute with v1.0.0 for correct values.
-   ```
-
-4. **Commit to semantic versioning strictly**
-   - 1.x.y releases: bug fixes only (no behavior changes unless fixing incorrect behavior)
-   - 1.x.0 releases: new features (backward compatible)
-   - 2.0.0 release: breaking changes
+1. Every cache key must include a configuration fingerprint: `(jd_tuple, body1, body2, aspect_set_hash, orb_policy_hash)`.
+2. Make config objects **frozen and hashable** (`@dataclass(frozen=True)`) so they can be cache keys directly.
+3. Expose a `cache_clear_all()` helper and call it in tests that switch config.
+4. Document that mutating the global aspect set requires `_cached_planet_position_batch.cache_clear()`.
+5. For house systems, include the system char (`'P'`, `'K'`) in any cache key.
 
 **Warning signs:**
-- Known bugs still present at 1.0.0 release
-- No documentation of numerical precision guarantees
-- No policy for handling correctness bugs post-1.0
 
-**Phase to address:**
-Phase 2 (Bug Fixes) — must complete before 1.0.0 release
+- A test that sets `aspect_set = "traditional"`, calls API, then sets `aspect_set = "harmonic_12"` and gets traditional results.
+- Cache stats (`.cache_info()`) show 100% hit rate after a config change (should be 0%).
+
+**Phase to address:** Phase 1 (configurable aspects core) and Phase 2 (houses) — must be designed in from day one.
 
 ---
 
-### Pitfall 3: Hidden Dependencies Fail at Runtime
+### Pitfall 3: Picking the Wrong Lilith and Validating Against the Wrong Authority
 
 **What goes wrong:**
-User installs `pip install ketu==1.0.0` successfully. Code runs fine until they call a function that imports Pandas, then:
-```
-ImportError: No module named 'pandas'
-```
+Three definitions exist: **Mean Lilith** (lunar apogee, smooth ~40°/yr precession, no retrograde — what Ketu currently implements per `ketu/core.py:77`), **True/Osculating Lilith** (instantaneous apogee, can retrograde, differs from Mean by up to 30°), and **Asteroid Lilith #1181** (a real minor planet, completely different orbit). Fixing "the Lilith bug" without specifying *which* Lilith leads to:
 
-**Why it happens:**
-Ketu has hidden Pandas dependency in `aspects/timelines.py` (CONCERNS.md line 119-125). Import is inside function, not at module level, so pip doesn't track it and installation succeeds. Failure happens at runtime.
+- Implementing True Lilith, then validating against Astro.com which defaults to Mean Lilith → tests pass for wrong reason.
+- Implementing Mean correctly, but the bug was actually the sign of the apogee longitude (Lilith is the apogee + 180° in some conventions).
 
 **How to avoid:**
-**Option A: Make Pandas required** (increases dependency burden)
-```toml
-# pyproject.toml
-dependencies = [
-    "numpy>=1.20.0",
-    "pandas>=1.5.0",  # Now required
-]
-```
-
-**Option B: Make aspect timelines optional** (preferred for pure NumPy goal)
-```python
-# ketu/__init__.py
-try:
-    from ketu.aspects.timelines import generate_aspect_timeline
-    _TIMELINES_AVAILABLE = True
-except ImportError:
-    _TIMELINES_AVAILABLE = False
-    def generate_aspect_timeline(*args, **kwargs):
-        raise ImportError(
-            "generate_aspect_timeline requires pandas. "
-            "Install with: pip install pandas>=1.5.0"
-        )
-```
-
-**Option C: Remove Pandas entirely** (best for 1.0 goal)
-- Rewrite `aspects/timelines.py` to use structured NumPy arrays (CYCLE_DTYPE already exists)
-- Remove DataFrame conversions, return structured arrays instead
-- Breaking change but acceptable for 1.0
-
-**Recommendation**: Option C — rewrite to pure NumPy, aligns with "NumPy only" constraint.
+1. **Decide first, code second.** Phase 3 starts with a written decision: "Ketu computes *Mean* Lilith = Mean Lunar Apogee, longitude in tropical zodiac, defined as [precise formula citing source]."
+2. Pick **two** independent reference sources (Swiss Ephemeris `swe_calc(SE_MEAN_APOG)` AND Astro.com), confirm they agree, then test against both.
+3. Capture **at least 5 reference dates** (current epoch, J2000, 1900-01-01, 2000-01-01, 2050-01-01) accurate to 0.01° — hardcode as test fixtures.
+4. Document that True Lilith and Asteroid Lilith are out-of-scope.
 
 **Warning signs:**
-- Import statements hidden inside functions
-- Dependencies not in `pyproject.toml` but used in code
-- No test that validates install in clean environment
 
-**Phase to address:**
-Phase 3 (Dependency Cleanup) — remove Pandas before 1.0.0
+- The fix PR has no link to a primary source defining Lilith.
+- Test fixtures use values from a single online calculator.
+- The word "Lilith" appears in the PR without "Mean" or "True" or "#1181" qualifier.
+
+**Phase to address:** Phase 3 (Lilith fix) — first task is "write LILITH_DEFINITION.md and pick reference sources" before touching code.
 
 ---
 
-### Pitfall 4: Removing Modules from PyPI Package Without Proper Metadata
+### Pitfall 4: Lilith Fix Is a Silent Breaking Change for Users Built on the Bug
 
 **What goes wrong:**
-User has code: `from ketu.export.chart import draw_zodiacal_chart`. After upgrading to 1.0.0:
-1. If `ketu.export` package is removed entirely → `ModuleNotFoundError`
-2. If kept as stub → `ImportError` inside the module
-3. Worst case: Old `.pyc` files from 0.4.0 remain, code "works" but uses stale bytecode
-
-**Why it happens:**
-Python package managers don't automatically remove old files when upgrading. If 0.4.0 installed `ketu/export/chart.py` and 1.0.0 removes it from `packages=[]`, the old file may persist.
+If Ketu v1.0 produces "wrong" Lilith longitudes and a downstream user (Kala? Surya?) trained ML models or stored chart data using those wrong values, fixing the math invalidates their data.
 
 **How to avoid:**
-1. **Clean package list in pyproject.toml**
-   ```toml
-   # Current (0.4.0)
-   packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.cycles", "ketu.cache", "ketu.export"]
+1. Bump **minor version** at minimum (already planned: v1.1).
+2. Add a **prominent CHANGELOG section** "Numerical Behavior Changes": "Lilith longitudes will differ from v1.0 by up to X° at any given date."
+3. Document the magnitude of change with concrete examples.
+4. Optional: legacy mode `ketu.set_lilith_mode("v1.0_legacy")` if backward compat matters.
+5. Notify Kala and Surya maintainers *before* release.
 
-   # 1.0.0 - remove export
-   packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.cycles", "ketu.cache"]
-   ```
-
-2. **Use `find_packages()` carefully**
-   If switching from explicit list to `find_packages()`, verify it doesn't accidentally include export:
-   ```python
-   # setup.py or pyproject.toml
-   packages = find_packages(exclude=["tests", "benchmarks", "examples"])
-   ```
-
-3. **Test clean install** (critical step often skipped)
-   ```bash
-   # Create fresh venv
-   python -m venv test_venv
-   source test_venv/bin/activate
-
-   # Install wheel directly (not editable)
-   pip install dist/ketu-1.0.0-py3-none-any.whl
-
-   # Verify removed modules don't import
-   python -c "from ketu.export import draw_zodiacal_chart" # Should fail
-   python -c "import ketu.export.chart" # Should fail
-   ```
-
-4. **Document upgrade path**
-   ```markdown
-   # UPGRADING.md
-   ## From 0.4.x to 1.0.0
-
-   If upgrading in existing environment:
-   ```bash
-   pip uninstall ketu
-   pip install ketu==1.0.0
-   ```
-
-   This ensures old export modules are removed.
-   ```
-
-**Warning signs:**
-- No clean install test in fresh venv
-- `setup.py`/`pyproject.toml` has manual package list that doesn't match actual structure
-- No `.pyc` cleanup in upgrade path
-
-**Phase to address:**
-Phase 7 (Release Preparation) — must test before PyPI publish
+**Phase to address:** Phase 3 (Lilith fix) for legacy mode; Phase final (release) for CHANGELOG/UPGRADING.md.
 
 ---
 
-### Pitfall 5: Test Coverage Number Hides Critical Gaps
+### Pitfall 5: Placidus Undefined Above ~66° Latitude — Silent NaN Propagation
 
 **What goes wrong:**
-Project reaches 70% test coverage and releases 1.0.0. Users discover critical bugs in:
-- Cache behavior (0% coverage, CONCERNS.md line 21-23)
-- Cycle calculations (0% coverage, CONCERNS.md line 25-29)
+At polar latitudes (>~66.56°), parts of the ecliptic never cross the horizon, and Placidus's semi-arc trisection has no solution. Naïve implementations:
 
-Coverage metric is met but **wrong code** was tested.
+- Return NaN cusps → propagate through downstream calculations as silent NaNs.
+- Hang in iterative loops that never converge.
+- Return finite-but-meaningless values from a numerical solver.
 
-**Why it happens:**
-Coverage tools measure lines executed, not correctness. Easy to hit 70% by testing trivial functions (getters, formatters) while leaving core logic untested.
+Koch has the same fundamental issue (also based on diurnal arcs).
 
 **How to avoid:**
-1. **Coverage by module, not overall**
-   ```bash
-   pytest --cov=ketu --cov-report=term-missing
+1. Detect polar regime explicitly: `if abs(latitude) > 66.56: ...`
+2. Provide a **documented fallback**: Swiss Ephemeris's `houses_with_fallback` pattern uses **Porphyry** (works at all latitudes) when Placidus/Koch fail.
+3. Allow user to choose: `polar_fallback="porphyry" | "whole_sign" | "raise"`.
+4. Add explicit polar-region tests: 70°N, 80°N, 89°N (and southern equivalents).
+5. Validate convergence: cap iterations (e.g., 50) and detect non-convergence.
 
-   # Check per-module coverage
-   # CRITICAL: Cache, cycles, aspects must be >80%
-   # ACCEPTABLE: Display, export (deprecated) can be lower
-   ```
-
-2. **Priority-based coverage targets**
-   | Module | Priority | Target Coverage | Rationale |
-   |--------|----------|-----------------|-----------|
-   | `ketu/cycles/calculator.py` | CRITICAL | 90% | Core calculation engine |
-   | `ketu/cache/ephemeris_cache.py` | CRITICAL | 85% | Data integrity risk |
-   | `ketu/aspects/core.py` | HIGH | 85% | Affects all downstream |
-   | `ketu/complex.py` | HIGH | 80% | Mathematical correctness |
-   | `ketu/display.py` | LOW | 40% | UI only, not data |
-
-3. **Write tests for failure modes**
-   Current tests focus on happy path. Add:
-   - Invalid inputs (negative JD, out-of-range bodies)
-   - Edge cases (timestamp at exactly 0°, 360° wraparound)
-   - Cache corruption scenarios
-   - Non-determinism tests (run same calculation 100 times, verify identical results)
-
-4. **Mutation testing** (advanced, optional)
-   Tools like `mutmut` inject bugs into code to verify tests catch them:
-   ```bash
-   pip install mutmut
-   mutmut run --paths-to-mutate ketu/cycles/
-   # If mutation survives → test gap
-   ```
-
-**Warning signs:**
-- High coverage in `display.py`, low in `cycles/calculator.py`
-- No tests for error conditions
-- Coverage jumps from 62% to 71% without testing critical modules
-
-**Phase to address:**
-Phase 4 (Test Coverage) — prioritize critical modules
+**Phase to address:** Phase 2 (houses) — must include polar-fallback design and tests in DoD.
 
 ---
 
-### Pitfall 6: Complex Number Math - Precision Loss in Angle Wrapping
+### Pitfall 6: Sidereal Time Precision Cliff — Small SidT Error → Big Cusp Error
 
 **What goes wrong:**
-Cycle phase calculations lose precision during normalization. User calculates angle separation, gets 359.9999999997° instead of 0.0° due to floating point error compounded by trig functions.
+House cusps depend on **Local Sidereal Time** (LST). 1 second of LST error ≈ 1 second-of-arc on MC. But:
 
-**Why it happens:**
-Complex number representation uses `e^(iθ) = cos(θ) + i·sin(θ)`. Chain of operations:
-1. Degrees → Radians (first conversion)
-2. Radians → Complex (sin/cos introduce error)
-3. Complex division (compounds error)
-4. Complex → Radians (atan2 introduces error)
-5. Radians → Degrees (final conversion)
+- **1 minute of LST error** ≈ 15 arcminutes on MC ≈ a planet jumps house if near a cusp.
+- **GMST formula errors** (wrong precession model, JD-vs-JDE confusion, UT1-vs-UTC) accumulate to minutes.
+- **True vs Apparent obliquity**: using mean obliquity for cusp calculation introduces ~9″ error on Asc/Desc.
 
-Each step loses ~1e-15 precision. After 5 steps, can accumulate to 1e-12, which becomes visible after wraparound.
+Ketu's existing `ephemeris/time.py` was tuned for *body positions* (~0.01° suffices). Houses need ~0.001° (10× tighter).
 
 **How to avoid:**
-1. **Use modulo carefully**
-   ```python
-   # BAD: Can produce -0.0 or 360.0
-   angle_deg = (angle_deg % 360)
+1. Audit `ephemeris/time.py` GMST/LST functions before Phase 2 starts. Verify against IAU 2006/2000A formulas.
+2. Consistently use the same obliquity (true apparent) for both body positions AND house cusps.
+3. Reference test: compute Ascendant at 2000-01-01 12:00 UT, lat 51.5° (London). Cross-check with Astro.com to ≤ 1 arcminute.
+4. Property test: increment time by 4 minutes; MC should advance by exactly 1 degree (modulo obliquity).
 
-   # GOOD: Guarantees [0, 360)
-   angle_deg = angle_deg % 360.0
-   if angle_deg < 0:
-       angle_deg += 360.0
-   ```
-
-2. **Epsilon comparisons for aspect detection**
-   ```python
-   # BAD: Exact comparison fails due to precision
-   if separation == 0.0:  # conjunction
-
-   # GOOD: Tolerance-based comparison
-   EPSILON = 1e-6  # ~0.0036 arcseconds
-   if abs(separation - 0.0) < EPSILON:
-   ```
-
-3. **Test boundary cases**
-   ```python
-   def test_angle_wraparound():
-       """Test precision at 0/360 boundary"""
-       moon = ZodiacPoint.from_degrees(359.99999999)
-       sun = ZodiacPoint.from_degrees(0.00000001)
-       ratio = moon / sun
-
-       # Should be near 0, not near 360
-       assert ratio.aspect_degrees < 1.0 or ratio.aspect_degrees > 359.0
-   ```
-
-4. **Document precision limits**
-   ```python
-   # ketu/complex.py docstring
-   """
-   Precision: Angular calculations accurate to ~1e-6 degrees (~0.0036 arcseconds).
-   This is sufficient for astrological purposes but not for astronomical ephemeris.
-
-   Note: Angles near 0°/360° boundary may show small numerical artifacts (< 1e-6°).
-   """
-   ```
-
-**Warning signs:**
-- Tests don't cover angles near 0°, 360°
-- No epsilon comparisons for floating point equality
-- No documented precision guarantees
-
-**Phase to address:**
-Phase 4 (Test Coverage) + Phase 5 (Integration)
+**Phase to address:** Phase 2 (houses) — pre-implementation audit of LST/obliquity.
 
 ---
 
-### Pitfall 7: Platform-Specific Floating Point Differences
+### Pitfall 7: Iterative Placidus — Vectorization Trap and Convergence Failures
 
 **What goes wrong:**
-Tests pass on Linux (dev machine) but fail on Windows or macOS. Same calculation produces:
-- Linux: `120.50000000000001`
-- Windows: `120.49999999999999`
+Placidus uses successive approximation per intermediate cusp (cusps 11, 12, 2, 3 are root-finding problems). Two failure modes:
 
-Test expects exact match, fails on Windows.
-
-**Why it happens:**
-NumPy and Python math use platform-specific BLAS/LAPACK libraries. Different compilers (GCC vs MSVC) produce different floating point optimizations. Transcendental functions (sin, cos, atan2) are especially susceptible.
+1. **NaN propagation**: one iteration produces NaN; subsequent iterations never recover.
+2. **Anti-vectorization**: developer tries to vectorize per-element-iteration over arrays, creating either ragged convergence or slow Python loops disguised as NumPy.
 
 **How to avoid:**
-1. **Use `numpy.testing.assert_allclose`**
-   ```python
-   # BAD: Exact comparison
-   assert result == 120.5
+1. **Don't over-vectorize.** A loop over dates calling a scalar Placidus function is acceptable for charts. Houses are NOT a hot path like aspect timeseries.
+2. If batch is needed, use boolean-mask continuation: compute new estimate only where `not_converged` mask is True.
+3. Hard cap iterations at ~50. If unconverged: NaN + warning, OR fallback to Porphyry.
+4. Defensive: `np.where(np.isnan(x), fallback_value, x)` on outputs.
+5. Benchmark target: 1000 charts/second is fine for v1.1 — don't sacrifice clarity for premature speed.
 
-   # GOOD: Tolerance-based
-   np.testing.assert_allclose(result, 120.5, rtol=1e-7, atol=1e-9)
-   # rtol = relative tolerance (1e-7 = 0.00001%)
-   # atol = absolute tolerance (1e-9 = 0.000000001)
-   ```
-
-2. **Test on multiple platforms** (GitHub Actions)
-   ```yaml
-   # .github/workflows/test.yml
-   strategy:
-     matrix:
-       os: [ubuntu-latest, windows-latest, macos-latest]
-       python-version: ['3.10', '3.11', '3.12', '3.13']
-   ```
-
-3. **Document tested platforms**
-   ```markdown
-   # README.md
-   ## Platform Support
-
-   Ketu is tested on:
-   - Linux (Ubuntu 20.04+)
-   - macOS (12+)
-   - Windows (10+)
-
-   Numerical results may differ by <1e-7 degrees across platforms due to BLAS differences.
-   ```
-
-4. **Canonical test data** (for regression tests)
-   Generate expected values on one platform, store as JSON:
-   ```python
-   # tests/fixtures/golden_data.json
-   {
-     "sun_moon_conjunction_2020_12_21": {
-       "separation": 120.50000000000001,
-       "tolerance": 1e-6  # Platform-safe tolerance
-     }
-   }
-   ```
-
-**Warning signs:**
-- Tests use `==` for floating point comparisons
-- CI only tests on one platform
-- No tolerance documented for numerical accuracy
-
-**Phase to address:**
-Phase 4 (Test Coverage) — update test assertions
+**Phase to address:** Phase 2 (houses) — make scalar-loop the default, optimize only if benchmarks demand.
 
 ---
 
-## Moderate Pitfalls
-
-### Pitfall 8: Wheel vs Source Distribution Inconsistencies
+### Pitfall 8: Inconsistent Aspect Filtering Across Modules
 
 **What goes wrong:**
-User installs from source (`pip install ketu`) and it works. Another user installs from wheel (`pip install ketu --only-binary :all:`) and gets different behavior or missing files.
+v1.1 adds configurable aspect sets. The filter must be applied consistently across:
 
-**Why it happens:**
-`MANIFEST.in` controls source distribution (sdist), `pyproject.toml [tool.setuptools.package-data]` controls wheel. If they diverge, builds are inconsistent.
+- `ketu/aspects/calculator.py`
+- `ketu/aspects/windows.py`
+- `ketu/aspects/transits.py`
+- `ketu/aspects/timelines.py`
+- `ketu/cycles/calculator.py`
+- CLI in `ketu/display.py` and `ketu/__main__.py`
+
+If one module reads the configured set and another reads the global `aspects`, you get **mismatched outputs**: CLI shows 7 aspects but JSON export contains 14.
 
 **How to avoid:**
-1. **Test both build types**
-   ```bash
-   # Build both
-   python -m build
+1. Single source of truth: a `KetuConfig` (or `AspectConfig`) frozen dataclass passed explicitly to every public function.
+2. Add a "config-consistency" integration test: configure `traditional` (5 aspects), call every public API, assert no result contains a non-traditional aspect.
+3. mypy can help: type the parameter `aspect_set: AspectSet` and grep for any function not accepting it.
+4. CLI must thread the same config to every command.
 
-   # Verify contents
-   tar -tzf dist/ketu-1.0.0.tar.gz | grep -E '\.(py|typed)$'
-   unzip -l dist/ketu-1.0.0-py3-none-any.whl
-
-   # Install and test each
-   pip install dist/ketu-1.0.0.tar.gz
-   pytest
-   pip uninstall ketu
-
-   pip install dist/ketu-1.0.0-py3-none-any.whl
-   pytest
-   ```
-
-2. **Keep MANIFEST.in minimal**
-   ```
-   # MANIFEST.in
-   include README.md
-   include LICENSE
-   include CHANGELOG.md
-   recursive-include ketu *.typed
-   ```
-
-3. **Use pyproject.toml for package data**
-   ```toml
-   [tool.setuptools.package-data]
-   ketu = ["py.typed"]
-   ```
-
-**Phase to address:**
-Phase 7 (Release Preparation)
+**Phase to address:** Phase 1 (configurable aspects) — DoD must include "all public APIs accept and respect aspect_set, integration test passes."
 
 ---
 
-### Pitfall 9: Type Hints Broken After Module Removal
+### Pitfall 9: User Confusion — `--harmonics 12` Ambiguity
 
 **What goes wrong:**
-Ketu has `py.typed` marker for type checking. After removing export modules, user's type checker fails:
-```
-error: Module 'ketu.export' has no attribute 'draw_zodiacal_chart'
-```
+`--harmonics 12` is ambiguous:
 
-Even though user doesn't import it, their type checker scans all exported symbols.
+- "Set named harmonic-12" → 7 aspects (multiples of 30°)
+- "Only the 12th harmonic" → 1 aspect (the 30° semi-sextile)
+- "Harmonics up to 12" → all aspects with denominators ≤ 12
+- "Highest harmonic = 12" → 12 aspects total
 
 **How to avoid:**
-1. **Update __init__.py carefully**
-   Remove from `__all__` (already planned)
+1. **Don't accept bare integers.** Force unambiguous syntax:
+   - `--aspect-set traditional` (named preset)
+   - `--aspect-set "0,60,90,120,180"` (explicit angle list)
+   - `--harmonic-up-to 12` (range)
+   - `--harmonic-only 12` (single)
+2. Provide named presets that are documented: `classical` (5), `traditional` (7), `extended` (14), `all-14` (legacy compat).
+3. The CLI `--help` must list every preset with the exact aspect angles included.
+4. Print the resolved aspect set at the start of CLI output: `# Using aspect set: classical [0°, 60°, 90°, 120°, 180°]`.
+5. Add `--list-aspect-sets` subcommand.
 
-2. **Test with mypy in strict mode**
-   ```bash
-   pip install mypy
-   mypy ketu/ --strict --no-implicit-optional
-   ```
-
-3. **Verify type stubs in wheel**
-   ```bash
-   unzip -l dist/ketu-1.0.0-py3-none-any.whl | grep typed
-   # Should find: ketu/py.typed
-   ```
-
-**Phase to address:**
-Phase 5 (Integration Testing)
+**Phase to address:** Phase 1 (configurable aspects) — UX/CLI design must be settled before implementation.
 
 ---
 
-### Pitfall 10: PyPI Metadata Doesn't Match Reality
+### Pitfall 10: CLI Default Output Change Breaks Script Parsers
 
 **What goes wrong:**
-User searches PyPI for "astronomical calculations", finds Ketu, but description says "chart rendering and visualization" (old copy). Downloads, finds no charts, feels misled.
+v1.0 CLI emits 14 aspects in a specific format. Users have shell scripts piping `ketu` output through `jq`, `grep`, or `awk`. v1.1 changes the default → all those scripts silently produce different (or empty) results.
 
 **How to avoid:**
-Update `pyproject.toml` metadata for 1.0.0:
+1. **Must provide escape hatch**: `--harmonics all` (or `--aspect-set legacy-14`) tested and stable.
+2. CHANGELOG with giant "BREAKING" banner for the default change.
+3. UPGRADING.md with migration examples.
+4. Output format **versioned**: emit `"format_version": "1.1"` in JSON outputs.
 
-```toml
-[project]
-name = "ketu"
-version = "1.0.0"
-description = "Pure NumPy astronomical calculations for planetary cycles and aspects"  # Updated
-keywords = [
-    "astronomy",
-    "ephemeris",
-    "aspects",
-    "planets",
-    "cycles",
-    "numpy",
-    # Removed: "astrology", "charts", "visualization"
-]
-classifiers = [
-    "Development Status :: 5 - Production/Stable",  # Changed from Beta
-    "Intended Audience :: Developers",
-    "Intended Audience :: Science/Research",
-    "Topic :: Scientific/Engineering :: Astronomy",
-    "Programming Language :: Python :: 3.10",
-    "Programming Language :: Python :: 3.11",
-    "Programming Language :: Python :: 3.12",
-    "Programming Language :: Python :: 3.13",
-]
-
-[project.optional-dependencies]
-# Removed: chart, icalendar, all
-# (No optional dependencies in 1.0 - pure NumPy only)
-```
-
-**Phase to address:**
-Phase 7 (Release Preparation)
+**Phase to address:** Phase 1 (legacy escape hatch); release phase (CHANGELOG and migration docs).
 
 ---
 
-### Pitfall 11: Changelog Doesn't Follow Keep a Changelog Format
+### Pitfall 11: Performance Regression — Filter In Inner Loop Instead of Upfront
 
 **What goes wrong:**
-User reads CHANGELOG.md to understand upgrade impact. Sees:
-```markdown
-## [1.0.0] - 2026-02-20
-
-- Removed exports
-- Fixed bugs
-- Updated tests
-```
-
-Vague. User doesn't know WHAT broke or WHY.
+Naïve implementation: in the per-date inner loop of `compute_aspects`, check `if aspect_name in user_aspect_set: ...`. With Python set lookups in the hot path, this can 2-5× slow down vectorized calculations.
 
 **How to avoid:**
-Follow Keep a Changelog structure (already claimed in CHANGELOG.md line 7):
+1. **Resolve filter once, before any loop.** Convert `aspect_set` to a NumPy boolean mask on the full `aspects` array at API entry. Subsequent code uses `aspects[mask]` (a view).
+2. Maintain a benchmark suite. Run on every PR. Regress threshold: 10%.
+3. If config-aware path is 50% slower than v1.0 baseline, reject the PR.
 
-```markdown
-## [1.0.0] - 2026-02-20
-
-### BREAKING CHANGES
-
-- **Removed export modules** (`ketu.export.chart`, `ketu.export.icalendar`)
-  - Rationale: Pure calculation library, exports belong in separate GUI layer
-  - Migration: Stay on 0.4.x if charts needed, or use matplotlib directly
-  - Removed functions: `draw_zodiacal_chart`, `export_lunations_to_ical`, `export_transits_to_ical`, `export_aspects_to_ical`
-
-- **Removed optional dependencies** (`matplotlib`, `icalendar`)
-  - `pip install ketu[chart]` no longer valid
-  - Core library is now NumPy-only
-
-- **Removed CLI entry point** (`ketu` command)
-  - Removed: `ketu.display.main()`
-  - Rationale: Library focus, not CLI tool
-  - Migration: Use as Python library or stay on 0.4.x
-
-- **Removed Pandas dependency** from aspect timelines
-  - `generate_aspect_timeline()` now returns structured NumPy array instead of DataFrame
-  - Migration: Use `.to_records()` if DataFrame needed: `pd.DataFrame(result)`
-
-### Fixed
-
-- **Operator precedence bug** in cache logic (`cycles/calculator.py`)
-  - IMPACT: Cache was sometimes used when `use_cache=False`
-  - Now respects cache flag correctly
-
-- **Aspect vectorization non-determinism**
-  - IMPACT: `calculate_aspects_vectorized()` sometimes returned 30 instead of 31 aspects
-  - Now deterministic across all dates
-
-### Changed
-
-- Integrated complex number representation into cycle engine
-- Standardized error messages across modules
-- Improved test coverage to 70%+ (focus on critical modules)
-
-### Performance
-
-- Vectorized ResonanceField calculations (1000x speedup for 8760 timestamps)
-- Consolidated caching strategies
-
-### Documentation
-
-- Updated all docs for 1.0 API
-- Removed chart/icalendar examples
-- Added precision guarantees section
-- Added platform compatibility matrix
-```
-
-**Phase to address:**
-Phase 7 (Release Preparation)
+**Phase to address:** Phase 1 (configurable aspects) — DoD includes "benchmark <= v1.0 baseline within 5%."
 
 ---
 
-### Pitfall 12: No Rollback Strategy if 1.0.0 Has Critical Bug
+### Pitfall 12: Test Coverage Drop When Adding Houses Module
 
 **What goes wrong:**
-1.0.0 releases to PyPI. Users upgrade. Critical bug discovered (wrong aspect calculations). No way to "unpublish" from PyPI. Chaos.
+Houses is substantial (~500 LOC: Placidus, Koch, sidereal time, polar fallback). Mediocre tests drop coverage from 91% → 85%. CI passes (no gate at 90%?), quality erodes silently.
 
 **How to avoid:**
-1. **Release candidate first**
-   ```bash
-   # Release 1.0.0rc1 to PyPI
-   version = "1.0.0rc1"
-   python -m build
-   twine upload dist/*
+1. **Add coverage gate**: CI fails if `coverage < 90%` (project-wide) AND `coverage < 85%` (any module).
+2. For `houses`, target ≥ 95%.
+3. Reference fixtures: capture 10+ test cases (varied lat, including polar) from Swiss Ephemeris. Hardcode as `tests/fixtures/houses_reference.json`.
+4. Property tests: cusps sum to 360°; cusps monotonic mod 360; Asc + 180° ≈ Desc.
+5. Cross-system test: Whole-Sign cusps == 30° × sign boundaries.
 
-   # Ask users to test
-   # Wait 1-2 weeks
-
-   # If stable, release 1.0.0
-   version = "1.0.0"
-   ```
-
-2. **GitHub pre-release**
-   Create GitHub release as "pre-release" before PyPI:
-   - Upload wheel/sdist as artifacts
-   - Tag as v1.0.0-rc1
-   - Ask community to test
-   - Wait for feedback
-
-3. **Smoke tests before publish**
-   ```python
-   # tests/smoke_test.py
-   """Critical calculations that must work"""
-   def test_sun_moon_conjunction():
-       """Known event: Dec 21, 2020 conjunction"""
-       jd = utc_to_julian(datetime(2020, 12, 21, 18, 0))
-       aspects = calculate_aspects(jd)
-       conjunctions = [a for a in aspects if a['aspect'] == 'conjunction']
-       assert len(conjunctions) > 0
-
-   def test_cycle_series_basic():
-       """Cycle series must not crash on common inputs"""
-       timestamps = pd.date_range('2020-01-01', '2020-12-31', freq='D')
-       cycles = generate_cycle_series(timestamps, "Sun", "Moon")
-       assert len(cycles) == len(timestamps)
-   ```
-
-4. **Yanking strategy** (last resort)
-   ```bash
-   # If 1.0.0 is broken
-   pip install twine
-   twine upload --repository pypi dist/ketu-1.0.1-*  # Fixed version
-
-   # Then yank broken version (marks as unavailable but doesn't delete)
-   # Requires PyPI maintainer access
-   # Only for critical bugs
-   ```
-
-**Phase to address:**
-Phase 7 (Release Preparation) — release 1.0.0rc1 first
+**Phase to address:** Phase 2 (houses) — coverage gate added as part of phase, fixtures committed before merge.
 
 ---
 
-## Minor Pitfalls
-
-### Pitfall 13: Version Number Not Updated in All Files
+### Pitfall 13: Documentation Drift — numpydoc + mypy Strict Not Maintained
 
 **What goes wrong:**
-`pyproject.toml` says 1.0.0, but `ketu/__init__.py` still says `__version__ = "0.4.0"`. Users check version at runtime, see 0.4.0, confusion.
+Existing modules pass mypy strict + have full numpydoc. New `houses/` module added with sparse docstrings or `Any` types as a shortcut. Sphinx builds succeed but new module is undocumented.
 
 **How to avoid:**
-Single source of truth:
+1. mypy strict enforced in CI for the entire package.
+2. Sphinx build is part of CI: `-W` flag treats warnings as errors.
+3. Pre-commit hook: `interrogate --fail-under=95`.
+4. Each phase DoD: "All public APIs have numpydoc with Parameters / Returns / Examples."
 
-```toml
-# pyproject.toml
-[project]
-dynamic = ["version"]
-
-[tool.setuptools.dynamic]
-version = {attr = "ketu.__version__"}
-```
-
-```python
-# ketu/__init__.py
-__version__ = "1.0.0"
-```
-
-Pre-release checklist:
-```bash
-grep -r "0\.4\.0" ketu/ docs/ README.md
-# Should find: 0 matches (except in CHANGELOG history)
-```
-
-**Phase to address:**
-Phase 7 (Release Preparation)
+**Phase to address:** Every phase — CI gate.
 
 ---
 
-### Pitfall 14: GitHub Release Tag Doesn't Match PyPI Version
+### Pitfall 14: Forgetting to Export New Modules in `__init__.py`
 
 **What goes wrong:**
-PyPI has `ketu-1.0.0`, GitHub has tag `v1.0` (missing patch). URLs break, users confused.
+`ketu/__init__.py` has an `__all__` list. Developer adds `ketu/houses/` but forgets to expose `compute_houses` at top-level. Users can `from ketu.houses import compute_houses` but `from ketu import compute_houses` fails.
 
 **How to avoid:**
-Consistent tagging:
-```bash
-# Git tag MUST match pyproject.toml version exactly
-git tag v1.0.0  # NOT v1.0, NOT 1.0.0, NOT release-1.0.0
-git push origin v1.0.0
+1. Phase DoD checklist: "New public APIs in `ketu/__init__.py.__all__`."
+2. Smoke test: `tests/test_public_api.py` enumerates expected top-level exports.
+3. Sphinx autodoc surfaces missing exports.
 
-# PyPI version must match
-# pyproject.toml: version = "1.0.0"
-python -m build
-twine upload dist/ketu-1.0.0*
-```
-
-**Phase to address:**
-Phase 7 (Release Preparation)
+**Phase to address:** Every phase that adds public APIs.
 
 ---
-
-### Pitfall 15: No UPGRADING.md or Migration Guide
-
-**What goes wrong:**
-User reads CHANGELOG, sees "Removed export modules," has no idea how to update code.
-
-**How to avoid:**
-Create `UPGRADING.md`:
-
-```markdown
-# Upgrading to Ketu 1.0
-
-## From 0.4.x to 1.0.0
-
-### Removed: Chart rendering
-
-**Before (0.4.x):**
-```python
-from ketu import draw_zodiacal_chart
-draw_zodiacal_chart(jd, filename='chart.svg')
-```
-
-**After (1.0.0):**
-Not supported. Options:
-1. Stay on ketu==0.4.0 if charts are critical
-2. Use matplotlib directly (we can provide example code)
-
-### Removed: iCalendar export
-
-**Before (0.4.x):**
-```python
-from ketu import export_lunations_to_ical
-export_lunations_to_ical(start, end, filename='lunar.ics')
-```
-
-**After (1.0.0):**
-Not supported. Stay on 0.4.x or use `icalendar` library directly.
-
-### Changed: Aspect timelines return NumPy arrays
-
-**Before (0.4.x):**
-```python
-timeline = generate_aspect_timeline(...)  # Returns DataFrame
-timeline['separation'].mean()
-```
-
-**After (1.0.0):**
-```python
-timeline = generate_aspect_timeline(...)  # Returns structured array
-timeline['separation'].mean()  # Still works!
-
-# Or convert to DataFrame manually
-import pandas as pd
-df = pd.DataFrame(timeline)
-```
-
-### Fixed: Correctness bugs
-
-If you relied on v0.4.0 results, recompute with v1.0.0:
-- Cache behavior corrected (respects use_cache flag)
-- Aspect vectorization now deterministic
-```
-
-**Phase to address:**
-Phase 7 (Release Preparation)
-
----
-
-## Technical Debt Patterns
-
-| Shortcut | Immediate Benefit | Long-term Cost | When Acceptable |
-|----------|-------------------|----------------|-----------------|
-| Skip deprecation warnings | Faster 1.0 release | Angry users, support burden | Never - always deprecate first |
-| Keep optional deps hidden | Cleaner dependency list | Runtime ImportErrors | Never - make explicit or remove |
-| 70% coverage via trivial tests | Hit metric quickly | Critical bugs slip through | Never - prioritize by module risk |
-| Skip platform testing | Faster CI | Windows/Mac failures in production | Never for 1.0 |
-| Manual version updates | Simpler setup | Version drift across files | Never - automate with single source |
-| No migration guide | Less writing | User confusion, GitHub issues | Never for breaking changes |
-
-## Integration Gotchas
-
-| Integration | Common Mistake | Correct Approach |
-|-------------|----------------|------------------|
-| NumPy arrays | Using `==` for float comparison | Use `np.testing.assert_allclose()` |
-| PyPI publish | Upload without testing wheel install | Always test fresh venv install from wheel |
-| GitHub Actions | Test only on Ubuntu | Matrix: [ubuntu, windows, macos] x [3.10, 3.11, 3.12, 3.13] |
-| SemVer | Breaking change in 1.1.0 | Breaking changes require 2.0.0 after 1.0 |
-| Package removal | Delete module, ship it | Test that old modules don't import after upgrade |
-
-## Performance Traps
-
-| Trap | Symptoms | Prevention | When It Breaks |
-|------|----------|------------|----------------|
-| Python loops in ResonanceField | 1000x slower than vectorized | Use `calc_planet_position_batch()` | >1000 timestamps |
-| Tuple conversion for cache | Conversion overhead on every call | Custom hash function or accept unhashable | High-frequency calls |
-| Lunar calendar iteration | Slow for multi-year ranges | Batch find all new moons via aspect timeline | >5 years |
-| Complex array broadcasting | Memory explosion for large arrays | Document limits, chunk if needed | >1M timestamps |
-
-## Security Mistakes
-
-| Mistake | Risk | Prevention |
-|---------|------|------------|
-| Cache dir default permissions (0o755) | On shared systems, other users read cache | Set to 0o700 (user-only) |
-| No input validation on JD | Negative JD causes ephemeris errors | Validate JD range: `if jd < 0: raise ValueError` |
-| Unpickling cache without verification | Malicious cache files execute code | Use JSON for cache, not pickle |
-
-## UX Pitfalls
-
-| Pitfall | User Impact | Better Approach |
-|---------|-------------|-----------------|
-| Silent cache failures | Results wrong, no error | Log cache hit/miss, warn on errors |
-| Vague error messages | "ValueError: invalid input" | "ValueError: body_id must be 0-12, got 99" |
-| No progress indicator | Users think code hung | Optional progress callback for long operations |
-| Breaking API without migration guide | Users stuck, frustrated | Always provide UPGRADING.md with examples |
-
-## "Looks Done But Isn't" Checklist
-
-- [ ] **Module removal:** Verify old modules don't import in fresh venv wheel install
-- [ ] **Version numbers:** Grep for old version in all files (code, docs, examples)
-- [ ] **PyPI metadata:** Description/keywords match actual 1.0 functionality
-- [ ] **Platform tests:** CI runs on Ubuntu, Windows, macOS for all supported Python versions
-- [ ] **Float comparisons:** All tests use `assert_allclose`, not `==`
-- [ ] **Coverage targets:** Critical modules (cycles, cache, aspects) >80%, not just overall 70%
-- [ ] **Known bugs:** Operator precedence fixed, aspect non-determinism fixed
-- [ ] **Deprecation path:** If skipping 0.5.0, clear migration guide in CHANGELOG and UPGRADING.md
-- [ ] **Hidden dependencies:** No runtime ImportError for undeclared dependencies
-- [ ] **Type checking:** `mypy ketu/ --strict` passes
-- [ ] **Smoke tests:** Critical calculations tested against known-good results
-- [ ] **Release candidate:** 1.0.0rc1 published and tested before 1.0.0 final
-
-## Recovery Strategies
-
-| Pitfall | Recovery Cost | Recovery Steps |
-|---------|---------------|----------------|
-| Breaking API without deprecation | HIGH | 1. Release 1.0.1 with stubs that raise helpful errors<br>2. Publish detailed migration guide<br>3. Monitor GitHub issues, provide support |
-| Hidden dependency breaks install | MEDIUM | 1. Release 1.0.1 with dependency added<br>2. Or remove feature entirely in 1.0.1<br>3. PyPI yank 1.0.0 if critical |
-| Known bug shipped in 1.0.0 | HIGH | 1. Fix ASAP in 1.0.1<br>2. If correctness bug: document result changes<br>3. If critical: yank 1.0.0 (last resort) |
-| Wrong PyPI metadata | LOW | 1. Update metadata, release 1.0.1<br>2. Edit PyPI description (can be done without release) |
-| Platform test failures | MEDIUM | 1. Reproduce on affected platform<br>2. Fix float comparisons or platform-specific code<br>3. Release 1.0.1 |
-| Incomplete module removal | MEDIUM | 1. Release 1.0.1 with proper package list<br>2. Test wheel install in clean venv |
 
 ## Pitfall-to-Phase Mapping
 
 | Pitfall | Prevention Phase | Verification |
 |---------|------------------|--------------|
-| Breaking API without deprecation | Phase 1 (Deprecation) + Phase 7 | Check CHANGELOG has BREAKING CHANGES section |
-| SemVer confusion (bugs in 1.0) | Phase 2 (Bug Fixes) | All CONCERNS.md bugs resolved before release |
-| Hidden Pandas dependency | Phase 3 (Dependency Cleanup) | `pip install ketu` in clean venv, import all functions |
-| Module removal breaks imports | Phase 7 (Release Preparation) | Fresh venv wheel install, verify old modules fail to import |
-| Coverage hiding critical gaps | Phase 4 (Test Coverage) | Per-module coverage: cycles >90%, cache >85% |
-| Complex math precision loss | Phase 5 (Integration) | Tests include 0°/360° boundary cases |
-| Platform float differences | Phase 4 (Test Coverage) | All tests use assert_allclose, CI tests 3 platforms |
-| Wheel vs source differences | Phase 7 (Release Preparation) | Install both sdist and wheel, pytest each |
-| Type hints broken | Phase 5 (Integration) | `mypy ketu/ --strict` passes |
-| PyPI metadata outdated | Phase 7 (Release Preparation) | Review pyproject.toml classifiers/keywords/description |
-| Changelog vague | Phase 7 (Release Preparation) | CHANGELOG follows Keep a Changelog format |
-| No rollback plan | Phase 7 (Release Preparation) | Release 1.0.0rc1 first, wait for feedback |
-
-## Phase-Specific Warnings
-
-| Phase Topic | Likely Pitfall | Mitigation |
-|-------------|---------------|------------|
-| Phase 1: Deprecation | Skipping deprecation warnings to save time | Don't skip - either do 0.5.0 release with warnings, or provide extensive migration guide |
-| Phase 2: Bug Fixes | Fixing bugs changes behavior, breaking tests | Document behavior changes in CHANGELOG "Correctness Fixes" section |
-| Phase 3: Dependency Cleanup | Removing Pandas breaks aspect timelines | Rewrite to use NumPy structured arrays (CYCLE_DTYPE already exists) |
-| Phase 4: Test Coverage | Hitting 70% without testing critical modules | Set per-module targets, prioritize cycles/cache/aspects |
-| Phase 5: Integration | Assuming tests pass = code works | Add smoke tests for known calculations, test on 3 platforms |
-| Phase 6: Documentation | Docs still reference removed features | Grep docs for "chart", "icalendar", "matplotlib" |
-| Phase 7: Release Prep | Publishing to PyPI without testing wheel install | ALWAYS test fresh venv install from wheel before publish |
-
-## Sources
-
-**Codebase Analysis:**
-- `/home/loc/workspace/solaris/ketu/.planning/codebase/CONCERNS.md` - Known bugs and gaps identified
-- `/home/loc/workspace/solaris/ketu/pyproject.toml` - Current dependencies and metadata
-- `/home/loc/workspace/solaris/ketu/ketu/__init__.py` - Export structure and optional deps
-- `/home/loc/workspace/solaris/ketu/CHANGELOG.md` - Version history and SemVer claims
-
-**Python Packaging Best Practices:**
-- Python Packaging User Guide (packaging.python.org) - official PyPI packaging standards
-- PEP 440 (Version Identification) - semantic versioning for Python
-- Keep a Changelog (keepachangelog.com) - changelog format standard
-- Semantic Versioning 2.0.0 (semver.org) - version bump rules
-
-**Scientific Python Ecosystem:**
-- NumPy Testing Guidelines - float comparison best practices
-- SciPy Developer Guide - platform testing and numerical precision
-- Astropy Coordination Committee - astronomical software standards (relevant for ephemeris libraries)
-
-**Known Issues:**
-- Operator precedence bug (CONCERNS.md line 140-165) - CRITICAL for Phase 2
-- Aspect non-determinism (CONCERNS.md line 167-174) - CRITICAL for Phase 2
-- Hidden Pandas dependency (CONCERNS.md line 119-125) - CRITICAL for Phase 3
-- Untested cache module (CONCERNS.md line 21-23) - CRITICAL for Phase 4
-- Untested cycles module (CONCERNS.md line 25-29) - CRITICAL for Phase 4
-
-**Confidence Assessment:**
-- HIGH for codebase-specific pitfalls (direct analysis of CONCERNS.md and code)
-- HIGH for Python packaging pitfalls (established best practices, PEPs)
-- HIGH for NumPy/scientific library pitfalls (documented standards)
-- MEDIUM for complex number precision (domain-specific, based on general floating point knowledge)
+| 1. Aspect array shape change | Phase 1 — design before code | Invariant test on aspect order + length |
+| 2. LRU cache config-blind | Phase 1 + Phase 2 | Test: change config, assert cache miss |
+| 3. Wrong Lilith definition | Phase 3 — DEFINITION.md before code | 5+ reference dates from 2 sources agree |
+| 4. Lilith breaks stored data | Phase 3 + release phase | UPGRADING.md Lilith section; legacy mode test |
+| 5. Placidus polar undefined | Phase 2 — fallback in DoD | Test at lat=70°,80° passes |
+| 6. Sidereal time precision | Phase 2 — pre-implementation audit | Cusps within 1 arcmin of Astro.com |
+| 7. Placidus iterative convergence | Phase 2 — implementation | Iteration cap test + NaN-recovery test |
+| 8. Inconsistent aspect filtering | Phase 1 — config threaded everywhere | Integration test asserts ≤5 aspects |
+| 9. CLI `--harmonics 12` ambiguity | Phase 1 — UX/CLI design first | `--help` lists named presets |
+| 10. CLI default change breaks scripts | Phase 1 (legacy flag) + release | `--harmonics all` returns v1.0 output |
+| 11. Filter-in-inner-loop perf | Phase 1 — benchmark gate | ≤5% regression vs v1.0 |
+| 12. Coverage drop adding houses | Phase 2 — coverage gate | CI fails if <90% |
+| 13. Docs / mypy drift | Every phase — CI gate | mypy strict + sphinx -W + interrogate |
+| 14. Missing top-level exports | Each public-API phase | `tests/test_public_api.py` |
 
 ---
 
-*Pitfalls research for: Ketu 1.0 Python Library Consolidation*
-*Researched: 2026-02-12*
-*Confidence: HIGH (codebase analysis + established Python/scientific library practices)*
+## "Looks Done But Isn't" Checklist
+
+- [ ] **Configurable aspects:** CLI threading verified — `ketu cycles --aspect-set X` and `ketu transits --aspect-set X` both honor X
+- [ ] **Configurable aspects:** Cache invalidation verified — fresh results after config change
+- [ ] **Houses:** Polar-region tests — `compute_houses(lat=80)` documented behavior
+- [ ] **Houses:** Convergence cap exists — non-convergence raises or warns
+- [ ] **Houses:** ≥10 reference charts validated against Astro.com or Swiss Ephemeris
+- [ ] **Lilith fix:** `LILITH_DEFINITION.md` exists with primary source citation
+- [ ] **Lilith fix:** Legacy mode (or documented as truly removed)
+- [ ] **Lilith fix:** 5+ epoch reference values spanning 1900-2050
+- [ ] **CLI:** `--list-aspect-sets` / `--list-house-systems` introspection commands
+- [ ] **CLI:** Resolved config echoed in output
+- [ ] **Public API:** `from ketu import compute_houses` works
+- [ ] **Docs:** UPGRADING.md migration steps for v1.0 → v1.1
+- [ ] **Docs:** Performance disclosure with benchmark numbers in CHANGELOG
+- [ ] **CI:** Coverage gate fails at <90%
+- [ ] **CI:** Benchmark regression check tracked
+- [ ] **Downstream:** Kala / Surya maintainers notified before release
+
+---
+
+## Confidence Notes
+
+- **HIGH:** Pitfalls 1, 2, 8, 11, 12, 13, 14 (verifiable in Ketu codebase)
+- **HIGH:** Pitfalls 5, 6 (verified via Swiss Ephemeris docs, Astrowiki — Placidus polar limit at ±66.56° well-established)
+- **HIGH:** Pitfall 3 (three Lilith definitions confirmed across 4+ independent sources)
+- **MEDIUM:** Pitfall 7 (Placidus iterative convergence — failure modes inferred from numerical analysis)
+- **MEDIUM:** Pitfall 4 (downstream impact — depends on whether Kala/Surya persist Lilith values)
+- **HIGH:** Pitfalls 9, 10 (CLI UX patterns)
+
+---
+
+## Sources
+
+- Ketu codebase: `ketu/core.py`, `ketu/aspects/core.py:73`
+- [Astrodienst Astrowiki — Placidus House System](https://www.astro.com/astrowiki/en/Placidus_House_System)
+- [Wikipedia: House (astrology) — polar limitations](https://en.wikipedia.org/wiki/House_(astrology))
+- [Swiss Ephemeris official documentation](https://www.astro.com/swisseph/swisseph.htm)
+- [pyswisseph house_cusp_calculation manual](https://github.com/astrorigin/pyswisseph/blob/master/docs/programmers_manual/house_cusp_calculation.rst)
+- [Serennu — Mean & True Black Moon Lilith](https://serennu.com/astrology/mean-true-black-moon.php)
+- [Kerykeion — Lilith calculations: Mean vs True](https://kerykeion.net/content/learn-astrology/lilith-true-vs-mean)
+- [stjarnhimlen — sidereal time precision](https://stjarnhimlen.se/comp/ppcomp.html)
