@@ -10,25 +10,25 @@ See: .planning/PROJECT.md (updated 2026-05-06)
 ## Current Position
 
 Phase: 9 of 12 (Configurable Aspects) — **IN PROGRESS**
-Plan: 1 of 6 complete (09-03 done; 09-01, 09-02, 09-04a, 09-04b, 09-05 remaining)
-Status: Plan 09-03 complete — `core.aspects` v1.1 invariant locked: length 14 + dtype.names + per-row name/angle/coef + sha256 byte fingerprint `c5bd1773...9afb359`. Mutation test verified surgical row-drift detection. 423 tests green, no regressions; `core.aspects` itself unchanged (append-only contract preserved)
-Last activity: 2026-05-06 — Plan 09-03 executed; commit `e5a529d` (test) on `gsd/v1.1-milestone`
+Plan: 3 of 6 complete (09-01, 09-02, 09-03 done — Wave 1 complete; 09-04a, 09-04b, 09-05 remaining)
+Status: Wave 1 complete — Plan 09-01 baseline captured (`baseline-v1.0.json`, mean[365]=200.87ms, aspect_set=extended, drift=3.56% PASS); Plan 09-02 presets module (CLASSICAL/TRADITIONAL/EXTENDED frozen masks); Plan 09-03 invariant test (sha256 fingerprint `c5bd1773...9afb359`, mutation-tested). Wave 2 (09-04a calculator refactor, 09-04b default migration) is unblocked.
+Last activity: 2026-05-06 — Plan 09-01 executed; commits `78085d1` (benchmark script via Wave-1 parallel collision with 09-02), `e6fca78` (baseline JSON capture) on `gsd/v1.1-milestone`
 
-Progress: [████░░░░░░] v1.0 complete; v1.1 1/5 phases complete (Phase 8: 5/5 plans), Phase 9: 1/6 plans
+Progress: [████░░░░░░] v1.0 complete; v1.1 1/5 phases complete (Phase 8: 5/5 plans), Phase 9: 3/6 plans
 
 ## Performance Metrics
 
 **Velocity (v1.0 reference baseline):**
 
 - Total plans completed (v1.0): 16
-- v1.1 plans completed: 6 (Phase 8: 08-01, 08-02, 08-03, 08-04, 08-05; Phase 9: 09-03)
+- v1.1 plans completed: 8 (Phase 8: 08-01, 08-02, 08-03, 08-04, 08-05; Phase 9: 09-01, 09-02, 09-03)
 
 **By Phase (v1.1):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 8. Lilith Verification & Fix | 5 | ~22m 18s | ~4m 28s |
-| 9. Configurable Aspects | 1 | ~1m 35s | ~1m 35s |
+| 9. Configurable Aspects | 3 | ~13m 00s | ~4m 20s |
 | 10. Houses Module | 0 | — | — |
 | 11. CLI Refactor & Integration | 0 | — | — |
 | 12. Release Preparation v1.1.0 | 0 | — | — |
@@ -40,6 +40,8 @@ Progress: [████░░░░░░] v1.0 complete; v1.1 1/5 phases comple
 | Phase 08 P04 | 10m 1s | 4 tasks | 4 files |
 | Phase 08 P05 | 3m 41s | 2 tasks | 2 files |
 | Phase 09 P03 | 1m 35s | 1 tasks | 1 files |
+| Phase 09 P02 | 5m 25s | 3 tasks | 3 files |
+| Phase 09 P01 | 6m 00s | 2 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -64,6 +66,7 @@ Decisions are logged in PROJECT.md Key Decisions table. Recent decisions affecti
 - [Phase 08]: [Phase 08-05] Magnitude consistency invariant locked across CHANGELOG/UPGRADING/LILITH_DEFINITION at 6-decimal precision: pre-fix 179.936579 deg (user-visible breaking-change), post-fix 0.002693 deg (5 dates) and 0.007815 deg (55K daily samples) -- both <0.01 deg tolerance. Per-date table in UPGRADING live-computed from get_lilith_position rather than copied from Plan 04 SUMMARY
 - [Phase 08]: [Phase 08-05] Deviation from pure Chapront secular linear stated transparently in CHANGELOG and UPGRADING (NOT minimized): both files explicitly state v1.1 ships 'linear secular term + 1 sin() perturbation', not a raw ELP-2000 polynomial. Per execution-context note from Wave 3 orchestrator
 - [Phase 09]: [Phase 09-03]: core.aspects invariant pinned via sha256 byte fingerprint (c5bd1773...9afb359) + per-row name/angle/coef + length 14 + dtype.names. Mutation test verified surgical row-drift detection. Defense-in-depth pattern: any future drift in rows 0-13 fails with informative messages identifying the affected row index
+- [Phase 09]: [Phase 09-02]: ketu/aspects/presets.py — three frozen length-14 np.bool_ masks (CLASSICAL=5, TRADITIONAL=7, EXTENDED=14) with single-call resolve_aspect_set() dispatching on six input types (None / str preset case-insensitive / Sequence[str|int] / np.ndarray bool|int). Defensive bool-rejection in Sequence prevents silent [True, False] -> [1, 0] index coercion. ASP-06 forward-looking rule documented (no caches today materialize filtered aspects, but Wave 2 must hash mask.tobytes() if adding any). 100% test coverage on presets.py (56 tests).
 
 ### From v1.0 milestone (carried context)
 
