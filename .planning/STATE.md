@@ -50,6 +50,7 @@ Decisions are logged in PROJECT.md Key Decisions table. Recent decisions affecti
 - `core.aspects` stays length-14 append-only (Kala uses positional indexing — non-negotiable)
 - `pysweph>=2.10.3.6` is test-only dependency (AGPL-safe; no runtime deps added)
 - [Phase 08]: Test-only optional extra pattern: AGPL-licensed pysweph lives under [project.optional-dependencies].test, never in [project].dependencies — proven empirically with two-venv install test
+- [Phase 08-01]: Investigation-first ordering enforced — `docs/LILITH_DEFINITION.md` (contract for harness/fix) lands BEFORE any code change; tolerance derived arithmetically (0.01 deg ≈ 129 min mean apogee drift), not a round-number convention; History section pre-seeded with literal Plan 04 sentinel for atomic update
 
 ### From v1.0 milestone (carried context)
 
