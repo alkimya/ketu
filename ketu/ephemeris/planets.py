@@ -11,6 +11,7 @@ from functools import lru_cache
 from .time import utc_to_julian, terrestrial_to_universal
 from .orbital import (
     ORBITAL_ELEMENTS,
+    _LILITH_MEAN_RATE_DEG_PER_DAY,
     get_body_position,
     get_moon_position,
     get_lunar_nodes,
@@ -149,8 +150,10 @@ def calc_planet_position(jd: float, planet_id: int, flags: int = 0) -> np.ndarra
         lat = 0.0
         dist = 0.0  # Mean apogee doesn't have physical distance
 
-        # Lilith progression speed
-        lon_speed = 0.1114040803  # degrees per day
+        # Lilith progression speed -- secular mean motion only (sinusoidal
+        # perturbation contributes <1e-3 deg/day; out of scope for the
+        # speed-ratio heuristic). Single source of truth: orbital.py.
+        lon_speed = _LILITH_MEAN_RATE_DEG_PER_DAY  # matches docs/LILITH_DEFINITION.md
         lat_speed = 0.0
         dist_speed = 0.0
 
@@ -455,7 +458,7 @@ def calculate_speed_ratio(jd: float, body_id: int) -> float:
         9: 0.004167,  # Pluto
         10: -0.052954,  # Mean Node
         11: -0.052954,  # True Node
-        12: 0.111404,  # Lilith
+        12: round(_LILITH_MEAN_RATE_DEG_PER_DAY, 6),  # Lilith (matches orbital.py rate)
     }
 
     avg_speed = avg_speeds.get(body_id, 1.0)
