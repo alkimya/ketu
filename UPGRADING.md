@@ -1,4 +1,112 @@
-# Upgrading from Ketu 0.4.x to 1.0.0
+# Upgrading
+
+This guide collects migration notes between Ketu releases. Sections are
+ordered newest-first.
+
+## v1.0 -> v1.1
+
+Ketu v1.1 is a backward-compatible feature release (configurable
+aspects, houses module, CLI refactor) with **one breaking numerical
+fix**: the Mean Apogee Lilith longitude formula. All other body
+positions, cycles, harmonics, and aspect calculations involving
+non-Lilith bodies are **unchanged** between v1.0 and v1.1.
+
+### Lilith (Black Moon) Calculation
+
+The Mean Apogee Lilith formula has been **corrected** in v1.1 to match
+Swiss Ephemeris's `SE_MEAN_APOG`. Values returned by
+`get_lilith_position(jd)` and `calc_planet_position(jd, 12)` differ
+from v1.0 by approximately **180 deg** on essentially every date in
+the 1900-2050 range.
+
+**Root cause:** the v1.0 formula `83.3532 + 0.1114040803 * d` was
+actually computing the lunar mean *perigee* longitude (the apogee plus
+180 deg, mod 360), not the apogee. The formula was never externally
+verified against an independent reference implementation. v1.1's Plan
+03 cross-check harness (`tests/test_lilith_cross_check.py`) measured
+`MAX |delta| = 179.936579 deg` against `swe.calc_ut(jd, swe.MEAN_APOG)`
+on five dates spanning 1900-2050.
+
+**Fix:** v1.1 ships a re-fitted formula:
+
+```text
+lilith_lon = (E + R * d + A * sin(omega * d + phi)) mod 360 deg
+where d = JD_UT - 2451545.0
+  E     = 263.3521188770 deg     (mean longitude at J2000.0)
+  R     = 0.1114036699  deg/day  (mean motion)
+  A     = 0.1156754590  deg      (perturbation amplitude)
+  omega = 0.3287143373  deg/day  (perturbation rate, period ~1095 days)
+  phi   = 96.6084061482 deg      (perturbation phase at J2000.0)
+```
+
+Note: this is a deliberate deviation from a pure Chapront secular
+linear formula. v1.1 ships **linear secular term + one sin()
+perturbation**, not a raw ELP-2000 polynomial. The single perturbation
+term absorbs a residual sinusoidal component (period approximately
+1095 days, amplitude approximately 0.116 deg) that a pure linear
+correction could not reduce below the 0.01 deg tolerance. All five
+parameters were jointly nonlinear-least-squares-fitted against
+`swe.calc_ut(jd, swe.MEAN_APOG)` over 55K daily samples 1900-2050.
+
+**Post-fix accuracy** (vs. Swiss Ephemeris `SE_MEAN_APOG`):
+
+- Max |delta| over the five Plan 03 cross-check dates: **0.002693 deg**
+- Max |delta| over 55K daily samples 1900-2050:        **0.007815 deg**
+
+Both well below the **0.01 deg** user-facing tolerance documented in
+`docs/LILITH_DEFINITION.md`.
+
+**Concrete v1.0 -> v1.1 examples** (the `Delta v1.1 - v1.0` column is
+the user-visible shift in Ketu output, computed as
+`signed_circular_diff(v1_1, v1_0)` in degrees, NOT the Ketu-vs-swe
+residual):
+
+| Date                   | v1.0 Lilith (deg) | v1.1 Lilith (deg) | Delta v1.1 - v1.0 (deg) |
+|------------------------|-------------------|-------------------|-------------------------|
+| 1900-06-15 12:00:00 UT |        352.812244 |        172.874759 |             -179.937486 |
+| 1950-03-21 18:30:00 UT |        217.722980 |         37.629503 |             +179.906523 |
+| 2000-01-01 12:00:00 UT |         83.353200 |        263.467026 |             -179.886174 |
+| 2025-09-23 06:00:00 UT |         50.189492 |        230.090328 |             +179.900836 |
+| 2050-12-21 00:00:00 UT |        357.307261 |        177.413556 |             -179.893705 |
+
+(v1.0 column reproduces the legacy formula
+`(83.3532 + 0.1114040803 * (jd - 2451545.0)) mod 360`; v1.1 column is
+the live `get_lilith_position` output. Deltas are wrapped into
+`(-180, +180]`. The signs alternate because both v1.0 and v1.1 wrap
+around 360 deg at slightly different rates -- the user-visible
+magnitude is approximately 180 deg on every date.)
+
+**Action required:** Recompute any cached Lilith values produced by
+v1.0. If you stored Ketu output (lunation timing arrays for the lunar
+apogee, ML feature columns including Lilith longitude or its
+derivatives, aspect-window catalogues for Lilith, natal/transit
+charts) for downstream consumption, regenerate them with v1.1.
+
+**Downstream consumers (Kala, etc.):** Lilith body index `12` is
+unchanged. Positional arrays remain length-14 (no schema break). Only
+the longitude returned for a given JD shifts by approximately 180 deg.
+Any pipeline that re-runs Ketu calls is automatically migrated;
+pipelines that consume cached v1.0 outputs without recomputation will
+silently retain the v1.0 (incorrect) values.
+
+**See also:**
+
+- `docs/LILITH_DEFINITION.md` -- full definition, formula, reference
+  frame, source theory, tolerance derivation, and v1.0 -> v1.1
+  History.
+- `tests/test_lilith_cross_check.py` -- the cross-check harness (run
+  via `pip install -e .[test] && pytest tests/test_lilith_cross_check.py`).
+- `CHANGELOG.md` v1.1.0 entry -- short release-notes summary.
+
+### Other v1.0 -> v1.1 Changes
+
+Other v1.1 work (configurable aspects, houses module, CLI refactor)
+is backward-compatible. See per-feature documentation and the
+`CHANGELOG.md` v1.1.0 entry for non-Lilith additions.
+
+---
+
+## v0.4.x -> v1.0.0
 
 Ketu 1.0.0 is a breaking release focused on API cleanup and simplification. This guide will help you migrate your code from version 0.4.x to 1.0.0.
 
