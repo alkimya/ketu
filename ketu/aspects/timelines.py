@@ -26,6 +26,16 @@ from ketu.core import bodies, aspects
 from ketu.aspects.windows import find_aspect_window, AspectWindow, AspectMoment
 from ketu.calculations import distance, long, long_velocity, utc_to_julian, julian_to_utc
 
+# Default aspect set sourced from presets module (Phase 9, ASP-04).
+# Replaces previously-hardcoded ["Conjunction", "Sextile", "Square", "Trine", "Opposition"]
+# list. Single source of truth: when CLASSICAL changes, all call sites in this
+# module pick up the change automatically.
+from ketu.aspects.presets import CLASSICAL as _CLASSICAL_MASK
+_CLASSICAL_NAMES = tuple(
+    aspects["name"][i].decode()
+    for i in np.where(_CLASSICAL_MASK)[0]
+)
+
 
 @dataclass
 class AspectEvent:
@@ -394,9 +404,9 @@ def generate_aspect_timeline(
     ...     timezone="America/New_York"
     ... )
     """
-    # Default aspects: BIG_FIVE
+    # Default aspects: CLASSICAL preset (Phase 9 ASP-04)
     if aspects_list is None:
-        aspects_list = ["Conjunction", "Sextile", "Square", "Trine", "Opposition"]
+        aspects_list = list(_CLASSICAL_NAMES)
 
     # Parse timezone
     if timezone is None:

@@ -48,6 +48,16 @@ from ketu.aspects.core import (
     calculate_adaptive_step,
 )
 
+# Default aspect set sourced from presets module (Phase 9, ASP-04).
+# Replaces previously-hardcoded ["Conjunction", "Sextile", "Square", "Trine", "Opposition"]
+# lists. Single source of truth: when CLASSICAL changes, all call sites in this
+# module pick up the change automatically.
+from ketu.aspects.presets import CLASSICAL as _CLASSICAL_MASK
+_CLASSICAL_NAMES = tuple(
+    aspects["name"][i].decode()
+    for i in np.where(_CLASSICAL_MASK)[0]
+)
+
 
 # ========== Data Structures ==========
 
@@ -300,9 +310,9 @@ def find_transits_to_position(
     # Normalize longitude to 0-360
     reference_longitude = reference_longitude % 360
 
-    # Default aspects
+    # Default aspects: CLASSICAL preset (Phase 9 ASP-04)
     if aspects_list is None:
-        aspects_list = ["Conjunction", "Sextile", "Square", "Trine", "Opposition"]
+        aspects_list = list(_CLASSICAL_NAMES)
 
     # Convert dates
     if isinstance(start_date, str):
@@ -517,9 +527,9 @@ def compare_dates_transits(
     # Get transit positions
     transit_positions = get_natal_positions(transit_date)
 
-    # Default aspects
+    # Default aspects: CLASSICAL preset (Phase 9 ASP-04)
     if aspects_list is None:
-        aspects_list = ["Conjunction", "Sextile", "Square", "Trine", "Opposition"]
+        aspects_list = list(_CLASSICAL_NAMES)
 
     # Convert transit date
     if isinstance(transit_date, str):
