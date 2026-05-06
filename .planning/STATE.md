@@ -10,25 +10,25 @@ See: .planning/PROJECT.md (updated 2026-05-06)
 ## Current Position
 
 Phase: 9 of 12 (Configurable Aspects) — **IN PROGRESS**
-Plan: 3 of 6 complete (09-01, 09-02, 09-03 done — Wave 1 complete; 09-04a, 09-04b, 09-05 remaining)
-Status: Wave 1 complete — Plan 09-01 baseline captured (`baseline-v1.0.json`, mean[365]=200.87ms, aspect_set=extended, drift=3.56% PASS); Plan 09-02 presets module (CLASSICAL/TRADITIONAL/EXTENDED frozen masks); Plan 09-03 invariant test (sha256 fingerprint `c5bd1773...9afb359`, mutation-tested). Wave 2 (09-04a calculator refactor, 09-04b default migration) is unblocked.
-Last activity: 2026-05-06 — Plan 09-01 executed; commits `78085d1` (benchmark script via Wave-1 parallel collision with 09-02), `e6fca78` (baseline JSON capture) on `gsd/v1.1-milestone`
+Plan: 5 of 6 complete (09-01, 09-02, 09-03 done — Wave 1; 09-04a calculator-refactor + 09-04b default-migration done — Wave 2 complete; 09-05 remaining)
+Status: Wave 2 complete — Plan 09-04a refactored `ketu/aspects/calculator.py` (4 public APIs gain `aspects: AspectSetSpec = None`, defaults to CLASSICAL via resolver, hot loops emit canonical `int(i_asp)`, Kala positional contract preserved); Plan 09-04b migrated four hardcoded default-list literals in `ketu/aspects/{windows,timelines,transits}.py` to derive from CLASSICAL preset (single source of truth — when CLASSICAL changes, all four call sites pick up the change automatically). Wave 2 disjoint-file invariant honored: 04a touched calculator.py only, 04b touched windows/timelines/transits.py only. 479 tests pass; mypy --strict clean. Plan 09-05 (integration & benchmark) now unblocked.
+Last activity: 2026-05-07 — Plan 09-04b executed; commit `787a3e5` (windows/timelines/transits default migration) on `gsd/v1.1-milestone`
 
-Progress: [████░░░░░░] v1.0 complete; v1.1 1/5 phases complete (Phase 8: 5/5 plans), Phase 9: 3/6 plans
+Progress: [█████░░░░░] v1.0 complete; v1.1 1/5 phases complete (Phase 8: 5/5 plans), Phase 9: 5/6 plans
 
 ## Performance Metrics
 
 **Velocity (v1.0 reference baseline):**
 
 - Total plans completed (v1.0): 16
-- v1.1 plans completed: 8 (Phase 8: 08-01, 08-02, 08-03, 08-04, 08-05; Phase 9: 09-01, 09-02, 09-03)
+- v1.1 plans completed: 10 (Phase 8: 08-01, 08-02, 08-03, 08-04, 08-05; Phase 9: 09-01, 09-02, 09-03, 09-04a, 09-04b)
 
 **By Phase (v1.1):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 8. Lilith Verification & Fix | 5 | ~22m 18s | ~4m 28s |
-| 9. Configurable Aspects | 3 | ~13m 00s | ~4m 20s |
+| 9. Configurable Aspects | 5 | ~25m 37s | ~5m 7s |
 | 10. Houses Module | 0 | — | — |
 | 11. CLI Refactor & Integration | 0 | — | — |
 | 12. Release Preparation v1.1.0 | 0 | — | — |
@@ -42,6 +42,8 @@ Progress: [████░░░░░░] v1.0 complete; v1.1 1/5 phases comple
 | Phase 09 P03 | 1m 35s | 1 tasks | 1 files |
 | Phase 09 P02 | 5m 25s | 3 tasks | 3 files |
 | Phase 09 P01 | 6m 00s | 2 tasks | 1 files |
+| Phase 09 P04a | 6m 34s | 2 tasks | 1 files |
+| Phase 09 P04b | 6m 3s | 1 tasks | 3 files |
 
 ## Accumulated Context
 
@@ -68,6 +70,7 @@ Decisions are logged in PROJECT.md Key Decisions table. Recent decisions affecti
 - [Phase 09]: [Phase 09-03]: core.aspects invariant pinned via sha256 byte fingerprint (c5bd1773...9afb359) + per-row name/angle/coef + length 14 + dtype.names. Mutation test verified surgical row-drift detection. Defense-in-depth pattern: any future drift in rows 0-13 fails with informative messages identifying the affected row index
 - [Phase 09]: [Phase 09-02]: ketu/aspects/presets.py — three frozen length-14 np.bool_ masks (CLASSICAL=5, TRADITIONAL=7, EXTENDED=14) with single-call resolve_aspect_set() dispatching on six input types (None / str preset case-insensitive / Sequence[str|int] / np.ndarray bool|int). Defensive bool-rejection in Sequence prevents silent [True, False] -> [1, 0] index coercion. ASP-06 forward-looking rule documented (no caches today materialize filtered aspects, but Wave 2 must hash mask.tobytes() if adding any). 100% test coverage on presets.py (56 tests).
 - [Phase 09]: [Phase 09-01]: ASP-08 v1.0 baseline frozen at `.planning/phases/09-configurable-aspects/baseline-v1.0.json` (git_sha=049a9e7, aspect_set=extended, mean[365]=200.87ms cv=1.62%, 50 iter × 3 batch sizes, drift=3.56% PASS <5% gate). `tests/benchmark_aspects_batch.py` ships --aspect-set flag from day 1 and mismatch-rejection in --compare mode (no silent baseline-vs-comparison drift). Wave-1 parallel collision: identical script content authored independently by Plan 09-01 and committed via Plan 09-02 commit `78085d1` — md5 verified byte-identical, no merge needed.
+- [Phase 09]: [Phase 09-04b]: Four hardcoded `["Conjunction", "Sextile", "Square", "Trine", "Opposition"]` literal default lists (1 in windows.py find_aspects_timeline, 1 in timelines.py generate_aspect_timeline, 2 in transits.py find_transits_to_position + compare_dates_transits) replaced with `list(_CLASSICAL_NAMES)` derivation from CLASSICAL preset. Per file: ONE module-level import block + `_CLASSICAL_NAMES = tuple(aspects["name"][i].decode() for i in np.where(_CLASSICAL_MASK)[0])`. Approach A locked (preserve `aspects_list: list[str]` shape; do NOT widen to AspectSetSpec — v1.2+ scope). `find_aspect_window` (single-aspect API) and `lunar_calendar.BIG_FIVE` untouched. Single-source-of-truth invariant verified by provenance smoke test: all three modules resolve to canonical 5-major tuple. 479 tests pass; mypy --strict clean. Pre-existing interrogate gap (85.2% < 90% in nested callbacks) verified unrelated to this plan via git-stash baseline comparison.
 
 ### From v1.0 milestone (carried context)
 
@@ -95,10 +98,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-06 (Plan 09-01 execution; Wave 1 closing)
-Stopped at: Completed `09-01-baseline-capture-PLAN.md`. v1.0 baseline frozen at `.planning/phases/09-configurable-aspects/baseline-v1.0.json` with `aspect_set='extended'`, `git_sha=049a9e7ef8de0256ddf0016183a2cbc9adba2c57`, mean[365]=200.87ms ± 3.26ms (cv=1.62%); reproducibility drift between two consecutive captures = 3.56% (PASS <5% gate). `tests/benchmark_aspects_batch.py` (378 lines, mypy --strict clean) authored independently in Plan 09-01 matched byte-for-byte the script committed in parallel by Plan 09-02 commit `78085d1` — no merge conflict, single Task 2 commit `e6fca78` for the JSON. Wave 1 (09-01 baseline / 09-02 presets / 09-03 invariant) all green; `ketu/aspects/calculator.py` byte-identical to v1.0 at baseline-capture time. Wave 2 (09-04a calculator-refactor that wires `aspects=` kwarg, 09-04b default-migration) now unblocked. Wave-3 enforcement primitive verified end-to-end: `--compare` mode reads baseline `aspect_set` and rejects CLI override that disagrees (exits 2); `--aspect-set classical` on v1.0 HEAD exits 3 by design (will succeed post-09-04a). Run-to-run noise on `--compare` round-trip can hover at 5-7% on size 365 — Wave 3 should run multiple invocations and use median delta if any single run hovers near the gate.
+Last session: 2026-05-07 (Plan 09-04b execution; Wave 2 closing)
+Stopped at: Completed `09-04b-default-migration-PLAN.md`. Four hardcoded default-list literals across `ketu/aspects/{windows,timelines,transits}.py` (4 sites total: 1+1+2) migrated to derive from CLASSICAL preset via `list(_CLASSICAL_NAMES)`. Single source of truth: each file gains ONE module-level import block + `_CLASSICAL_NAMES = tuple(aspects["name"][i].decode() for i in np.where(_CLASSICAL_MASK)[0])`; each call site does `list(_CLASSICAL_NAMES)` for fresh mutable list. `aspects_list: list[str] | None = None` shape preserved across all four functions (Approach A locked, no AspectSetSpec widening). `find_aspect_window` and `lunar_calendar.BIG_FIVE` untouched (locked OUT OF SCOPE). Wave 2 disjoint-file invariant honored: 09-04a touched calculator.py only, 09-04b touched windows/timelines/transits.py only — zero merge conflict despite parallel execution. 479 tests pass, mypy --strict clean, single commit `787a3e5` (refactor scope, 3 files, 38 insertions / 14 deletions). Wave 2 closed; Plan 09-05 (integration & benchmark using `--aspect-set classical`) is the only remaining Phase 9 plan.
 Resume file: None
 
 ---
 *State initialized: 2026-02-12*
-*Last updated: 2026-05-06 — Plan 09-01 complete; Phase 9: 3/6 plans (Wave 1 done). v1.0 calculate_aspects_batch baseline frozen; --aspect-set flag wired from day 1; aspect_set=extended locked; reproducibility drift 3.56% PASS; Wave 2 (09-04a/09-04b) unblocked*
+*Last updated: 2026-05-07 — Plan 09-04b complete; Phase 9: 5/6 plans (Wave 2 closed). Four hardcoded default-list literals in windows/timelines/transits migrated to CLASSICAL preset; single-source-of-truth invariant established; 09-05 remaining (integration & benchmark)*
