@@ -39,6 +39,16 @@ from ketu.aspects.core import (
     calculate_adaptive_step,
 )
 
+# Default aspect set sourced from presets module (Phase 9, ASP-04).
+# Replaces previously-hardcoded ["Conjunction", "Sextile", "Square", "Trine", "Opposition"]
+# lists. Single source of truth: when CLASSICAL changes, all call sites in this
+# module pick up the change automatically.
+from ketu.aspects.presets import CLASSICAL as _CLASSICAL_MASK
+_CLASSICAL_NAMES = tuple(
+    aspects["name"][i].decode()
+    for i in np.where(_CLASSICAL_MASK)[0]
+)
+
 
 # ========== Data Structures ==========
 
@@ -426,15 +436,9 @@ def find_aspects_timeline(
     >>> for window in timeline:
     ...     print(f"{window.aspect}: {window.moments[0].exact}")
     """
-    # Default to all major aspects
+    # Default to CLASSICAL preset (5 majors) per Phase 9 ASP-04
     if aspects_list is None:
-        aspects_list = [
-            "Conjunction",
-            "Sextile",
-            "Square",
-            "Trine",
-            "Opposition",
-        ]
+        aspects_list = list(_CLASSICAL_NAMES)
 
     # Convert dates
     if isinstance(start_date, str):
