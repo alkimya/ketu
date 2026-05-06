@@ -5,30 +5,30 @@
 See: .planning/PROJECT.md (updated 2026-05-06)
 
 **Core value:** Cycle calculations must be correct, tested, and performant
-**Current focus:** Milestone v1.1 Flexibility & Houses — Phase 8 (Lilith Verification & Fix)
+**Current focus:** Milestone v1.1 Flexibility & Houses — Phase 9 (Configurable Aspects)
 
 ## Current Position
 
-Phase: 8 of 12 (Lilith Verification & Fix) — **COMPLETE**
-Plan: 5 of 5 complete — Phase 8 done; phases 9 (Configurable Aspects), 10 (Houses Module), 11 (CLI Refactor) unblocked for parallel execution per ROADMAP wave structure
-Status: Plan 08-05 complete (v1.1.0 release notes finalized: `CHANGELOG.md` v1.1.0 entry + `UPGRADING.md` v1.0 -> v1.1 section with 5-row per-date table; magnitudes `0.002693`/`0.007815`/`179.936579` consistent at 6-decimal precision across CHANGELOG, UPGRADING, and `docs/LILITH_DEFINITION.md`); existing test suite still green at 420 passed
-Last activity: 2026-05-06 — Plan 08-05 executed; commits `3b18290` (CHANGELOG), `1907af6` (UPGRADING); deviation from pure Chapront secular linear stated transparently per Wave 3 orchestrator note
+Phase: 9 of 12 (Configurable Aspects) — **IN PROGRESS**
+Plan: 1 of 6 complete (09-03 done; 09-01, 09-02, 09-04a, 09-04b, 09-05 remaining)
+Status: Plan 09-03 complete — `core.aspects` v1.1 invariant locked: length 14 + dtype.names + per-row name/angle/coef + sha256 byte fingerprint `c5bd1773...9afb359`. Mutation test verified surgical row-drift detection. 423 tests green, no regressions; `core.aspects` itself unchanged (append-only contract preserved)
+Last activity: 2026-05-06 — Plan 09-03 executed; commit `e5a529d` (test) on `gsd/v1.1-milestone`
 
-Progress: [████░░░░░░] v1.0 complete; v1.1 1/5 phases complete (Phase 8: 5/5 plans)
+Progress: [████░░░░░░] v1.0 complete; v1.1 1/5 phases complete (Phase 8: 5/5 plans), Phase 9: 1/6 plans
 
 ## Performance Metrics
 
 **Velocity (v1.0 reference baseline):**
 
 - Total plans completed (v1.0): 16
-- v1.1 plans completed: 5 (Phase 8: 08-01, 08-02, 08-03, 08-04, 08-05) — Phase 8 COMPLETE
+- v1.1 plans completed: 6 (Phase 8: 08-01, 08-02, 08-03, 08-04, 08-05; Phase 9: 09-03)
 
 **By Phase (v1.1):**
 
 | Phase | Plans | Total | Avg/Plan |
 |-------|-------|-------|----------|
 | 8. Lilith Verification & Fix | 5 | ~22m 18s | ~4m 28s |
-| 9. Configurable Aspects | 0 | — | — |
+| 9. Configurable Aspects | 1 | ~1m 35s | ~1m 35s |
 | 10. Houses Module | 0 | — | — |
 | 11. CLI Refactor & Integration | 0 | — | — |
 | 12. Release Preparation v1.1.0 | 0 | — | — |
@@ -39,6 +39,7 @@ Progress: [████░░░░░░] v1.0 complete; v1.1 1/5 phases comple
 | Phase 08 P03 | 4m 31s | 2 tasks | 1 files |
 | Phase 08 P04 | 10m 1s | 4 tasks | 4 files |
 | Phase 08 P05 | 3m 41s | 2 tasks | 2 files |
+| Phase 09 P03 | 1m 35s | 1 tasks | 1 files |
 
 ## Accumulated Context
 
@@ -62,6 +63,7 @@ Decisions are logged in PROJECT.md Key Decisions table. Recent decisions affecti
 - [Phase 08-04]: avg_speeds[12] uses `round(_LILITH_MEAN_RATE_DEG_PER_DAY, 6)` — preserves 6-decimal `avg_speeds` dict convention while inheriting from source-of-truth named constant
 - [Phase 08]: [Phase 08-05] Magnitude consistency invariant locked across CHANGELOG/UPGRADING/LILITH_DEFINITION at 6-decimal precision: pre-fix 179.936579 deg (user-visible breaking-change), post-fix 0.002693 deg (5 dates) and 0.007815 deg (55K daily samples) -- both <0.01 deg tolerance. Per-date table in UPGRADING live-computed from get_lilith_position rather than copied from Plan 04 SUMMARY
 - [Phase 08]: [Phase 08-05] Deviation from pure Chapront secular linear stated transparently in CHANGELOG and UPGRADING (NOT minimized): both files explicitly state v1.1 ships 'linear secular term + 1 sin() perturbation', not a raw ELP-2000 polynomial. Per execution-context note from Wave 3 orchestrator
+- [Phase 09]: [Phase 09-03]: core.aspects invariant pinned via sha256 byte fingerprint (c5bd1773...9afb359) + per-row name/angle/coef + length 14 + dtype.names. Mutation test verified surgical row-drift detection. Defense-in-depth pattern: any future drift in rows 0-13 fails with informative messages identifying the affected row index
 
 ### From v1.0 milestone (carried context)
 
@@ -89,10 +91,10 @@ None yet.
 
 ## Session Continuity
 
-Last session: 2026-05-06 (Plan 08-05 execution)
-Stopped at: Completed `08-05-release-notes-PLAN.md` and Phase 8 in full (5/5 plans). `CHANGELOG.md` `[1.1.0] - UNRELEASED` section added with explicit Lilith correction entry (Fixed/Added/Migration subsections); `UPGRADING.md` restructured with general "Upgrading" H1 plus per-release H2 sections, new `## v1.0 -> v1.1` section above existing v0.4 -> v1.0 content includes 5-row per-date table (live-computed from `get_lilith_position`) showing user-visible ~180 deg shift. Magnitudes `0.002693 deg` (5-date), `0.007815 deg` (55K daily), `179.936579 deg` (pre-fix) all at 6-decimal precision in CHANGELOG, UPGRADING, and `docs/LILITH_DEFINITION.md`. Deviation from pure Chapront secular linear (v1.1 = linear + 1 sin perturbation) stated transparently in both release-notes files. Test suite 420 passed, no regressions from doc-only changes. Phase 8 success criteria 1-5 (definition / harness / fix / AGPL-safe / release notes) all met. Phases 9 (Configurable Aspects), 10 (Houses Module), 11 (CLI Refactor) unblocked for parallel execution.
+Last session: 2026-05-06 (Plan 09-03 execution)
+Stopped at: Completed `09-03-invariant-test-PLAN.md` (commit `e5a529d`). `core.aspects` v1.1 invariant locked in `tests/test_ketu.py::TestData`: length 14 + dtype.names + per-row name/angle/coef (with `pytest.approx(abs=1e-6)`) + sha256 byte fingerprint `c5bd177316ce98d428bee011a5b0f17ae247d1dee1e478c2389af51d39afb359`. Mutation test verified: row swap in `ketu/core.py` causes BOTH `test_aspects_structure` AND `test_aspects_byte_fingerprint` to fail with surgical messages identifying the drifted row index, then revert restores green. 423/423 tests passing on full suite, no regressions. `core.aspects` itself unchanged — append-only contract preserved per Phase 9 invariant. Plans 09-04a (calculator-refactor) and 09-04b (default-migration) now have machine-enforceable safety net for any future drift in rows 0-13. Note: plan referenced class name `TestCoreData`; actual class in `tests/test_ketu.py` is `TestData` — used existing class (no rename), tests landed correctly.
 Resume file: None
 
 ---
 *State initialized: 2026-02-12*
-*Last updated: 2026-05-06 — Plan 08-05 complete; Phase 8 COMPLETE (5/5 plans, ~22m 18s total). v1.1.0 release notes finalized; magnitude consistency invariant locked across CHANGELOG/UPGRADING/LILITH_DEFINITION; phases 9/10/11 unblocked*
+*Last updated: 2026-05-06 — Plan 09-03 complete; Phase 9: 1/6 plans (~1m 35s). core.aspects invariant pinned via sha256 fingerprint; mutation test verified surgical row-drift detection; defense-in-depth pattern (length + dtype + per-row + bytes) established for structured-array invariants*
