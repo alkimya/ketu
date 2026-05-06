@@ -295,6 +295,12 @@ def calculate_aspects_batch(
     selected_indices: npt.NDArray[np.intp] = np.where(mask)[0]
     selected_angles: npt.NDArray[np.float64] = _CORE_ASPECTS["angle"][mask]
     selected_coefs: npt.NDArray[np.float64] = _CORE_ASPECTS["coef"][mask]
+    # Hoist per-aspect Python-scalar conversions ABOVE the per-date loop so we
+    # pay the cast cost ``len(selected_indices)`` times total instead of
+    # ``n_dates × len(selected_indices)`` (ASP-08 hot-loop fix).
+    selected_iasp_ints: list[int] = [int(v) for v in selected_indices]
+    selected_angles_f: list[float] = [float(v) for v in selected_angles]
+    selected_coefs_f: list[float] = [float(v) for v in selected_coefs]
 
     bodies_id = l_bodies["id"]
     n_bodies = len(bodies_id)
@@ -327,6 +333,12 @@ def calculate_aspects_batch(
     body1_ids = bodies_id[i_indices]
     body2_ids = bodies_id[j_indices]
 
+    # Pre-compute per-aspect orb arrays ONCE (independent of date) — the
+    # only per-aspect input is ``aspect_coef``, so this work is hoisted out
+    # of the per-date loop entirely.
+    pair_orb_sums = (orbs_body1 + orbs_body2) / 2  # Shape: (n_pairs,)
+    selected_orbs_per_aspect = [pair_orb_sums * c for c in selected_coefs_f]
+
     # Process each date
     results_by_date = []
     for date_idx in range(n_dates):
@@ -337,11 +349,10 @@ def calculate_aspects_batch(
         # filtered subset (parallel to selected_angles / selected_coefs);
         # ``i_asp`` is the canonical 0-13 index emitted to results — Kala's
         # positional contract.
-        for k, i_asp_val in enumerate(selected_indices):
-            i_asp = int(i_asp_val)
-            aspect_angle = float(selected_angles[k])
-            aspect_coef = float(selected_coefs[k])
-            orbs = (orbs_body1 + orbs_body2) / 2 * aspect_coef
+        for k in range(len(selected_iasp_ints)):
+            i_asp = selected_iasp_ints[k]
+            aspect_angle = selected_angles_f[k]
+            orbs = selected_orbs_per_aspect[k]
 
             if i_asp == 0:  # Conjunction (canonical index 0)
                 in_orb = distances_this_date <= orbs
