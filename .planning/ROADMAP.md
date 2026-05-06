@@ -84,7 +84,15 @@ Plans:
   4. User calls any aspect API with `aspects=None` and gets `CLASSICAL` (5 majors) — the default change is explicit and observable; downstream consumers like Kala must opt into `EXTENDED`
   5. User runs `pytest -k benchmark` and `calculate_aspects_batch()` shows ≤5% regression vs the v1.0 baseline (filter mask resolved once at API entry, not in hot loops); LRU caches include `aspect_set` hash so config changes never return stale results
 
-**Plans**: TBD
+**Plans**: 5 plans
+
+Plans:
+
+- [ ] 09-01-baseline-capture-PLAN.md — Capture v1.0 timing baseline for `calculate_aspects_batch()` (BEFORE any code change) into `baseline-v1.0.json`; ASP-08 reference point
+- [ ] 09-02-presets-module-PLAN.md — Create `ketu/aspects/presets.py` with `CLASSICAL`/`TRADITIONAL`/`EXTENDED` frozen masks + `resolve_aspect_set` resolver; re-export from subpackage `__init__` (ASP-02, ASP-04, ASP-05, ASP-06)
+- [ ] 09-03-invariant-test-PLAN.md — Strengthen `tests/test_ketu.py` invariant: length 14, dtype.names, per-row name/angle/coef, sha256 byte fingerprint (ASP-01)
+- [ ] 09-04-api-refactor-PLAN.md — Thread `aspects=` through `calculate_aspects/_vectorized/_batch` (hot loops emit canonical `i_asp`); migrate 4 hardcoded `["Conjunction", "Sextile", "Square", "Trine", "Opposition"]` lists to `CLASSICAL` preset (ASP-03, ASP-04, ASP-05)
+- [ ] 09-05-integration-and-benchmark-PLAN.md — Integration test (CLASSICAL leak = zero across all batch APIs) + benchmark comparison vs `baseline-v1.0.json` (ASP-07, ASP-08)
 
 ### Phase 10: Houses Module
 
