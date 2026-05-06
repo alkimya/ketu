@@ -1,115 +1,151 @@
-# Requirements: Ketu 1.0
+# Requirements: Ketu v1.1 Flexibility & Houses
 
-**Defined:** 2026-02-12
+**Defined:** 2026-05-06
 **Core Value:** Cycle calculations must be correct, tested, and performant
+**Milestone goal:** Make Ketu more flexible (configurable aspects), more complete (astrological houses), and more correct (Lilith fix) — evolving from astronomical to astronomical-astrological framework.
 
-## v1 Requirements
+## v1.1 Requirements
 
-Requirements for 1.0.0 release. Each maps to roadmap phases.
+Requirements for milestone v1.1. Each maps to roadmap phases (numbered from 8 onwards, continuing v1.0).
 
-### Bug Fixes
+### Configurable Aspects (ASP)
 
-- [ ] **BUG-01**: Operator precedence in cache logic fixed — `use_cache=False` correctly disables cache
-- [ ] **BUG-02**: Aspect vectorization is deterministic — `calculate_aspects_vectorized()` returns consistent count across all dates
+- [ ] **ASP-01**: `core.aspects` constant remains length 14, append-only — invariant test guarantees order and length
+- [ ] **ASP-02**: Module `ketu/aspects/presets.py` exposes `CLASSICAL` (5 majors), `TRADITIONAL` (7 = h12), `EXTENDED` (14 = legacy v1.0)
+- [ ] **ASP-03**: `calculate_aspects()`, `calculate_aspects_vectorized()`, `calculate_aspects_batch()` accept `aspects=` parameter (list of names, preset name, or index array)
+- [ ] **ASP-04**: Python API default changes — `aspects=None` resolves to `CLASSICAL` (5 majors); downstream consumers like Kala must explicitly request `EXTENDED` for legacy 14
+- [ ] **ASP-05**: `aspect_set` is resolved to a NumPy boolean mask once at API entry — no filter inside hot loops
+- [ ] **ASP-06**: LRU cache keys include `aspect_set` hash where applicable (no stale results after config change)
+- [ ] **ASP-07**: Integration test: configure `CLASSICAL`, call all public aspect APIs, assert no result contains a non-classical aspect
+- [ ] **ASP-08**: Benchmark: `calculate_aspects_batch()` regresses by no more than 5% vs v1.0 baseline
 
-### Module Removal
+### CLI Refactor (CLI)
 
-- [ ] **REM-01**: Export package removed — `ketu/export/` directory deleted (chart.py, icalendar.py, constants.py)
-- [ ] **REM-02**: Optional dependencies removed from pyproject.toml — no matplotlib, icalendar, or `[chart]`/`[icalendar]`/`[all]` extras
-- [ ] **REM-03**: Hidden Pandas dependency removed — `generate_aspect_timeline()` returns NumPy structured array, not DataFrame
-- [ ] **REM-04**: Public API cleaned — `__init__.py` `__all__` audited, export-related functions removed, internals marked private
+- [ ] **CLI-01**: `ketu` command uses argparse with subcommands (replaces interactive `input()` prompt)
+- [ ] **CLI-02**: Flag `--harmonics SPEC` accepts preset name (`classical`, `traditional`, `extended`, `all`) OR explicit harmonic list (`9,10,11`)
+- [ ] **CLI-03**: `--harmonics all` returns v1.0 14-aspect output byte-identical (legacy escape hatch, regression-tested)
+- [ ] **CLI-04**: `ketu houses` subcommand: `--date ISO --lat FLOAT --lon FLOAT --system {placidus,koch}`
+- [ ] **CLI-05**: Introspection flags `--list-aspect-sets` and `--list-house-systems` print available options with descriptions
+- [ ] **CLI-06**: CLI output includes resolved config header (e.g. `# Aspect set: classical [0°, 60°, 90°, 120°, 180°]`)
 
-### Complex Math Integration
+### Houses Module (HOU)
 
-- [ ] **CPX-01**: Cycle engine uses complex numbers internally — angular separation computed via complex arithmetic, degrees as output
-- [ ] **CPX-02**: ResonanceField vectorized — `_get_trace()` uses `calc_planet_position_batch()` instead of Python loop
-- [ ] **CPX-03**: Caching strategies consolidated — single coherent caching approach (not LRU + EphemerisCache in parallel)
+- [ ] **HOU-01**: Audit `ephemeris/time.py` GMST/LST + obliquity precision; tighten if needed to achieve <1 arcmin error on Ascendant vs Astro.com reference
+- [ ] **HOU-02**: New `ketu/houses/` subpackage with registry pattern (`SYSTEMS = {"placidus": ..., "koch": ...}`) for extensibility
+- [ ] **HOU-03**: Placidus implementation with iteration cap (max 50) and explicit convergence detection
+- [ ] **HOU-04**: Koch implementation (closed-form or iterative per chosen derivation)
+- [ ] **HOU-05**: Output `HOUSES_DTYPE` structured array: 12 cusps + ASC + MC + ARMC + Vertex
+- [ ] **HOU-06**: Polar fallback parameter `polar_fallback={"raise","porphyry"}`; `HighLatitudeError` raised by default beyond ±66.56°
+- [ ] **HOU-07**: Helper `house_of(planet_lon, cusps) -> int` returns 1-12
+- [ ] **HOU-08**: Vectorization over `(jd, lat, lon)` arrays (mask-based continuation for Placidus iteration)
+- [ ] **HOU-09**: ≥95% coverage on `houses/`; ≥10 reference fixtures vs Astro.com / Swiss Ephemeris including polar lats (70°, 80°)
+- [ ] **HOU-10**: Remove `calculate_house_cusps` placeholder stub from `ephemeris/planets.py` (currently returns wrong equal-house values)
 
-### Code Quality
+### Lilith Verification & Fix (LIL)
 
-- [ ] **QAL-01**: Error messages standardized — consistent ValueError/TypeError with context across all modules
-- [ ] **QAL-02**: Pytest `slow` marker registered in pyproject.toml config
+- [ ] **LIL-01**: `LILITH_DEFINITION.md` written FIRST: documents Mean Apogee definition, tropical longitude convention, source citation (Chapront-Touz/Francou), explicit formula
+- [ ] **LIL-02**: Test harness compares current Ketu formula (`ephemeris/orbital.py:591`) vs `pysweph SE_MEAN_APOG` on 5+ dates spanning 1900, 1950, 2000, 2025, 2050
+- [ ] **LIL-03**: If empirical error >0.01°, formula is corrected; regression tests pin new values with explicit pysweph cross-check
+- [ ] **LIL-04**: `pysweph>=2.10.3.6` added to `[project.optional-dependencies] test` (NOT runtime)
+- [ ] **LIL-05**: CHANGELOG and UPGRADING.md document any Lilith value changes with magnitude (e.g. "Lilith differs by X° vs v1.0 on date Y")
 
-### Testing
+### Release v1.1.0 (REL)
 
-- [ ] **TST-01**: Overall test coverage reaches 70%
-- [ ] **TST-02**: `cycles/calculator.py` has tests covering cycle generation, aspect proximity, and edge cases
-- [ ] **TST-03**: `cache/ephemeris_cache.py` has tests covering cache hit/miss, file I/O, and invalidation
-- [ ] **TST-04**: All tests pass on Python 3.10-3.13
+- [ ] **REL-01**: Version bumped 1.0.0 → 1.1.0 in `pyproject.toml` AND `ketu/__init__.py` (sync test passes)
+- [ ] **REL-02**: CHANGELOG section "BREAKING / Numerical Behavior Changes" documents: CLI default change, Lilith correction (if any), new houses module
+- [ ] **REL-03**: UPGRADING.md updated with v1.0 → v1.1 migration guide (script users, Kala adapter, Lilith consumers)
+- [ ] **REL-04**: GitHub release v1.1.0 + PyPI publish via trusted publishing OIDC (workflow already configured)
 
-### Documentation & Release
+## v2 Requirements (Deferred)
 
-- [ ] **DOC-01**: Documentation updated for 1.0 API — no references to chart, icalendar, matplotlib, or removed functions
-- [ ] **DOC-02**: CHANGELOG.md has detailed BREAKING CHANGES section for 0.4.0 → 1.0.0
-- [ ] **DOC-03**: Version bumped to 1.0.0 in pyproject.toml and `ketu/__init__.py`
-- [ ] **DOC-04**: PyPI classifiers updated (Development Status :: 5 - Production/Stable)
-- [ ] **DOC-05**: GitHub release created with tag v1.0.0
-- [ ] **DOC-06**: Package published to PyPI
+Acknowledged but not in v1.1 roadmap.
 
-## v2 Requirements
+### Future Lilith Variants
 
-Deferred to future release. Tracked but not in current roadmap.
+- **LIL2-01**: True/Osculating Lilith (h13) — instantaneous apogee with retrograde motion
+- **LIL2-02**: Asteroid Lilith #1181 — different body entirely
 
-### Type Safety
+### Future House Systems
 
-- **TYP-01**: All public functions have complete type hints with `numpy.typing`
-- **TYP-02**: `mypy --strict` passes in CI
+- **HOU2-01**: Whole Sign houses (trivial trig, polar-safe)
+- **HOU2-02**: Equal houses (trivial trig, polar-safe)
+- **HOU2-03**: Porphyry houses (currently used as polar fallback only)
+- **HOU2-04**: Regiomontanus houses
+- **HOU2-05**: Campanus houses
 
-### Platform Testing
+### Other
 
-- **PLT-01**: CI tests on Linux, macOS, Windows matrix
-- **PLT-02**: NumPy 2.x compatibility verified
-
-### Advanced
-
-- **ADV-01**: Migration guide (UPGRADING.md) with code examples
-- **ADV-02**: Release candidate (1.0.0rc1) published before final
-- **ADV-03**: API surface audit targets 30-40 public functions (down from ~60)
+- **AST-01**: Asteroids (Ceres, Pallas, Juno, Vesta) and Centaurs (Chiron)
+- **AST-02**: Fixed stars
+- **AST-03**: Arabic Parts / Lots
 
 ## Out of Scope
 
+Explicitly excluded from v1.1.
+
 | Feature | Reason |
 |---------|--------|
-| Chart/SVG visualization | Removed — belongs in future GUI layer |
-| iCalendar export | Removed — belongs in future GUI layer |
-| Matplotlib dependency | Removed entirely |
-| French documentation rebuild | Defer to post-1.0 |
-| Real-time streaming | Not needed for batch analysis |
+| True/Osculating Lilith | Defer to v1.2 — Mean Lilith is de-facto standard in 95% of astrology software |
+| Asteroid Lilith #1181 | Defer to v1.2+ — different body, separate effort |
+| Whole Sign / Equal / Porphyry / Regiomontanus houses (concrete impl) | Architecture supports them via registry; ship Placidus + Koch in v1.1 to prove pattern |
+| Chiron, Centaurs, asteroids, fixed stars | Defer to future milestone |
+| Arabic Parts / Lots | Defer to future milestone |
+| Timezone handling inside Ketu | UTC remains required; timezone conversion is caller's responsibility |
+| `pyswisseph` or `pysweph` as runtime dependency | Test-only is acceptable; license (AGPL) and brand promise (NumPy-only) prevent runtime |
+| Chart/SVG visualization | Still removed since v1.0; deferred to post-Ketu GUI tooling |
+| iCalendar export | Still removed since v1.0 |
+| Real-time streaming calculations | Still batch-oriented |
 | Web API | Ketu is a library, not a service |
-| swisseph re-integration | Already replaced with pure NumPy in v0.3.0 |
-| Logging framework | Nice-to-have, not blocking 1.0 |
+| French documentation rebuild | Still deferred |
+| `click` / `typer` CLI dependencies | argparse stdlib is sufficient; no new runtime deps |
+| Bare `--harmonics 12` integer parsing | Too ambiguous (set vs single vs range); force named presets or explicit list |
 
 ## Traceability
 
+Mapping requirements to roadmap phases. Phase numbering continues from v1.0 (last phase was 7).
+
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| REM-01 | Phase 1 | Pending |
-| REM-02 | Phase 1 | Pending |
-| REM-04 | Phase 1 | Pending |
-| BUG-01 | Phase 2 | Pending |
-| BUG-02 | Phase 2 | Pending |
-| REM-03 | Phase 3 | Pending |
-| TST-01 | Phase 4 | Pending |
-| TST-02 | Phase 4 | Pending |
-| TST-03 | Phase 4 | Pending |
-| TST-04 | Phase 4 | Pending |
-| QAL-02 | Phase 4 | Pending |
-| CPX-01 | Phase 5 | Pending |
-| CPX-02 | Phase 5 | Pending |
-| CPX-03 | Phase 5 | Pending |
-| QAL-01 | Phase 5 | Pending |
-| DOC-01 | Phase 6 | Pending |
-| DOC-02 | Phase 6 | Pending |
-| DOC-03 | Phase 7 | Pending |
-| DOC-04 | Phase 7 | Pending |
-| DOC-05 | Phase 7 | Pending |
-| DOC-06 | Phase 7 | Pending |
+| LIL-01 | Phase 8 | Pending |
+| LIL-02 | Phase 8 | Pending |
+| LIL-03 | Phase 8 | Pending |
+| LIL-04 | Phase 8 | Pending |
+| LIL-05 | Phase 8 | Pending |
+| ASP-01 | Phase 9 | Pending |
+| ASP-02 | Phase 9 | Pending |
+| ASP-03 | Phase 9 | Pending |
+| ASP-04 | Phase 9 | Pending |
+| ASP-05 | Phase 9 | Pending |
+| ASP-06 | Phase 9 | Pending |
+| ASP-07 | Phase 9 | Pending |
+| ASP-08 | Phase 9 | Pending |
+| HOU-01 | Phase 10 | Pending |
+| HOU-02 | Phase 10 | Pending |
+| HOU-03 | Phase 10 | Pending |
+| HOU-04 | Phase 10 | Pending |
+| HOU-05 | Phase 10 | Pending |
+| HOU-06 | Phase 10 | Pending |
+| HOU-07 | Phase 10 | Pending |
+| HOU-08 | Phase 10 | Pending |
+| HOU-09 | Phase 10 | Pending |
+| HOU-10 | Phase 10 | Pending |
+| CLI-01 | Phase 11 | Pending |
+| CLI-02 | Phase 11 | Pending |
+| CLI-03 | Phase 11 | Pending |
+| CLI-04 | Phase 11 | Pending |
+| CLI-05 | Phase 11 | Pending |
+| CLI-06 | Phase 11 | Pending |
+| REL-01 | Phase 12 | Pending |
+| REL-02 | Phase 12 | Pending |
+| REL-03 | Phase 12 | Pending |
+| REL-04 | Phase 12 | Pending |
 
 **Coverage:**
-- v1 requirements: 21 total
-- Mapped to phases: 21
-- Unmapped: 0
+
+- v1.1 requirements: 33 total
+- Mapped to phases: 33
+- Unmapped: 0 ✓
 
 ---
-*Requirements defined: 2026-02-12*
-*Last updated: 2026-02-12 after roadmap creation*
+*Requirements defined: 2026-05-06*
+*Last updated: 2026-05-06 after initial v1.1 definition*
