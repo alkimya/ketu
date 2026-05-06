@@ -21,7 +21,7 @@ Ketu v1.1 evolves the library from a pure astronomical engine into an astronomic
 - Phase 12 is last (depends on all prior phases)
 
 - [x] **Phase 8: Lilith Verification & Fix** — Document Lilith definition, audit formula vs Swiss Ephemeris, fix if needed (completed 2026-05-06)
-- [ ] **Phase 9: Configurable Aspects** — 5-major default with `CLASSICAL`/`TRADITIONAL`/`EXTENDED` presets; append-only `core.aspects`
+- [x] **Phase 9: Configurable Aspects** — 5-major default with `CLASSICAL`/`TRADITIONAL`/`EXTENDED` presets; append-only `core.aspects` (completed 2026-05-07)
 - [ ] **Phase 10: Houses Module** — Placidus + Koch with extensible registry, polar fallback, LST precision audit
 - [ ] **Phase 11: CLI Refactor & Integration** — argparse subcommands, `--harmonics SPEC`, `ketu houses` subcommand, introspection flags
 - [ ] **Phase 12: Release Preparation v1.1.0** — Version bump, CHANGELOG, UPGRADING.md, GitHub release, PyPI publish
@@ -84,15 +84,16 @@ Plans:
   4. User calls any aspect API with `aspects=None` and gets `CLASSICAL` (5 majors) — the default change is explicit and observable; downstream consumers like Kala must opt into `EXTENDED`
   5. User runs `pytest -k benchmark` and `calculate_aspects_batch()` shows ≤5% regression vs the v1.0 baseline (filter mask resolved once at API entry, not in hot loops); LRU caches include `aspect_set` hash so config changes never return stale results
 
-**Plans**: 5 plans
+**Plans**: 6 plans (Plan 09-04 split into 09-04a + 09-04b per checker Blocker 3)
 
 Plans:
 
-- [ ] 09-01-baseline-capture-PLAN.md — Capture v1.0 timing baseline for `calculate_aspects_batch()` (BEFORE any code change) into `baseline-v1.0.json`; ASP-08 reference point
-- [ ] 09-02-presets-module-PLAN.md — Create `ketu/aspects/presets.py` with `CLASSICAL`/`TRADITIONAL`/`EXTENDED` frozen masks + `resolve_aspect_set` resolver; re-export from subpackage `__init__` (ASP-02, ASP-04, ASP-05, ASP-06)
-- [ ] 09-03-invariant-test-PLAN.md — Strengthen `tests/test_ketu.py` invariant: length 14, dtype.names, per-row name/angle/coef, sha256 byte fingerprint (ASP-01)
-- [ ] 09-04-api-refactor-PLAN.md — Thread `aspects=` through `calculate_aspects/_vectorized/_batch` (hot loops emit canonical `i_asp`); migrate 4 hardcoded `["Conjunction", "Sextile", "Square", "Trine", "Opposition"]` lists to `CLASSICAL` preset (ASP-03, ASP-04, ASP-05)
-- [ ] 09-05-integration-and-benchmark-PLAN.md — Integration test (CLASSICAL leak = zero across all batch APIs) + benchmark comparison vs `baseline-v1.0.json` (ASP-07, ASP-08)
+- [x] 09-01-baseline-capture-PLAN.md — Capture v1.0 timing baseline for `calculate_aspects_batch()` (BEFORE any code change) into `baseline-v1.0.json`; benchmark script ships with `--aspect-set` flag (default extended) wired from day 1; ASP-08 reference point
+- [x] 09-02-presets-module-PLAN.md — Create `ketu/aspects/presets.py` with `CLASSICAL`/`TRADITIONAL`/`EXTENDED` frozen masks + `resolve_aspect_set` resolver; re-export from subpackage `__init__` (ASP-02, ASP-04, ASP-05, ASP-06)
+- [x] 09-03-invariant-test-PLAN.md — Strengthen `tests/test_ketu.py` invariant: length 14, dtype.names, per-row name/angle/coef, sha256 byte fingerprint (ASP-01)
+- [x] 09-04a-calculator-refactor-PLAN.md — Thread `aspects=` through `calculate_aspects/_vectorized/_batch` AND `find_aspects_between_dates`; refactor hot loops to emit canonical `i_asp` from `selected_indices[k]`; rename module-level `aspects` import to `_CORE_ASPECTS` (ASP-03, ASP-04, ASP-05, ASP-07 calculator-side)
+- [x] 09-04b-default-migration-PLAN.md — Migrate 4 hardcoded `["Conjunction", "Sextile", "Square", "Trine", "Opposition"]` lists in `windows.py`/`timelines.py`/`transits.py` to derive from `CLASSICAL` preset; parallel with 09-04a in Wave 2 (ASP-04, ASP-07 windows/timelines/transits-side)
+- [x] 09-05-integration-and-benchmark-PLAN.md — Integration test (CLASSICAL leak = zero across all 4 public aspect APIs incl. `find_aspects_between_dates`) + benchmark comparison vs `baseline-v1.0.json` with HARD PASS/FAIL ≤5% gate (ASP-07, ASP-08)
 
 ### Phase 10: Houses Module
 
@@ -172,7 +173,7 @@ Plans:
 |-------|-----------|----------------|--------|-----------|
 | 1-7 (collapsed) | v1.0 | 16/16 | ✓ Complete | 2026-02-12 |
 | 8. Lilith Verification & Fix | v1.1 | 5/5 | ✓ Complete | 2026-05-06 |
-| 9. Configurable Aspects | v1.1 | 0/TBD | Not started | - |
+| 9. Configurable Aspects | v1.1 | 6/6 | ✓ Complete | 2026-05-07 |
 | 10. Houses Module | v1.1 | 0/TBD | Not started | - |
 | 11. CLI Refactor & Integration | v1.1 | 0/TBD | Not started | - |
 | 12. Release Preparation v1.1.0 | v1.1 | 0/TBD | Not started | - |
@@ -183,4 +184,5 @@ v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`.
 *Roadmap v1.1 created: 2026-05-06*
 *Phase 8 plans created: 2026-05-06*
 *Phase 8 executed: 2026-05-06 (FORMULA-CORRECTION branch — Lilith formula fixed at 4 sites, max |delta| 0.002693° vs Swiss Ephemeris)*
+*Phase 9 executed: 2026-05-07 (6 plans, 3 waves — CLASSICAL default, presets module, ASP-08 PASS at -10.10% max regression on EXTENDED, 488 tests green)*
 *v1.0 roadmap archived to .planning/milestones/v1.0-ROADMAP.md*
