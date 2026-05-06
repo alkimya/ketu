@@ -7,6 +7,68 @@ All notable changes to Ketu are documented here.
 This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.1.0] - UNRELEASED
+
+### Fixed (BREAKING - Numerical Behavior Change)
+
+- **Lilith (Mean Apogee) longitude formula corrected** to match Swiss
+  Ephemeris `SE_MEAN_APOG`. The v1.0 formula
+  (`83.3532 + 0.1114040803 * d`) was actually computing the lunar mean
+  *perigee* longitude, not the apogee, producing a systematic offset of
+  approximately 180 deg on every date. Empirical max |delta| vs.
+  `swe.calc_ut(jd, swe.MEAN_APOG)` over 1900-2050 was 179.936579 deg
+  (Plan 03 cross-check). The v1.1 formula adds 180 deg to the epoch,
+  refines the secular rate, and adds a single sin() perturbation term
+  (period approximately 1095 days) fitted by joint nonlinear least
+  squares against `swe.MEAN_APOG` over 55K daily samples 1900-2050. This
+  is a deliberate deviation from a pure Chapront secular linear formula:
+  Ketu v1.1 ships `linear secular term + 1 sin() perturbation`, not a
+  raw ELP-2000 polynomial. Post-fix max |delta| vs. Swiss Ephemeris is
+  0.002693 deg on the five Plan 03 cross-check dates and 0.007815 deg
+  over 55K daily samples 1900-2050 -- both well below the 0.01 deg
+  tolerance documented in `docs/LILITH_DEFINITION.md`.
+- **User-visible impact:** Lilith longitudes returned by
+  `get_lilith_position(jd)` and `calc_planet_position(jd, 12)` differ
+  from v1.0 by approximately 180 deg on essentially every date.
+  Concrete v1.0 -> v1.1 examples per date are tabulated in
+  `UPGRADING.md`. **Recompute any cached Lilith values produced by
+  v1.0** (ML feature arrays, lunation timing tables, aspect-window
+  catalogues, charts). Other body positions are unchanged.
+- **Single source of truth:** all four Lilith call sites
+  (`ketu/ephemeris/orbital.py` x2, `ketu/ephemeris/planets.py` x2) now
+  reference five private module-level constants (`_LILITH_MEAN_*`,
+  `_LILITH_PERTURB_*`) declared once in `orbital.py`, eliminating the
+  v1.0 four-site literal-duplication drift risk.
+
+### Added
+
+- **Lilith definition contract** (`docs/LILITH_DEFINITION.md`): single
+  reference document stating which quantity Ketu computes (Mean Apogee,
+  matching `SE_MEAN_APOG`), the exact formula, the reference frame
+  (tropical, ecliptic of date, geocentric, mean orbit), the source
+  (ELP-2000 / Chapront-Touze with one fitted perturbation), the 0.01
+  deg cross-check tolerance and its derivation, and the v1.0 -> v1.1
+  History.
+- **Lilith cross-check harness** (`tests/test_lilith_cross_check.py`):
+  parametrized pytest module verifying `get_lilith_position` against
+  Swiss Ephemeris on five dates spanning 1900-2050, plus a tighter
+  regression-baseline layer at 0.005 deg pinning the v1.1 fit. The
+  harness uses `pytest.importorskip("swisseph")` so it skips cleanly
+  when `pysweph` is not installed.
+- **Test-only optional dependency** `pysweph>=2.10.3.6` under
+  `[project.optional-dependencies].test` -- AGPL-licensed, never shipped
+  in the runtime wheel. Verified empirically via two-venv runtime
+  isolation test: `pip install ketu` MUST NOT pull `pysweph`;
+  `pip install -e .[test]` MUST. See `docs/LILITH_DEFINITION.md`
+  "AGPL and Test-Only Dependency Note" section.
+
+### Migration
+
+See `UPGRADING.md` v1.0 -> v1.1 section for per-date v1.0 vs. v1.1
+Lilith values, the action required, and downstream-consumer notes
+(Kala, etc.). Non-Lilith bodies, cycles, harmonics, houses, and
+aspect calculations are unaffected.
+
 ## [1.0.0] - 2026-02-12
 
 ### BREAKING CHANGES
