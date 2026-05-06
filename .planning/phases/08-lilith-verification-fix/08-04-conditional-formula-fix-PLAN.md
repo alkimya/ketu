@@ -58,6 +58,8 @@ Purpose: REQUIREMENTS LIL-03 + ROADMAP success criterion #3. The conditional str
 Precondition: `08-03-SUMMARY.md` must exist and contain a line of the exact form `MAX |delta| = X.XXXXXX deg` AND a line of the exact form `Plan 04: <NO-OP|FORMULA-CORRECTION>`. If either is missing, halt with a clear error pointing back to Plan 03.
 
 Output: Either a no-op SUMMARY (branch NO-OP) or a coordinated 3-site code change + harness enhancement + definition update (branch FORMULA-CORRECTION).
+
+Note on `files_modified`: the frontmatter `files_modified` list is the MAXIMAL (FORMULA-CORRECTION-branch) set — `ketu/ephemeris/orbital.py`, `ketu/ephemeris/planets.py`, `tests/test_lilith_cross_check.py`, `docs/LILITH_DEFINITION.md`. On the NO-OP branch, ONLY `docs/LILITH_DEFINITION.md` is modified (Task 4); the other three files are listed conditionally and remain untouched. `git status --porcelain` after the NO-OP branch must show exactly one modified file: `docs/LILITH_DEFINITION.md`.
 </objective>
 
 <execution_context>
@@ -127,13 +129,15 @@ Branch decision is unambiguously parsed. Subsequent tasks know whether to skip o
   <action>
 **SKIP THIS TASK IF Task 1 selected branch == NO-OP.**
 
-Derive the corrected constants. The strategy depends on the error-shape diagnosis from Plan 03:
+Derive the corrected constants. The three error-shape branches are quoted verbatim from research §Pitfall 1 ("Warning sign: Error monotonic in time across the 5 dates -> frame mismatch. Error roughly constant -> epoch constant `83.3532` is off. Error roughly proportional to `d` -> rate constant `0.1114040803` is off."):
 
-- **Constant offset (`error_shape == constant`)**: only the epoch constant `83.3532` needs correction. Compute `new_epoch = swe.calc_ut(2451545.0, swe.MEAN_APOG)[0][0]` (i.e. `swe`'s value at J2000.0 exactly). Replace `83.3532` with the high-precision value.
+1. **Constant offset (error roughly CONSTANT across all 5 dates) — epoch correction only.** Per research §Pitfall 1, "Error roughly constant -> epoch constant `83.3532` is off." Compute `new_epoch = swe.calc_ut(2451545.0, swe.MEAN_APOG)[0][0]` (i.e. `swe`'s value at J2000.0 exactly). Replace `83.3532` with the high-precision value; keep the rate `0.1114040803` UNCHANGED.
 
-- **Proportional in `d` (`error_shape == proportional`)**: only the rate `0.1114040803` needs correction. Linear-fit `swe`'s longitude over the 5 dates: `new_rate = (lon_swe(jd_late) - lon_swe(jd_early)) / (jd_late - jd_early)` with appropriate unwrapping. Use the 1900 and 2050 anchors for maximum lever arm.
+2. **Proportional in `d` (error grows roughly LINEARLY with date, near-zero at J2000) — rate correction only.** Per research §Pitfall 1, "Error roughly proportional to `d` -> rate constant `0.1114040803` is off." Linear-fit `swe`'s longitude over the 5 dates: `new_rate = (lon_swe(jd_late) - lon_swe(jd_early)) / (jd_late - jd_early)` with appropriate unwrapping. Use the 1900 and 2050 anchors for maximum lever arm. Keep the epoch `83.3532` UNCHANGED.
 
-- **Frame mismatch (`error_shape == monotonic`)**: this is the most likely diagnosis (research §Pitfall 1). Both epoch AND rate may need correction. Linear-regress `lon_swe` against `d` over the 5 dates and use slope and intercept.
+3. **Mixed/monotonic (error MONOTONIC in time with non-zero intercept at J2000) — frame mismatch; full polyfit gives both epoch and rate.** Per research §Pitfall 1, "Error monotonic in time across the 5 dates -> frame mismatch." This is the most likely diagnosis (precession misalignment between Ketu's mean-of-J2000 and `swe`'s mean-of-date). Linear-regress `lon_swe` against `d` over the 5 dates: `new_rate, new_epoch = np.polyfit(d, lon_swe_unwrapped, 1)`. BOTH epoch AND rate are updated.
+
+Distinguishing branch 2 (proportional) from branch 3 (monotonic-with-intercept): inspect the per-date delta column from `/tmp/lilith-deltas.out`. If `delta(2000-01-01) ~= 0` and `|delta|` grows roughly linearly with `|d|`, it is proportional (branch 2). If `delta(2000-01-01)` is non-zero AND `|delta|` grows monotonically, it is mixed/frame-mismatch (branch 3).
 
 For ALL strategies, the regression input is the 5 per-date `swe.calc_ut` values from Plan 03's `/tmp/lilith-deltas.out` (or recomputed in this task). Do NOT pin from current Ketu output.
 
@@ -223,14 +227,52 @@ Must report Success. The `pyproject.toml [[tool.mypy.overrides]] module = ["swis
 # If branch == NO-OP, this verify is trivially "skipped" — task 2 didn't run.
 # If branch == FORMULA-CORRECTION:
 
-# Old constants are GONE from all four sites:
-! grep -F "83.3532 + 0.1114040803" ketu/ephemeris/orbital.py
-! grep -F "0.1114040803" ketu/ephemeris/orbital.py
-! grep -F "0.1114040803" ketu/ephemeris/planets.py
-! grep -F "0.111404," ketu/ephemeris/planets.py  # the avg_speeds 6dp value
+# Structural check 1 — the named constants exist and are exported from orbital.py:
+grep -E "^_LILITH_MEAN_EPOCH_DEG\\s*=" ketu/ephemeris/orbital.py
+grep -E "^_LILITH_MEAN_RATE_DEG_PER_DAY\\s*=" ketu/ephemeris/orbital.py
 
-# New constants present (replace VALUE_X by the derived numbers):
-grep -E "_LILITH_MEAN_EPOCH_DEG|_LILITH_MEAN_RATE_DEG_PER_DAY" ketu/ephemeris/orbital.py
+# Structural check 2 — the formula at orbital.py:591 references the named constants
+# (NOT a duplicated literal):
+grep -E "_LILITH_MEAN_EPOCH_DEG\\s*\\+\\s*_LILITH_MEAN_RATE_DEG_PER_DAY\\s*\\*\\s*d" ketu/ephemeris/orbital.py
+
+# Structural check 3 — ORBITAL_ELEMENTS row at orbital.py:146 references the named rate
+# constant (NOT a duplicated literal):
+grep -F "_LILITH_MEAN_RATE_DEG_PER_DAY" ketu/ephemeris/orbital.py
+
+# Structural check 4 — planets.py imports and uses the named rate constant:
+grep -E "from\\s+ketu\\.ephemeris\\.orbital\\s+import.*_LILITH_MEAN_RATE_DEG_PER_DAY" ketu/ephemeris/planets.py
+# Site C (lon_speed) uses full-precision constant by name:
+grep -E "lon_speed\\s*=\\s*_LILITH_MEAN_RATE_DEG_PER_DAY" ketu/ephemeris/planets.py
+# Site D (avg_speeds[12]) uses round() of the named constant — NOT a duplicated literal:
+grep -E "12:\\s*round\\(_LILITH_MEAN_RATE_DEG_PER_DAY,\\s*6\\)" ketu/ephemeris/planets.py
+
+# Structural check 5 — the legacy literals are NOT used as standalone constants anywhere
+# in the source (neither as concatenated formula nor as duplicated row literal). Note:
+# legacy 6-decimal `0.111404` may legitimately appear in a comment or test string; we
+# only forbid it as a Python expression value.
+! grep -E "^\\s*\\(?\\s*83\\.3532\\s*\\+\\s*0\\.1114040803" ketu/ephemeris/orbital.py
+! grep -E "^\\s*lon_speed\\s*=\\s*0\\.1114040803\\b" ketu/ephemeris/planets.py
+
+# Numerical check — at least one of (rate, epoch) actually changed from the legacy values
+# (the entire point of this branch):
+python3 -c "
+from ketu.ephemeris.orbital import _LILITH_MEAN_RATE_DEG_PER_DAY, _LILITH_MEAN_EPOCH_DEG
+assert (_LILITH_MEAN_RATE_DEG_PER_DAY, _LILITH_MEAN_EPOCH_DEG) != (0.1114040803, 83.3532), \
+    'FORMULA-CORRECTION branch must change at least one of (rate, epoch); current values match legacy'
+print(f'rate={_LILITH_MEAN_RATE_DEG_PER_DAY!r}, epoch={_LILITH_MEAN_EPOCH_DEG!r}')
+"
+
+# Site-D rounding consistency — round(rate, 6) must equal the literal stored in
+# avg_speeds[12]. We don't grep for the rounded literal directly (it might equal
+# the legacy 0.111404 by coincidence, or differ); we read the dict in Python:
+python3 -c "
+from ketu.ephemeris.orbital import _LILITH_MEAN_RATE_DEG_PER_DAY
+from ketu.ephemeris.planets import avg_speeds  # adjust import path to match planets.py
+expected = round(_LILITH_MEAN_RATE_DEG_PER_DAY, 6)
+actual = avg_speeds[12]
+assert actual == expected, f'avg_speeds[12]={actual!r} but round(rate,6)={expected!r}'
+print(f'avg_speeds[12]={actual!r} matches round(rate,6)')
+" || echo "NOTE: if avg_speeds is not module-level in planets.py, replace this with a structural grep on round(_LILITH_MEAN_RATE_DEG_PER_DAY, 6) at line 458"
 
 # Mypy still strict-clean:
 mypy --strict ketu/ 2>&1 | grep -E "Success|error:"
@@ -242,6 +284,8 @@ grep "5 passed" /tmp/lilith-harness-postfix.out
 # Existing test suite still green:
 pytest tests/ -q 2>&1 | tail -3
 ```
+
+Rationale for the structural-check style: the previous draft used literal-string forbidden-pattern checks (`! grep -F "0.111404," ...` and `! grep -F "0.1114040803" ...`) which fail spuriously on a legitimate fix. If the corrected rate happens to round to `0.111404` at 6 decimal places (entirely possible if only the epoch is off, or if the rate is corrected only in the 7th+ decimal), the file legitimately contains `12: 0.111404,` after the fix and `! grep -F "0.111404,"` would FAIL. By switching to (a) positive structural checks that the named constants exist and are referenced everywhere they should be, (b) a numerical Python check that the constants actually differ from legacy, and (c) a single regex forbidding the OLD literal-as-formula form (not bare 6-dp numbers), the verify step distinguishes "fix did the wrong thing" from "fix happens to round to the same 6-dp string as legacy."
   </verify>
   <done>
 All three sites (orbital.py:591, orbital.py:146, planets.py:153, planets.py:458) reference the new constants consistently. Mypy strict passes. Harness reports 5/5 passed. Existing test suite still passes.
@@ -286,11 +330,19 @@ def test_lilith_regression_baseline(dt: datetime) -> None:
 Tune `REGRESSION_TOLERANCE_DEG` to the actual post-fit max residual + 50% safety margin. If the fit is excellent (e.g. max residual 0.0003 deg post-fit), set the tolerance to 0.0005 deg. Document the choice in the constant's docstring.
 
 Do NOT hardcode expected longitudes (that would be a Ketu-tests-Ketu loop — research §"Anti-patterns"). Continue to compute reference values from `swe.calc_ut` at test time; only the tolerance number is pinned.
+
+**LIL-03 interpretation note:** REQUIREMENTS LIL-03 says "pin new values with explicit pysweph cross-check." That requirement is satisfied by computing the reference at test time from `swe.calc_ut` (NOT by hardcoding numeric Ketu values into the test). Hardcoding Ketu output would create a Ketu-tests-Ketu loop (research §"Anti-patterns"); the cross-check IS the pinning. The `REGRESSION_TOLERANCE_DEG` constant pins the *agreement margin* between Ketu and `swe`, which is the only externally-anchored quantity worth pinning.
+
+**Import-pattern preservation (propagated from Plan 03 Task 1):** This task adds new test functions to the SAME file, reusing the module-level `pytest.importorskip("swisseph", minversion="2.10.3.6")` runtime gate and the separate `import swisseph as swe` static-typing import established in Plan 03 Task 1. Do NOT introduce a `swe = pytest.importorskip(...)` binding here — that returns `ModuleType` and breaks `mypy --strict` on every `swe.MEAN_APOG` / `swe.calc_ut` access. Reuse the existing `swe` symbol from the module-level `import swisseph as swe`.
   </action>
   <verify>
 ```bash
 grep -F "REGRESSION_TOLERANCE_DEG" tests/test_lilith_cross_check.py
 grep -F "test_lilith_regression_baseline" tests/test_lilith_cross_check.py
+
+# Import-pattern from Plan 03 Task 1 is preserved (separate runtime gate + static-typing import):
+grep -E "^import swisseph as swe$" tests/test_lilith_cross_check.py
+! grep -E "^swe\\s*=\\s*pytest\\.importorskip" tests/test_lilith_cross_check.py
 
 # Both test functions pass:
 pytest tests/test_lilith_cross_check.py -v 2>&1 | grep -E "passed|failed"
@@ -300,7 +352,7 @@ mypy --strict tests/test_lilith_cross_check.py 2>&1 | grep -E "Success|error:"
 ```
   </verify>
   <done>
-Harness has 10 passing parametrized cases (5 user-tolerance + 5 regression-tolerance). Mypy strict still passes on the test file.
+Harness has 10 passing parametrized cases (5 user-tolerance + 5 regression-tolerance). Mypy strict still passes on the test file. The Plan 03 import-pattern (`pytest.importorskip` runtime gate + separate `import swisseph as swe`) is preserved; no `swe = pytest.importorskip(...)` rebinding was introduced.
   </done>
 </task>
 
@@ -350,7 +402,7 @@ ASCII-only formatting; consistent with the rest of the document (no Unicode degr
   <verify>
 ```bash
 # History section was updated (placeholder is gone):
-! grep -F "TO BE FILLED BY PLAN 05" docs/LILITH_DEFINITION.md
+! grep -F "TO BE FILLED BY PLAN 04" docs/LILITH_DEFINITION.md
 ! grep -iF "to be filled" docs/LILITH_DEFINITION.md
 
 # History section now includes v1.1 verdict:

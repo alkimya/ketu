@@ -82,9 +82,11 @@ Create `tests/test_lilith_cross_check.py` (new file). Use the EXACT structure fr
 2. **Import gate** — TOP of file, before any other imports from `ketu.*`:
    ```python
    import pytest
-   swe = pytest.importorskip("swisseph", minversion="2.10.3.6")
+
+   pytest.importorskip("swisseph", minversion="2.10.3.6")  # runtime gate, no binding
+   import swisseph as swe  # static-typing import; picks up pyproject mypy override
    ```
-   Rationale: when running `pytest tests/` without the `[test]` extra installed, the entire module is collected as SKIPPED rather than ERRORED.
+   Rationale: when running `pytest tests/` without the `[test]` extra installed, `pytest.importorskip` raises `pytest.skip.Exception` at collection time and the entire module is collected as SKIPPED rather than ERRORED. The subsequent `import swisseph as swe` only executes after the gate passes; it gives mypy a real `import` statement to which the pyproject `[[tool.mypy.overrides]] module = ["swisseph.*"]` rule applies. Do NOT bind `swe = pytest.importorskip(...)` because that returns `ModuleType` and `mypy --strict` will reject every `swe.MEAN_APOG` / `swe.calc_ut(...)` attribute access (the override matches `import swisseph` statements, not local variables).
 
 3. **Tolerance constant** — Module-level:
    ```python
@@ -155,6 +157,10 @@ wc -l tests/test_lilith_cross_check.py  # >= 60
 # Required content:
 grep -F "pytest.importorskip(\"swisseph\"" tests/test_lilith_cross_check.py
 grep -F "minversion=\"2.10.3.6\"" tests/test_lilith_cross_check.py
+# NEW: separate `import swisseph as swe` is REQUIRED so mypy --strict picks up
+# the pyproject `module = ["swisseph.*"]` override (the override matches direct
+# import statements, NOT locals bound from importorskip).
+grep -E "^import swisseph as swe$" tests/test_lilith_cross_check.py
 grep -F "TOLERANCE_DEG = 0.01" tests/test_lilith_cross_check.py
 grep -F "swe.MEAN_APOG" tests/test_lilith_cross_check.py
 grep -F "swe.calc_ut" tests/test_lilith_cross_check.py
@@ -170,6 +176,10 @@ grep -E "datetime\\(2050" tests/test_lilith_cross_check.py
 ! grep -E "swe\\.calc\\(" tests/test_lilith_cross_check.py
 ! grep -F "swe.set_sid_mode" tests/test_lilith_cross_check.py
 ! grep -E "delta\\s*==" tests/test_lilith_cross_check.py
+# NEW: `swe = pytest.importorskip(...)` returns ModuleType and breaks mypy --strict.
+# The recommended pattern is `pytest.importorskip("swisseph", ...)` (no binding)
+# followed by a separate `import swisseph as swe`. Forbid the bound form:
+! grep -E "^swe\\s*=\\s*pytest\\.importorskip" tests/test_lilith_cross_check.py
 
 # Mypy strict on the new file:
 mypy --strict tests/test_lilith_cross_check.py 2>&1 | tee /tmp/mypy-lilith.out
@@ -259,6 +269,20 @@ grep -E "MAX \\|delta\\| =" /tmp/lilith-deltas.out
 
 # Existing tests still pass:
 pytest tests/ -q 2>&1 | tail -3
+
+# Once 08-03-SUMMARY.md has been written (per the <output> contract below),
+# enforce the exact two-line contract that Plan 04 Task 1 reads. These greps
+# MUST match the precise format Plan 04 will parse — no leading whitespace,
+# no trailing trash, exactly one of NO-OP or FORMULA-CORRECTION. Run AFTER
+# SUMMARY.md is finalized (typically at the end of plan execution):
+test -f .planning/phases/08-lilith-verification-fix/08-03-SUMMARY.md && \
+  grep -E "^MAX \\|delta\\| = [0-9]+\\.[0-9]{6} deg$" \
+    .planning/phases/08-lilith-verification-fix/08-03-SUMMARY.md && \
+  echo "MAX DELTA LINE FORMATTED OK"
+test -f .planning/phases/08-lilith-verification-fix/08-03-SUMMARY.md && \
+  grep -E "^Plan 04: (NO-OP|FORMULA-CORRECTION)$" \
+    .planning/phases/08-lilith-verification-fix/08-03-SUMMARY.md && \
+  echo "PLAN 04 BRANCH LINE FORMATTED OK"
 ```
   </verify>
   <done>

@@ -14,7 +14,7 @@ must_haves:
     - "User reads the document and can identify the reference frame (tropical, ecliptic of date, geocentric, mean)"
     - "User finds explicit Chapront-Touze / Chapront / Francou citation pointing to ELP-2000 lunar theory"
     - "User finds the 0.01-degree tolerance justified by arithmetic (rate * time-equivalent), not by round-number convention"
-    - "User finds a History section with a placeholder for the v1.0 -> v1.1 verification result (filled in by Plan 05)"
+    - "User finds a History section with a placeholder for the v1.0 -> v1.1 verification result (filled in by Plan 04)"
   artifacts:
     - path: "docs/LILITH_DEFINITION.md"
       provides: "Authoritative definition of Ketu's Lilith (Mean Apogee) computation"
@@ -108,9 +108,9 @@ Required top-level sections (in this order):
 
 8. **AGPL & Test-Only Dependency Note** — State that `pysweph` (Swiss Ephemeris Python wrapper) is licensed AGPL/commercial; Ketu uses it only via `[project.optional-dependencies].test`. It is NEVER pulled into the runtime wheel. The two-venv runtime-isolation test (Plan 02) verifies this empirically.
 
-9. **History** — Two bullets, the second a placeholder filled in by Plan 05:
+9. **History** — Two bullets, the second a placeholder filled in by Plan 04:
    - `v0.x - v1.0`: formula `83.3532 + 0.1114040803*d` shipped; never externally verified.
-   - `v1.1 (Phase 8)`: formula verified against Swiss Ephemeris. **Result: [TO BE FILLED BY PLAN 05 — either "agreement within X.XXXX deg on all sampled dates, no formula change" or "formula corrected to A + B*d, max error reduced from M to N deg"]**
+   - `v1.1 (Phase 8)`: formula verified against Swiss Ephemeris. **Result: [TO BE FILLED BY PLAN 04 — either "agreement within X.XXXX deg on all sampled dates, no formula change" or "formula corrected to A + B*d, max error reduced from M to N deg"]**
 
 DO NOT touch any code. DO NOT modify `orbital.py`, `planets.py`, `pyproject.toml`. This plan produces exactly ONE new file.
 
@@ -150,7 +150,7 @@ git status --porcelain ketu/ pyproject.toml | grep -v '^$' && echo "FAIL: code m
 2. Document contains all 9 named sections in stated order.
 3. Document quotes the verbatim current Ketu formula and cites Chapront-Touze / Francou.
 4. Tolerance justification is arithmetic, not "0.01 because the requirements said so."
-5. History section has a placeholder explicitly marked for Plan 05.
+5. History section has a placeholder explicitly marked for Plan 04.
 6. Zero source files modified.
 </success_criteria>
 

@@ -113,10 +113,15 @@ Run two clean-venv installation tests to PROVE that `pysweph` is reachable via t
 Execute exactly these commands from the repo root and capture the output of EACH `python -c` invocation. The expected outcomes are explicit; deviations FAIL this task.
 
 ```bash
+# Pin the install target to an absolute path: pip install -e <path> resolves the
+# target by cwd, and these checks run from /tmp venvs whose cwd may not be the
+# repo root. REPO_ROOT is computed once and reused.
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+
 # Venv 1: runtime install — must NOT pull pysweph
 python3 -m venv /tmp/ketu-runtime-check
 /tmp/ketu-runtime-check/bin/pip install --upgrade pip
-/tmp/ketu-runtime-check/bin/pip install -e .
+/tmp/ketu-runtime-check/bin/pip install -e "$REPO_ROOT"
 # Expect: ModuleNotFoundError: No module named 'swisseph'
 /tmp/ketu-runtime-check/bin/python -c "import swisseph" 2>&1 | tee /tmp/ketu-runtime-check.out
 # Verify the failure mode is exactly ModuleNotFoundError (not ImportError-other):
@@ -133,7 +138,7 @@ rm -rf /tmp/ketu-runtime-check
 # Venv 2: test install — MUST pull pysweph
 python3 -m venv /tmp/ketu-test-check
 /tmp/ketu-test-check/bin/pip install --upgrade pip
-/tmp/ketu-test-check/bin/pip install -e ".[test]"
+/tmp/ketu-test-check/bin/pip install -e "$REPO_ROOT[test]"
 # Expect: prints "12" (the SE_MEAN_APOG constant)
 /tmp/ketu-test-check/bin/python -c "import swisseph; print(swisseph.MEAN_APOG)" 2>&1 | tee /tmp/ketu-test-check.out
 # Sanity: confirm the package name is pysweph not pyswisseph
