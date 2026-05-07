@@ -3,10 +3,13 @@
 Coverage targets:
 - Line 117: Moon lon_diff > 180 branch (wrapping at 360/0 boundary)
 - Lines 239-249: calculate_all_positions() error handling
-- Lines 292-308: calculate_house_cusps() (entire function)
 - Lines 372, 380, 405: find_exact_aspect() edge cases, find_all_aspects default
 - Lines 441-466: calculate_speed_ratio() (entire function)
 - Line 493: calc_planet_position_batch() error path
+
+(``calculate_house_cusps`` was removed in Plan 10-06 — see CHANGELOG
+"Removed" entry. Use ``ketu.calculate_houses`` from the ``ketu.houses``
+module for production house-cusp computation.)
 """
 
 import pytest
@@ -19,7 +22,6 @@ from ketu.ephemeris.planets import (
     calc_planet_position,
     calc_planet_position_batch,
     calculate_all_positions,
-    calculate_house_cusps,
     find_exact_aspect,
     find_all_aspects,
     calculate_speed_ratio,
@@ -181,92 +183,6 @@ class TestCalculateAllPositionsError:
             assert 0 <= pos[0] < 360, f"{name} longitude {pos[0]} out of range"
 
         calc_planet_position.cache_clear()
-
-
-class TestCalculateHouseCusps:
-    """Test lines 292-308: calculate_house_cusps.
-
-    Tests the Equal House system implementation with known dates
-    and geographic coordinates.
-    """
-
-    def test_house_cusps_returns_correct_structure(self):
-        """Verify cusps array has 12 elements, ascmc has 6."""
-        jd = _make_jd(2020, 12, 21, 12, 0)
-        lat = 48.8566  # Paris
-        lon = 2.3522
-
-        cusps, ascmc = calculate_house_cusps(jd, lat, lon)
-
-        assert isinstance(cusps, np.ndarray)
-        assert len(cusps) == 12
-        assert isinstance(ascmc, np.ndarray)
-        assert len(ascmc) == 6
-
-    def test_house_cusps_30_degree_spacing(self):
-        """Equal house system should have exactly 30 degrees between cusps."""
-        jd = _make_jd(2020, 6, 21, 12, 0)
-        lat = 40.7128  # New York
-        lon = -74.0060
-
-        cusps, ascmc = calculate_house_cusps(jd, lat, lon)
-
-        for i in range(11):
-            spacing = (cusps[i + 1] - cusps[i]) % 360
-            assert abs(spacing - 30.0) < 0.001, (
-                f"Cusp {i+1} to {i+2} spacing is {spacing}, expected 30.0"
-            )
-
-    def test_house_cusps_all_in_range(self):
-        """All cusps should be in [0, 360)."""
-        jd = _make_jd(2023, 1, 1, 0, 0)
-        lat = -33.8688  # Sydney
-        lon = 151.2093
-
-        cusps, ascmc = calculate_house_cusps(jd, lat, lon)
-
-        for i, cusp in enumerate(cusps):
-            assert 0 <= cusp < 360, f"Cusp {i+1} = {cusp} out of range"
-
-    def test_house_cusps_ascendant_is_first_cusp(self):
-        """First cusp should equal the ascendant."""
-        jd = _make_jd(2020, 12, 21, 12, 0)
-        lat = 48.8566
-        lon = 2.3522
-
-        cusps, ascmc = calculate_house_cusps(jd, lat, lon)
-
-        ascendant = ascmc[0]
-        assert abs(cusps[0] - ascendant) < 0.001, (
-            f"First cusp {cusps[0]} != ascendant {ascendant}"
-        )
-
-    def test_house_cusps_mc_relation(self):
-        """MC should be (ascendant + 90) % 360 in simplified implementation."""
-        jd = _make_jd(2020, 12, 21, 12, 0)
-        lat = 48.8566
-        lon = 2.3522
-
-        cusps, ascmc = calculate_house_cusps(jd, lat, lon)
-
-        asc = ascmc[0]
-        mc = ascmc[1]
-        expected_mc = (asc + 90) % 360
-        assert abs(mc - expected_mc) < 0.001, (
-            f"MC {mc} != expected {expected_mc}"
-        )
-
-    def test_house_cusps_different_locations(self):
-        """Cusps should differ for different geographic locations."""
-        jd = _make_jd(2020, 6, 21, 12, 0)
-
-        cusps_paris, _ = calculate_house_cusps(jd, 48.8566, 2.3522)
-        cusps_tokyo, _ = calculate_house_cusps(jd, 35.6762, 139.6503)
-
-        # Different longitudes should yield different cusps
-        assert not np.allclose(cusps_paris, cusps_tokyo), (
-            "Cusps should differ for Paris vs Tokyo"
-        )
 
 
 class TestFindExactAspectEdgeCases:

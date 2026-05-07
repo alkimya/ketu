@@ -5,7 +5,7 @@ replacing the pyswisseph dependency with numpy-based calculations.
 """
 
 import numpy as np
-from typing import Tuple, Dict, Optional
+from typing import Dict, Optional
 from functools import lru_cache
 
 from .time import utc_to_julian, terrestrial_to_universal
@@ -268,47 +268,6 @@ def body_properties(jd: float, body_id: int) -> np.ndarray:
         Array of [longitude, latitude, distance, lon_speed, lat_speed, dist_speed].
     """
     return calc_planet_position(jd, body_id)
-
-
-def calculate_house_cusps(jd: float, lat: float, lon: float, house_system: str = "P") -> Tuple[np.ndarray, np.ndarray]:
-    """Calculate house cusps (simplified implementation)
-
-    Parameters
-    ----------
-    jd : float
-        Julian Date.
-    lat : float
-        Geographic latitude.
-    lon : float
-        Geographic longitude.
-    house_system : str, optional
-        House system code (P=Placidus, K=Koch, etc.).
-
-    Returns
-    -------
-    tuple of (np.ndarray, np.ndarray)
-        Tuple of (cusps, ascmc) arrays.
-    """
-    # This is a simplified implementation
-    # Full implementation would require complex house calculations
-
-    from .time import sidereal_time
-
-    # Local sidereal time
-    lst = sidereal_time(jd, lon)
-
-    # Simple equal house system as placeholder
-    cusps = np.zeros(12)
-    ascendant = lst  # Simplified
-
-    for i in range(12):
-        cusps[i] = (ascendant + i * 30) % 360
-
-    # ascmc array: ASC, MC, ARMC, Vertex, etc.
-    mc = (lst + 90) % 360  # Simplified
-    ascmc = np.array([ascendant, mc, lst, 0, 0, 0])
-
-    return cusps, ascmc
 
 
 def find_exact_aspect(

@@ -9,6 +9,31 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## [1.1.0] - UNRELEASED
 
+### Removed (BREAKING)
+
+- **`ketu.ephemeris.calculate_house_cusps`** — broken equal-house
+  placeholder removed. The v1.0/v0.x function returned an Equal House
+  fallback regardless of the requested `house_system` argument and was
+  never connected to a real algorithm. It also exposed the wrong return
+  shape vs. mainstream Swiss-Ephemeris-compatible APIs (it returned
+  `(cusps, ascmc)` with a 6-element ascmc instead of the standard
+  13-tuple Placidus result). Use `ketu.calculate_houses(jd, lat, lon,
+  system='placidus' | 'koch' | 'porphyry')` from the new `ketu.houses`
+  module instead — vectorised, registry-extensible, with explicit
+  `polar_fallback={"raise","porphyry"}` semantics. (HOU-10)
+
+### Added
+
+- **`ketu.houses` module** — Placidus, Koch, and Porphyry house systems
+  registered through a `@register("name")` decorator and dispatched via
+  `calculate_houses(jd, lat, lon, system, polar_fallback)`. Output is a
+  `HOUSES_DTYPE` structured array with 12 cusps + ASC/MC/ARMC/Vertex,
+  vectorised over the broadcast of `(jd, lat, lon)`. New systems plug
+  in via the registry without modifying `calculate_houses` dispatch.
+  Includes `house_of(planet_lon, cusps)` for the 1..12 house lookup
+  and `HighLatitudeError` raised by default at `|lat| > polar_circle(jd)`.
+  (HOU-02 .. HOU-10)
+
 ### Fixed (BREAKING - Numerical Behavior Change)
 
 - **Lilith (Mean Apogee) longitude formula corrected** to match Swiss
