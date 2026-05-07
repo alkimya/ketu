@@ -5,12 +5,15 @@ type: execute
 wave: 2
 depends_on:
   - "10-01"
+  - "10-02"
 files_modified:
+  - ketu/__init__.py
   - ketu/houses/__init__.py
   - ketu/houses/core.py
   - ketu/houses/registry.py
   - ketu/houses/ascmc.py
   - ketu/houses/_ecliptic.py
+  - pyproject.toml
   - tests/houses/test_dtype.py
   - tests/houses/test_registry.py
   - tests/houses/test_ascmc.py

@@ -22,6 +22,7 @@ must_haves:
     - "If tightened: ketu.ephemeris.time.sidereal_time uses IAU 2006 GMST polynomial (Meeus 12.4) and matches swe.sidtime within 1 arcsec over 1900-2100"
     - "If not tightened: lst-audit-report.md justifies acceptance with measured worst-case ASC error multiplier × GMST drift < 60 arcsec at all polar lats sampled (66.5°, 70°, 80°)"
     - "tests/houses/test_lst_obliquity_precision.py asserts the chosen precision contract — fails CI if regressed"
+    - "tests/houses/test_lst_obliquity_precision.py includes a polar-ASC regression fence: parametrized over the 5 sample dates at lat=66.5°, asserts |delta_asc| < 50 arcsec via swe.houses_armc isolation (10 arcsec headroom vs HOU-01 60-arcsec spec)"
     - "ASP-style state.md blocker 'LST/obliquity precision audit' is closed by this plan's completion"
   artifacts:
     - path: "ketu/ephemeris/time.py"
@@ -31,9 +32,9 @@ must_haves:
       provides: "Empty marker file establishing tests/houses/ subpackage"
       min_lines: 0
     - path: "tests/houses/test_lst_obliquity_precision.py"
-      provides: "Empirical precision assertions vs swisseph oracle for sidereal_time and mean_obliquity over 5+ dates spanning 1900-2100"
+      provides: "Empirical precision assertions vs swisseph oracle for sidereal_time, mean_obliquity, longitude-offset linearity, AND polar-ASC regression fence at lat=66.5° (via swe.houses_armc) over 5+ dates spanning 1900-2100"
       contains: "def test_"
-      min_lines: 60
+      min_lines: 90
     - path: ".planning/phases/10-houses-module/lst-audit-report.md"
       provides: "Audit decision document — empirical numbers + verdict (tighten | accept) + rationale tied to <1 arcmin HOU-01 spec"
       contains: "Verdict"
@@ -162,6 +163,16 @@ tests/houses/test_lst_obliquity_precision.py</files>
         - Assert `abs(ketu_eps_deg - swe_eps_deg) * 3600 < TOL_OBLIQUITY_ARCSEC`. Set `TOL_OBLIQUITY_ARCSEC = 0.1` (research empirically measured ±0.05″; 0.1″ is 2× headroom — already-excellent confirmation, NOT a fix).
     - Test 3 — `test_sidereal_time_longitude_offset_is_pure_addition()`:
         - For jd = J2000 and three longitudes (0°, 90°E, -45°W), assert `sidereal_time(jd, lon) == (sidereal_time(jd, 0) + lon) % 360` within 1e-9 deg. (Cheap correctness check; catches any future bug where longitude is swapped or signed wrong.)
+    - Test 4 — `test_asc_error_within_spec_at_polar_boundary(jd)` (parametrized over the 5 sample dates × `lat=66.5`):
+        - The audit narrative captures the polar-ASC headroom argument (max worst-case ~33″ at lat 66°), but Tests 1-3 only fence GMST/obliquity drift directly. This test fences the resulting ASC error so any future regression is caught automatically. Threshold: 50.0 arcsec (10-arcsec headroom vs HOU-01 60-arcsec spec; intentionally tighter than spec so we hear about it before we ship).
+        - For each `jd` in the 5 sample dates, with `lat = 66.5°`:
+            - Compute `armc_ketu_deg = sidereal_time(jd, 0.0)` (ketu's GMST → ARMC at lon=0 is just GMST in degrees).
+            - Compute `eps_ketu_deg = mean_obliquity(jd)`.
+            - Feed BOTH into the SAME oracle call: `cusps_oracle, ascmc_oracle = swe.houses_armc(armc_ketu_deg, 66.5, eps_ketu_deg, b"P")` → `asc_oracle_at_ketu_armc = ascmc_oracle[0]`. (Using `houses_armc` not `houses_ex`: this isolates the ASC formula from any sidereal-time mismatch — both ketu and oracle see the same ARMC and obliquity.)
+            - Then call the SAME oracle with swisseph's own ARMC: `armc_swe_deg = swe.sidtime(jd) * 15.0`; eps_swe = `swe.calc_ut(jd, swe.ECL_NUT)[0][1]`; `_, ascmc_swe = swe.houses_armc(armc_swe_deg, 66.5, eps_swe, b"P") → asc_swe = ascmc_swe[0]`.
+            - The delta `delta_asc_arcsec = abs(((asc_oracle_at_ketu_armc - asc_swe + 180) % 360) - 180) * 3600` is the ASC error attributable to ketu's GMST + obliquity drift propagating through Placidus's ASC formula at the polar boundary.
+            - Assert `delta_asc_arcsec < 50.0` with f-string error message: `f"jd={jd} lat=66.5 ASC error {delta_asc_arcsec:.3f} arcsec ≥ 50.0 (spec: 60.0)"`.
+        - Use `pytest.importorskip("swisseph")` already at module level (Test 1 covers this); no extra gating needed. Document in a code comment that this test is the "automatic regression fence" referenced in lst-audit-report.md §5 and that swisseph's `houses_armc` accepts ARMC in degrees (not hours) — Pitfall 7 from research applies via the houses_ex path; `houses_armc` is the same units convention.
     - All assertions use `numpy.testing` style only if vectorizing; here scalars are fine — use plain `assert` with f-string error message including the actual delta in arcsec for fast triage.
 
     Step C — IF Task 1 verdict is TIGHTEN, modify `ketu/ephemeris/time.py::sidereal_time` to use the IAU 2006 form documented in lst-audit-report.md §7. Preserve the function signature `(jd: float, longitude: float = 0.0) -> float` exactly — no breaking changes. Write a numpydoc-style "Notes" section in the docstring: "Uses IAU 2006 GMST polynomial (Meeus 2nd ed. eq. 12.4); accuracy <1 arcsec vs Swiss Ephemeris over 1900-2100 (verified by tests/houses/test_lst_obliquity_precision.py)." Update the inline comment "GMST at 0h UT" to reflect the 2006 source. Do NOT change `mean_obliquity` (already excellent).
@@ -176,7 +187,7 @@ tests/houses/test_lst_obliquity_precision.py</files>
     - Do NOT add a `tests/houses/conftest.py` here — that's Plan 10-02's deliverable. This plan only creates `__init__.py` (package marker) + `test_lst_obliquity_precision.py` (the audit's regression test).
   </action>
   <verify>
-    `pytest tests/houses/test_lst_obliquity_precision.py -v` runs and passes (skipped only if `pip install -e ".[test]"` was not run, in which case the importorskip kicks in). All 3 tests × 5 parametrized dates = 15 test cases pass.
+    `pytest tests/houses/test_lst_obliquity_precision.py -v` runs and passes (skipped only if `pip install -e ".[test]"` was not run, in which case the importorskip kicks in). 4 tests total: Test 1 (5 dates), Test 2 (5 dates), Test 3 (single, 3 longitudes inside), Test 4 (5 dates) = 16 test cases pass.
 
     `mypy --strict ketu/ephemeris/time.py tests/houses/test_lst_obliquity_precision.py` is clean.
 
@@ -185,7 +196,7 @@ tests/houses/test_lst_obliquity_precision.py</files>
     `python -c "from ketu.ephemeris.time import sidereal_time; print(sidereal_time(2451545.0, 0.0))"` runs without error.
   </verify>
   <done>
-    `tests/houses/__init__.py` exists. `tests/houses/test_lst_obliquity_precision.py` exists with 3 parametrized tests asserting GMST <TOL_GMST_ARCSEC, obliquity <0.1 arcsec, and longitude-offset linearity. All tests pass. If verdict was TIGHTEN: `ketu/ephemeris/time.py::sidereal_time` uses IAU 2006 polynomial and TOL_GMST_ARCSEC = 1.0. If verdict was ACCEPT: formula unchanged, TOL_GMST_ARCSEC = 20.0 (research worst-case + headroom), docstring notes updated. mypy --strict clean. State.md blocker "LST/obliquity precision audit" is resolved.
+    `tests/houses/__init__.py` exists. `tests/houses/test_lst_obliquity_precision.py` exists with 4 tests asserting GMST <TOL_GMST_ARCSEC, obliquity <0.1 arcsec, longitude-offset linearity, AND polar-ASC regression fence at lat=66.5° <50 arcsec via swe.houses_armc isolation. All tests pass. If verdict was TIGHTEN: `ketu/ephemeris/time.py::sidereal_time` uses IAU 2006 polynomial and TOL_GMST_ARCSEC = 1.0. If verdict was ACCEPT: formula unchanged, TOL_GMST_ARCSEC = 20.0 (research worst-case + headroom), docstring notes updated. mypy --strict clean. State.md blocker "LST/obliquity precision audit" is resolved.
   </done>
 </task>
 
@@ -195,7 +206,7 @@ tests/houses/test_lst_obliquity_precision.py</files>
 - `pytest tests/houses/test_lst_obliquity_precision.py -v` passes (or skips wholesale if swisseph not installed — never partial-skip).
 - `cat .planning/phases/10-houses-module/lst-audit-report.md` exists, contains numbers, contains "Verdict: ACCEPT" or "Verdict: TIGHTEN".
 - `mypy --strict ketu/ephemeris/time.py tests/houses/test_lst_obliquity_precision.py` is clean.
-- `pytest tests/` (full suite) shows 488+15 = 503+ tests pass; no regressions.
+- `pytest tests/` (full suite) shows 488+16 = 504+ tests pass; no regressions.
 - `git log --oneline -5` shows the audit report committed in this plan's commit (plus formula change if verdict=TIGHTEN).
 - The state.md blocker "LST/obliquity precision audit (Phase 10 first task)" is resolvable — i.e. on plan completion, the next planner reading state.md should be able to mark this blocker closed.
 </verification>
@@ -214,6 +225,7 @@ After completion, create `.planning/phases/10-houses-module/10-01-SUMMARY.md` do
 - Verdict (ACCEPT or TIGHTEN) and 1-paragraph rationale
 - TOL_GMST_ARCSEC chosen (1.0 if TIGHTEN, 20.0 if ACCEPT) and why
 - If TIGHTEN: diff summary of the time.py change (lines edited, formula reference)
-- Confirmation that 488+15 tests pass and mypy --strict is clean
+- Polar-ASC regression fence (Test 4): max |delta_asc| at lat=66.5° across 5 dates, headroom vs 50-arcsec assertion threshold
+- Confirmation that 488+16 tests pass and mypy --strict is clean
 - Confirmation that state.md blocker "LST/obliquity precision audit" is closed
 </output>
