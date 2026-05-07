@@ -64,9 +64,15 @@ testpaths = ["tests"]
 python_files = "test_*.py"
 python_classes = "Test*"
 python_functions = "test_*"
+# Project-wide coverage report on every pytest run. NOTE: do NOT add
+# --cov-fail-under here — that would block partial test runs (e.g.
+# pytest tests/test_ephemeris.py) that don't exercise enough of the
+# codebase to hit the threshold. The HOU-09 95% gate scoped to
+# ketu.houses lives in the Makefile target `make houses-coverage`.
 addopts = "-v --cov=ketu --cov-report=term-missing"
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+    "houses_coverage_gate: HOU-09 95% coverage gate for ketu.houses (run via Makefile target `make houses-coverage`)",
 ]
 
 [tool.coverage.run]
