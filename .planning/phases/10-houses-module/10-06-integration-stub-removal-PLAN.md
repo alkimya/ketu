@@ -11,6 +11,7 @@ files_modified:
   - ketu/houses/api.py
   - ketu/ephemeris/planets.py
   - ketu/ephemeris/__init__.py
+  - pyproject.toml
   - tests/test_planets_coverage.py
   - tests/houses/test_house_of.py
   - tests/houses/test_integration.py
@@ -29,6 +30,7 @@ must_haves:
     - "house_of(planet_lon, cusps) returns 1-12 int (or ndarray of int) for any longitude; vectorized over both planet_lon and cusps"
     - "calculate_house_cusps stub is REMOVED from ketu/ephemeris/planets.py; ketu/ephemeris/__init__.py no longer exports it; tests/test_planets_coverage.py loses the stub-related tests"
     - "ketu.houses module coverage is ≥95% via pytest-cov on tests/houses/"
+    - "Coverage gate is wired into committed config: pyproject.toml [tool.pytest.ini_options] addopts includes --cov=ketu and --cov-report=term-missing project-wide; the houses-specific 95% threshold lives in a documented script/Makefile target (`pytest tests/houses/ --cov=ketu.houses --cov-fail-under=95`) so a bare `pytest tests/` cannot silently miss the gate"
     - "Public API: ketu.calculate_houses, ketu.house_of, ketu.HOUSES_DTYPE, ketu.HighLatitudeError, ketu.HOUSE_SYSTEMS all importable at the top level"
     - "Migration note in CHANGELOG.md (or scratch note for Plan 12 release prep) documents the calculate_house_cusps removal as a breaking change"
   artifacts:
@@ -73,6 +75,10 @@ must_haves:
       to: "ketu.houses calculate_houses, house_of, HOUSES_DTYPE, HighLatitudeError, HOUSE_SYSTEMS"
       via: "top-level public API re-export"
       pattern: "from ketu\\.houses import"
+    - from: "pyproject.toml [tool.pytest.ini_options]"
+      to: "ketu.houses coverage gate"
+      via: "addopts wires --cov=ketu --cov-report=term-missing project-wide; HOU-09 95% gate runs as `pytest tests/houses/ --cov=ketu.houses --cov-fail-under=95` (documented Makefile target / SUMMARY note)"
+      pattern: "tool\\.pytest\\.ini_options"
 ---
 
 <objective>
@@ -740,7 +746,40 @@ tests/houses/test_integration.py</files>
 
     Mark this with `@pytest.mark.slow` and provide an opt-out in CI if needed (the basic suite shouldn't recurse). Better: replace the subprocess with a direct invocation that avoids the recursion (parsing the existing .coverage file). For the simpler-and-cleaner version, omit the inline coverage test and add a CI gate via `pytest --cov=ketu.houses --cov-fail-under=95 tests/houses/` documented in SUMMARY.md instead.
 
-    Decision: prefer the CI gate approach. Drop the inline `test_ketu_houses_module_coverage_at_least_95_percent` from this test file; instead, document in SUMMARY.md that the coverage assertion is `pytest tests/houses/ --cov=ketu.houses --cov-fail-under=95` and run it as the verification command for this task. Avoids the meta-test recursion problem.
+    Decision: prefer the CI gate approach. Drop the inline `test_ketu_houses_module_coverage_at_least_95_percent` from this test file; instead, wire the coverage gate into committed config so a bare `pytest tests/` does NOT silently miss it.
+
+    Step D — Wire coverage gate into `pyproject.toml`. Read the current `pyproject.toml`; locate (or create) the `[tool.pytest.ini_options]` table. Update / add the `addopts` key so EVERY pytest run reports module-level coverage in the terminal:
+
+    ```toml
+    [tool.pytest.ini_options]
+    minversion = "7.0"
+    addopts = "--cov=ketu --cov-report=term-missing"
+    testpaths = ["tests"]
+    markers = [
+        "slow: marks tests as slow (deselect with '-m \"not slow\"')",
+        "houses_coverage_gate: HOU-09 95% coverage gate for ketu.houses (run via Makefile target)",
+    ]
+    ```
+
+    DO NOT set `--cov-fail-under` project-wide (would block test runs that touch only one module). Instead, the houses-specific 95% gate is a SEPARATE invocation, documented in two places:
+
+    - `tests/houses/test_integration.py` module docstring footer: "HOU-09 coverage gate command: `pytest tests/houses/ --cov=ketu.houses --cov-fail-under=95`"
+    - `Makefile` (create or update): add a `houses-coverage` target:
+
+    ```makefile
+    .PHONY: houses-coverage
+    houses-coverage:
+    	pytest tests/houses/ --cov=ketu.houses --cov-fail-under=95 --cov-report=term-missing
+    ```
+
+    (If a `Makefile` already exists, append the target; do NOT overwrite. Tab indentation is required for Makefile recipes.)
+
+    The verify step for this task runs `make houses-coverage` (or the explicit pytest command if make isn't standard in the project). The committed pyproject.toml change ensures `pytest tests/` will surface the coverage report in every CI run, even when the strict 95% gate is reserved to the houses-specific Makefile target.
+
+    Anti-patterns to avoid (Step D specifically):
+    - DO NOT add `--cov-fail-under=95` to the project-wide `addopts` — that would block any partial test run (e.g. `pytest tests/test_ephemeris.py`) that doesn't exercise enough of `ketu.houses` to clear 95%. The gate must scope to `tests/houses/` only.
+    - DO NOT delete pre-existing `addopts` content — append `--cov=ketu --cov-report=term-missing` to whatever is there. Read first; merge; write.
+    - DO NOT skip the markers entry for `slow` if Phase 9 introduced slow tests — verify by `grep -n "slow" tests/` before editing; if `slow` is already used, the marker MUST be declared in pyproject.toml (pytest 7+ warns on undeclared markers in --strict-markers mode).
 
     Anti-patterns to avoid:
     - DO NOT use `calculate_houses` from `ketu.ephemeris` anywhere — that import is dead after Task 2.
@@ -753,7 +792,11 @@ tests/houses/test_integration.py</files>
 
     `pytest tests/houses/test_integration.py -v` shows ~30 tests passing (3 systems × 8 charts = 24 oracle-agreement parametrize, plus ~6 invariants).
 
-    `pytest tests/houses/ --cov=ketu.houses --cov-fail-under=95 --cov-report=term-missing` reports ≥95% coverage on the ketu.houses subpackage. If below, the missing lines are flagged in the term-missing report; address them by either removing dead code or adding a targeted test.
+    `pytest tests/houses/ --cov=ketu.houses --cov-fail-under=95 --cov-report=term-missing` reports ≥95% coverage on the ketu.houses subpackage. Equivalently: `make houses-coverage` (which runs the same command) exits 0. If below 95%, the missing lines are flagged in the term-missing report; address them by either removing dead code or adding a targeted test.
+
+    `grep -A5 "tool.pytest.ini_options" pyproject.toml` shows `addopts = "--cov=ketu --cov-report=term-missing"`. A bare `pytest tests/` now prints a coverage table in stdout (sanity: re-run a known passing test file and confirm coverage section appears).
+
+    `grep "houses-coverage" Makefile` returns the target line — confirms the Makefile target landed (only relevant if a Makefile is present in the project; if not, the Makefile creation is a Step D output too).
 
     `pytest tests/ -v` — full suite passes (488 + ~80 new house tests = ~570 total).
 
@@ -762,7 +805,7 @@ tests/houses/test_integration.py</files>
     `grep -r "swisseph" ketu/` returns nothing.
   </verify>
   <done>
-    `tests/houses/test_house_of.py` exists with 7 tests covering scalar, vectorized, mixed cusps, 360° wrap, modular normalization. `tests/houses/test_integration.py` exists with ~30 tests covering systems registration, dtype shape, all 3 systems × 8 charts oracle agreement, polar_fallback raise/porphyry semantics, vectorized scalar/1d/2d shape preservation, no-runtime-swisseph sanity. `pytest tests/houses/ --cov=ketu.houses --cov-fail-under=95` passes. mypy --strict clean. Full pytest suite green.
+    `tests/houses/test_house_of.py` exists with 7 tests covering scalar, vectorized, mixed cusps, 360° wrap, modular normalization. `tests/houses/test_integration.py` exists with ~30 tests covering systems registration, dtype shape, all 3 systems × 8 charts oracle agreement, polar_fallback raise/porphyry semantics, vectorized scalar/1d/2d shape preservation, no-runtime-swisseph sanity. `pyproject.toml [tool.pytest.ini_options]` contains `addopts = "--cov=ketu --cov-report=term-missing"` and the `slow` + `houses_coverage_gate` markers; `Makefile` has a `houses-coverage` target running the 95% gate. `pytest tests/houses/ --cov=ketu.houses --cov-fail-under=95` passes. mypy --strict clean. Full pytest suite green.
   </done>
 </task>
 
@@ -770,7 +813,7 @@ tests/houses/test_integration.py</files>
 
 <verification>
 - `pytest tests/houses/ -v` shows ~80+ tests across all 7 test files (test_lst_obliquity_precision, test_oracle_smoke, test_dtype, test_registry, test_ascmc, test_placidus, test_koch, test_porphyry, test_polar_safety, test_house_of, test_integration).
-- `pytest tests/houses/ --cov=ketu.houses --cov-fail-under=95` passes — the HOU-09 coverage gate.
+- `pytest tests/houses/ --cov=ketu.houses --cov-fail-under=95` passes — the HOU-09 coverage gate. Wired in committed config: `pyproject.toml [tool.pytest.ini_options]` includes `--cov=ketu --cov-report=term-missing` in addopts (every pytest run reports coverage); a `make houses-coverage` Makefile target runs the houses-scoped 95% gate.
 - All 3 systems (placidus, koch, porphyry) registered into SYSTEMS at module import time; calculate_houses dispatches via SYSTEMS[name.lower()] with no inline if/elif.
 - polar_fallback='raise' (default) raises HighLatitudeError; polar_fallback='porphyry' substitutes Porphyry for polar elements without NaN.
 - house_of returns int32 ndarray of values in {1..12}; vectorized over both planet_lon and cusps arrays.
@@ -800,6 +843,7 @@ After completion, create `.planning/phases/10-houses-module/10-06-SUMMARY.md` do
 - HOU-10 stub removal: lines deleted in ephemeris/planets.py, ephemeris/__init__.py, tests/test_planets_coverage.py
 - CHANGELOG entry text
 - Final ketu.houses coverage percentage (target ≥95%)
+- Coverage gate wiring: pyproject.toml addopts diff + Makefile houses-coverage target excerpt
 - Full pytest suite count: ~570+ (488 existing + ~80 Plan 10)
 - Confirmation: mypy --strict clean across ketu/ and tests/houses/; grep "swisseph" ketu/ returns zero
 - Phase 10 acceptance criteria 1-5 ALL GREEN — list each with evidence

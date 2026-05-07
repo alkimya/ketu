@@ -4,6 +4,7 @@ plan: 04
 type: execute
 wave: 3
 depends_on:
+  - "10-01"
   - "10-02"
   - "10-03"
 files_modified:

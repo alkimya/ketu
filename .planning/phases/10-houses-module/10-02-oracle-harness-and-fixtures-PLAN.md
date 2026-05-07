@@ -19,7 +19,7 @@ must_haves:
     - "tests/houses/conftest.py exposes a session-scoped reference_charts fixture with ≥10 (label, jd, lat, lon) entries spanning normal latitudes, mid-latitudes, southern hemisphere, 1900/2050 boundary, AND polar lats 70° and 80°"
     - "tests/houses/conftest.py exposes a swe_oracle(jd, lat, lon, system) helper that calls swe.houses_ex(jd, lat, lon, BYTES) and returns a dict with cusps[12], asc, mc, armc, vertex (slicing the [1:13] of the 13-tuple to get to 0-indexed 12-element cusps)"
     - "tests/houses/conftest.py exposes a swe_oracle_armc(armc, lat, eps, system) helper for isolating algorithm error from sidereal-time error during fixture authoring (uses swe.houses_armc)"
-    - "tests/houses/fixtures/reference_charts.json contains the snapshotted oracle output for all ≥10 charts × {placidus, koch} = ≥20 entries — committed as a planning artifact"
+    - "tests/houses/fixtures/reference_charts.json contains the snapshotted oracle output for all ≥10 charts × {placidus, koch, porphyry} = ≥30 entries — committed as a planning artifact"
     - "Polar charts at lat=70° and lat=80° are present in the fixture corpus and the snapshot records the swisseph polar behavior (raises swisseph.Error for Placidus/Koch beyond the polar circle)"
     - "tests/houses/test_oracle_smoke.py asserts the fixture loads correctly and the oracle helpers are wired (no production-code dependencies — this is pure infra)"
     - "All swisseph access is gated by pytest.importorskip in conftest.py — module imports cleanly even if swisseph is not installed (entire test directory is skipped, never partial)"
@@ -30,7 +30,7 @@ must_haves:
       contains: "swe_oracle"
       min_lines: 100
     - path: "tests/houses/fixtures/reference_charts.json"
-      provides: "≥10 chart oracle snapshots × 2 systems (placidus + koch); polar lats included; structured as JSON with sections for normal-lat (cusps populated) and polar-lat (records oracle's swisseph.Error or Porphyry fallback)"
+      provides: "≥10 chart oracle snapshots × 3 systems (placidus + koch + porphyry); polar lats included; structured as JSON with sections for normal-lat (cusps populated) and polar-lat (records oracle's swisseph.Error for Placidus/Koch, closed-form cusps for Porphyry)"
       contains: "placidus"
       min_lines: 50
     - path: "tests/houses/test_oracle_smoke.py"
@@ -53,13 +53,13 @@ must_haves:
 ---
 
 <objective>
-Build the test infrastructure that Plans 10-03, 10-04, 10-05, 10-06 will all consume: a pytest conftest exposing the swisseph oracle, a session-scoped reference-charts list, and a JSON fixture file containing ≥10 reference snapshots × 2 systems (Placidus + Koch). This plan owns the oracle-side helpers; production-code modules are still empty at this point.
+Build the test infrastructure that Plans 10-03, 10-04, 10-05, 10-06 will all consume: a pytest conftest exposing the swisseph oracle, a session-scoped reference-charts list, and a JSON fixture file containing ≥10 reference snapshots × 3 systems (Placidus + Koch + Porphyry). This plan owns the oracle-side helpers; production-code modules are still empty at this point.
 
 Purpose: HOU-09 mandates "≥10 reference fixtures vs Astro.com / Swiss Ephemeris including polar lats (70°, 80°)." Authoring fixtures programmatically through swisseph is the right pattern (research §"Don't Hand-Roll" row 1) — eliminates copy-paste errors, lets us re-snapshot on demand, and creates a stable JSON artifact tracked in git. The other 4 plans (03, 04, 05, 06) all import this conftest; building it as a separate plan unblocks parallel Wave 3 (Plans 04 and 05 can both consume it without touching it).
 
 Output:
 - `tests/houses/conftest.py` — swe_oracle / swe_oracle_armc helpers, reference_charts session-scoped fixture, SYSTEM_BYTES dict
-- `tests/houses/fixtures/reference_charts.json` — committed snapshot of ≥10 charts × {placidus, koch} oracle output
+- `tests/houses/fixtures/reference_charts.json` — committed snapshot of ≥10 charts × {placidus, koch, porphyry} oracle output (Plan 10-06's `test_integration.py` parametrizes over all 3 systems × 8 charts; missing porphyry would silently skip 8/24 cases)
 - `tests/houses/test_oracle_smoke.py` — proves the fixture and helpers are wired correctly (no production-code dependencies yet)
 </objective>
 
@@ -191,11 +191,11 @@ Output:
 </task>
 
 <task type="auto">
-  <name>Task 2: Snapshot ≥10 charts × {placidus, koch} oracle output to fixtures/reference_charts.json</name>
+  <name>Task 2: Snapshot ≥10 charts × {placidus, koch, porphyry} oracle output to fixtures/reference_charts.json</name>
   <files>tests/houses/fixtures/reference_charts.json
 tests/houses/test_oracle_smoke.py</files>
   <action>
-    Step A — Create `tests/houses/fixtures/reference_charts.json` by running a one-off snapshot script. The script itself is NOT committed (or lives at scripts/snapshot_reference_charts.py and is documented in the SUMMARY); the JSON output IS committed.
+    Step A — Create `tests/houses/fixtures/reference_charts.json` by running a one-off snapshot script (covers `placidus`, `koch`, `porphyry` — pyswisseph hsys bytes `b'P'`, `b'K'`, `b'O'` per the Astrodienst hsys table; verified empirically: `swe.houses_ex(jd, lat, lon, b'O')` returns Porphyry cusps without error at all latitudes including polar). The script itself is NOT committed (or lives at scripts/snapshot_reference_charts.py and is documented in the SUMMARY); the JSON output IS committed.
 
     Snapshot script logic:
     ```python
@@ -207,7 +207,7 @@ tests/houses/test_oracle_smoke.py</files>
     )
 
     CHARTS = [...same list as conftest reference_charts...]
-    SYSTEMS = ["placidus", "koch"]
+    SYSTEMS = ["placidus", "koch", "porphyry"]  # b'P', b'K', b'O' — Astrodienst hsys table
 
     snapshot: dict = {"version": "v1.1-phase10-snapshot", "charts": {}}
     for chart in CHARTS:
@@ -234,8 +234,8 @@ tests/houses/test_oracle_smoke.py</files>
     Run from `venv/bin/activate`. Verify the resulting JSON:
     - Top-level keys: `version`, `charts`
     - Exactly 10 entries under `charts`
-    - For non-polar charts (8 of them): both `placidus` and `koch` entries have a `cusps` array of length 12, plus `asc`, `mc`, `armc`, `vertex` floats.
-    - For polar charts (lat=70, lat=80, 2 of them): both `placidus` and `koch` entries have an `error` key (swisseph raises `swisseph.Error` beyond the polar circle — research §"Empirical baseline" verified this) and `polar: true`.
+    - For non-polar charts (8 of them): all three of `placidus`, `koch`, `porphyry` entries have a `cusps` array of length 12, plus `asc`, `mc`, `armc`, `vertex` floats.
+    - For polar charts (lat=70, lat=80, 2 of them): `placidus` and `koch` entries have an `error` key (swisseph raises `swisseph.Error` beyond the polar circle — research §"Empirical baseline" verified this) and `polar: true`. The `porphyry` entry is closed-form and DOES populate `cusps`/`asc`/`mc`/`armc`/`vertex` even at lat=80° (Porphyry is the polar fallback path; this is the behavior Plan 10-05 will replicate in pure NumPy).
 
     Expected file size: ~10 KB (compact). Commit with `git add tests/houses/fixtures/reference_charts.json`.
 
@@ -296,7 +296,7 @@ tests/houses/test_oracle_smoke.py</files>
             assert label in loaded_reference_snapshot["charts"], (
                 f"Snapshot missing chart {label}"
             )
-            for sys_name in ["placidus", "koch"]:
+            for sys_name in ["placidus", "koch", "porphyry"]:
                 snap = loaded_reference_snapshot["charts"][label]["systems"][sys_name]
                 live = swe_oracle(chart["jd"], chart["lat"], chart["lon"], sys_name)
                 if "error" in snap:
@@ -321,7 +321,7 @@ tests/houses/test_oracle_smoke.py</files>
   <verify>
     `pytest tests/houses/test_oracle_smoke.py -v` runs and shows 6 tests passing (or all skipped if swisseph not installed).
 
-    `python -c "import json; d = json.load(open('tests/houses/fixtures/reference_charts.json')); assert len(d['charts']) == 10; assert all(s in d['charts']['J2000_Paris']['systems'] for s in ['placidus', 'koch']); assert d['charts']['J2000_Lat80_North']['systems']['placidus'].get('polar') is True; print('OK', len(d['charts']), 'charts')"` succeeds.
+    `python -c "import json; d = json.load(open('tests/houses/fixtures/reference_charts.json')); assert len(d['charts']) == 10; assert all(s in d['charts']['J2000_Paris']['systems'] for s in ['placidus', 'koch', 'porphyry']); assert d['charts']['J2000_Lat80_North']['systems']['placidus'].get('polar') is True; assert 'cusps' in d['charts']['J2000_Lat80_North']['systems']['porphyry']; print('OK', len(d['charts']), 'charts')"` succeeds.
 
     `mypy --strict tests/houses/test_oracle_smoke.py` is clean.
 
@@ -330,7 +330,7 @@ tests/houses/test_oracle_smoke.py</files>
     `wc -l tests/houses/fixtures/reference_charts.json` shows >50 lines (sanity: real content, not just `{}`).
   </verify>
   <done>
-    `tests/houses/fixtures/reference_charts.json` committed with version field, 10 charts × 2 systems, polar charts marked with `error` + `polar: true`, non-polar charts with full cusps + asc + mc + armc + vertex. `tests/houses/test_oracle_smoke.py` exists with 6 smoke tests, all passing. The full `pytest tests/` suite still passes (488 + 15 from Plan 01 + 6 from this plan = 509+ total tests). mypy --strict clean.
+    `tests/houses/fixtures/reference_charts.json` committed with version field, 10 charts × 3 systems (placidus, koch, porphyry), polar charts marked with `error` + `polar: true` for placidus/koch and closed-form cusps for porphyry, non-polar charts with full cusps + asc + mc + armc + vertex for all 3 systems. `tests/houses/test_oracle_smoke.py` exists with 6 smoke tests, all passing. The full `pytest tests/` suite still passes (488 + 15 from Plan 01 + 6 from this plan = 509+ total tests). mypy --strict clean.
   </done>
 </task>
 
@@ -338,14 +338,14 @@ tests/houses/test_oracle_smoke.py</files>
 
 <verification>
 - `pytest tests/houses/ -v` passes (≥6 + 15 = 21 tests; or wholesale-skipped if swisseph missing).
-- `tests/houses/fixtures/reference_charts.json` is valid JSON, ≥10 charts, includes lat=70° and lat=80° polar entries marked with error.
+- `tests/houses/fixtures/reference_charts.json` is valid JSON, ≥10 charts × 3 systems (placidus, koch, porphyry); includes lat=70° and lat=80° polar entries marked with error for placidus/koch and closed-form cusps for porphyry.
 - `mypy --strict tests/houses/conftest.py tests/houses/test_oracle_smoke.py` clean.
 - No production-code imports of `ketu.houses` in this plan's deliverables (it doesn't exist yet).
 - `grep -r "import swisseph" ketu/` returns nothing — runtime constraint preserved.
 </verification>
 
 <success_criteria>
-- HOU-09 fixture infrastructure landed: ≥10 charts including polar 70°/80° snapshotted to a committed JSON.
+- HOU-09 fixture infrastructure landed: ≥10 charts × 3 systems (placidus, koch, porphyry) including polar 70°/80° snapshotted to a committed JSON. Plan 10-06 integration tests parametrize over all 3 systems × 8 non-polar charts = 24 oracle-agreement cases without silent skips.
 - Oracle helpers (swe_oracle, swe_oracle_armc) are reusable across plans 03/04/05/06 via pytest fixture mechanism.
 - bytes-vs-str trap (Pitfall 8) and 13-tuple slicing trap (Pitfall 7) are solved at the conftest layer; downstream test files never see them.
 - Plans 04 and 05 can run in Wave 3 simultaneously, both reading the same fixture JSON without modifying it.
@@ -355,7 +355,7 @@ tests/houses/test_oracle_smoke.py</files>
 After completion, create `.planning/phases/10-houses-module/10-02-SUMMARY.md` documenting:
 - The 10 reference charts chosen (table: label, jd, lat, lon)
 - swisseph version used for the snapshot (from `swe.version`)
-- Polar charts and the error-marker shape recorded for them
+- Polar charts: error-marker shape recorded for placidus/koch; closed-form cusps recorded for porphyry (porphyry is finite at all lats — that's why Plan 10-05 picks it as the polar fallback)
 - File size and SHA256 of `reference_charts.json` (so Plan 06 integration test can pin against it if desired)
 - Confirmation: 488 + 15 (Plan 01) + 6 (Plan 02) = 509+ tests pass; mypy strict clean; no `ketu/` imports of swisseph
 </output>
