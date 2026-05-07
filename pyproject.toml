@@ -51,10 +51,10 @@ Issues = "https://github.com/alkimya/ketu/issues"
 Changelog = "https://github.com/alkimya/ketu/blob/main/CHANGELOG.md"
 
 [project.scripts]
-ketu = "ketu.display:main"
+ketu = "ketu.cli:main"
 
 [tool.setuptools]
-packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.cycles", "ketu.cache", "ketu.houses"]
+packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.cycles", "ketu.cache", "ketu.houses", "ketu.cli"]
 
 [tool.setuptools.package-data]
 ketu = ["py.typed"]
