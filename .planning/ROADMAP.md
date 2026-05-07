@@ -22,7 +22,7 @@ Ketu v1.1 evolves the library from a pure astronomical engine into an astronomic
 
 - [x] **Phase 8: Lilith Verification & Fix** — Document Lilith definition, audit formula vs Swiss Ephemeris, fix if needed (completed 2026-05-06)
 - [x] **Phase 9: Configurable Aspects** — 5-major default with `CLASSICAL`/`TRADITIONAL`/`EXTENDED` presets; append-only `core.aspects` (completed 2026-05-07)
-- [ ] **Phase 10: Houses Module** — Placidus + Koch with extensible registry, polar fallback, LST precision audit
+- [x] **Phase 10: Houses Module** — Placidus + Koch with extensible registry, polar fallback, LST precision audit (completed 2026-05-07)
 - [ ] **Phase 11: CLI Refactor & Integration** — argparse subcommands, `--harmonics SPEC`, `ketu houses` subcommand, introspection flags
 - [ ] **Phase 12: Release Preparation v1.1.0** — Version bump, CHANGELOG, UPGRADING.md, GitHub release, PyPI publish
 
@@ -116,12 +116,12 @@ Plans:
 
 Plans:
 
-- [ ] 10-01-lst-precision-audit-PLAN.md — Audit GMST/obliquity precision vs swisseph; tighten sidereal_time to IAU 2006 if needed; close state.md HOU-01 blocker (HOU-01)
-- [ ] 10-02-oracle-harness-and-fixtures-PLAN.md — Build tests/houses/conftest.py with swe_oracle helpers + ≥10 reference charts (incl. polar 70°/80°) snapshotted to fixtures/reference_charts.json (HOU-09 partial)
-- [ ] 10-03-registry-dtype-ascmc-PLAN.md — Create ketu/houses/ subpackage scaffold: HOUSES_DTYPE, HighLatitudeError, SYSTEMS registry pattern, vectorized closed-form ASC/MC/ARMC/Vertex (HOU-02, HOU-05)
-- [ ] 10-04-placidus-implementation-PLAN.md — Vectorized Placidus with mask-based iteration, MAX_ITER=50, NaN propagation at polar; oracle agreement <1 arcmin on 8 charts × 12 cusps (HOU-03, HOU-08)
-- [ ] 10-05-koch-porphyry-polar-PLAN.md — Koch (oblique-ascension trisection) + Porphyry (closed-form polar fallback) + is_polar/polar_circle helpers using time-varying 90°-ε(jd) (HOU-04, HOU-06)
-- [ ] 10-06-integration-stub-removal-PLAN.md — Real calculate_houses (SYSTEMS dispatch + polar_fallback) + house_of vectorized + REMOVE calculate_house_cusps stub from ephemeris/planets.py + ≥95% coverage gate (HOU-07, HOU-10)
+- [x] 10-01-lst-precision-audit-PLAN.md — Audit GMST/obliquity precision vs swisseph; tighten sidereal_time to IAU 2006 if needed; close state.md HOU-01 blocker (HOU-01)
+- [x] 10-02-oracle-harness-and-fixtures-PLAN.md — Build tests/houses/conftest.py with swe_oracle helpers + ≥10 reference charts (incl. polar 70°/80°) snapshotted to fixtures/reference_charts.json (HOU-09 partial)
+- [x] 10-03-registry-dtype-ascmc-PLAN.md — Create ketu/houses/ subpackage scaffold: HOUSES_DTYPE, HighLatitudeError, SYSTEMS registry pattern, vectorized closed-form ASC/MC/ARMC/Vertex (HOU-02, HOU-05)
+- [x] 10-04-placidus-implementation-PLAN.md — Vectorized Placidus with mask-based iteration, MAX_ITER=50, NaN propagation at polar; oracle agreement <1 arcmin on 8 charts × 12 cusps (HOU-03, HOU-08)
+- [x] 10-05-koch-porphyry-polar-PLAN.md — Koch (oblique-ascension trisection) + Porphyry (closed-form polar fallback) + is_polar/polar_circle helpers using time-varying 90°-ε(jd) (HOU-04, HOU-06)
+- [x] 10-06-integration-stub-removal-PLAN.md — Real calculate_houses (SYSTEMS dispatch + polar_fallback) + house_of vectorized + REMOVE calculate_house_cusps stub from ephemeris/planets.py + ≥95% coverage gate (HOU-07, HOU-10)
 
 ### Phase 11: CLI Refactor & Integration
 
@@ -183,7 +183,7 @@ Plans:
 | 1-7 (collapsed) | v1.0 | 16/16 | ✓ Complete | 2026-02-12 |
 | 8. Lilith Verification & Fix | v1.1 | 5/5 | ✓ Complete | 2026-05-06 |
 | 9. Configurable Aspects | v1.1 | 6/6 | ✓ Complete | 2026-05-07 |
-| 10. Houses Module | v1.1 | 0/6 | Plans created | - |
+| 10. Houses Module | v1.1 | 6/6 | ✓ Complete | 2026-05-07 |
 | 11. CLI Refactor & Integration | v1.1 | 0/TBD | Not started | - |
 | 12. Release Preparation v1.1.0 | v1.1 | 0/TBD | Not started | - |
 
@@ -196,3 +196,4 @@ v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`.
 *Phase 9 executed: 2026-05-07 (6 plans, 3 waves — CLASSICAL default, presets module, ASP-08 PASS at -10.10% max regression on EXTENDED, 488 tests green)*
 *v1.0 roadmap archived to .planning/milestones/v1.0-ROADMAP.md*
 *Phase 10 plans created: 2026-05-07 (6 plans, 4 waves — Plan 01 unblocks all; Plans 02/03 parallel Wave 2; Plans 04/05 parallel Wave 3; Plan 06 closes Wave 4)*
+*Phase 10 executed: 2026-05-07 (6 plans, 4 waves — sidereal_time tightened to apparent GST, Placidus/Koch/Porphyry registered via SYSTEMS, polar fallback wired, calculate_house_cusps stub removed; 638 tests, 96.75% houses coverage, max ASC delta 0.858 arcmin vs Swiss Ephemeris — VERIFICATION.md PASSED 5/5)*
