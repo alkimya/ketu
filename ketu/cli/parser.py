@@ -12,36 +12,12 @@ validator, subcommand dispatchers, formatters, and introspection.
 from __future__ import annotations
 
 import argparse
-import sys
 from typing import Sequence
 
+from .aspects_cmd import cmd_aspects
 from .harmonics_spec import parse_harmonics_spec
 from .houses_cmd import cmd_houses
-
-# Stub dispatchers — real implementations land in Plan 11-04 (aspects +
-# introspection). Plan 11-03 wired the real ``cmd_houses``; the houses
-# stub is gone. For now the remaining stubs print a "not yet implemented"
-# notice and return 0; tests pinning the dispatch shape continue to assert
-# on the Plan-N marker as breadcrumbs.
-
-
-def _stub_aspects(args: argparse.Namespace) -> int:
-    """Stub dispatcher for the ``aspects`` subcommand (replaced in Plan 11-04)."""
-    print(
-        "ketu aspects: not yet implemented (wired in Plan 11-04)",
-        file=sys.stderr,
-    )
-    return 0
-
-
-def _stub_list_aspect_sets() -> None:
-    """Stub for ``--list-aspect-sets`` introspection (replaced in Plan 11-04)."""
-    print("(--list-aspect-sets: wired in Plan 11-04)", file=sys.stderr)
-
-
-def _stub_list_house_systems() -> None:
-    """Stub for ``--list-house-systems`` introspection (replaced in Plan 11-04)."""
-    print("(--list-house-systems: wired in Plan 11-04)", file=sys.stderr)
+from .introspection import cmd_list_aspect_sets, cmd_list_house_systems
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -121,7 +97,7 @@ def build_parser() -> argparse.ArgumentParser:
         metavar="ISO",
         help="UTC date-time, ISO 8601 (e.g. 2026-05-06T12:00:00Z).",
     )
-    p_aspects.set_defaults(func=_stub_aspects)
+    p_aspects.set_defaults(func=cmd_aspects)
 
     # `ketu houses --date ISO --lat F --lon F --system NAME`
     p_houses = subparsers.add_parser(
@@ -195,10 +171,10 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     # Introspection short-circuits.
     if args.list_aspect_sets:
-        _stub_list_aspect_sets()
+        cmd_list_aspect_sets()
         return 0
     if args.list_house_systems:
-        _stub_list_house_systems()
+        cmd_list_house_systems()
         return 0
 
     # No subcommand → print help and return 0.

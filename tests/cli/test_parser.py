@@ -144,24 +144,27 @@ class TestMainDispatch:
         """--list-aspect-sets short-circuits before subcommand dispatch."""
         rc = invoke_main(["--list-aspect-sets"])
         assert rc == 0
-        # Stub message lives on stderr per Plan 11-01; Plan 11-04 replaces with real content.
-        err = capsys.readouterr().err
-        assert "list-aspect-sets" in err.lower() or "Plan 11-04" in err
+        out = capsys.readouterr().out
+        assert "classical" in out
+        assert "traditional" in out
+        assert "extended" in out
+        assert "all" in out
 
     def test_main_list_house_systems_short_circuits(self, invoke_main, capsys):
         rc = invoke_main(["--list-house-systems"])
         assert rc == 0
-        err = capsys.readouterr().err
-        assert "list-house-systems" in err.lower() or "Plan 11-04" in err
+        out = capsys.readouterr().out
+        assert "placidus" in out
+        assert "koch" in out
+        assert "porphyry" in out
 
     def test_main_aspects_dispatches_to_func(self, invoke_main, capsys):
-        """Stub aspects dispatcher returns 0 and writes its marker to stderr."""
+        """`ketu aspects --date X` runs cmd_aspects → exit 0; resolved-config header on stderr."""
         rc = invoke_main(["aspects", "--date", "2026-05-06T12:00:00Z"])
         assert rc == 0
-        err = capsys.readouterr().err
-        # Plan 11-04 will replace this with real output; here we just
-        # confirm dispatch reached the stub.
-        assert "Plan 11-04" in err or "not yet implemented" in err
+        out = capsys.readouterr()
+        assert "Bodies Positions" in out.out
+        assert "Aspect set:" in out.err  # CLI-06 header on stderr
 
     def test_main_houses_dispatches_to_func(self, invoke_main, capsys):
         """Real houses dispatcher (Plan 11-03) returns 0 and prints cusps to stdout."""
