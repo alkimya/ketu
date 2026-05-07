@@ -164,7 +164,13 @@ Plans:
   3. User reads UPGRADING.md v1.0 → v1.1 section and finds explicit migration recipes for script users (CLI), Kala adapter (request `EXTENDED` for legacy 14), and any Lilith consumers
   4. User runs `pip install ketu==1.1.0` from PyPI in a fresh venv and the test suite passes (250+ tests, mypy strict, numpydoc, interrogate ≥95%); the GitHub release v1.1.0 is published with notes pointing to CHANGELOG and UPGRADING
 
-**Plans**: TBD
+**Plans**: 4 plans
+
+Plans:
+- [ ] 12-01-version-bump-and-sync-PLAN.md — REL-01: bump 1.0.0→1.1.0 in pyproject.toml + ketu/__init__.py, verify sync test
+- [ ] 12-02-changelog-completion-PLAN.md — REL-02: add CHANGELOG BREAKING summary, Phase 9 + Phase 11 entries; update README "What's New" to v1.1
+- [ ] 12-03-upgrading-completion-PLAN.md — REL-03: add CLI default, Kala adapter, houses module, stderr header migration recipes to UPGRADING.md
+- [ ] 12-04-release-publish-PLAN.md — REL-04: pre-flight build/test, merge to main, date-stamp CHANGELOG, tag v1.1.0, watch publish.yml, GH release, post-publish smoke (autonomous: false)
 
 ## Coverage Validation
 
