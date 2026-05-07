@@ -1,14 +1,14 @@
-"""Display and CLI functions for Ketu.
+"""Library formatters for Ketu astronomical output.
 
-This module provides functions to format and print astronomical calculations,
-as well as the main command-line interface.
+Provides ``print_positions`` and ``print_aspects`` — pure-stdout
+formatted dumps used by the CLI (``ketu.cli.aspects_cmd``) and
+documentation examples. The legacy interactive ``main()`` prompt was
+removed in Phase 11; the argparse-based CLI lives in ``ketu.cli``.
 """
 
 from __future__ import annotations
 
-from datetime import datetime
 from typing import TYPE_CHECKING
-from zoneinfo import ZoneInfo
 
 import numpy as np
 
@@ -16,18 +16,12 @@ from .core import signs
 from .core import aspects as _CORE_ASPECTS
 from .calculations import (
     body_name,
-    body_id,
     body_sign,
     positions,
     is_retrograde,
     dd_to_dms,
-    utc_to_julian,
-    julian_to_utc,
 )
-from .aspects import (
-    calculate_aspects,
-    find_aspects_between_dates,
-)
+from .aspects import calculate_aspects
 
 if TYPE_CHECKING:
     from .aspects.presets import AspectSetSpec
@@ -87,37 +81,7 @@ def print_aspects(
         )
 
 
-def main() -> None:
-    """Main CLI entry point for interactive astronomical calculations."""
-    try:
-        year, month, day = map(int, input("Give a date with ISO format, ex: 2020-12-21\n").split("-"))
-        hour, minute = map(int, input("Give a time (hour, minute), with ISO format, ex: 19:20\n").split(":"))
-        tzinfo = input("Give the Time Zone, ex: 'Europe/Paris' for France: ") or "Europe/Paris"
-        zoneinfo = ZoneInfo(tzinfo)
-        dtime = datetime(year, month, day, hour, minute, tzinfo=zoneinfo)
-        jday = utc_to_julian(dtime)
-        print_positions(jday)
-        print_aspects(jday)
-
-        # Demo of new features
-        print("\n------------- Aspect Timing Example -------------")
-        # Example: Find timing for Sun-Moon conjunction
-        sun_id = body_id("Sun")
-        moon_id = body_id("Moon")
-
-        aspects_found = find_aspects_between_dates(jday - 15, jday + 15, sun_id, moon_id)
-        for asp in aspects_found[:3]:  # Show first 3
-            exact_jd, b1, b2, asp_name, asp_val = asp
-            exact_dt = julian_to_utc(exact_jd)
-            print(f"{body_name(b1)} {asp_name} {body_name(b2)} at {exact_dt}")
-
-    except ValueError as e:
-        print(f"Error : {e}")
-        print("Please enter a valid date and time with ISO format")
-
-
 __all__ = [
     "print_positions",
     "print_aspects",
-    "main",
 ]
