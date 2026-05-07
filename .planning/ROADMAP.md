@@ -23,7 +23,7 @@ Ketu v1.1 evolves the library from a pure astronomical engine into an astronomic
 - [x] **Phase 8: Lilith Verification & Fix** — Document Lilith definition, audit formula vs Swiss Ephemeris, fix if needed (completed 2026-05-06)
 - [x] **Phase 9: Configurable Aspects** — 5-major default with `CLASSICAL`/`TRADITIONAL`/`EXTENDED` presets; append-only `core.aspects` (completed 2026-05-07)
 - [x] **Phase 10: Houses Module** — Placidus + Koch with extensible registry, polar fallback, LST precision audit (completed 2026-05-07)
-- [ ] **Phase 11: CLI Refactor & Integration** — argparse subcommands, `--harmonics SPEC`, `ketu houses` subcommand, introspection flags
+- [x] **Phase 11: CLI Refactor & Integration** — argparse subcommands, `--harmonics SPEC`, `ketu houses` subcommand, introspection flags (completed 2026-05-07)
 - [ ] **Phase 12: Release Preparation v1.1.0** — Version bump, CHANGELOG, UPGRADING.md, GitHub release, PyPI publish
 
 ## Cross-Cutting Constraints
@@ -140,13 +140,13 @@ Plans:
   4. User runs `ketu houses --date 2026-05-06T12:00:00Z --lat 48.85 --lon 2.35 --system placidus` and receives the same house cusps the Python API returns for the same inputs
   5. User runs `ketu --list-aspect-sets` and `ketu --list-house-systems` and sees the available options with descriptions; every CLI invocation echoes a resolved-config header (e.g. `# Aspect set: classical [0°, 60°, 90°, 120°, 180°]` and the chosen house system if applicable)
 
-**Plans**: 6 plans, 5 waves
+**Plans**: 6 plans, 6 waves
 - [ ] 11-01-cli-parser-scaffolding-PLAN.md — Lay down ketu/cli/ subpackage skeleton: __init__.py + parser.py with build_parser() + main() dispatch, top-level introspection flags + --harmonics, aspects/houses subparsers stub-dispatched; tests/cli/ scaffold (Wave 1)
 - [ ] 11-02-harmonics-spec-validator-PLAN.md — parse_harmonics_spec(s) -> length-14 np.bool_ mask; presets (classical/traditional/extended/all), comma-separated indices, bare-integer rejection (CLI-02); wire into parser.py (Wave 2)
-- [ ] 11-03-houses-subcommand-PLAN.md — cmd_houses + parse_iso_utc with Python-3.10 'Z' shim; calls ketu.calculate_houses, prints 12 cusps + ASC + MC; CLI cusps match Python API across 3 systems × 3 locations (CLI-04, Wave 2)
-- [ ] 11-04-aspects-cmd-formatters-introspection-PLAN.md — cmd_aspects (resolves --harmonics, calls calculate_aspects, ALWAYS emits v1.0 'Aspect Timing Example' block) + emit_resolved_config to STDERR (CLI-06) + cmd_list_aspect_sets / cmd_list_house_systems (CLI-05); replaces all parser stubs (Wave 3)
-- [ ] 11-05-entry-point-repoint-legacy-removal-PLAN.md — pyproject.toml [project.scripts] ketu = ketu.cli:main + add ketu.cli to packages; ketu/__main__.py imports from ketu.cli; DELETE display.py:main(); remove tests/test_ketu.py:TestMain (CLI-01 closed, Wave 4)
-- [ ] 11-06-byte-identical-regression-PLAN.md — Capture v1.0 fixture from v1.0.0 git tag (J2000.0/UTC reference invocation), human-verify checkpoint before pinning, subprocess regression test python -m ketu --harmonics all aspects --date 2000-01-01T12:00:00Z == fixture bytes (CLI-03, Wave 5)
+- [ ] 11-03-houses-subcommand-PLAN.md — cmd_houses + parse_iso_utc with Python-3.10 'Z' shim (monkeypatch-forced shim test); calls ketu.calculate_houses, prints 12 cusps + ASC + MC; CLI cusps match Python API across 3 systems × 3 locations (CLI-04, Wave 3)
+- [ ] 11-04-aspects-cmd-formatters-introspection-PLAN.md — cmd_aspects (resolves --harmonics, delegates to display.print_aspects(jd, aspects=mask) — single source of truth for the v1.0 'º' format; ALWAYS emits 'Aspect Timing Example' block) + emit_resolved_config to STDERR (CLI-06; called from BOTH cmd_aspects AND cmd_houses) + cmd_list_aspect_sets / cmd_list_house_systems (CLI-05); replaces all parser stubs (Wave 4)
+- [ ] 11-05-entry-point-repoint-legacy-removal-PLAN.md — pyproject.toml [project.scripts] ketu = ketu.cli:main + add ketu.cli to packages; ketu/__main__.py imports from ketu.cli; DELETE display.py:main(); remove tests/test_ketu.py:TestMain (CLI-01 closed, Wave 5)
+- [ ] 11-06-byte-identical-regression-PLAN.md — Capture v1.0 fixture from v1.0.0 git tag (J2000.0/UTC reference invocation; stderr-empty guard during capture), human-verify checkpoint before pinning, subprocess regression test python -m ketu --harmonics all aspects --date 2000-01-01T12:00:00Z == fixture bytes (CLI-03, Wave 6)
 
 ### Phase 12: Release Preparation v1.1.0
 
@@ -190,7 +190,7 @@ Plans:
 | 8. Lilith Verification & Fix | v1.1 | 5/5 | ✓ Complete | 2026-05-06 |
 | 9. Configurable Aspects | v1.1 | 6/6 | ✓ Complete | 2026-05-07 |
 | 10. Houses Module | v1.1 | 6/6 | ✓ Complete | 2026-05-07 |
-| 11. CLI Refactor & Integration | v1.1 | 0/6 | Plans created | - |
+| 11. CLI Refactor & Integration | v1.1 | 6/6 | ✓ Complete | 2026-05-07 |
 | 12. Release Preparation v1.1.0 | v1.1 | 0/TBD | Not started | - |
 
 v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`.
@@ -203,3 +203,4 @@ v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`.
 *v1.0 roadmap archived to .planning/milestones/v1.0-ROADMAP.md*
 *Phase 10 plans created: 2026-05-07 (6 plans, 4 waves — Plan 01 unblocks all; Plans 02/03 parallel Wave 2; Plans 04/05 parallel Wave 3; Plan 06 closes Wave 4)*
 *Phase 10 executed: 2026-05-07 (6 plans, 4 waves — sidereal_time tightened to apparent GST, Placidus/Koch/Porphyry registered via SYSTEMS, polar fallback wired, calculate_house_cusps stub removed; 638 tests, 96.75% houses coverage, max ASC delta 0.858 arcmin vs Swiss Ephemeris — VERIFICATION.md PASSED 5/5)*
+*Phase 11 executed: 2026-05-07 (6 plans, 6 waves — `ketu/cli/` argparse subpackage; `--harmonics SPEC` validator; `ketu houses` subcommand; `--list-aspect-sets` / `--list-house-systems`; resolved-config header on stderr; legacy `display.py:main()` deleted; 724 tests green — VERIFICATION.md PASSED 6/6. Plan 11-06 pivoted to Option A: byte-stable forward contract (v1.1 self-pin) instead of v1.0 backward contract — Phases 8 + 9 deliberately diverged from v1.0 astronomy.)*
