@@ -17,6 +17,7 @@ from ketu.calculations import dd_to_dms
 from ketu.core import signs
 
 from ._dates import parse_iso_utc
+from .formatters import emit_resolved_config
 
 
 def _format_cusp(cusp_deg: float) -> str:
@@ -53,6 +54,9 @@ def cmd_houses(args: argparse.Namespace) -> int:
     int
         Process exit code: 0 on success, non-zero handled by caller.
     """
+    # Resolved-config header to STDERR (CLI-06; BLOCKER 2 fix — every
+    # CLI invocation echoes the resolved config, including `houses`).
+    emit_resolved_config(mask=None, preset_name=None, house_system=args.system)
     jd = parse_iso_utc(args.date)
     # Public API; registry dispatch happens inside calculate_houses.
     rec = calculate_houses(
