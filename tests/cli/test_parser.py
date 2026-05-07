@@ -1,0 +1,183 @@
+"""Unit tests for ketu.cli.parser — argparse tree shape and main() dispatch."""
+from __future__ import annotations
+
+import pytest
+
+from ketu.cli.parser import build_parser
+
+
+class TestBuildParser:
+    """build_parser() shape: prog, subparsers, top-level flags."""
+
+    def test_prog_is_ketu(self):
+        parser = build_parser()
+        assert parser.prog == "ketu"
+
+    def test_subparsers_present(self):
+        """aspects and houses subparsers are registered."""
+        parser = build_parser()
+        # Inspect via parse_args round-trip: --help on each must not crash.
+        with pytest.raises(SystemExit) as exc:
+            parser.parse_args(["aspects", "--help"])
+        assert exc.value.code == 0
+        with pytest.raises(SystemExit) as exc:
+            parser.parse_args(["houses", "--help"])
+        assert exc.value.code == 0
+
+    def test_aspects_requires_date(self, capsys):
+        """`ketu aspects` without --date is rejected with code 2."""
+        parser = build_parser()
+        with pytest.raises(SystemExit) as exc:
+            parser.parse_args(["aspects"])
+        assert exc.value.code == 2
+        err = capsys.readouterr().err
+        assert "--date" in err
+
+    def test_houses_requires_date_lat_lon(self, capsys):
+        """`ketu houses` without --date/--lat/--lon is rejected."""
+        parser = build_parser()
+        with pytest.raises(SystemExit) as exc:
+            parser.parse_args(["houses"])
+        assert exc.value.code == 2
+
+    def test_houses_system_default_is_placidus(self):
+        parser = build_parser()
+        args = parser.parse_args(
+            [
+                "houses",
+                "--date",
+                "2026-05-06T12:00:00Z",
+                "--lat",
+                "48.85",
+                "--lon",
+                "2.35",
+            ]
+        )
+        assert args.system == "placidus"
+
+    def test_houses_system_choices_enforced(self, capsys):
+        parser = build_parser()
+        with pytest.raises(SystemExit) as exc:
+            parser.parse_args(
+                [
+                    "houses",
+                    "--date",
+                    "2026-05-06T12:00:00Z",
+                    "--lat",
+                    "48.85",
+                    "--lon",
+                    "2.35",
+                    "--system",
+                    "regiomontanus",
+                ]
+            )
+        assert exc.value.code == 2
+        err = capsys.readouterr().err
+        assert "regiomontanus" in err or "invalid choice" in err
+
+    def test_houses_polar_fallback_default_is_raise(self):
+        parser = build_parser()
+        args = parser.parse_args(
+            [
+                "houses",
+                "--date",
+                "2026-05-06T12:00:00Z",
+                "--lat",
+                "48.85",
+                "--lon",
+                "2.35",
+            ]
+        )
+        assert args.polar_fallback == "raise"
+
+    def test_top_level_harmonics_present(self):
+        parser = build_parser()
+        # Sub-position; top-level flag goes BEFORE the subcommand.
+        args = parser.parse_args(
+            [
+                "--harmonics",
+                "classical",
+                "aspects",
+                "--date",
+                "2026-05-06T12:00:00Z",
+            ]
+        )
+        # str passthrough — Plan 11-02 swaps validator
+        assert args.harmonics == "classical"
+
+    def test_harmonics_default_is_none(self):
+        """Default --harmonics value is None (resolved to CLASSICAL by aspects_cmd)."""
+        parser = build_parser()
+        args = parser.parse_args(
+            ["aspects", "--date", "2026-05-06T12:00:00Z"]
+        )
+        assert args.harmonics is None
+
+    def test_introspection_flags_default_false(self):
+        parser = build_parser()
+        # Need a subcommand or main() will print help; here we just check
+        # the namespace shape after a successful parse.
+        args = parser.parse_args(
+            ["aspects", "--date", "2026-05-06T12:00:00Z"]
+        )
+        assert args.list_aspect_sets is False
+        assert args.list_house_systems is False
+
+
+class TestMainDispatch:
+    """main(argv) entry point — short-circuit / dispatch / fallback."""
+
+    def test_main_no_args_prints_help_returns_0(self, invoke_main, capsys):
+        """`ketu` with no args prints help to stdout and returns 0
+        (does NOT crash with AttributeError on missing args.func — Pitfall 4
+        in research)."""
+        rc = invoke_main([])
+        assert rc == 0
+        captured = capsys.readouterr()
+        assert "usage:" in captured.out.lower() or "ketu" in captured.out
+
+    def test_main_list_aspect_sets_short_circuits(self, invoke_main, capsys):
+        """--list-aspect-sets short-circuits before subcommand dispatch."""
+        rc = invoke_main(["--list-aspect-sets"])
+        assert rc == 0
+        # Stub message lives on stderr per Plan 11-01; Plan 11-04 replaces with real content.
+        err = capsys.readouterr().err
+        assert "list-aspect-sets" in err.lower() or "Plan 11-04" in err
+
+    def test_main_list_house_systems_short_circuits(self, invoke_main, capsys):
+        rc = invoke_main(["--list-house-systems"])
+        assert rc == 0
+        err = capsys.readouterr().err
+        assert "list-house-systems" in err.lower() or "Plan 11-04" in err
+
+    def test_main_aspects_dispatches_to_func(self, invoke_main, capsys):
+        """Stub aspects dispatcher returns 0 and writes its marker to stderr."""
+        rc = invoke_main(["aspects", "--date", "2026-05-06T12:00:00Z"])
+        assert rc == 0
+        err = capsys.readouterr().err
+        # Plan 11-04 will replace this with real output; here we just
+        # confirm dispatch reached the stub.
+        assert "Plan 11-04" in err or "not yet implemented" in err
+
+    def test_main_houses_dispatches_to_func(self, invoke_main, capsys):
+        """Stub houses dispatcher returns 0 and writes its marker to stderr."""
+        rc = invoke_main(
+            [
+                "houses",
+                "--date",
+                "2026-05-06T12:00:00Z",
+                "--lat",
+                "48.85",
+                "--lon",
+                "2.35",
+            ]
+        )
+        assert rc == 0
+        err = capsys.readouterr().err
+        assert "Plan 11-03" in err or "not yet implemented" in err
+
+    def test_main_unknown_subcommand_rejected(self, invoke_main, capsys):
+        """Unknown subcommand → argparse SystemExit(2)."""
+        with pytest.raises(SystemExit) as exc:
+            invoke_main(["nonexistent-subcommand"])
+        assert exc.value.code == 2
