@@ -98,11 +98,141 @@ silently retain the v1.0 (incorrect) values.
   via `pip install -e .[test] && pytest tests/test_lilith_cross_check.py`).
 - `CHANGELOG.md` v1.1.0 entry -- short release-notes summary.
 
-### Other v1.0 -> v1.1 Changes
+### CLI Default Aspect Set (Phase 9 / ASP-04)
 
-Other v1.1 work (configurable aspects, houses module, CLI refactor)
-is backward-compatible. See per-feature documentation and the
-`CHANGELOG.md` v1.1.0 entry for non-Lilith additions.
+In v1.0, the `ketu` CLI emitted **14 aspects per body pair** by
+default (the EXTENDED preset: conjunction, opposition, trine, square,
+sextile, quincunx, semisextile, semisquare, sesquisquare, quintile,
+biquintile, novile, septile, decile).
+
+In v1.1, the CLI default is **CLASSICAL: the 5 major aspects only**
+(conjunction, opposition, trine, square, sextile). Scripts that
+parsed v1.0 CLI output will receive approximately 64% fewer aspect
+rows per body pair.
+
+The `core.aspects` array is **unchanged** (length-14, append-only —
+verified by the Phase 9 invariant test in
+`tests/test_aspects_invariants.py`). Positional indexing into the
+array still works. Only the *default selection* the CLI applies on
+top of the array changed.
+
+**Migration recipe (CLI users)**
+
+```bash
+# Restore v1.0 default behavior (14 aspects):
+ketu --harmonics extended aspects --date 2026-05-07T12:00:00Z
+
+# Discover available presets:
+ketu --list-aspect-sets
+
+# Pin to v1.0 instead of migrating:
+pip install 'ketu<1.1'
+```
+
+**Migration recipe (Python API users)**
+
+```python
+# v1.0 implicit: calculate_aspects emitted all 14 harmonics
+from ketu.aspects import calculate_aspects
+result = calculate_aspects(jd, bodies)  # got 14 aspects
+
+# v1.1 default: 5 majors only. Restore v1.0 behavior explicitly:
+from ketu.aspects import calculate_aspects
+from ketu.aspects.presets import EXTENDED
+result = calculate_aspects(jd, bodies, aspects=EXTENDED)  # 14 aspects
+```
+
+### Kala / Downstream Adapter Migration (Phase 9 / ASP-04)
+
+If you maintain a downstream adapter that consumes Ketu's aspect
+output (Kala's `KetuDataAdapter`, custom scripts, ML feature
+pipelines), check whether your code depends on the **count** of
+aspect rows or on a specific *named* aspect (quincunx, semisextile,
+etc.) that only EXTENDED includes.
+
+In v1.0, downstream consumers received EXTENDED implicitly. In v1.1,
+they receive CLASSICAL by default — silently losing 9 rows per body
+pair without any error.
+
+**Recipe** — request EXTENDED explicitly at the API boundary:
+
+```python
+# In your adapter's Ketu call site:
+from ketu.aspects.presets import EXTENDED
+from ketu.aspects import calculate_aspects_batch
+
+aspects = calculate_aspects_batch(jds, bodies, aspects=EXTENDED)
+```
+
+The `core.aspects` array remains length-14 and append-only (Kala
+positional indexing unaffected). Cache keys include the aspect-set
+configuration hash, so explicit `aspects=EXTENDED` produces a fresh
+cache entry rather than serving stale CLASSICAL data.
+
+> **Note:** This guidance is for *downstream maintainers* of adapters
+> that depend on Ketu's CLI or Python API. It does not require any
+> change inside `ketu` itself. Sibling project Kala (separate
+> repository) handles its own upgrade independently.
+
+### Houses Module (Phase 10 / HOU-10)
+
+The v1.0 placeholder `ketu.ephemeris.calculate_house_cusps` was
+**removed** because it was broken: it returned an Equal House
+fallback regardless of the requested `house_system` argument and
+exposed an inconsistent return shape. The replacement is the new
+`ketu.houses` module.
+
+**Migration recipe (Python API)**
+
+```python
+# v1.0 (BROKEN, now removed - ImportError in v1.1):
+from ketu.ephemeris import calculate_house_cusps  # ImportError
+
+# v1.1:
+from ketu import calculate_houses, house_of, HOUSES_DTYPE
+houses = calculate_houses(jd, lat, lon, system='placidus')
+# houses is a HOUSES_DTYPE structured array with 12 cusps + ASC/MC/ARMC/Vertex,
+# vectorised over the broadcast of (jd, lat, lon).
+ascendant = houses['cusps'][..., 0]      # cusp 1 = ASC
+midheaven = houses['cusps'][..., 9]      # cusp 10 = MC
+which_house = house_of(planet_lon=200.0, cusps=houses['cusps'][0])  # 1..12
+```
+
+**Migration recipe (CLI)**
+
+```bash
+# Single-chart house cusps (UTC ISO 8601 date, not raw JD):
+ketu houses --date 2000-01-01T12:00:00Z --lat 48.85 --lon 2.35 --system placidus
+
+# Discover available house systems and polar-fallback hints:
+ketu --list-house-systems
+```
+
+Available systems in v1.1: `placidus`, `koch`, `porphyry` (the v1.0
+broken `equal_fallback` placeholder is gone; `equal` and `whole_sign`
+are not yet registered). High-latitude charts (|lat| > polar_circle(jd))
+raise `HighLatitudeError` by default; pass `--polar-fallback porphyry`
+(CLI) or `polar_fallback="porphyry"` (Python API) to fall back to
+Porphyry houses instead.
+
+### Resolved-Config stderr Header (Phase 11 / CLI-06)
+
+The v1.1 CLI prints a resolved-config header to **stderr** (not
+stdout) on every invocation. Example:
+
+```text
+# Ketu v1.1.0
+# Aspect set: classical (5 aspects: Conjunction 0°, Sextile 60°, Square 90°, Trine 120°, Opposition 180°)
+```
+
+Pipelines that read stdout only (`ketu ... | parser`) are
+**unaffected**. Pipelines that mix stdout and stderr (`ketu ... 2>&1`)
+will see two extra leading lines and may need to filter on `^# `.
+Suppress entirely with `2>/dev/null` if your pipeline cannot tolerate
+stderr output.
+
+For the houses subcommand, the second line is `# House system: <name>`
+instead of `# Aspect set: ...`.
 
 ---
 
