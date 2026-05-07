@@ -16,27 +16,19 @@ import sys
 from typing import Sequence
 
 from .harmonics_spec import parse_harmonics_spec
+from .houses_cmd import cmd_houses
 
-# Stub dispatchers — real implementations land in Plans 11-03 (houses) and
-# 11-04 (aspects). For now they print a "not yet implemented" notice and
-# return 0; this lets Plan 11-01 ship a parseable, runnable skeleton with
-# tests pinning the dispatch shape. Each plan that lands a real
-# implementation imports its dispatcher and re-points set_defaults.
+# Stub dispatchers — real implementations land in Plan 11-04 (aspects +
+# introspection). Plan 11-03 wired the real ``cmd_houses``; the houses
+# stub is gone. For now the remaining stubs print a "not yet implemented"
+# notice and return 0; tests pinning the dispatch shape continue to assert
+# on the Plan-N marker as breadcrumbs.
 
 
 def _stub_aspects(args: argparse.Namespace) -> int:
     """Stub dispatcher for the ``aspects`` subcommand (replaced in Plan 11-04)."""
     print(
         "ketu aspects: not yet implemented (wired in Plan 11-04)",
-        file=sys.stderr,
-    )
-    return 0
-
-
-def _stub_houses(args: argparse.Namespace) -> int:
-    """Stub dispatcher for the ``houses`` subcommand (replaced in Plan 11-03)."""
-    print(
-        "ketu houses: not yet implemented (wired in Plan 11-03)",
         file=sys.stderr,
     )
     return 0
@@ -178,7 +170,7 @@ def build_parser() -> argparse.ArgumentParser:
             "offending elements."
         ),
     )
-    p_houses.set_defaults(func=_stub_houses)
+    p_houses.set_defaults(func=cmd_houses)
 
     return parser
 

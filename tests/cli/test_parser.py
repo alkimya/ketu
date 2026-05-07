@@ -164,7 +164,7 @@ class TestMainDispatch:
         assert "Plan 11-04" in err or "not yet implemented" in err
 
     def test_main_houses_dispatches_to_func(self, invoke_main, capsys):
-        """Stub houses dispatcher returns 0 and writes its marker to stderr."""
+        """Real houses dispatcher (Plan 11-03) returns 0 and prints cusps to stdout."""
         rc = invoke_main(
             [
                 "houses",
@@ -177,8 +177,12 @@ class TestMainDispatch:
             ]
         )
         assert rc == 0
-        err = capsys.readouterr().err
-        assert "Plan 11-03" in err or "not yet implemented" in err
+        captured = capsys.readouterr()
+        # Plan 11-03 wired cmd_houses: real cusps go to stdout; "House Cusps"
+        # header + 12 cusps + ASC/MC are the load-bearing markers.
+        assert "House Cusps" in captured.out
+        assert "ASC:" in captured.out
+        assert "MC :" in captured.out
 
     def test_main_unknown_subcommand_rejected(self, invoke_main, capsys):
         """Unknown subcommand → argparse SystemExit(2)."""
