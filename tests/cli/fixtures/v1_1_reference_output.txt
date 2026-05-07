@@ -1,0 +1,52 @@
+
+
+------------- Bodies Positions -------------
+Sun       : Capricorn      10º22'22"
+Moon      : Scorpio        12º48'56"
+Mercury   : Capricorn       1º53'44"
+Venus     : Sagittarius     1º34' 7"
+Mars      : Aquarius       27º57'30"
+Jupiter   : Aries          25º16'54"
+Saturn    : Taurus         10º25'42", R
+Uranus    : Aquarius       14º47'59"
+Neptune   : Aquarius        3º11' 8"
+Pluto     : Sagittarius    11º26'56"
+Rahu      : Leo             5º 7'41", R
+Ketu      : Aquarius        5º 7' 3", R
+Lilith    : Sagittarius    23º27'41"
+
+
+------------- Bodies Aspects -------------
+Sun     - Moon        : Sextile       2º26'34"
+Sun     - Mercury     : Conjunction   8º28'37"
+Sun     - Venus       : Novile        1º11'45"
+Sun     - Jupiter     : Tredecile     3º 5'27"
+Sun     - Saturn      : Trine        -1º56'39"
+Sun     - Pluto       : Semi-sextile  1º 4'33"
+Moon    - Mars        : Tredecile     2º51'25"
+Moon    - Jupiter     : Quadrinovile -3º32' 1"
+Moon    - Saturn      : Opposition    2º23'14"
+Moon    - Uranus      : Square       -2º 0'57"
+Moon    - Neptune     : Binovile     -1º37'48"
+Moon    - Lilith      : Novile       -1º21'15"
+Mercury - Venus       : Semi-sextile -1º40'23"
+Mercury - Rahu        : Quincunx      3º13'56"
+Venus   - Mars        : Square        3º36'36"
+Venus   - Jupiter     : Biquintile    0º17'13"
+Venus   - Saturn      : Quadrinovile  1º 8'25"
+Venus   - Uranus      : Quintile     -2º46' 8"
+Venus   - Neptune     : Sextile      -2º22'59"
+Mars    - Jupiter     : Sextile       2º40'36"
+Mars    - Saturn      : Quintile     -1º31'48"
+Jupiter - Uranus      : Quintile      1º31' 4"
+Jupiter - Ketu        : Binovile     -1º50' 8"
+Jupiter - Lilith      : Trine        -2º10'46"
+Saturn  - Pluto       : Quincunx      1º 1'13"
+Neptune - Rahu        : Opposition    1º56'32"
+Neptune - Ketu        : Conjunction   1º55'54"
+Neptune - Lilith      : Novile        0º16'33"
+
+------------- Aspect Timing Example -------------
+Sun Trine Moon at 1999-12-18 10:24:22+00:00
+Sun Sextile Moon at 2000-01-12 01:41:15+00:00
+Sun Square Moon at 2000-01-14 13:11:43+00:00
