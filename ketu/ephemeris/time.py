@@ -303,37 +303,67 @@ def equation_of_time(jd: float) -> float:
 
 
 def sidereal_time(jd: float, longitude: float = 0.0) -> float:
-    """Calculate Greenwich Mean Sidereal Time (GMST) or Local Sidereal Time
+    """Calculate apparent Greenwich Sidereal Time (GAST) or Local Sidereal Time.
 
     Parameters
     ----------
     jd : float
-        Julian Date in UT
+        Julian Date in UT.
     longitude : float, optional
         Observer's longitude in degrees (east positive).
-        If 0, returns GMST. (default: 0.0)
+        If 0, returns apparent GST. (default: 0.0)
 
     Returns
     -------
     float
-        Sidereal time in degrees (0-360)
+        Apparent sidereal time in degrees (0-360).
+
+    Notes
+    -----
+    Returns **apparent** sidereal time (GMST + equation of equinoxes), the
+    convention consumed by Swiss Ephemeris house functions
+    (``swe.houses``, ``swe.houses_armc``). Mean GMST is computed from the
+    IAU 1982 polynomial (Meeus 2nd ed. eq. 12.4); the equation of
+    equinoxes correction (Meeus eq. 12.6) is then applied:
+
+        EE = nut_lon × cos(eps_mean)
+        GAST = GMST + EE
+
+    Both ``nutation`` (4-term truncated series) and ``mean_obliquity``
+    (IAU 2006) come from :mod:`ketu.ephemeris.coordinates`. Empirical
+    accuracy versus ``swe.sidtime(jd) * 15.0``: max |drift| = 2.05 arcsec
+    over 1900-2100 sample range; max ASC error at lat=49° (Placidus,
+    via ``swe.houses_armc`` isolation) = 6.4 arcsec, well within
+    HOU-01's <60 arcsec spec. Detailed audit:
+    ``.planning/phases/10-houses-module/lst-audit-report.md``. Test
+    contract: ``tests/houses/test_lst_obliquity_precision.py``.
     """
+    # Local import: avoid circular import at module load (coordinates
+    # does not import time, but the dependency direction is now
+    # explicit — coordinates is foundational, time depends on it).
+    from .coordinates import mean_obliquity, nutation
+
     # Days and centuries since J2000.0
     d = jd - 2451545.0
     T = d / 36525.0
 
-    # GMST at 0h UT
-    gmst = 280.46061837 + 360.98564736629 * d + 0.000387933 * T**2 - T**3 / 38710000.0
+    # Mean GMST at 0h UT (IAU 1982 / Meeus 2nd ed. eq. 12.4)
+    gmst_mean = 280.46061837 + 360.98564736629 * d + 0.000387933 * T**2 - T**3 / 38710000.0
 
-    # Normalize to 0-360 degrees
-    gmst = gmst % 360.0
-    if gmst < 0:
-        gmst += 360.0
+    # Equation of equinoxes (Meeus eq. 12.6): EE = nut_lon × cos(eps_mean)
+    nut_lon, _ = nutation(jd)
+    eps_mean = float(mean_obliquity(jd))
+    ee_deg = nut_lon * np.cos(np.deg2rad(eps_mean))
+
+    # Apparent GMST (= GAST) = mean + equation of equinoxes
+    gst = (gmst_mean + ee_deg) % 360.0
+    if gst < 0:
+        gst += 360.0
 
     # Add longitude for local sidereal time
-    lst = (gmst + longitude) % 360.0
+    lst = (gst + longitude) % 360.0
 
-    return lst
+    return float(lst)
 
 
 def local_to_utc(dtime: datetime) -> datetime:
