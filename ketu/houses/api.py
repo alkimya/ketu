@@ -102,6 +102,7 @@ def calculate_houses(
         )
 
     sys_fn = get_system(system)  # raises ValueError on unknown system
+    system_lower = system.lower()
 
     # Broadcast inputs to common shape S.
     jd_a = np.asarray(jd, dtype=np.float64)
@@ -114,10 +115,15 @@ def calculate_houses(
     armc = np.asarray(ascmc["armc"], dtype=np.float64)
     eps = np.asarray(ascmc["eps"], dtype=np.float64)
 
-    # Detect polar elements (|lat| > polar_circle(jd)).
+    # Detect polar elements (|lat| > polar_circle(jd)). Porphyry is itself
+    # the polar fallback path — mathematically defined at all latitudes
+    # including 89° — so the polar gate does NOT apply when the user
+    # explicitly requested Porphyry. Skipping the gate here lets users
+    # call ``calculate_houses(jd, 80, 0, system='porphyry')`` directly
+    # without redundant ``polar_fallback='porphyry'`` boilerplate.
     polar_mask_raw = is_polar(lat_b, jd_b)
     polar_mask = np.asarray(polar_mask_raw, dtype=bool)
-    any_polar = bool(polar_mask.any())
+    any_polar = bool(polar_mask.any()) and system_lower != "porphyry"
 
     if any_polar and polar_fallback == "raise":
         # First offending element drives the diagnostic.
@@ -127,7 +133,7 @@ def calculate_houses(
         offending_lat = float(lat_b.reshape(-1)[first_idx])
         offending_polar_lat = float(polar_lats_arr.reshape(-1)[first_idx])
         raise HighLatitudeError(
-            offending_lat, system.lower(), offending_polar_lat
+            offending_lat, system_lower, offending_polar_lat
         )
 
     # Dispatch via SYSTEMS — no inline if/elif ladder anywhere
@@ -149,7 +155,7 @@ def calculate_houses(
     out["jd"] = jd_b
     out["lat"] = lat_b
     out["lon"] = lon_b
-    out["system"] = system.lower()
+    out["system"] = system_lower
     out["cusps"] = cusps
     out["asc"] = np.asarray(ascmc["asc"])
     out["mc"] = np.asarray(ascmc["mc"])

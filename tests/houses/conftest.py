@@ -31,12 +31,22 @@ Public surface (consumed by Plans 10-03, 10-04, 10-05, 10-06):
 
 from __future__ import annotations
 
-import json
-from pathlib import Path
-from typing import Any
-
+# IMPORTANT: numpy MUST be imported BEFORE swisseph. The pyswisseph C
+# extension links against numpy at load time; if coverage.py's import
+# hooks rewrite the numpy module mid-flight (e.g. when more test
+# modules load numpy paths via ``ketu.houses`` BEFORE this conftest is
+# reached), the swisseph extension and numpy can end up holding
+# different module instances of numpy's sentinels (``_NoValueType``),
+# manifesting as ``TypeError: float() argument must be ... not
+# '_NoValueType'`` from inside numpy's reductions. Pinning numpy first
+# (and BEFORE the importorskip below) keeps the import order stable
+# across coverage and non-coverage runs.
 import numpy as np
 import pytest
+
+import json  # noqa: E402  (after numpy import per ordering rationale above)
+from pathlib import Path  # noqa: E402
+from typing import Any  # noqa: E402
 
 # Module-level gate: when pysweph is absent, the line below raises
 # pytest.skip.Exception at collection time so the entire tests/houses/
