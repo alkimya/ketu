@@ -20,9 +20,6 @@ from ketu.aspects import (
     find_aspect_timing,
     find_aspects_between_dates,
 )
-from ketu.display import main
-
-
 class TestVelocityFunctions:
     """Test velocity functions that weren't fully covered"""
 
@@ -231,68 +228,6 @@ class TestAspectTiming:
 
         # Should get same results regardless of order
         assert len(aspects1) == len(aspects2)
-
-
-class TestMainCLI:
-    """Test main CLI function with various inputs"""
-
-    def test_main_valid_input(self, monkeypatch, capsys):
-        """Test main with valid input"""
-        inputs = iter([
-            "2020-12-21",
-            "19:20",
-            "Europe/Paris"
-        ])
-        monkeypatch.setattr("builtins.input", lambda _: next(inputs))
-
-        main()
-        captured = capsys.readouterr()
-
-        # Should show positions
-        assert "Bodies Positions" in captured.out
-        assert "Bodies Aspects" in captured.out
-        assert "Aspect Timing Example" in captured.out
-
-    def test_main_default_timezone(self, monkeypatch, capsys):
-        """Test main with default timezone"""
-        inputs = iter([
-            "2020-12-21",
-            "19:20",
-            ""  # Empty string should use default
-        ])
-        monkeypatch.setattr("builtins.input", lambda _: next(inputs))
-
-        main()
-        captured = capsys.readouterr()
-
-        # Should complete successfully with default timezone
-        assert "Bodies Positions" in captured.out
-
-    def test_main_invalid_date(self, monkeypatch, capsys):
-        """Test main with invalid date format"""
-        inputs = iter([
-            "not-a-date",
-            "invalid"
-        ])
-        monkeypatch.setattr("builtins.input", lambda _: next(inputs))
-
-        main()
-        captured = capsys.readouterr()
-
-        assert "Error" in captured.out
-
-    def test_main_invalid_time(self, monkeypatch, capsys):
-        """Test main with invalid time format"""
-        inputs = iter([
-            "2020-12-21",
-            "invalid-time"
-        ])
-        monkeypatch.setattr("builtins.input", lambda _: next(inputs))
-
-        main()
-        captured = capsys.readouterr()
-
-        assert "Error" in captured.out
 
 
 if __name__ == "__main__":

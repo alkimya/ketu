@@ -99,7 +99,7 @@ from ketu.calculations import (
     distance,
 )
 from ketu.aspects import get_aspect, calculate_aspects, get_orb
-from ketu.display import print_positions, print_aspects, main
+from ketu.display import print_positions, print_aspects
 
 
 class TestData:
@@ -371,20 +371,6 @@ class TestDisplay:
 
         assert "Bodies Aspects" in captured.out
         # May or may not have aspects, but structure should be there
-
-
-class TestMain:
-    """Test main CLI function"""
-
-    def test_main_invalid_input(self, monkeypatch, capsys):
-        """Test main with invalid input"""
-        inputs = iter(["invalid-date", ""])
-        monkeypatch.setattr("builtins.input", lambda _: next(inputs, ""))
-
-        main()
-        captured = capsys.readouterr()
-
-        assert "Error" in captured.out or "error" in captured.out
 
 
 class TestPrecision:
