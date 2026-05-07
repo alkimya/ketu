@@ -54,7 +54,7 @@ Changelog = "https://github.com/alkimya/ketu/blob/main/CHANGELOG.md"
 ketu = "ketu.display:main"
 
 [tool.setuptools]
-packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.cycles", "ketu.cache"]
+packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.cycles", "ketu.cache", "ketu.houses"]
 
 [tool.setuptools.package-data]
 ketu = ["py.typed"]
