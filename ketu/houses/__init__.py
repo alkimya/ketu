@@ -1,17 +1,13 @@
 """House system calculations.
 
-Public API surface (HOU-02 + HOU-05 of v1.1 milestone):
+Public API surface (HOU-02 + HOU-05 + HOU-07 of v1.1 milestone):
 
-- :func:`calculate_houses` — Compute house cusps for one or many charts.
+- :func:`calculate_houses` — Compute house cusps for one or many charts;
+  dispatches via :data:`SYSTEMS`, handles ``polar_fallback``.
 - :func:`house_of` — Map a planetary longitude to its 1..12 house index.
 - :data:`HOUSES_DTYPE` — Structured array layout for house results.
 - :class:`HighLatitudeError` — Raised at polar latitudes (default behavior).
 - :data:`SYSTEMS` — Dict of registered house-system implementations.
-
-Plans 10-04 (Placidus) and 10-05 (Koch + Porphyry) register their
-implementations into :data:`SYSTEMS`. Plan 10-06 wires the dispatch in
-:func:`calculate_houses` and the lookup in :func:`house_of`. Until those
-plans land, the public bodies stub-raise :class:`NotImplementedError`.
 
 Examples
 --------
@@ -22,99 +18,36 @@ See Also
 --------
 ketu.houses.registry.register : Decorator to add new systems.
 ketu.houses.ascmc.compute_ascmc : Closed-form ASC/MC/ARMC/Vertex.
+
+Notes
+-----
+The submodule imports below (``placidus``, ``koch``, ``porphyry``) trigger
+the ``@register`` decorator at module load time, populating :data:`SYSTEMS`.
+Without these imports, ``calculate_houses(system="placidus")`` would raise
+``ValueError("unknown house system 'placidus'")`` because no module would
+have loaded the decorators. Common-pitfall trap for registry patterns —
+keep these imports even if "unused" by IDE inspection.
 """
 from __future__ import annotations
 
-from typing import Literal, Union
-
-import numpy as np
-
+from .api import calculate_houses, house_of
 from .core import HOUSES_DTYPE, HighLatitudeError
 from .registry import SYSTEMS, get_system, register
+
+# Trigger registration of built-in systems by importing the modules.
+# Each module's @register decorator runs on import. DO NOT remove —
+# without these imports, SYSTEMS is empty at import time and every
+# calculate_houses call would fail.
+from . import placidus  # noqa: F401  registers 'placidus' in SYSTEMS
+from . import koch       # noqa: F401  registers 'koch' in SYSTEMS
+from . import porphyry   # noqa: F401  registers 'porphyry' in SYSTEMS
 
 __all__ = [
     "HOUSES_DTYPE",
     "HighLatitudeError",
     "SYSTEMS",
     "calculate_houses",
+    "get_system",
     "house_of",
+    "register",
 ]
-
-
-def calculate_houses(
-    jd: Union[float, np.ndarray],
-    lat: Union[float, np.ndarray],
-    lon: Union[float, np.ndarray],
-    system: str = "placidus",
-    polar_fallback: Literal["raise", "porphyry"] = "raise",
-) -> np.ndarray:
-    """Compute house cusps for one or many ``(jd, lat, lon)`` inputs.
-
-    .. note::
-        STUB IMPLEMENTATION — full body lands in Plan 10-06 (integration).
-        Plans 10-04 (Placidus) and 10-05 (Koch + Porphyry) register their
-        implementations into :data:`SYSTEMS`; Plan 10-06 wires this dispatch
-        and ASC/MC/ARMC/Vertex glue from :mod:`ketu.houses.ascmc`.
-
-    Parameters
-    ----------
-    jd : float or np.ndarray
-        Julian Date, UT.
-    lat : float or np.ndarray
-        Geographic latitude (degrees).
-    lon : float or np.ndarray
-        Geographic longitude (degrees, east-positive).
-    system : str, default "placidus"
-        Registered house system name; case-insensitive.
-    polar_fallback : {"raise", "porphyry"}, default "raise"
-        Behavior when ``|lat|`` exceeds the polar circle for ``system``.
-        ``"raise"`` raises :class:`HighLatitudeError`; ``"porphyry"`` falls
-        back to the Porphyry algorithm (Plan 10-05).
-
-    Returns
-    -------
-    np.ndarray
-        Structured array of :data:`HOUSES_DTYPE`, leading shape preserved
-        from broadcast of inputs.
-
-    Raises
-    ------
-    NotImplementedError
-        Always, until Plan 10-06 lands.
-    """
-    raise NotImplementedError(
-        "calculate_houses is wired in Plan 10-06; "
-        "use ketu.houses.SYSTEMS[system] directly until then "
-        "(after Plans 10-04 / 10-05 register implementations)."
-    )
-
-
-def house_of(
-    planet_lon: Union[float, np.ndarray],
-    cusps: np.ndarray,
-) -> np.ndarray:
-    """Return the 1-indexed house containing each planetary longitude.
-
-    .. note::
-        STUB IMPLEMENTATION — full body lands in Plan 10-06.
-
-    Parameters
-    ----------
-    planet_lon : float or np.ndarray
-        Planetary ecliptic longitude(s) in degrees, ``[0, 360)``.
-    cusps : np.ndarray
-        12-element cusp array (or batched ``(N, 12)``) in degrees.
-
-    Returns
-    -------
-    np.ndarray
-        1-indexed house number(s) in ``{1, ..., 12}``.
-
-    Raises
-    ------
-    NotImplementedError
-        Always, until Plan 10-06 lands.
-    """
-    raise NotImplementedError(
-        "house_of is wired in Plan 10-06."
-    )
