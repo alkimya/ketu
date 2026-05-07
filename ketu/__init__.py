@@ -57,6 +57,13 @@ __author__ = "Loc Cosnier"
 __license__ = "MIT"
 
 from ketu.core import bodies, aspects, signs
+from ketu.houses import (
+    HOUSES_DTYPE,
+    HighLatitudeError,
+    SYSTEMS as HOUSE_SYSTEMS,  # rename to avoid clobbering future "SYSTEMS" globals
+    calculate_houses,
+    house_of,
+)
 
 __all__ = [
     "__version__",
@@ -65,4 +72,9 @@ __all__ = [
     "bodies",
     "aspects",
     "signs",
+    "HOUSES_DTYPE",
+    "HighLatitudeError",
+    "HOUSE_SYSTEMS",
+    "calculate_houses",
+    "house_of",
 ]
