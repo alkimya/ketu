@@ -9,6 +9,26 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ## [1.1.0] - UNRELEASED
 
+### BREAKING / Numerical Behavior Changes (Summary)
+
+This release contains three user-visible behavior changes from v1.0.
+Read each in detail in the dedicated sub-sections below and consult
+`UPGRADING.md` for migration recipes.
+
+1. **CLI default aspect set: EXTENDED (14) -> CLASSICAL (5).** The
+   `ketu` CLI now emits 5 major aspects by default (Conjunction,
+   Sextile, Square, Trine, Opposition). Restore v1.0 behavior with
+   `ketu --harmonics extended`. (Phase 9 / ASP-04)
+2. **Lilith (Mean Apogee) longitude formula corrected.** Values now
+   match Swiss Ephemeris `SE_MEAN_APOG` to better than 0.01 deg. v1.0
+   values were approximately 180 deg off on every date. Recompute
+   any cached Lilith data. (Phase 8 / LIL-03)
+3. **Houses module replaces broken `calculate_house_cusps`.** The v1.0
+   `ketu.ephemeris.calculate_house_cusps` always returned an Equal
+   House fallback regardless of system; it has been removed. Use the
+   new `ketu.calculate_houses(...)` API or the `ketu houses` CLI
+   subcommand. (Phase 10 / HOU-10)
+
 ### Removed (BREAKING)
 
 - **`ketu.ephemeris.calculate_house_cusps`** — broken equal-house
@@ -21,6 +41,20 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   system='placidus' | 'koch' | 'porphyry')` from the new `ketu.houses`
   module instead — vectorised, registry-extensible, with explicit
   `polar_fallback={"raise","porphyry"}` semantics. (HOU-10)
+
+### Changed (BREAKING)
+
+- **CLI default aspect set is now CLASSICAL (5 aspects) instead of
+  the implicit EXTENDED (14 aspects) of v1.0.** The new default
+  surfaces only the 5 major aspects (Conjunction, Opposition, Trine,
+  Square, Sextile). v1.0 emitted all 14 harmonics by default; users
+  who scraped CLI stdout will see approximately 64% fewer aspect
+  rows per body pair. The `core.aspects` array remains length-14
+  append-only (Kala positional indexing is unaffected — verified by
+  the Phase 9 invariant test); only the *default selection* changed.
+  Restore v1.0 behavior with `ketu --harmonics extended`. List
+  available presets with `ketu --list-aspect-sets`. (Phase 9 /
+  ASP-04, ASP-08)
 
 ### Added
 
@@ -86,6 +120,37 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   isolation test: `pip install ketu` MUST NOT pull `pysweph`;
   `pip install -e .[test]` MUST. See `docs/LILITH_DEFINITION.md`
   "AGPL and Test-Only Dependency Note" section.
+
+### Added
+
+- **CLI refactor (argparse-based)** — `ketu` is now an argparse
+  multi-subcommand application:
+  - `ketu aspects --date <ISO-UTC>` — aspect snapshot for a single
+    instant (replaces the legacy interactive prompt).
+  - `ketu houses --date <ISO-UTC> --lat <lat> --lon <lon>
+    --system <name>` — house cusps for a single chart with optional
+    `--polar-fallback {raise,porphyry}`.
+  - `--harmonics {classical,traditional,extended,all,<comma-list>}` —
+    select the aspect preset or pass an arbitrary comma-separated list
+    of harmonic indices (e.g. `--harmonics 0,4,7,9,13`).
+  - `ketu --list-aspect-sets` — print available aspect presets with
+    their angles, then exit. Works with or without a subcommand.
+  - `ketu --list-house-systems` — print available house systems with
+    their polar-fallback hint, then exit. Works with or without a
+    subcommand.
+  - **Resolved-config stderr header** — every invocation emits a
+    `# Ketu vX.Y.Z` line plus, when applicable, a `# Aspect set: <name>
+    (N aspects: ...)` and/or `# House system: <name>` line to
+    **stderr** (not stdout). Pipelines that consume stdout only are
+    unaffected; pipelines that mix stdout and stderr should suppress
+    with `2>/dev/null` or filter lines starting with `#`.
+- **Forward byte-stability regression** — new test
+  `tests/cli/test_v1_1_reference_byte_stable.py` pins the v1.1
+  default `ketu --harmonics all aspects --date 2000-01-01T12:00:00Z`
+  output (sha256 `067fa67672d2e3c727a30612364e4b9bb1699401768f4a8fc4819a0e951785ed`,
+  fixture at `tests/cli/fixtures/v1_1_reference_output.txt`) — catches
+  unintended format/encoding/header drift in future releases.
+  (Phase 11 / CLI-03)
 
 ### Migration
 

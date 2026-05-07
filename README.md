@@ -10,17 +10,35 @@ This library was originally designed to generate biodynamic calendars and time s
 
 ![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
 
-## What's New in v1.0.0
+## What's New in v1.1.0
 
-**Major release with breaking changes. See [UPGRADING.md](UPGRADING.md) and [CHANGELOG.md](CHANGELOG.md) for migration guide.**
+Ketu 1.1.0 is a feature release with **two breaking behavior changes**
+from v1.0 (Lilith longitudes shift by approximately 180 deg, CLI
+default emits 5 majors instead of 14 harmonics). Migration is
+straightforward — see [UPGRADING.md](UPGRADING.md) for recipes.
 
-- **Pure calculation library** - NumPy-only dependency, no visualization or export modules
-- **Correctness fixes** - Cache operator precedence bug, aspect vectorization non-determinism, Moon velocity wrapping
-- **Explicit API** - Velocity functions renamed (`vlong()` → `long_velocity()`), pandas dependency removed
-- **Type hints everywhere** - mypy strict mode compliance
-- **Comprehensive docstrings** - NumPy-style documentation with Examples sections
-- **98% test coverage** - 408 tests across all modules
-- **Performance improvements** - Vectorized batch ephemeris calculations
+- **Configurable aspects** — choose between `CLASSICAL` (5 majors,
+  default), `TRADITIONAL` (7), `EXTENDED` (14), or `ALL`, via the
+  `--harmonics` CLI flag or the `aspects=` parameter on the Python
+  API. Discover presets with `ketu --list-aspect-sets`.
+- **Houses module** — `ketu.calculate_houses(jd, lat, lon, system)`
+  with Placidus, Koch, and Porphyry systems, vectorised over the
+  broadcast of `(jd, lat, lon)`, with `polar_fallback` semantics for
+  high-latitude charts. CLI:
+  `ketu houses --system placidus --lat 48.85 --lon 2.35 --date 2026-05-07T12:00:00Z`.
+  List systems with `ketu --list-house-systems`.
+- **Lilith fix** — Mean Apogee longitudes now match Swiss Ephemeris
+  `SE_MEAN_APOG` to better than 0.01 deg (was approximately 180 deg
+  off in v1.0). See [UPGRADING.md](UPGRADING.md) for the per-date
+  shift table.
+- **CLI refactor** — argparse-based, `ketu aspects` and `ketu houses`
+  subcommands, resolved-config header on stderr, forward
+  byte-stability regression test pinning v1.1 default output.
+- **Test-only Swiss Ephemeris cross-check** —
+  `pip install ketu[test]` pulls `pysweph>=2.10.3.6` for harness
+  validation; runtime install (`pip install ketu`) stays pure-NumPy.
+
+For the full list of changes see [CHANGELOG.md](CHANGELOG.md).
 
 ## Features
 
