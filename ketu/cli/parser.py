@@ -15,6 +15,8 @@ import argparse
 import sys
 from typing import Sequence
 
+from .harmonics_spec import parse_harmonics_spec
+
 # Stub dispatchers — real implementations land in Plans 11-03 (houses) and
 # 11-04 (aspects). For now they print a "not yet implemented" notice and
 # return 0; this lets Plan 11-01 ship a parseable, runnable skeleton with
@@ -88,13 +90,12 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
 
-    # Top-level --harmonics SPEC. Plan 11-01 declares it with type=str so
-    # the parser is constructible; Plan 11-02 swaps in parse_harmonics_spec
+    # Top-level --harmonics SPEC. Plan 11-02 wires type=parse_harmonics_spec
     # which returns a length-14 np.bool_ mask. Default=None means "use the
     # CLASSICAL preset" (resolved by aspects_cmd in Plan 11-04).
     parser.add_argument(
         "--harmonics",
-        type=str,
+        type=parse_harmonics_spec,
         default=None,
         metavar="SPEC",
         help=(
