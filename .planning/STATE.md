@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: executing
-last_updated: "2026-05-08T15:28:03.952Z"
+last_updated: "2026-05-08T17:51:31.249Z"
 last_activity: 2026-05-08
 progress:
   total_phases: 1
   completed_phases: 0
   total_plans: 5
-  completed_plans: 3
-  percent: 60
+  completed_plans: 4
+  percent: 80
 ---
 
 # Project State
@@ -25,7 +25,7 @@ See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 ## Current Position
 
 Phase: 13 (doc-gates-and-ci-foundation) — EXECUTING
-Plan: 4 of 5
+Plan: 5 of 5
 Status: Ready to execute
 Progress: [░░░░░░░░░░] 0/8 v1.2 phases complete (0/37 REQs)
 Last activity: 2026-05-08
