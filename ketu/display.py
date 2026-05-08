@@ -28,12 +28,12 @@ if TYPE_CHECKING:
 
 
 def print_positions(jdate: float) -> None:
-    """Print formatted positions of all bodies for a given date
+    """Print formatted positions of all bodies for a given date.
 
     Parameters
     ----------
     jdate : float
-        Julian Date
+        Julian Date.
     """
     print("\n")
     print("------------- Bodies Positions -------------")
