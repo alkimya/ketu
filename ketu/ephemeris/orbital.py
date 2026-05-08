@@ -643,11 +643,13 @@ def get_lilith_position(jd: float) -> float:
     float
         Longitude in degrees in [0, 360).
 
-    See Also
-    --------
-    docs/LILITH_DEFINITION.md : Frame, formula, tolerance, history.
-    tests/test_lilith_cross_check.py : Regression harness vs. Swiss
-        Ephemeris ``SE_MEAN_APOG``.
+    Notes
+    -----
+    Reference documents:
+
+    - ``docs/LILITH_DEFINITION.md`` — Frame, formula, tolerance, history.
+    - ``tests/test_lilith_cross_check.py`` — Regression harness vs. Swiss
+      Ephemeris ``SE_MEAN_APOG``.
     """
     # Days since J2000.0
     d = jd - 2451545.0
