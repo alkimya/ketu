@@ -1,0 +1,96 @@
+"""Core types for the charts subpackage.
+
+Defines :data:`CHART_DTYPE`, the structured-array layout for a fully-resolved
+natal chart (positions + ASC/MC/ARMC/Vertex + cusps + aspects). The dtype is
+the contractual heart of Phase 14: every downstream consumer (synastry,
+composite, solar return, Arabic Parts) reads charts via this layout.
+
+Notes
+-----
+
+Why a structured array?
+~~~~~~~~~~~~~~~~~~~~~~~
+
+The ``ketu/charts`` subpackage publishes :data:`CHART_DTYPE` as a NumPy
+structured dtype rather than a Python ``@dataclass`` or a flat
+``dict[str, np.ndarray]``. Four reasons drove the choice (Phase 14
+Option A, locked in PROJECT.md and CONTEXT.md D-01):
+
+1. **ML-interop, NumPy-first.** Kala (the downstream ML consumer) indexes
+   each chart positionally — ``chart["body_lons"][i]`` for body ``i`` of
+   the canonical 13-body axis. The axis order is FROZEN by D-08 so that
+   adapters never need to rebuild mappings.
+2. **Batchability.** A single ``np.empty(S, dtype=CHART_DTYPE)`` allocation
+   carries S charts as one contiguous buffer. Compared to S Python
+   dataclass instances, allocation is roughly two orders of magnitude
+   faster and the result is natively ``np.save`` / ``np.load``-friendly,
+   ``np.concatenate``-friendly, and ``mmap``-friendly.
+3. **Self-describing.** Every chart carries its own ``(jd, lat, lon,
+   system)`` (D-04). Synastry (Phase 16), composite (Phase 17), solar
+   return (Phase 18), and Parts (Phase 19) consume charts without
+   transporting their context separately, eliminating a class of
+   "lost context" bugs.
+4. **Inline houses, not nested (D-03).** The houses portion of the chart
+   is inlined as scalar / short-subarray fields (``cusps``, ``asc``,
+   ``mc``, ``armc``, ``vertex``) rather than nested as a
+   ``("houses", HOUSES_DTYPE)`` field. The nesting would add an
+   indirection level for zero ML-interop benefit; values are scalars or
+   length-12 subarrays already.
+
+The same NumPy-first reasoning applies inside Ketu (CYCLE_DTYPE,
+HOUSES_DTYPE) — CHART_DTYPE follows the established precedent.
+"""
+from __future__ import annotations
+
+import numpy as np
+
+#: Structured dtype for a fully-resolved natal chart.
+#:
+#: Fields (14 total, ordered as metadata -> bodies -> houses -> aspects):
+#:     - ``jd`` (f8): Julian Date, UT.
+#:     - ``lat`` (f8): Geographic latitude, degrees.
+#:     - ``lon`` (f8): Geographic longitude (east-positive), degrees.
+#:     - ``system`` (U10): House system requested (e.g. "placidus").
+#:     - ``body_lons`` (f8, (13,)): Ecliptic longitudes per body, degrees [0, 360).
+#:     - ``body_lats`` (f8, (13,)): Ecliptic latitudes per body, degrees.
+#:     - ``body_speeds`` (f8, (13,)): Longitude speeds per body, deg/day.
+#:           Negative => retrograde.
+#:     - ``cusps`` (f8, (12,)): 12 house cusps, degrees [0, 360).
+#:     - ``asc`` (f8): Ascendant, degrees [0, 360).
+#:     - ``mc`` (f8): Medium Coeli, degrees [0, 360).
+#:     - ``armc`` (f8): Right Ascension of MC, degrees [0, 360).
+#:     - ``vertex`` (f8): Vertex, degrees [0, 360).
+#:     - ``aspect_matrix`` (i1, (13, 13)): canonical aspect index in
+#:           ``[0, 13]``; ``-1`` means "no aspect"; symmetric
+#:           (``matrix[i, j] == matrix[j, i]``); diagonal == ``-1``
+#:           (a body has no aspect with itself).
+#:     - ``aspect_orbs`` (f4, (13, 13)): orb in degrees; ``NaN`` means
+#:           "no orb" (matches ``aspect_matrix == -1``); symmetric;
+#:           diagonal == ``NaN``.
+#:
+#: Caller mask one-liner:
+#:     ``mask = chart["aspect_matrix"] >= 0``  # or
+#:     ``~np.isnan(chart["aspect_orbs"])``
+#:
+#: Body axis order (the (13,) axis) follows :data:`ketu.core.bodies`:
+#:     0=Sun, 1=Moon, 2=Mercury, 3=Venus, 4=Mars, 5=Jupiter, 6=Saturn,
+#:     7=Uranus, 8=Neptune, 9=Pluto, 10=Rahu, 11=Ketu, 12=Lilith.
+#:
+#: This axis is FROZEN by D-08 (Kala positional contract). Adding bodies
+#: (e.g. Chiron) is a v1.3 BREAKING change.
+CHART_DTYPE: np.dtype = np.dtype([
+    ("jd",            "f8"),
+    ("lat",           "f8"),
+    ("lon",           "f8"),
+    ("system",        "U10"),
+    ("body_lons",     "f8", (13,)),
+    ("body_lats",     "f8", (13,)),
+    ("body_speeds",   "f8", (13,)),
+    ("cusps",         "f8", (12,)),
+    ("asc",           "f8"),
+    ("mc",            "f8"),
+    ("armc",          "f8"),
+    ("vertex",        "f8"),
+    ("aspect_matrix", "i1", (13, 13)),
+    ("aspect_orbs",   "f4", (13, 13)),
+])
