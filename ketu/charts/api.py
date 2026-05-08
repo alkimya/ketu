@@ -16,23 +16,84 @@ lives only in :mod:`tests.charts.conftest` (test-only, AGPL boundary).
 
 Notes
 -----
-This module ships as a STUB in plan 14-01: :data:`CHART_DTYPE` is final
-but the function bodies raise :class:`NotImplementedError`. Plans 14-02
-and 14-03 wire ``compute_chart`` (positions + houses, then aspect_matrix);
-plan 14-04 wires ``is_day_chart``. The signatures and docstrings are
-final from plan 14-01 onward so the doc gates (``interrogate >= 95%``,
-``numpydoc validate``) stay green continuously while implementation
-lands wave by wave.
+Plan 14-02 wires ``compute_chart`` for positions + houses (with
+``aspect_matrix`` / ``aspect_orbs`` sentinel-initialised to ``-1`` /
+``NaN``); plan 14-03 will populate the dense aspect block; plan 14-04
+will wire ``is_day_chart``. Signatures and docstrings stay stable wave
+by wave so the doc gates (``interrogate >= 95%``, ``numpydoc validate``)
+remain green continuously.
 """
 from __future__ import annotations
 
-from typing import Literal, Union
+from typing import Literal, Union, cast
 
 import numpy as np
 
 from ketu.aspects.presets import AspectSetSpec
+from ketu.ephemeris.planets import calc_planet_position_batch
+from ketu.houses import calculate_houses
+
+from .core import CHART_DTYPE
 
 ArrayLike = Union[float, np.ndarray]
+
+#: Number of canonical bodies in the (13,) axis. Frozen per D-08 (Kala
+#: positional contract). Mirrors ``len(ketu.core.bodies)`` and the
+#: subarray shapes pinned in :data:`ketu.charts.CHART_DTYPE`.
+_BODY_COUNT: int = 13
+
+
+def _vectorised_body_properties(
+    jd_b: np.ndarray,
+) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
+    """Compute per-body lon/lat/speed for a broadcast jd array.
+
+    Loops over the 13 canonical bodies (NOT over the leading shape S).
+    Each iteration calls :func:`ketu.ephemeris.planets.calc_planet_position_batch`,
+    which is natively vectorised on jd; the total Python loop count is
+    therefore constant in S (Pitfall 1 from RESEARCH §5).
+
+    Parameters
+    ----------
+    jd_b : np.ndarray
+        Broadcast Julian Date array, leading shape ``S`` (any compatible
+        shape — 0-d, 1-d, 2-d, etc.).
+
+    Returns
+    -------
+    body_lons : np.ndarray
+        Shape ``S + (13,)``, dtype ``float64``. Ecliptic longitudes per
+        body, degrees in ``[0, 360)``.
+    body_lats : np.ndarray
+        Shape ``S + (13,)``, dtype ``float64``. Ecliptic latitudes per
+        body, degrees.
+    body_speeds : np.ndarray
+        Shape ``S + (13,)``, dtype ``float64``. Longitude speeds per
+        body, ``deg/day`` (negative => retrograde).
+
+    Notes
+    -----
+    The 13-body axis order follows :data:`ketu.core.bodies`
+    (Sun=0, ..., Lilith=12) and is FROZEN per decision D-08.
+    """
+    jd_flat = np.asarray(jd_b, dtype=np.float64).ravel()  # shape (M,)
+    n = jd_flat.size
+    lons = np.empty((n, _BODY_COUNT), dtype=np.float64)
+    lats = np.empty((n, _BODY_COUNT), dtype=np.float64)
+    speeds = np.empty((n, _BODY_COUNT), dtype=np.float64)
+    for body_id in range(_BODY_COUNT):
+        # calc_planet_position_batch returns (n, 6):
+        # [lon, lat, dist, lon_speed, lat_speed, dist_speed].
+        batch = calc_planet_position_batch(jd_flat, body_id)
+        lons[:, body_id] = batch[:, 0]
+        lats[:, body_id] = batch[:, 1]
+        speeds[:, body_id] = batch[:, 3]
+    tail_shape = jd_b.shape + (_BODY_COUNT,)
+    return (
+        lons.reshape(tail_shape),
+        lats.reshape(tail_shape),
+        speeds.reshape(tail_shape),
+    )
 
 
 def compute_chart(
@@ -65,12 +126,10 @@ def compute_chart(
         :func:`ketu.houses.registry.register` (currently
         ``"placidus"``, ``"koch"``, ``"porphyry"``). Case-insensitive.
     aspects : AspectSetSpec, default None
-        Aspect-set selector. ``None`` resolves to
-        :data:`ketu.aspects.presets.CLASSICAL` (5 majors), aligned with
-        the Phase 9 default (D-07). Accepts the same spec as
-        :func:`ketu.aspects.calculator.calculate_aspects_vectorized` —
-        preset name, sequence of names/indices, or a length-14 boolean
-        mask.
+        Aspect-set selector. Accepted for API stability and reserved for
+        plan 14-03 (D-10); currently ignored — see Notes. ``None``
+        resolves to :data:`ketu.aspects.presets.CLASSICAL` (5 majors)
+        once plan 14-03 wires the dense aspect computation (D-07).
     polar_fallback : {"raise", "porphyry"}, default "raise"
         Behaviour when ``|lat| > polar_circle(jd)`` (~ 66.56 deg). Passed
         through to :func:`ketu.houses.calculate_houses` (D-11). When
@@ -88,9 +147,6 @@ def compute_chart(
 
     Raises
     ------
-    NotImplementedError
-        Always, until plans 14-02 (positions + houses) and 14-03
-        (aspect_matrix) wire the implementation.
     HighLatitudeError
         When ``polar_fallback='raise'`` and any input exceeds the polar
         circle (propagated from :func:`ketu.houses.calculate_houses`).
@@ -105,6 +161,11 @@ def compute_chart(
     ``aspect_matrix`` / ``aspect_orbs``) is FROZEN per D-08. Indices
     follow :data:`ketu.core.bodies` order (Sun=0, ..., Lilith=12).
     Adding bodies is a v1.3 BREAKING change.
+
+    In this Plan-02 wiring, ``aspect_matrix`` and ``aspect_orbs`` are
+    sentinel-initialised (``-1`` / ``NaN``) and the ``aspects`` parameter
+    is accepted but not consumed. Plan 14-03 wires the dense aspect
+    computation and removes this note.
 
     Examples
     --------
@@ -127,10 +188,57 @@ def compute_chart(
     >>> charts.shape, charts["body_lons"].shape, charts["aspect_matrix"].shape  # doctest: +SKIP
     ((2,), (2, 13), (2, 13, 13))
     """
-    raise NotImplementedError(
-        "compute_chart will be wired in plan 14-02 (positions + houses) "
-        "and plan 14-03 (aspect_matrix)."
+    # ``aspects`` is accepted for API stability; plan 14-03 will consume it.
+    del aspects
+
+    # 1. Broadcast (mirror calculate_houses houses/api.py:107-114).
+    jd_a = np.asarray(jd, dtype=np.float64)
+    lat_a = np.asarray(lat, dtype=np.float64)
+    lon_a = np.asarray(lon, dtype=np.float64)
+    jd_b, lat_b, lon_b = np.broadcast_arrays(jd_a, lat_a, lon_a)
+    leading_shape = jd_b.shape
+
+    # 2. Houses (one call covers cusps + ASC/MC/ARMC/Vertex + polar dispatch).
+    #    Validation of ``polar_fallback`` and ``system`` happens here too —
+    #    not duplicated locally (PATTERNS § 3.1 "Skip" guidance).
+    houses = calculate_houses(
+        jd_b, lat_b, lon_b,
+        system=system, polar_fallback=polar_fallback,
     )
+
+    # 3. Body positions vectorised on S (loop bound to 13 bodies, constant
+    #    in S; see _vectorised_body_properties docstring).
+    body_lons, body_lats, body_speeds = _vectorised_body_properties(jd_b)
+
+    # 4. Aspect matrix: sentinel-initialised for now; plan 14-03 will
+    #    replace this with a real call to ``_build_aspect_matrix(...)``.
+    aspect_matrix = np.full(
+        leading_shape + (_BODY_COUNT, _BODY_COUNT),
+        -1, dtype=np.int8,
+    )
+    aspect_orbs = np.full(
+        leading_shape + (_BODY_COUNT, _BODY_COUNT),
+        np.nan, dtype=np.float32,
+    )
+
+    # 5. Assemble structured output.
+    out = np.empty(leading_shape, dtype=CHART_DTYPE)
+    out["jd"] = jd_b
+    out["lat"] = lat_b
+    out["lon"] = lon_b
+    out["system"] = system.lower()
+    out["body_lons"] = body_lons
+    out["body_lats"] = body_lats
+    out["body_speeds"] = body_speeds
+    out["cusps"] = houses["cusps"]
+    out["asc"] = houses["asc"]
+    out["mc"] = houses["mc"]
+    out["armc"] = houses["armc"]
+    out["vertex"] = houses["vertex"]
+    out["aspect_matrix"] = aspect_matrix
+    out["aspect_orbs"] = aspect_orbs
+
+    return cast(np.ndarray, out)
 
 
 def is_day_chart(
