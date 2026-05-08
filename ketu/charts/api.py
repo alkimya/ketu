@@ -16,12 +16,16 @@ lives only in :mod:`tests.charts.conftest` (test-only, AGPL boundary).
 
 Notes
 -----
-Plan 14-02 wires ``compute_chart`` for positions + houses (with
-``aspect_matrix`` / ``aspect_orbs`` sentinel-initialised to ``-1`` /
-``NaN``); plan 14-03 will populate the dense aspect block; plan 14-04
-will wire ``is_day_chart``. Signatures and docstrings stay stable wave
-by wave so the doc gates (``interrogate >= 95%``, ``numpydoc validate``)
-remain green continuously.
+``compute_chart`` projects intra-chart aspects into a dense ``(13, 13)``
+matrix via a Python loop over the leading shape ``S`` (D-16); each
+``S``-element call to
+:func:`ketu.aspects.calculator.calculate_aspects_vectorized` is itself
+vectorised over the 78 body-pair upper-triangle, so the Python
+overhead is constant in ``S``. ``is_day_chart`` exposes the
+sunrise-inclusive sect helper required by Phase 19 (Arabic Parts) with
+internal Porphyry polar fallback (D-15). Signatures and docstrings are
+stable across waves so the doc gates (``interrogate >= 95%``,
+``numpydoc validate``) remain green continuously.
 """
 from __future__ import annotations
 
@@ -29,6 +33,7 @@ from typing import Literal, Union, cast
 
 import numpy as np
 
+from ketu.aspects.calculator import calculate_aspects_vectorized
 from ketu.aspects.presets import AspectSetSpec
 from ketu.ephemeris.planets import calc_planet_position_batch
 from ketu.houses import calculate_houses, house_of
@@ -96,6 +101,90 @@ def _vectorised_body_properties(
     )
 
 
+def _build_aspect_matrix(
+    jd_b: np.ndarray,
+    aspects: AspectSetSpec,
+) -> tuple[np.ndarray, np.ndarray]:
+    """Build the dense ``(13, 13)`` aspect matrix and orb matrix over leading shape ``S``.
+
+    Loops over ``S`` in Python (per D-16); each ``S``-element call to
+    :func:`ketu.aspects.calculator.calculate_aspects_vectorized` is
+    natively vectorised over the 78 body-pair upper-triangle, so the
+    Python overhead is constant in ``S``. The diagonal stays at the
+    sentinel state (a body has no aspect with itself, D-06).
+
+    Parameters
+    ----------
+    jd_b : np.ndarray
+        Broadcast Julian Date array, leading shape ``S`` (any compatible
+        shape — 0-d, 1-d, 2-d, etc.). Scalar-jd traverses the loop via
+        ``np.ndindex(()) == [()]`` (RESEARCH Assumption A1).
+    aspects : AspectSetSpec
+        Pass-through to ``calculate_aspects_vectorized``. ``None``
+        resolves to :data:`ketu.aspects.presets.CLASSICAL` (5 majors,
+        per D-07). Accepts a preset name (``"classical"``,
+        ``"traditional"``, ``"extended"``), a list of aspect names or
+        canonical indices, or a length-14 boolean mask.
+
+    Returns
+    -------
+    aspect_matrix : np.ndarray
+        Shape ``S + (13, 13)``, dtype ``int8``. Each cell holds the
+        canonical aspect index ``i_asp`` in ``[0, 13]`` (per
+        :data:`ketu.core.aspects` ordering) when an aspect is in orb,
+        or ``-1`` for "no aspect" (D-06). Symmetric per D-17:
+        ``matrix[..., i, j] == matrix[..., j, i]``. Diagonal stays at
+        ``-1``.
+    aspect_orbs : np.ndarray
+        Shape ``S + (13, 13)``, dtype ``float32``. Orb in degrees when
+        an aspect is in orb, ``NaN`` for "no orb" (D-06). Symmetric per
+        D-17. Diagonal stays at ``NaN``.
+
+    Notes
+    -----
+    The Python loop over ``S`` is an explicit v1.2 trade-off (D-16):
+    ``compute_chart`` is typically called for ML batches in the
+    hundreds (synastry, composite, solar return), not 100k+. A
+    pure-vectorised reimplementation can land in v1.3 if Phase 16
+    profiling motivates it.
+    """
+    matrix = np.full(
+        jd_b.shape + (_BODY_COUNT, _BODY_COUNT), -1, dtype=np.int8,
+    )
+    orbs = np.full(
+        jd_b.shape + (_BODY_COUNT, _BODY_COUNT), np.nan, dtype=np.float32,
+    )
+
+    # ``np.ndindex(())`` yields exactly one tuple ``()`` for a 0-d shape,
+    # so the scalar-jd case traverses this loop once with ``idx == ()``
+    # naturally — no special-casing needed (RESEARCH Assumption A1, pinned
+    # by ``test_aspect_matrix_scalar_jd_via_ndindex_empty_tuple``).
+    #
+    # TODO(v1.3): hoist ``resolve_aspect_set(aspects)`` above this loop if
+    # profiling shows hot-path cost — see RESEARCH §Pitfall 3. For v1.2
+    # the resolver runs at ~µs and ``S`` stays in the hundreds, so the
+    # repeated call is acceptable.
+    for idx in np.ndindex(jd_b.shape):
+        jd_scalar = float(jd_b[idx])
+        records = calculate_aspects_vectorized(jd_scalar, aspects=aspects)
+        # ``records`` is a structured array with fields
+        # ``(body1, body2, i_asp, orb)`` ; ``body1 < body2`` by
+        # upper-triangle convention (calculator.py:187 ``triu_indices``).
+        for rec in records:
+            i = int(rec["body1"])
+            j = int(rec["body2"])
+            i_asp = int(rec["i_asp"])
+            orb = float(rec["orb"])
+            # D-17 mirror: write upper- AND lower-triangle so callers
+            # can index either order without ceremony.
+            matrix[idx + (i, j)] = i_asp
+            matrix[idx + (j, i)] = i_asp
+            orbs[idx + (i, j)] = orb
+            orbs[idx + (j, i)] = orb
+
+    return matrix, orbs
+
+
 def compute_chart(
     jd: ArrayLike,
     lat: ArrayLike,
@@ -126,10 +215,16 @@ def compute_chart(
         :func:`ketu.houses.registry.register` (currently
         ``"placidus"``, ``"koch"``, ``"porphyry"``). Case-insensitive.
     aspects : AspectSetSpec, default None
-        Aspect-set selector. Accepted for API stability and reserved for
-        plan 14-03 (D-10); currently ignored — see Notes. ``None``
-        resolves to :data:`ketu.aspects.presets.CLASSICAL` (5 majors)
-        once plan 14-03 wires the dense aspect computation (D-07).
+        Aspect-set selector. ``None`` resolves to
+        :data:`ketu.aspects.presets.CLASSICAL` (5 majors), aligned with
+        the package-wide default (D-07). Accepts a preset name
+        (``"classical"``, ``"traditional"``, ``"extended"``), a list of
+        aspect names or canonical indices, or a length-14 boolean mask
+        (pass-through to
+        :func:`ketu.aspects.calculator.calculate_aspects_vectorized`,
+        D-10). The ``aspect_matrix`` field stores canonical 0-13 indices
+        regardless of the selected subset; cells outside the subset stay
+        at the sentinel ``-1``.
     polar_fallback : {"raise", "porphyry"}, default "raise"
         Behaviour when ``|lat| > polar_circle(jd)`` (~ 66.56 deg). Passed
         through to :func:`ketu.houses.calculate_houses` (D-11). When
@@ -162,10 +257,18 @@ def compute_chart(
     follow :data:`ketu.core.bodies` order (Sun=0, ..., Lilith=12).
     Adding bodies is a v1.3 BREAKING change.
 
-    In this Plan-02 wiring, ``aspect_matrix`` and ``aspect_orbs`` are
-    sentinel-initialised (``-1`` / ``NaN``) and the ``aspects`` parameter
-    is accepted but not consumed. Plan 14-03 wires the dense aspect
-    computation and removes this note.
+    The aspect matrix is built by a Python loop over the leading shape
+    ``S`` (D-16). Each ``S``-element call to
+    :func:`ketu.aspects.calculator.calculate_aspects_vectorized` is
+    itself vectorised over the 78 body-pair upper-triangle, so the
+    Python overhead is constant in ``S``. For ML batches in the
+    hundreds (synastry, composite, solar return), this is comfortably
+    below the bottleneck threshold; large-batch (>10k) callers should
+    profile and report. ``aspects=None`` resolves to the ``CLASSICAL``
+    preset (5 majors), aligned with the package-wide default (D-07).
+    The matrix is symmetric (D-17): ``matrix[..., i, j] == matrix[..., j, i]``;
+    the diagonal stays at the sentinel ``-1`` (a body has no aspect with
+    itself, D-06).
 
     Examples
     --------
@@ -188,9 +291,6 @@ def compute_chart(
     >>> charts.shape, charts["body_lons"].shape, charts["aspect_matrix"].shape  # doctest: +SKIP
     ((2,), (2, 13), (2, 13, 13))
     """
-    # ``aspects`` is accepted for API stability; plan 14-03 will consume it.
-    del aspects
-
     # 1. Broadcast (mirror calculate_houses houses/api.py:107-114).
     jd_a = np.asarray(jd, dtype=np.float64)
     lat_a = np.asarray(lat, dtype=np.float64)
@@ -210,16 +310,11 @@ def compute_chart(
     #    in S; see _vectorised_body_properties docstring).
     body_lons, body_lats, body_speeds = _vectorised_body_properties(jd_b)
 
-    # 4. Aspect matrix: sentinel-initialised for now; plan 14-03 will
-    #    replace this with a real call to ``_build_aspect_matrix(...)``.
-    aspect_matrix = np.full(
-        leading_shape + (_BODY_COUNT, _BODY_COUNT),
-        -1, dtype=np.int8,
-    )
-    aspect_orbs = np.full(
-        leading_shape + (_BODY_COUNT, _BODY_COUNT),
-        np.nan, dtype=np.float32,
-    )
+    # 4. Aspect matrix: dense (13, 13) projection of intra-chart aspects
+    #    (D-05, D-06, D-17). Python loop over S is a conscious v1.2
+    #    trade-off (D-16); revisited in v1.3 if synastry profiling
+    #    motivates a pure-vectorised reimplementation.
+    aspect_matrix, aspect_orbs = _build_aspect_matrix(jd_b, aspects=aspects)
 
     # 5. Assemble structured output.
     out = np.empty(leading_shape, dtype=CHART_DTYPE)
