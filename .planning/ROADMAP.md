@@ -24,7 +24,7 @@ Ketu v1.1 evolves the library from a pure astronomical engine into an astronomic
 - [x] **Phase 9: Configurable Aspects** — 5-major default with `CLASSICAL`/`TRADITIONAL`/`EXTENDED` presets; append-only `core.aspects` (completed 2026-05-07)
 - [x] **Phase 10: Houses Module** — Placidus + Koch with extensible registry, polar fallback, LST precision audit (completed 2026-05-07)
 - [x] **Phase 11: CLI Refactor & Integration** — argparse subcommands, `--harmonics SPEC`, `ketu houses` subcommand, introspection flags (completed 2026-05-07)
-- [ ] **Phase 12: Release Preparation v1.1.0** — Version bump, CHANGELOG, UPGRADING.md, GitHub release, PyPI publish
+- [x] **Phase 12: Release Preparation v1.1.0** — Version bump, CHANGELOG, UPGRADING.md, GitHub release, PyPI publish (completed 2026-05-08)
 
 ## Cross-Cutting Constraints
 
@@ -197,7 +197,7 @@ Plans:
 | 9. Configurable Aspects | v1.1 | 6/6 | ✓ Complete | 2026-05-07 |
 | 10. Houses Module | v1.1 | 6/6 | ✓ Complete | 2026-05-07 |
 | 11. CLI Refactor & Integration | v1.1 | 6/6 | ✓ Complete | 2026-05-07 |
-| 12. Release Preparation v1.1.0 | v1.1 | 0/TBD | Not started | - |
+| 12. Release Preparation v1.1.0 | v1.1 | 4/4 | ✓ Complete | 2026-05-08 |
 
 v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`.
 
@@ -210,3 +210,4 @@ v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`.
 *Phase 10 plans created: 2026-05-07 (6 plans, 4 waves — Plan 01 unblocks all; Plans 02/03 parallel Wave 2; Plans 04/05 parallel Wave 3; Plan 06 closes Wave 4)*
 *Phase 10 executed: 2026-05-07 (6 plans, 4 waves — sidereal_time tightened to apparent GST, Placidus/Koch/Porphyry registered via SYSTEMS, polar fallback wired, calculate_house_cusps stub removed; 638 tests, 96.75% houses coverage, max ASC delta 0.858 arcmin vs Swiss Ephemeris — VERIFICATION.md PASSED 5/5)*
 *Phase 11 executed: 2026-05-07 (6 plans, 6 waves — `ketu/cli/` argparse subpackage; `--harmonics SPEC` validator; `ketu houses` subcommand; `--list-aspect-sets` / `--list-house-systems`; resolved-config header on stderr; legacy `display.py:main()` deleted; 724 tests green — VERIFICATION.md PASSED 6/6. Plan 11-06 pivoted to Option A: byte-stable forward contract (v1.1 self-pin) instead of v1.0 backward contract — Phases 8 + 9 deliberately diverged from v1.0 astronomy.)*
+*Phase 12 executed: 2026-05-08 (4 plans, 2 waves — version bumped to 1.1.0, CHANGELOG `[1.1.0] - 2026-05-08` with BREAKING summary + Phase 9 + Phase 11 entries, UPGRADING.md migration recipes for CLI default/Kala/houses/stderr header, README "What's New" v1.1 banner; PR #26 rebase-merged to main, tag `v1.1.0` → commit `41ee42e`, OIDC trusted-publish to PyPI via publish.yml, GitHub release v1.1.0 with sdist+wheel attached, fresh-venv smoke OK — VERIFICATION.md PASSED 9/9. **v1.1 milestone closed.**)*
