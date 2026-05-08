@@ -64,9 +64,13 @@ import numpy as np
 #:           ``[0, 13]``; ``-1`` means "no aspect"; symmetric
 #:           (``matrix[i, j] == matrix[j, i]``); diagonal == ``-1``
 #:           (a body has no aspect with itself).
-#:     - ``aspect_orbs`` (f4, (13, 13)): orb in degrees; ``NaN`` means
-#:           "no orb" (matches ``aspect_matrix == -1``); symmetric;
-#:           diagonal == ``NaN``.
+#:     - ``aspect_orbs`` (f4, (13, 13)): **signed** orb in degrees;
+#:           ``aspect_angle - distance`` (positive when ``distance <
+#:           aspect_angle``, negative when ``distance > aspect_angle``);
+#:           ``NaN`` means "no orb" (matches ``aspect_matrix == -1``);
+#:           symmetric; diagonal == ``NaN``. Inherits the sign convention
+#:           from :func:`ketu.aspects.calculator.calculate_aspects_vectorized`.
+#:           For absolute-orb filters use ``np.abs(chart["aspect_orbs"])``.
 #:
 #: Caller mask one-liner:
 #:     ``mask = chart["aspect_matrix"] >= 0``  # or
