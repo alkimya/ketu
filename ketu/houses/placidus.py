@@ -80,18 +80,22 @@ TOL_DEG: float = 1e-7
 
 
 def _ra_formula_cusp_11(armc: np.ndarray, AD: np.ndarray) -> np.ndarray:
+    """RA of Placidus cusp 11: ``ARMC + (90 + AD) / 3`` (mod 360)."""
     return (armc + (90.0 + AD) / 3.0) % 360.0
 
 
 def _ra_formula_cusp_12(armc: np.ndarray, AD: np.ndarray) -> np.ndarray:
+    """RA of Placidus cusp 12: ``ARMC + 2 * (90 + AD) / 3`` (mod 360)."""
     return (armc + 2.0 * (90.0 + AD) / 3.0) % 360.0
 
 
 def _ra_formula_cusp_2(armc: np.ndarray, AD: np.ndarray) -> np.ndarray:
+    """RA of Placidus cusp 2: ``ARMC + 180 - 2 * (90 - AD) / 3`` (mod 360)."""
     return (armc + 180.0 - 2.0 * (90.0 - AD) / 3.0) % 360.0
 
 
 def _ra_formula_cusp_3(armc: np.ndarray, AD: np.ndarray) -> np.ndarray:
+    """RA of Placidus cusp 3: ``ARMC + 180 - (90 - AD) / 3`` (mod 360)."""
     return (armc + 180.0 - (90.0 - AD) / 3.0) % 360.0
 
 
