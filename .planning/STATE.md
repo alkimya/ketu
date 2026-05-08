@@ -1,3 +1,18 @@
+---
+gsd_state_version: 1.0
+milestone: v1.2
+milestone_name: Astrologie relationnelle et prédictive
+status: executing
+last_updated: "2026-05-08T11:23:45.029Z"
+last_activity: 2026-05-08 -- Phase 13 execution started
+progress:
+  total_phases: 8
+  completed_phases: 0
+  total_plans: 5
+  completed_plans: 0
+  percent: 0
+---
+
 # Project State
 
 ## Project Reference
@@ -5,15 +20,15 @@
 See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** v1.2 Astrologie relationnelle et prédictive — roadmap defined (Phases 13-20), Phase 13 planned (5 plans, 4 waves), ready to execute.
+**Current focus:** Phase 13 — doc-gates-and-ci-foundation
 
 ## Current Position
 
-Phase: 13 — Ready to execute
-Plan: 5 plans (13-01 through 13-05) across 4 waves
-Status: Phase 13 plans created and verified (research + pattern map + plan checker green on iteration 2); ready for `/gsd-execute-phase 13`
+Phase: 13 (doc-gates-and-ci-foundation) — EXECUTING
+Plan: 1 of 5
+Status: Executing Phase 13
 Progress: [░░░░░░░░░░] 0/8 v1.2 phases complete (0/37 REQs)
-Last activity: 2026-05-08 — Phase 13 plans landed: Plan 01 (dev deps + interrogate config + 4 placidus docstrings), Plan 02 (interrogate CI + Makefile), Plan 03 (numpydoc config + 9 source-file fixes), Plan 04 (numpydoc CI warning), Plan 05 (positive-add to README/CHANGELOG). New decision D-14 formalizes GL01 deferral exception to D-08.
+Last activity: 2026-05-08 -- Phase 13 execution started
 Resume file: `.planning/phases/13-doc-gates-and-ci-foundation/13-01-PLAN.md`
 
 ## Performance Metrics
