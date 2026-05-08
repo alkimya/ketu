@@ -31,10 +31,14 @@ from ketu.charts import CHART_DTYPE, compute_chart
 from ketu.ephemeris.planets import calc_planet_position_batch
 from ketu.houses import HighLatitudeError, calculate_houses
 
-# Tolerance for cross-checking ``compute_chart`` houses block against a
-# direct ``calculate_houses`` call: same input pipeline, no algorithmic
-# divergence is expected, so an arc-second tolerance is more than enough.
-HOUSES_INLINE_TOL_DEG = 1e-9
+# Cross-checking ``compute_chart`` houses block against a direct
+# ``calculate_houses`` call: same input pipeline, identical fp64 values
+# in memory (compute_chart calls calculate_houses once and copies the
+# fields directly), so the contract is bit-exact equality (D-03
+# "houses inline = bit-for-bit"). We test with strict equality below
+# (np.testing.assert_array_equal / `==`) rather than a numerical
+# tolerance — any drift would be a regression introduced by an
+# intermediate cast in the copy pipeline.
 
 # Tolerance for cross-checking ``compute_chart["body_lons"]`` against the
 # underlying ``calc_planet_position_batch`` primitive: identical
@@ -104,20 +108,19 @@ def test_compute_chart_houses_inline_matches_calculate_houses(
     chart = compute_chart(jd, lat, lon, system=system)
     houses = calculate_houses(jd, lat, lon, system=system)
 
-    # cusps (12,)
-    deltas_cusps = np.abs(
-        np.asarray(chart["cusps"]) - np.asarray(houses["cusps"])
+    # cusps (12,) — strict bit-for-bit equality.
+    np.testing.assert_array_equal(
+        np.asarray(chart["cusps"]),
+        np.asarray(houses["cusps"]),
+        err_msg=f"{system}/{label}: cusps not bit-exact (D-03 ratchet)",
     )
-    assert (deltas_cusps < HOUSES_INLINE_TOL_DEG).all(), (
-        f"{system}/{label}: cusps drift {deltas_cusps.max():.3e} deg > "
-        f"{HOUSES_INLINE_TOL_DEG} deg"
-    )
-    # asc/mc/armc/vertex (scalar)
+    # asc/mc/armc/vertex (scalar) — strict bit-for-bit equality.
     for field in ("asc", "mc", "armc", "vertex"):
-        delta = abs(float(chart[field]) - float(houses[field]))
-        assert delta < HOUSES_INLINE_TOL_DEG, (
-            f"{system}/{label}: {field} drift {delta:.3e} deg > "
-            f"{HOUSES_INLINE_TOL_DEG} deg"
+        chart_val = float(chart[field])
+        houses_val = float(houses[field])
+        assert chart_val == houses_val, (
+            f"{system}/{label}: {field} not bit-exact "
+            f"(D-03 ratchet); chart={chart_val!r} vs houses={houses_val!r}"
         )
 
 
