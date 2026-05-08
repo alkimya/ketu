@@ -2,22 +2,17 @@
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-05-08 after v1.1 milestone close)
+See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Planning frontier for v1.2 (TBD). Run `/gsd-new-milestone` to start questioning → research → requirements → roadmap.
+**Current focus:** v1.2 Astrologie relationnelle et prédictive — defining requirements → roadmap.
 
 ## Current Position
 
-**Status:** v1.1 milestone CLOSED 2026-05-08.
-
-- v1.0 (Phases 1-7): ✓ Complete (16/16 plans, shipped 2026-02-12)
-- v1.1 (Phases 8-12): ✓ Complete (27/27 plans, shipped 2026-05-08)
-- v1.2: not yet planned
-
-**Last shipped:** ketu 1.1.0 on PyPI via tag `v1.1.0` (commit `41ee42e`, annotated SHA `54ce673`). Trusted-publishing OIDC workflow run 25528308313 (~38s). PyPI live: <https://pypi.org/project/ketu/1.1.0/>. GitHub release: <https://github.com/alkimya/ketu/releases/tag/v1.1.0>.
-
-Last activity: 2026-05-08 — v1.1 milestone archived to `.planning/milestones/v1.1-{ROADMAP,REQUIREMENTS}.md`. PROJECT.md evolution review complete; all v1.1 active requirements moved to Validated. ROADMAP.md collapsed v1.1 into `<details>` block. MILESTONES.md created with v1.1 + v1.0 entries.
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements
+Last activity: 2026-05-08 — Milestone v1.2 started
 
 ## Performance Metrics
 
@@ -59,4 +54,4 @@ Last activity: 2026-05-08 — v1.1 milestone archived to `.planning/milestones/v
 
 ## Session Continuity
 
-Resume the project with `/gsd-new-milestone` to start v1.2.
+v1.2 milestone initialized 2026-05-08. Next: `/gsd-plan-phase 13` once REQUIREMENTS.md and ROADMAP.md are written.

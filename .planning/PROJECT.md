@@ -14,34 +14,41 @@ Cycle calculations must be correct, tested, and performant. If the math is wrong
 
 v1.1 evolved Ketu from a pure astronomical engine into an astronomical-astrological framework: configurable aspect sets (CLASSICAL default = 5 majors, opt-in TRADITIONAL/EXTENDED), extensible houses module (Placidus / Koch / Porphyry), and a Lilith formula correction (~180° shift, was computing perigee). Argparse CLI with subcommands replaced the legacy interactive `input()` prompt. 724 tests pass; mypy `--strict` clean; houses module at 96.75% coverage.
 
-## Next Milestone Goals (v1.2 — Astrologie relationnelle et prédictive)
+## Current Milestone: v1.2 Astrologie relationnelle et prédictive
 
-Scope agreed with user 2026-05-08 post-v1.1 close. Pre-research working documents:
+**Goal:** Étendre Ketu de la chart natale astronomique vers l'astrologie relationnelle et prédictive, en s'appuyant sur le primitif `houses` livré en v1.1.
+
+**Framing:** non-breaking minor strict — toutes nouvelles APIs additives, pas de changement de défaut, pas d'export retiré.
+
+**Target features (Tier 1 — structurel):**
+
+- **Chart abstraction (Option A)** — `CHART_DTYPE` structured array (positions + ASC/MC + houses + aspects) retournée par `compute_chart(jd, lat, lon, system)`. Upstream pour synastry / composite / solar return.
+- **Additional house systems** — Whole Sign, Equal, Regiomontanus via `SYSTEMS` registry de v1.1
+- **Synastry** — calcul d'aspects inter-charts entre deux thèmes natals
+- **Composite chart (midpoint variant)** — fusion midpoint modulo 360° de deux thèmes
+- **Solar return (standard + relocated)** — chart prédictif annuel ; root-finding pure-NumPy sur `Sun_longitude(t) − natal_Sun_longitude` ; relocation = `calculate_houses(jd_return, new_lat, new_lon, system)`
+
+**Target features (Tier 2 — primitives):**
+
+- **Arabic Parts framework + 8 parts livrées** — `PARTS` registry extensible (analogue à `SYSTEMS`) ; livrer Fortune, Spirit, Eros, Necessity, Courage, Victory, Nemesis (7 Hermetic Lots) + Marriage (synergie synastry)
+- **`is_day_chart(jd, lat, lon)` helper** — sect determination vectorisable, requis par les Parts day/night-formula
+
+**Target features (Tier 3 — ops debt, deadline septembre 2026):**
+
+- **CI doc gates (early)** — wire `interrogate ≥95%` + `numpydoc validate` tôt dans le milestone (touche tout le code suivant)
+- **Workflow refresh (late)** — Node.js 20 → 24 sur `actions/checkout@v4`, `actions/setup-python@v5`, `actions/upload-artifact@v4` en phase isolée tardive
+- **`fr/CHANGELOG.md`** — créer (synthétisé depuis l'anglais, non double-maintenu) OU retirer la référence aspirationnelle
+
+**Pre-research working docs (consumed):**
 
 - [.planning/research/v1.2-SCOPE.md](research/v1.2-SCOPE.md) — three-tier scope sketch with risk register
-- [.planning/research/v1.2-OPEN_QUESTIONS.md](research/v1.2-OPEN_QUESTIONS.md) — questions for `/gsd-new-milestone` to resolve
-
-**Tier 1 — structural features:**
-
-- **Additional house systems** — Whole Sign, Equal, Regiomontanus (registry pattern from v1.1 already supports it)
-- **Synastry** — inter-chart aspect calculation between two natal charts
-- **Composite chart** — midpoint fusion of two charts for relationship analysis
-- **Solar return (révolution solaire)** — predictive chart for Sun's return to natal longitude
-
-**Tier 2 — useful primitives:**
-
-- **Part of Fortune + Arabic Parts framework** — extensible `PARTS` registry, ship 7 Hermetic Lots minimum
-- **`Chart` abstraction** — upstream architectural decision for synastry/composite/solar-return (see `v1.2-OPEN_QUESTIONS.md` Q1)
-
-**Tier 3 — ops debt (deadline-driven before September 2026):**
-
-- **CI documentation gates** — wire `interrogate ≥95%` + `numpydoc validate`
-- **Workflow refresh** — Node.js 20 → 24 across `actions/checkout@v4`, `actions/setup-python@v5`, `actions/upload-artifact@v4`
-- **`fr/CHANGELOG.md`** — create or remove the aspirational header reference
+- [.planning/research/v1.2-OPEN_QUESTIONS.md](research/v1.2-OPEN_QUESTIONS.md) — questions résolues lors du `/gsd-new-milestone` 2026-05-08
 
 **Explicitly DEFERRED to v1.3:**
 
 - **Chiron** — Centaur asteroid, very widely used in modern astrology, but requires either swisseph dependency or a Chebyshev-by-segment polynomial fit pipeline. User chose to make Chiron a dedicated v1.3 milestone (likely with other Centaurs: Pholus, Nessus, Chariklo). See `v1.2-SCOPE.md` § Out of scope for the technical reasoning.
+- **Davison composite** — chart pour temps + lat/lon midpoints. v1.2 ship midpoint composite uniquement.
+- **Lunar return** — même algo que solar return avec fenêtre 28j. Reportable post-solar-return si demande surface.
 
 ## Requirements
 
@@ -104,9 +111,17 @@ Scope agreed with user 2026-05-08 post-v1.1 close. Pre-research working document
 
 ### Active
 
-<!-- Current scope: v1.2 (TBD — placeholder until /gsd-new-milestone is run). -->
+<!-- Current scope: v1.2 — see .planning/REQUIREMENTS.md for the full list with REQ-IDs. -->
 
-No active requirements. Run `/gsd-new-milestone` to start v1.2 questioning → research → requirements → roadmap.
+v1.2 milestone scope agreed 2026-05-08 (PROJECT-00 through TIER3-NN — pending REQUIREMENTS.md generation immediately after milestone init).
+
+Headlines:
+
+- Chart abstraction `CHART_DTYPE` (Option A) — upstream architectural piece
+- Whole Sign / Equal / Regiomontanus house systems via existing `SYSTEMS` registry
+- Synastry, midpoint composite, solar return (standard + relocated)
+- Arabic Parts framework + 7 Hermetic Lots + Marriage; `is_day_chart` helper
+- CI doc gates (early), Node 20 → 24 workflow refresh (late), `fr/CHANGELOG.md` decision
 
 ### Out of Scope
 
@@ -173,7 +188,32 @@ No active requirements. Run `/gsd-new-milestone` to start v1.2 questioning → r
 | Test-only `pysweph` extra (AGPL isolation) | License + brand promise (NumPy-only runtime) prevent AGPL contamination of runtime wheel | ✓ Good (v1.1) — empirically verified two-venv isolation |
 | Apparent GST (Meeus eq. 12.6) for `sidereal_time()` | Aligns with Swiss Ephemeris house functions; <1 arcmin ASC error gate met | ✓ Good (v1.1) |
 | Magnitude consistency invariant across CHANGELOG / UPGRADING / LILITH_DEFINITION | Single source of truth for documented magnitudes; same numbers, same precision, three docs | ✓ Good (v1.1) |
+| v1.2 framing = non-breaking minor strict | v1.1 burned the BREAKING quota (Lilith / CLI default / `calculate_house_cusps`); v1.2 must be additive only | Pending (v1.2 scope decision) |
+| `Chart` abstraction = Option A (`CHART_DTYPE` structured array) | Cohérent avec CYCLE_DTYPE / HOUSES_DTYPE existants ; ML-interop NumPy-first ; batchable | Pending (v1.2 scope decision) |
+| Composite chart = midpoint variant only | Standard universel ; Davison reportable v1.3 si demande surface | Pending (v1.2 scope decision) |
+| Solar return = standard + relocated | Relocation quasi gratuite si l'abstraction Chart est correcte ; très utilisée en pratique moderne | Pending (v1.2 scope decision) |
+| Arabic Parts = framework + 7 Hermetic Lots + Marriage | Framework cost fixe (registry) ; marginal cost par Part ~5 lignes ; Marriage = synergie synastry | Pending (v1.2 scope decision) |
+| Tier 3 ordering = doc gates early, workflows late | Doc gates touchent tout le code suivant ; workflow refresh isolé en fin de milestone | Pending (v1.2 scope decision) |
+
+## Evolution
+
+This document evolves at phase transitions and milestone boundaries.
+
+**After each phase transition** (via `/gsd-transition`):
+
+1. Requirements invalidated? → Move to Out of Scope with reason
+2. Requirements validated? → Move to Validated with phase reference
+3. New requirements emerged? → Add to Active
+4. Decisions to log? → Add to Key Decisions
+5. "What This Is" still accurate? → Update if drifted
+
+**After each milestone** (via `/gsd-complete-milestone`):
+
+1. Full review of all sections
+2. Core Value check — still the right priority?
+3. Audit Out of Scope — reasons still valid?
+4. Update Context with current state
 
 ---
 
-Last updated: 2026-05-08 after v1.1 milestone close.
+Last updated: 2026-05-08 — v1.2 milestone initialized.
