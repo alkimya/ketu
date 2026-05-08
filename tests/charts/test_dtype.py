@@ -4,10 +4,11 @@ Pure structural assertions. No swisseph dependency, no oracle access — these
 tests run without any optional deps installed and pin the CHART_DTYPE
 contract for plans 14-02..05 to consume safely.
 
-Also covers stub-level guards: ``is_day_chart`` raises
-:class:`NotImplementedError` until plan 14-04 wires its body. The
-``compute_chart`` stub guard was removed by plan 14-02 when the function
-was wired (positions + houses + sentinel aspect block).
+The ``compute_chart`` stub guard was removed by plan 14-02 when the function
+was wired (positions + houses + sentinel aspect block); the ``is_day_chart``
+stub guard was removed by plan 14-04 when the sect helper was wired (sunrise
+inclusive D-13, polar-safe via internal Porphyry fallback D-15). Behavioural
+tests for these public functions live in dedicated test files.
 """
 from __future__ import annotations
 
@@ -233,11 +234,3 @@ def test_no_runtime_swisseph_import() -> None:
             )
 
 
-# ---------------------------------------------------------------------------
-# Stub guards — to be removed in plan 14-04
-# ---------------------------------------------------------------------------
-
-def test_is_day_chart_raises_not_implemented_until_plan_14_04() -> None:
-    """Stub test — to be removed in plan 14-04 when is_day_chart wires up."""
-    with pytest.raises(NotImplementedError, match="is_day_chart"):
-        is_day_chart(2451545.0, 48.86, 2.35)
