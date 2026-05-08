@@ -177,6 +177,49 @@ def test_is_day_chart_consistency_with_compute_chart_asc_and_sun_lon(
     )
 
 
+@pytest.mark.parametrize("system", ["placidus", "koch", "porphyry"])
+@pytest.mark.parametrize(
+    ("label", "jd", "lat", "lon"),
+    [
+        ("Paris J2000 noon",   2451545.0,   48.8566,   2.3522),
+        ("Sydney J2000 noon",  2451545.0,  -33.8688, 151.2093),
+        ("New York J2000 noon", 2451545.0,  40.7128, -74.0060),
+        ("Tokyo J2000 noon",   2451545.0,   35.6762, 139.6503),
+    ],
+)
+def test_is_day_chart_independent_of_caller_house_system(
+    system: str, label: str, jd: float, lat: float, lon: float,
+) -> None:
+    """``is_day_chart`` answer is invariant under the caller's house system.
+
+    WR-02 ratchet: pin the system-independence of ``is_day_chart``.
+    For all currently-registered house systems
+    (``placidus``, ``koch``, ``porphyry``) at non-polar latitudes,
+    every system has ``cusps[0] == ASC`` and ``cusps[6] == ASC + 180``,
+    so ``house_of(sun, cusps) >= 7`` is mathematically equivalent to the
+    ASC-delta sect formula. ``is_day_chart`` must agree with this
+    equivalence for *every* registered system, not just the default
+    Placidus.
+
+    When Phase 15 adds Whole Sign / Equal — where ``cusps[6] != ASC + 180``
+    — this ratchet will guard the contract: if a future regression makes
+    ``is_day_chart`` peek at the caller's house system, the Whole Sign /
+    Equal cases will diverge from the system-independent answer pinned
+    here for the quadrant systems.
+    """
+    del label  # only used for pytest IDs
+    chart = compute_chart(jd, lat, lon, system=system)
+    sun_lon = chart["body_lons"][0]
+    expected_house = house_of(sun_lon, chart["cusps"])
+    expected = bool(int(expected_house) >= 7)
+    actual = bool(is_day_chart(jd, lat, lon))
+    assert actual == expected, (
+        f"is_day_chart disagrees with house_of>=7 for system={system!r} "
+        f"at {label!s}: actual={actual}, expected={expected}, "
+        f"sun_house={int(expected_house)}"
+    )
+
+
 def test_is_day_chart_consistency_polar_via_asc_delta() -> None:
     """At polar latitudes, ``is_day_chart`` matches the system-independent
     ASC-delta definition (D-13/D-14): Sun above horizon iff
