@@ -24,17 +24,17 @@ from .ephemeris.planets import (
 # ========== Utility Functions ==========
 
 def dd_to_dms(deg: float) -> np.ndarray:
-    """Convert decimal degrees to degrees, minutes, seconds
+    """Convert decimal degrees to degrees, minutes, seconds.
 
     Parameters
     ----------
     deg : float
-        Decimal degrees (any value, positive or negative)
+        Decimal degrees (any value, positive or negative).
 
     Returns
     -------
     numpy.ndarray
-        Array of [degrees, minutes, seconds] as integers (int32)
+        Array of [degrees, minutes, seconds] as integers (int32).
 
     Examples
     --------
@@ -54,7 +54,7 @@ decimal_degrees_to_dms = dd_to_dms
 
 
 def distance(pos1: Union[float, np.ndarray], pos2: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
-    """Calculate angular distance between two positions (vectorized)
+    """Calculate angular distance between two positions (vectorized).
 
     Works with scalars or arrays via NumPy broadcasting.
     Always returns the shortest angular distance (0-180 degrees).
@@ -62,14 +62,14 @@ def distance(pos1: Union[float, np.ndarray], pos2: Union[float, np.ndarray]) -> 
     Parameters
     ----------
     pos1 : float or numpy.ndarray
-        First position in degrees (scalar or array)
+        First position in degrees (scalar or array).
     pos2 : float or numpy.ndarray
-        Second position in degrees (scalar or array)
+        Second position in degrees (scalar or array).
 
     Returns
     -------
     float or numpy.ndarray
-        Shortest angular distance in degrees (scalar or array)
+        Shortest angular distance in degrees (scalar or array).
 
     Notes
     -----
@@ -93,7 +93,7 @@ def distance(pos1: Union[float, np.ndarray], pos2: Union[float, np.ndarray]) -> 
 
 @lru_cache(maxsize=1024)
 def body_properties(jdate: float, body: int) -> np.ndarray:
-    """Cached wrapper for body_properties to maintain API compatibility
+    """Cached wrapper for body_properties to maintain API compatibility.
 
     Uses LRU cache (maxsize=1024) for optimal performance with repeated calculations.
     Benchmark shows 6.7x speedup vs no cache, and better performance than unbounded cache.
@@ -101,22 +101,23 @@ def body_properties(jdate: float, body: int) -> np.ndarray:
     Parameters
     ----------
     jdate : float
-        Julian Date (Terrestrial Time)
+        Julian Date (Terrestrial Time).
     body : int
         Body ID (0-12): 0=Sun, 1=Moon, 2=Mercury, 3=Venus, 4=Mars,
         5=Jupiter, 6=Saturn, 7=Uranus, 8=Neptune, 9=Pluto,
-        10=Rahu, 11=Ketu, 12=Lilith
+        10=Rahu, 11=Ketu, 12=Lilith.
 
     Returns
     -------
     numpy.ndarray
-        Array of [longitude, latitude, distance, lon_speed, lat_speed, dist_speed]
-        - longitude: degrees (0-360)
-        - latitude: degrees
-        - distance: AU (or 0 for calculated points like Rahu/Lilith)
-        - lon_speed: degrees/day
-        - lat_speed: degrees/day
-        - dist_speed: AU/day
+        Array of [longitude, latitude, distance, lon_speed, lat_speed, dist_speed]:
+
+        - longitude: degrees (0-360).
+        - latitude: degrees.
+        - distance: AU (or 0 for calculated points like Rahu/Lilith).
+        - lon_speed: degrees/day.
+        - lat_speed: degrees/day.
+        - dist_speed: AU/day.
 
     Notes
     -----
@@ -136,17 +137,17 @@ def body_properties(jdate: float, body: int) -> np.ndarray:
 
 
 def body_name(body: int) -> str:
-    """Get the name of an astronomical body
+    """Get the name of an astronomical body.
 
     Parameters
     ----------
     body : int
-        Body ID (0-12)
+        Body ID (0-12).
 
     Returns
     -------
     str
-        Body name (e.g., 'Sun', 'Moon', 'Mars', 'Rahu', 'Lilith')
+        Body name (e.g., 'Sun', 'Moon', 'Mars', 'Rahu', 'Lilith').
 
     Examples
     --------
@@ -170,22 +171,22 @@ def body_name(body: int) -> str:
 
 
 def body_id(b_name: str) -> int:
-    """Get the ID of an astronomical body by name
+    """Get the ID of an astronomical body by name.
 
     Parameters
     ----------
     b_name : str
-        Body name (e.g., "Sun", "Moon", "Mars")
+        Body name (e.g., "Sun", "Moon", "Mars").
 
     Returns
     -------
     int
-        Body ID (0-12)
+        Body ID (0-12).
 
     Raises
     ------
     IndexError
-        If body name is not found
+        If body name is not found.
 
     Examples
     --------
@@ -201,19 +202,19 @@ def body_id(b_name: str) -> int:
 
 
 def long(jdate: float, body: int) -> float:
-    """Get ecliptic longitude of a body
+    """Get ecliptic longitude of a body.
 
     Parameters
     ----------
     jdate : float
-        Julian Date (Terrestrial Time)
+        Julian Date (Terrestrial Time).
     body : int
-        Body ID (0-12)
+        Body ID (0-12).
 
     Returns
     -------
     float
-        Ecliptic longitude in degrees (0-360)
+        Ecliptic longitude in degrees (0-360).
 
     Notes
     -----
@@ -233,19 +234,19 @@ def long(jdate: float, body: int) -> float:
 
 
 def lat(jdate: float, body: int) -> float:
-    """Get ecliptic latitude of a body
+    """Get ecliptic latitude of a body.
 
     Parameters
     ----------
     jdate : float
-        Julian Date (Terrestrial Time)
+        Julian Date (Terrestrial Time).
     body : int
-        Body ID (0-12)
+        Body ID (0-12).
 
     Returns
     -------
     float
-        Ecliptic latitude in degrees
+        Ecliptic latitude in degrees.
 
     Examples
     --------
@@ -260,14 +261,14 @@ def lat(jdate: float, body: int) -> float:
 
 
 def dist_au(jdate: float, body: int) -> float:
-    """Get distance of a body from Earth
+    """Get distance of a body from Earth.
 
     Parameters
     ----------
     jdate : float
-        Julian Date (Terrestrial Time)
+        Julian Date (Terrestrial Time).
     body : int
-        Body ID (0-12)
+        Body ID (0-12).
 
     Returns
     -------
@@ -288,14 +289,14 @@ def dist_au(jdate: float, body: int) -> float:
 
 
 def long_velocity(jdate: float, body: int) -> float:
-    """Get longitude velocity of a body
+    """Get longitude velocity of a body.
 
     Parameters
     ----------
     jdate : float
-        Julian Date (Terrestrial Time)
+        Julian Date (Terrestrial Time).
     body : int
-        Body ID (0-12)
+        Body ID (0-12).
 
     Returns
     -------
@@ -316,19 +317,19 @@ def long_velocity(jdate: float, body: int) -> float:
 
 
 def lat_velocity(jdate: float, body: int) -> float:
-    """Get latitude velocity of a body
+    """Get latitude velocity of a body.
 
     Parameters
     ----------
     jdate : float
-        Julian Date (Terrestrial Time)
+        Julian Date (Terrestrial Time).
     body : int
-        Body ID (0-12)
+        Body ID (0-12).
 
     Returns
     -------
     float
-        Latitude speed in degrees/day
+        Latitude speed in degrees/day.
 
     Examples
     --------
@@ -343,19 +344,19 @@ def lat_velocity(jdate: float, body: int) -> float:
 
 
 def dist_velocity_au(jdate: float, body: int) -> float:
-    """Get distance velocity of a body
+    """Get distance velocity of a body.
 
     Parameters
     ----------
     jdate : float
-        Julian Date (Terrestrial Time)
+        Julian Date (Terrestrial Time).
     body : int
-        Body ID (0-12)
+        Body ID (0-12).
 
     Returns
     -------
     float
-        Distance speed in AU/day
+        Distance speed in AU/day.
 
     Examples
     --------
@@ -370,19 +371,19 @@ def dist_velocity_au(jdate: float, body: int) -> float:
 
 
 def is_retrograde(jdate: float, body: int) -> bool:
-    """Check if a body is in retrograde motion
+    """Check if a body is in retrograde motion.
 
     Parameters
     ----------
     jdate : float
-        Julian Date (Terrestrial Time)
+        Julian Date (Terrestrial Time).
     body : int
-        Body ID (0-12)
+        Body ID (0-12).
 
     Returns
     -------
     bool
-        True if retrograde (negative longitude velocity), False otherwise
+        True if retrograde (negative longitude velocity), False otherwise.
 
     Examples
     --------
@@ -397,19 +398,19 @@ def is_retrograde(jdate: float, body: int) -> bool:
 
 
 def is_ascending(jdate: float, body: int) -> bool:
-    """Check if a body's latitude is rising
+    """Check if a body's latitude is rising.
 
     Parameters
     ----------
     jdate : float
-        Julian Date (Terrestrial Time)
+        Julian Date (Terrestrial Time).
     body : int
-        Body ID (0-12)
+        Body ID (0-12).
 
     Returns
     -------
     bool
-        True if latitude is increasing (positive latitude velocity), False otherwise
+        True if latitude is increasing (positive latitude velocity), False otherwise.
 
     Examples
     --------
@@ -424,21 +425,22 @@ def is_ascending(jdate: float, body: int) -> bool:
 
 
 def body_sign(b_long: float) -> Tuple[int, int, int, int]:
-    """Convert longitude to zodiac sign position
+    """Convert longitude to zodiac sign position.
 
     Parameters
     ----------
     b_long : float
-        Ecliptic longitude in degrees (0-360)
+        Ecliptic longitude in degrees (0-360).
 
     Returns
     -------
     tuple of int
         (sign_index, degrees, minutes, seconds) where:
-        - sign_index: 0-11 (0=Aries, 1=Taurus, ..., 11=Pisces)
-        - degrees: 0-29 (position within sign)
-        - minutes: 0-59
-        - seconds: 0-59
+
+        - sign_index: 0-11 (0=Aries, 1=Taurus, ..., 11=Pisces).
+        - degrees: 0-29 (position within sign).
+        - minutes: 0-59.
+        - seconds: 0-59.
 
     Examples
     --------
@@ -457,19 +459,19 @@ def body_sign(b_long: float) -> Tuple[int, int, int, int]:
 
 
 def positions(jdate: float, l_bodies: np.ndarray = bodies) -> np.ndarray:
-    """Get ecliptic longitudes of all bodies
+    """Get ecliptic longitudes of all bodies.
 
     Parameters
     ----------
     jdate : float
-        Julian Date (Terrestrial Time)
+        Julian Date (Terrestrial Time).
     l_bodies : numpy.ndarray, optional
-        Bodies array with 'id' field (default: all 13 bodies from ketu.core)
+        Bodies array with 'id' field (default: all 13 bodies from ketu.core).
 
     Returns
     -------
     numpy.ndarray
-        Array of longitudes in degrees (0-360), one per body
+        Array of longitudes in degrees (0-360), one per body.
 
     Examples
     --------
