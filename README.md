@@ -236,6 +236,15 @@ Included sections:
 - **Examples**: advanced usage patterns
 - **Developer Guide**: architecture and performance details
 
+### Documentation Quality Gates
+
+Documentation quality is enforced by CI on every push:
+
+- **`interrogate ≥95%`** (blocking) — every public function, class, and module has a docstring.
+- **`numpydoc validate`** (warning, blocking from v1.2.0) — docstrings follow the NumPy convention.
+
+Run both locally before pushing: `make doc-gates`.
+
 ## Requirements
 
 - Python 3.10 or higher
