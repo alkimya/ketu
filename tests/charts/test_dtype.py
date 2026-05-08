@@ -215,6 +215,26 @@ def test_dtype_no_dataclass_chart_in_core() -> None:
     )
 
 
+def test_body_count_frozen_at_thirteen() -> None:
+    """D-08 ratchet: ``ketu.charts.api._BODY_COUNT`` is frozen at 13.
+
+    Pinned by the Kala positional contract — adding bodies (e.g. Chiron in
+    v1.3) is a BREAKING change that must be reviewed deliberately. Even
+    though ``_BODY_COUNT = len(ketu.core.bodies)`` is now derived rather
+    than a magic literal (IN-03 fix), this ratchet makes the freeze
+    explicit: any future change to ``ketu.core.bodies`` will go red here
+    until the human reviewer confirms the v1.3 BREAKING migration is
+    intended and updates every CHART_DTYPE subarray shape to match.
+    """
+    from ketu.charts.api import _BODY_COUNT
+    assert _BODY_COUNT == 13, (
+        f"D-08 freeze broken: _BODY_COUNT drifted to {_BODY_COUNT}. "
+        "Adding bodies is a v1.3 BREAKING change; update CHART_DTYPE "
+        "subarray shapes (body_lons / body_lats / body_speeds / "
+        "aspect_matrix / aspect_orbs) before lifting this ratchet."
+    )
+
+
 def test_no_runtime_swisseph_import() -> None:
     """AGPL boundary ratchet: ``import ketu.charts`` must not pull swisseph in."""
     # Re-import for symmetry with the houses test (already imported at

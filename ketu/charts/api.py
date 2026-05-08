@@ -35,6 +35,7 @@ import numpy as np
 
 from ketu.aspects.calculator import calculate_aspects_vectorized
 from ketu.aspects.presets import AspectSetSpec
+from ketu.core import bodies as _CANONICAL_BODIES
 from ketu.ephemeris.planets import calc_planet_position_batch
 from ketu.houses import calculate_houses
 from ketu.houses.ascmc import compute_ascmc
@@ -43,10 +44,13 @@ from .core import CHART_DTYPE
 
 ArrayLike = Union[float, np.ndarray]
 
-#: Number of canonical bodies in the (13,) axis. Frozen per D-08 (Kala
-#: positional contract). Mirrors ``len(ketu.core.bodies)`` and the
-#: subarray shapes pinned in :data:`ketu.charts.CHART_DTYPE`.
-_BODY_COUNT: int = 13
+#: Number of canonical bodies in the (13,) axis. Derived from
+#: :data:`ketu.core.bodies` so a v1.3 grow-the-axis change (e.g. adding
+#: Chiron) auto-propagates here. Pinned to ``13`` at runtime by
+#: ``test_body_count_frozen_at_thirteen`` per D-08 (Kala positional
+#: contract): if/when v1.3 lifts the freeze, the ratchet rouge forces an
+#: explicit human review of every CHART_DTYPE subarray shape.
+_BODY_COUNT: int = len(_CANONICAL_BODIES)
 
 
 def _vectorised_body_properties(
