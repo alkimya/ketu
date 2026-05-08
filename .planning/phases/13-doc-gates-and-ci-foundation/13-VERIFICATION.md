@@ -1,22 +1,27 @@
 ---
 phase: 13-doc-gates-and-ci-foundation
 verified: 2026-05-08T18:03:16Z
-status: human_needed
+human_acknowledged: 2026-05-08
+status: complete
 score: 4/4 must-haves verified
 overrides_applied: 0
 human_verification:
   - test: "Push une branche feature et observer l'onglet Actions GitHub"
     expected: "Step `Doc coverage gate (interrogate ≥95%)` apparaît UNIQUEMENT sur la leg Python 3.13 et est VERT."
     why_human: "Vérification end-to-end CI (matrix gating) — non testable localement sans push."
+    status: approved-pending-push
   - test: "Synthetic-gap negative test : effacer une docstring puis push"
     expected: "Step interrogate ROUGE sur 3.13 ; build CI fail (gate bloquant)."
     why_human: "Confirme la posture blocking de l'étape interrogate sur runner GitHub Actions réel. Plan 02 a déjà fait l'équivalent worktree-local."
+    status: approved-pending-push
   - test: "Synthetic-warning negative test : injecter un gap numpydoc puis push"
     expected: "Step numpydoc YELLOW (warning intercepté par continue-on-error: true) ; build overall GREEN."
     why_human: "Confirme la warning posture sur runner CI réel. Plan 04 a déjà fait l'équivalent local."
+    status: approved-pending-push
   - test: "Confirmer interprétation ROADMAP SC 13.4 vs 100 issues numpydoc différées"
     expected: "Sophie acte que la warning-posture absorbant les 100 issues est conforme à l'intent du SC 13.4 ('fix in this phase, not deferred')."
     why_human: "Décision narrative : interprétation littérale stricte vs pragmatique du SC 13.4 face au design D-04/D-05 — appel humain (Sophie)."
+    status: approved
 ---
 
 # Phase 13 : Doc Gates & CI Foundation — Rapport de vérification
