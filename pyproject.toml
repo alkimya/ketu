@@ -42,6 +42,10 @@ dependencies = [
 test = [
     "pysweph>=2.10.3.6",
 ]
+dev = [
+    "interrogate>=1.7.0",
+    "numpydoc>=1.10.0",
+]
 
 [project.urls]
 Homepage = "https://github.com/alkimya/ketu"
@@ -91,6 +95,22 @@ exclude_lines = [
     "raise NotImplementedError",
     "if __name__ == .__main__.:",
 ]
+
+[tool.interrogate]
+fail-under = 95
+exclude = [
+    "ketu/lunar_calendar.py",
+    "tests",
+    "build",
+    "docs",
+]
+ignore-init-method = true
+ignore-magic = true
+ignore-nested-functions = true
+ignore-private = false
+ignore-semiprivate = false
+verbose = 1
+style = "sphinx"
 
 # CI: pip install mypy numpy
 [tool.mypy]
