@@ -8,7 +8,7 @@
 
 PYTHON ?= python
 
-.PHONY: test test-fast houses-coverage mypy clean
+.PHONY: test test-fast houses-coverage doc-gates mypy clean
 
 ## test: Run the full pytest suite with coverage report.
 test:
@@ -37,6 +37,18 @@ test-fast:
 houses-coverage:
 	$(PYTHON) -m pytest tests/houses/ -o addopts="" --cov --cov-report= --cov-fail-under=0
 	$(PYTHON) -m coverage report --include='ketu/houses/*' --fail-under=95 -m
+
+## doc-gates: Run the doc-gate suite locally (interrogate + numpydoc lint).
+##
+## Mirrors what CI runs in tests.yml. Use before pushing to avoid
+## learning about a gate failure from the GitHub Actions email.
+doc-gates:
+	$(PYTHON) -m interrogate ketu/
+	$(PYTHON) -m numpydoc lint $$(find ketu -name "*.py" \
+	    ! -path "*/__pycache__/*" \
+	    ! -name "lunar_calendar.py" \
+	    ! -name "_*.py") || true
+	@echo "Doc gates OK (numpydoc warnings shown above; not blocking until v1.2.0)."
 
 ## mypy: Run mypy --strict over the whole package.
 mypy:
