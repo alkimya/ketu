@@ -249,6 +249,18 @@ def compute_chart(
         When ``system`` is unknown or ``polar_fallback`` is invalid
         (propagated from :func:`ketu.houses.calculate_houses`).
 
+    See Also
+    --------
+    ketu.houses.calculate_houses : House cusps + ASC/MC/ARMC/Vertex
+        engine called internally; ``polar_fallback`` is a pass-through
+        per D-11.
+    ketu.aspects.calculate_aspects_vectorized : Aspect engine whose
+        records are projected into the dense ``(13, 13)``
+        ``aspect_matrix`` / ``aspect_orbs`` block per D-05/D-17.
+    ketu.charts.is_day_chart : Sect helper (sunrise-inclusive,
+        polar-safe) used by Arabic Parts (Phase 19); standalone per
+        D-12 (not stored in :data:`CHART_DTYPE`).
+
     Notes
     -----
     The body axis (the ``(13,)`` dimension of ``body_lons``,
@@ -365,6 +377,15 @@ def is_day_chart(
         Boolean array with shape ``np.broadcast_shapes(jd, lat, lon)``.
         ``True`` where the Sun is in houses 7..12 (above horizon = day),
         ``False`` otherwise (below horizon = night).
+
+    See Also
+    --------
+    ketu.charts.compute_chart : Full natal-chart primitive; consumers
+        that already have a :data:`CHART_DTYPE` can call
+        ``is_day_chart`` separately rather than storing sect inside
+        the chart (D-12 rationale: avoids double source-of-truth).
+    ketu.houses.house_of : Body-to-house mapper used internally; the
+        sect decision is ``house_of(sun_lon, cusps) >= 7`` (D-14).
 
     Notes
     -----
