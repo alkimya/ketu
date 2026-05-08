@@ -8,7 +8,7 @@
 
 PYTHON ?= python
 
-.PHONY: test test-fast houses-coverage doc-gates mypy clean
+.PHONY: test test-fast houses-coverage charts-coverage doc-gates mypy clean
 
 ## test: Run the full pytest suite with coverage report.
 test:
@@ -37,6 +37,19 @@ test-fast:
 houses-coverage:
 	$(PYTHON) -m pytest tests/houses/ -o addopts="" --cov --cov-report= --cov-fail-under=0
 	$(PYTHON) -m coverage report --include='ketu/houses/*' --fail-under=95 -m
+
+## charts-coverage: Run the CHART-05 ≥95% coverage gate scoped to ketu.charts.
+##
+## Mirror of `houses-coverage` (HOU-09). Same two-step pattern to avoid
+## the NumPy `_NoValueType` reload bug triggered when coverage.py uses
+## `source=ketu.charts` (sub-package). With `source=ketu` (full package)
+## coverage works cleanly. We run pytest once with the project-wide
+## `ketu` source (no `--cov-fail-under` since most modules are
+## unexercised by tests/charts/), then scope the threshold check to
+## `ketu/charts/*` via `coverage report --include`.
+charts-coverage:
+	$(PYTHON) -m pytest tests/charts/ -o addopts="" --cov --cov-report= --cov-fail-under=0
+	$(PYTHON) -m coverage report --include='ketu/charts/*' --fail-under=95 -m
 
 ## doc-gates: Run the doc-gate suite locally (interrogate + numpydoc lint).
 ##
