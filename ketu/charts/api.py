@@ -36,7 +36,8 @@ import numpy as np
 from ketu.aspects.calculator import calculate_aspects_vectorized
 from ketu.aspects.presets import AspectSetSpec
 from ketu.ephemeris.planets import calc_planet_position_batch
-from ketu.houses import calculate_houses, house_of
+from ketu.houses import calculate_houses
+from ketu.houses.ascmc import compute_ascmc
 
 from .core import CHART_DTYPE
 
@@ -384,40 +385,46 @@ def is_day_chart(
         that already have a :data:`CHART_DTYPE` can call
         ``is_day_chart`` separately rather than storing sect inside
         the chart (D-12 rationale: avoids double source-of-truth).
-    ketu.houses.house_of : Body-to-house mapper used internally; the
-        sect decision is ``house_of(sun_lon, cusps) >= 7`` (D-14).
+    ketu.houses.ascmc.compute_ascmc : Closed-form ASC/MC/ARMC/Vertex
+        engine used internally for the system-independent ASC value.
 
     Notes
     -----
     **Sect convention (D-13).** Sunrise-inclusive: a Sun exactly on the
     Ascendant resolves to **day**. This matches the Hellenistic
     standard and is consistent with Solar Fire, Astro.com, and Robert
-    Hand's published rules. The ``house_of`` convention "cusps[i]
-    BEGINS house i+1" maps a Sun on the ASC to house 1 (and therefore
-    to ``False`` under a strict ``>= 7`` test). In practice, the strict
-    equality ``Sun == ASC`` has measure zero against real ephemeris
-    data (sub-arcsecond Sun position vs sub-arcsecond ASC computation),
-    so this implementation returns ``sun_house >= 7`` directly without
-    a dedicated ``np.isclose`` branch. Synthetic deltas of +/-0.01 deg
-    around the ASC are pinned by the test suite to validate the
-    convention pragmatically.
+    Hand's published rules. The implementation honours D-13 literally
+    via the diurnal-arc test ``(asc - sun_lon) mod 360 < 180`` — the
+    Sun trails the rotating Ascendant by 0..180° while above the
+    horizon. ``delta == 0`` (Sun exactly on the Ascendant) yields
+    ``True`` (day, sunrise-inclusive); ``delta == 180`` (Sun exactly on
+    the Descendant) yields ``False`` (night, sunset-exclusive).
+    Synthetic deltas of +/-0.01 deg around the ASC are pinned by the
+    test suite alongside the strict equality case.
 
-    **Polar safety (D-15).** ``is_day_chart`` calls
-    :func:`ketu.houses.calculate_houses` internally with
-    ``polar_fallback="porphyry"``, regardless of any caller setting,
-    so high-latitude users (Reykjavik, Tromso, relocated Solar Return
-    to polar latitudes, Arabic Parts at lat > 66.5 deg) always receive
-    a bool answer instead of a :class:`ketu.houses.HighLatitudeError`.
-    Porphyry cusps are mathematically defined at every latitude. The
+    **Polar safety (D-15).** ``is_day_chart`` derives the Ascendant
+    directly from :func:`ketu.houses.ascmc.compute_ascmc`, which is
+    closed-form via :func:`numpy.arctan2` and mathematically defined
+    at every latitude (including 80°+). High-latitude users
+    (Reykjavik, Tromso, relocated Solar Return to polar latitudes,
+    Arabic Parts at lat > 66.5 deg) always receive a bool answer
+    instead of a :class:`ketu.houses.HighLatitudeError`. The
     user-facing :func:`compute_chart` does **not** impose this
-    fallback — ``is_day_chart`` does, by design, because the sect
-    helper must always return a definitive bool.
+    polar tolerance — ``is_day_chart`` does, by design, because the
+    sect helper must always return a definitive bool.
 
-    **Geometric definition (D-14).** The above-horizon hemisphere maps
-    to houses 7..12 (DESC..MC..ASC, eastward).
-    :func:`ketu.houses.house_of` yields the Sun's natal house in
-    ``{1, ..., 12}``; ``return sun_house >= 7`` expresses the
-    day/night split without any declination math.
+    **Geometric definition (D-14).** The above-horizon hemisphere is
+    the *trailing* semicircle of the rotating Ascendant: as the Earth
+    rotates the ASC sweeps eastward through the zodiac while the Sun
+    is roughly stationary, so an above-horizon Sun trails the ASC by
+    ``0..180°`` of zodiacal longitude. Equivalently, the Sun is above
+    the horizon when ``(asc - sun_lon) mod 360 < 180`` — i.e. when
+    ``sun_lon`` lies in the half-open arc ``[ASC - 180, ASC]`` (mod
+    360). This is system-independent — it depends only on the
+    Ascendant, not on the chosen house system. Phase 15 will add
+    Whole Sign and Equal house systems whose cusp 7 is **not** at
+    ``ASC + 180``; the ASC-delta formulation here remains correct
+    for those systems and matches the Hellenistic definition of sect.
 
     **Standalone helper (D-12).** ``is_day``-ness is **not** stored in
     :data:`ketu.charts.CHART_DTYPE`: storing it would create a double
@@ -452,16 +459,17 @@ def is_day_chart(
     lon_a = np.asarray(lon, dtype=np.float64)
     jd_b, lat_b, lon_b = np.broadcast_arrays(jd_a, lat_a, lon_a)
 
-    # 2. Compute houses with Porphyry polar fallback (D-15) — always.
-    #    The day/night answer depends only on the Ascendant and the
-    #    above-horizon hemisphere; Porphyry preserves both at every
-    #    latitude, so the choice of system here is immaterial to the
-    #    sect outcome (we keep the package default "placidus" with
-    #    Porphyry substitution at polar elements only).
-    houses = calculate_houses(
-        jd_b, lat_b, lon_b,
-        system="placidus", polar_fallback="porphyry",
-    )
+    # 2. Closed-form Ascendant via compute_ascmc — system-independent and
+    #    polar-safe (D-15). compute_ascmc is pure numpy.arctan2 math,
+    #    mathematically defined at every latitude including 80°+, so we
+    #    never raise HighLatitudeError. Crucially this also makes
+    #    is_day_chart independent of any house system: Phase 15 will
+    #    introduce Whole Sign / Equal where DESC != ASC + 180, but the
+    #    Hellenistic sect definition is the eastward semicircle from the
+    #    ASC (above-horizon hemisphere), which holds regardless of the
+    #    house system.
+    ascmc = compute_ascmc(jd_b, lat_b, lon_b)
+    asc = np.asarray(ascmc["asc"], dtype=np.float64)
 
     # 3. Sun longitude per element. body_id=0 in calc_planet_position_batch
     #    is the Sun (PATTERNS § 3.2; mirrors _vectorised_body_properties
@@ -469,12 +477,21 @@ def is_day_chart(
     sun_lon_flat = calc_planet_position_batch(jd_b.ravel(), 0)[:, 0]
     sun_lon = sun_lon_flat.reshape(jd_b.shape)
 
-    # 4. Map Sun to its natal house (D-14).
-    sun_house = house_of(sun_lon, houses["cusps"])
-
-    # 5. Houses 7..12 = above horizon = day (D-13/D-14). Wrap in
-    #    ``np.asarray`` so scalar inputs still yield a 0-d ``np.ndarray``
-    #    of dtype ``bool`` rather than a bare ``np.bool_`` scalar — this
-    #    keeps the public return contract (``np.ndarray``) uniform across
-    #    scalar and vectorised call sites.
-    return np.asarray(sun_house >= 7)
+    # 4. Above-horizon test: a Sun whose ecliptic longitude is at or
+    #    "behind" the Ascendant (within the preceding 180°) is above the
+    #    horizon. The diurnal arc carries the Sun *backward* through the
+    #    zodiac relative to the rotating ASC: at sunrise ``Sun == ASC``
+    #    (delta = 0); just after sunrise the ASC has moved eastward of
+    #    the Sun (Sun in house 12, ``asc - sun_lon`` slightly positive);
+    #    at the MC the Sun trails the ASC by ~90°; at sunset it trails by
+    #    180° (DESC). So sect is ``(asc - sun_lon) mod 360 < 180``:
+    #    delta == 0 (Sun on ASC) -> day (D-13 sunrise-inclusive); delta
+    #    == 180 (Sun on DESC) -> night (sunset-exclusive). This is
+    #    system-independent: Whole Sign / Equal (Phase 15) leave this
+    #    semicircle definition unchanged. Wrap in ``np.asarray`` so
+    #    scalar inputs still yield a 0-d ``np.ndarray`` of dtype ``bool``
+    #    rather than a bare ``np.bool_`` scalar — this keeps the public
+    #    return contract (``np.ndarray``) uniform across scalar and
+    #    vectorised call sites.
+    delta = (asc - sun_lon) % 360.0
+    return np.asarray(delta < 180.0)

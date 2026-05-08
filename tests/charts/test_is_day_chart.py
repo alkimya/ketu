@@ -7,9 +7,13 @@ Pins the v1.2 sect helper contract (Plan 14-04):
   Sun in houses 1..6 = night. The strict ``Sun == ASC`` equality has
   measure zero on real data; convention is pinned by synthetic +/-0.01 deg
   deltas around the ASC.
-- Geometric definition (D-14): ``house_of(sun_lon, cusps) >= 7``.
+- Geometric definition (D-14): ``(asc - sun_lon) mod 360 < 180`` — the
+  Sun is above the horizon when its ecliptic longitude is in the
+  preceding semicircle of the rotating Ascendant. System-independent
+  (does not depend on the chosen house system).
 - Polar safety (D-15): never raises :class:`HighLatitudeError` thanks to
-  the internal ``polar_fallback="porphyry"`` always-on substitution.
+  the closed-form :func:`ketu.houses.ascmc.compute_ascmc` internal
+  Ascendant computation (no polar-fallback path needed).
 - Vectorisation: scalar (0-d), 1-d, 2-d, mixed broadcast (D-09).
 - Cross-API consistency with :data:`CHART_DTYPE` produced by
   :func:`compute_chart` for non-polar latitudes.
@@ -173,22 +177,38 @@ def test_is_day_chart_consistency_with_compute_chart_asc_and_sun_lon(
     )
 
 
-def test_is_day_chart_consistency_polar_via_explicit_porphyry() -> None:
-    """At polar latitudes, ``is_day_chart`` matches ``compute_chart(polar_fallback="porphyry")``.
+def test_is_day_chart_consistency_polar_via_asc_delta() -> None:
+    """At polar latitudes, ``is_day_chart`` matches the system-independent
+    ASC-delta definition (D-13/D-14): Sun above horizon iff
+    ``(asc - sun_lon) mod 360 < 180``.
 
-    This pins the D-15 internal-Porphyry choice: callers who supply the
-    same fallback explicitly to ``compute_chart`` get the same sect
-    answer as ``is_day_chart``.
+    Polar Porphyry cusps re-shift the house numbering (``cusps[6] == ASC``
+    instead of ``cusps[0] == ASC``), so the ``house_of(sun, cusps) >= 7``
+    pseudo-equivalence used at non-polar latitudes does not hold at polar
+    latitudes — this is by design now that ``is_day_chart`` derives sect
+    from the Ascendant alone (system-independent per the WR-02 fix).
+
+    What this test pins instead: a polar-night case where the Sun is
+    physically below the horizon (J2000 noon at lat=80 N is the polar
+    winter night), which the new ASC-delta formulation reports as
+    ``False`` (night) — matching physical reality.
     """
     jd, lat, lon = 2451545.0, 80.0, 0.0
     chart = compute_chart(jd, lat, lon, polar_fallback="porphyry")
-    sun_lon = chart["body_lons"][0]
-    expected = bool(int(house_of(sun_lon, chart["cusps"])) >= 7)
+    sun_lon = float(chart["body_lons"][0])
+    asc = float(chart["asc"])
+    expected = bool(((asc - sun_lon) % 360.0) < 180.0)
     actual = bool(is_day_chart(jd, lat, lon))
     assert actual == expected, (
-        f"is_day_chart at polar lat=80 disagrees with "
-        f"compute_chart(polar_fallback='porphyry'): "
-        f"actual={actual}, expected={expected}"
+        f"is_day_chart at polar lat=80 disagrees with the ASC-delta "
+        f"definition: actual={actual}, expected={expected} "
+        f"(asc={asc:.4f}, sun_lon={sun_lon:.4f})"
+    )
+    # Sanity: J2000 noon at lat=80 N is polar winter (Sun declination
+    # ~-23 deg, well below the -10 deg horizon limit at lat=80) -> night.
+    assert actual is False, (
+        "lat=80 N at J2000 noon must be a night chart (polar winter, "
+        "Sun physically below horizon)"
     )
 
 
