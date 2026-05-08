@@ -334,7 +334,11 @@ def compute_chart(
     out["jd"] = jd_b
     out["lat"] = lat_b
     out["lon"] = lon_b
-    out["system"] = system.lower()
+    # Single source-of-truth: read the canonical (lowercased) system
+    # name back from calculate_houses' output rather than re-normalising
+    # locally. Avoids drift if HOUSES_DTYPE['system'] ever changes its
+    # normalisation rule (alias resolution, kebab-case, etc.).
+    out["system"] = houses["system"]
     out["body_lons"] = body_lons
     out["body_lats"] = body_lats
     out["body_speeds"] = body_speeds
