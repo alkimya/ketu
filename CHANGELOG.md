@@ -7,6 +7,16 @@ All notable changes to Ketu are documented here.
 This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Added
+
+- **CI doc-quality gates** — `interrogate ≥95%` (blocking) and
+  `numpydoc validate` (warnings, blocking from v1.2.0) are now wired
+  into `tests.yml`. New `[project.optional-dependencies].dev` group
+  installs both tools (`pip install -e .[dev]`); `make doc-gates`
+  runs the full suite locally. (OPS-01, OPS-02)
+
 ## [1.1.0] - 2026-05-08
 
 ### BREAKING / Numerical Behavior Changes (Summary)
