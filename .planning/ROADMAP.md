@@ -40,7 +40,7 @@ Full details archived to `.planning/milestones/v1.1-ROADMAP.md`.
 ### 📋 v1.2 Astrologie relationnelle et prédictive (Phases 13-20)
 
 - [ ] **Phase 13: Doc Gates & CI Foundation** — Wire `interrogate ≥95%` and `numpydoc validate` early so they apply to every v1.2 module
-- [ ] **Phase 14: Chart Abstraction Foundation** — `ketu/charts/` subpackage with `CHART_DTYPE`, `compute_chart`, `is_day_chart` — keystone upstream of SYN/COMP/RET
+- [x] **Phase 14: Chart Abstraction Foundation** — `ketu/charts/` subpackage with `CHART_DTYPE`, `compute_chart`, `is_day_chart` — keystone upstream of SYN/COMP/RET *(2026-05-09)*
 - [ ] **Phase 15: Additional House Systems** — Whole Sign, Equal, Regiomontanus via existing `SYSTEMS` registry; Swiss Ephemeris validation
 - [ ] **Phase 16: Synastry** — `calculate_synastry(chart_a, chart_b)` with `SYNASTRY_DTYPE`, dense + filtered output modes, dedicated synastry orbs
 - [ ] **Phase 17: Composite Chart (Midpoint)** — `calculate_composite(chart_a, chart_b)` with circular midpoint helper and composite-derived houses
@@ -226,7 +226,7 @@ Plans:
 | 11. CLI Refactor & Integration         | v1.1      | 6/6            | ✓ Complete    | 2026-05-07 |
 | 12. Release Preparation v1.1.0         | v1.1      | 4/4            | ✓ Complete    | 2026-05-08 |
 | 13. Doc Gates & CI Foundation          | v1.2      | 0/5            | Planned       | —          |
-| 14. Chart Abstraction Foundation       | v1.2      | 0/?            | Not started   | —          |
+| 14. Chart Abstraction Foundation       | v1.2      | 5/5            | ✓ Complete    | 2026-05-09 |
 | 15. Additional House Systems           | v1.2      | 0/?            | Not started   | —          |
 | 16. Synastry                           | v1.2      | 0/?            | Not started   | —          |
 | 17. Composite Chart (Midpoint)         | v1.2      | 0/?            | Not started   | —          |
@@ -238,4 +238,4 @@ Plans:
 
 *v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`*
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
-*Roadmap last updated: 2026-05-08 — v1.2 phases 13-20 planned; Phase 13 plans scaffolded (5 plans, 3 waves).*
+*Roadmap last updated: 2026-05-09 — Phase 14 complete (5/5 plans, CHART-01..05 satisfied, 844 tests, 100% coverage `ketu/charts/`).*

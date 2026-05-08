@@ -10,11 +10,11 @@
 
 ### Chart abstraction (foundation — upstream of synastry/composite/return)
 
-- [ ] **CHART-01** : `ketu/charts/` subpackage created with `__init__.py` exposing public API
-- [ ] **CHART-02** : `CHART_DTYPE` structured array defined (positions par body + ASC + MC + ARMC + Vertex + cusps + aspects scalaires) — analogue de `HOUSES_DTYPE` / `CYCLE_DTYPE`, ML-interop NumPy-first
-- [ ] **CHART-03** : `compute_chart(jd, lat, lon, system="placidus", aspects="classical") → CHART_DTYPE` calcule un thème complet en un appel, vectorisable sur des arrays de `jd`
-- [ ] **CHART-04** : `is_day_chart(jd, lat, lon) → bool` helper vectorisable (Sun au-dessus de l'ASC = jour, sunrise inclusive)
-- [ ] **CHART-05** : Couverture ≥95 % sur `ketu/charts/` (gate identique à v1.1 houses)
+- [x] **CHART-01** : `ketu/charts/` subpackage created with `__init__.py` exposing public API *(Phase 14, 2026-05-09)*
+- [x] **CHART-02** : `CHART_DTYPE` structured array defined (positions par body + ASC + MC + ARMC + Vertex + cusps + aspects scalaires) — analogue de `HOUSES_DTYPE` / `CYCLE_DTYPE`, ML-interop NumPy-first *(Phase 14, 2026-05-09)*
+- [x] **CHART-03** : `compute_chart(jd, lat, lon, system="placidus", aspects="classical") → CHART_DTYPE` calcule un thème complet en un appel, vectorisable sur des arrays de `jd` *(Phase 14, 2026-05-09)*
+- [x] **CHART-04** : `is_day_chart(jd, lat, lon) → bool` helper vectorisable (Sun au-dessus de l'ASC = jour, sunrise inclusive) *(Phase 14, 2026-05-09)*
+- [x] **CHART-05** : Couverture ≥95 % sur `ketu/charts/` (gate identique à v1.1 houses) — atteint 100% *(Phase 14, 2026-05-09)*
 
 ### Additional house systems (Tier 1)
 
@@ -105,11 +105,11 @@ Each REQ-ID maps to exactly one phase. Filled by `gsd-roadmapper` 2026-05-08.
 
 | REQ-ID    | Phase    | Status  |
 |-----------|----------|---------|
-| CHART-01  | Phase 14 | Pending |
-| CHART-02  | Phase 14 | Pending |
-| CHART-03  | Phase 14 | Pending |
-| CHART-04  | Phase 14 | Pending |
-| CHART-05  | Phase 14 | Pending |
+| CHART-01  | Phase 14 | ✓ Done  |
+| CHART-02  | Phase 14 | ✓ Done  |
+| CHART-03  | Phase 14 | ✓ Done  |
+| CHART-04  | Phase 14 | ✓ Done  |
+| CHART-05  | Phase 14 | ✓ Done  |
 | HOU2-01   | Phase 15 | Pending |
 | HOU2-02   | Phase 15 | Pending |
 | HOU2-03   | Phase 15 | Pending |

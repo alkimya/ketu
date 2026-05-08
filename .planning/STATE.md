@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
-status: completed
-last_updated: "2026-05-08T22:00:00.000Z"
-last_activity: 2026-05-08 -- Phase 14 context gathered
+status: in-progress
+last_updated: "2026-05-09T00:00:00.000Z"
+last_activity: 2026-05-09 -- Phase 14 complete (CHART-01..05, 844 tests, 100% coverage)
 progress:
-  total_phases: 2
-  completed_phases: 1
-  total_plans: 5
-  completed_plans: 5
-  percent: 100
+  total_phases: 8
+  completed_phases: 2
+  total_plans: 10
+  completed_plans: 10
+  percent: 25
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 14 — chart-abstraction-foundation
+**Current focus:** Phase 15 — Additional House Systems (next up)
 
 ## Current Position
 
-Phase: 14 — CONTEXT GATHERED (ready for /gsd-plan-phase 14)
-Plan: 0 of TBD
-Status: Phase 14 discuss complete; CONTEXT.md captured
-Progress: [█░░░░░░░░░] 1/8 v1.2 phases complete (5/37 REQs)
-Last activity: 2026-05-08 -- Phase 14 context gathered
-Resume file: `.planning/phases/14-chart-abstraction-foundation/14-CONTEXT.md`
+Phase: 14 — COMPLETE (2026-05-09) — `ketu/charts/` keystone delivered
+Plan: 5 of 5 (CHART-01..05 satisfied)
+Status: Phase 14 closed; ready for Phase 15 (independent of CHART) or Phases 16/17/18/19 (CHART-dependent)
+Progress: [██░░░░░░░░] 2/8 v1.2 phases complete (10/37 REQs)
+Last activity: 2026-05-09 -- Phase 14 complete (844 tests, 100% coverage `ketu/charts/`, 0 critical review findings)
+Resume file: `.planning/phases/14-chart-abstraction-foundation/14-VERIFICATION.md`
 
 ## Performance Metrics
 
