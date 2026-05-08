@@ -112,6 +112,24 @@ ignore-semiprivate = false
 verbose = 1
 style = "sphinx"
 
+[tool.numpydoc_validation]
+checks = [
+    "all",   # report every check
+    "EX01",  # ignore: no examples section required (internal helpers)
+    "SA01",  # ignore: no See Also required
+    "ES01",  # ignore: no extended summary required
+    "GL01",  # ignore during warning phase (Phase 13–19); fix and remove in Phase 20
+]
+exclude = [
+    '\.lunar_calendar$',
+    '\._',
+]
+override_SS05 = [
+    '^Aspect$',
+    '^ZodiacPoint$',
+    '^CycleRatio$',
+]
+
 # CI: pip install mypy numpy
 [tool.mypy]
 python_version = "3.11"
