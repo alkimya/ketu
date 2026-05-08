@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: completed
-last_updated: "2026-05-08T20:56:41.284Z"
+last_updated: "2026-05-08T21:53:08.136Z"
 last_activity: 2026-05-08 -- Phase 13 marked complete
 progress:
-  total_phases: 1
+  total_phases: 2
   completed_phases: 1
   total_plans: 5
   completed_plans: 5
