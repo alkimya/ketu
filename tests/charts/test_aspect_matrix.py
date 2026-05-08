@@ -195,18 +195,26 @@ def test_aspect_matrix_handles_aspect_subset() -> None:
     )
     m = chart["aspect_matrix"]
     populated = m[m >= 0]
-    assert populated.size > 0, (
+    populated_values = set(int(v) for v in populated)
+
+    assert len(populated_values) > 0, (
         "Sagan chart has classical aspects, so a {Conjunction, Trine} "
         "subset must yield at least one populated cell"
     )
-    assert set(int(v) for v in populated) <= {_I_CONJUNCTION, _I_TRINE}, (
-        f"populated cells must be in {{0, 9}}; "
-        f"got {set(int(v) for v in populated)}"
+    assert populated_values <= {_I_CONJUNCTION, _I_TRINE}, (
+        f"populated cells must be in {{0, 9}}; got {populated_values}"
     )
-
-    # Verify Square (7) and Opposition (13) are filtered out:
-    assert (m == 7).sum() == 0, "Square (i_asp=7) leaked through aspect filter"
-    assert (m == 13).sum() == 0, "Opposition (i_asp=13) leaked through aspect filter"
+    # Verify Square (7) and Opposition (13) are filtered out — relies on
+    # the same set-of-int derivation above to dodge the NumPy ``sum()``
+    # reduction (which is what triggers the ``_NoValueType`` bug under
+    # ``coverage.py + swisseph + numpy lazy reload``; see
+    # tests/houses/conftest.py:32-43 for the rationale).
+    assert 7 not in populated_values, (
+        "Square (i_asp=7) leaked through aspect filter"
+    )
+    assert 13 not in populated_values, (
+        "Opposition (i_asp=13) leaked through aspect filter"
+    )
 
 
 # ---------------------------------------------------------------------------
