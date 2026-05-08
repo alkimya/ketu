@@ -101,12 +101,50 @@ Explicit boundaries pour v1.2.
 
 ## Traceability
 
-Filled by `gsd-roadmapper` after roadmap approval. Each REQ-ID maps to exactly one phase.
+Each REQ-ID maps to exactly one phase. Filled by `gsd-roadmapper` 2026-05-08.
 
-| REQ-ID | Phase | Status |
-|--------|-------|--------|
-| _Pending roadmap generation_ | _—_ | _—_ |
+| REQ-ID    | Phase    | Status  |
+|-----------|----------|---------|
+| CHART-01  | Phase 14 | Pending |
+| CHART-02  | Phase 14 | Pending |
+| CHART-03  | Phase 14 | Pending |
+| CHART-04  | Phase 14 | Pending |
+| CHART-05  | Phase 14 | Pending |
+| HOU2-01   | Phase 15 | Pending |
+| HOU2-02   | Phase 15 | Pending |
+| HOU2-03   | Phase 15 | Pending |
+| HOU2-04   | Phase 15 | Pending |
+| HOU2-05   | Phase 15 | Pending |
+| SYN-01    | Phase 16 | Pending |
+| SYN-02    | Phase 16 | Pending |
+| SYN-03    | Phase 16 | Pending |
+| SYN-04    | Phase 16 | Pending |
+| SYN-05    | Phase 16 | Pending |
+| COMP-01   | Phase 17 | Pending |
+| COMP-02   | Phase 17 | Pending |
+| COMP-03   | Phase 17 | Pending |
+| COMP-04   | Phase 17 | Pending |
+| RET-01    | Phase 18 | Pending |
+| RET-02    | Phase 18 | Pending |
+| RET-03    | Phase 18 | Pending |
+| RET-04    | Phase 18 | Pending |
+| RET-05    | Phase 18 | Pending |
+| PARTS-01  | Phase 19 | Pending |
+| PARTS-02  | Phase 19 | Pending |
+| PARTS-03  | Phase 19 | Pending |
+| PARTS-04  | Phase 19 | Pending |
+| PARTS-05  | Phase 19 | Pending |
+| PARTS-06  | Phase 19 | Pending |
+| PARTS-07  | Phase 19 | Pending |
+| PARTS-08  | Phase 19 | Pending |
+| OPS-01    | Phase 13 | Pending |
+| OPS-02    | Phase 13 | Pending |
+| OPS-03    | Phase 20 | Pending |
+| OPS-04    | Phase 20 | Pending |
+| OPS-05    | Phase 20 | Pending |
+
+**Coverage:** 37/37 v1.2 requirements mapped — no orphans, no double-mappings.
 
 ---
 
-*Defined: 2026-05-08 by Sophie Chen during `/gsd-new-milestone`. Pre-research docs (`v1.2-SCOPE.md`, `v1.2-OPEN_QUESTIONS.md`) consumed and superseded by this file. Research path skipped (decided non-breaking minor with prior architectural decisions already captured).*
+*Defined: 2026-05-08 by Sophie Chen during `/gsd-new-milestone`. Pre-research docs (`v1.2-SCOPE.md`, `v1.2-OPEN_QUESTIONS.md`) consumed and superseded by this file. Research path skipped (decided non-breaking minor with prior architectural decisions already captured). Traceability filled by `gsd-roadmapper` 2026-05-08 after roadmap approval.*

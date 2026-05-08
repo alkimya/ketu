@@ -5,14 +5,15 @@
 See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** v1.2 Astrologie relationnelle et prédictive — defining requirements → roadmap.
+**Current focus:** v1.2 Astrologie relationnelle et prédictive — roadmap defined (Phases 13-20), ready to plan Phase 13.
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 13 — pending
 Plan: —
-Status: Defining requirements
-Last activity: 2026-05-08 — Milestone v1.2 started
+Status: Roadmap defined, ready to plan Phase 13
+Progress: [░░░░░░░░░░] 0/8 v1.2 phases complete (0/37 REQs)
+Last activity: 2026-05-08 — v1.2 roadmap written by `gsd-roadmapper`; 37 REQs mapped across 8 phases
 
 ## Performance Metrics
 
@@ -35,23 +36,40 @@ Last activity: 2026-05-08 — Milestone v1.2 started
 
 **Open blockers:** None.
 
-**v1.2 ops debt (deferred from v1.1 close):**
+**v1.2 roadmap structure:**
 
-- `interrogate ≥95%` not installed/wired into CI — aspirational header reference only
-- `numpydoc validate` not wired into CI
-- `fr/CHANGELOG.md` does not exist (header reference is aspirational)
-- Node.js 20 deprecation warnings on every workflow step (`actions/checkout@v4`, `actions/setup-python@v5`, `actions/upload-artifact@v4`) — non-blocking; September 2026 removal deadline
-- Venv shebangs hardcoded to `/home/loc/workspace/solaris/ketu/venv/bin/python3` (project relocated from `solaris/ketu/` → `ketu/`); workaround via `python -m` pattern
+- Phase 13: Doc Gates & CI Foundation (OPS-01, OPS-02) — early ops debt; gates apply to all subsequent v1.2 code
+- Phase 14: Chart Abstraction Foundation (CHART-01..05) — keystone upstream of SYN/COMP/RET
+- Phase 15: Additional House Systems (HOU2-01..05) — independent of CHART; extends `SYSTEMS` registry
+- Phase 16: Synastry (SYN-01..05) — depends on Phase 14
+- Phase 17: Composite Chart Midpoint (COMP-01..04) — depends on Phase 14
+- Phase 18: Solar Return Standard + Relocated (RET-01..05) — depends on Phase 14
+- Phase 19: Arabic Parts Framework + 8 Parts (PARTS-01..08) — depends on Phase 14 (`is_day_chart`)
+- Phase 20: Release Preparation v1.2.0 (OPS-03, OPS-04, OPS-05) — late ops debt + PyPI publish
 
-**Working-tree leftovers (NOT v1.1 scope):**
+**v1.2 ops debt (will close during this milestone):**
+
+- `interrogate ≥95%` not installed/wired into CI — Phase 13 (OPS-01)
+- `numpydoc validate` not wired into CI — Phase 13 (OPS-02)
+- Node.js 20 deprecation warnings on every workflow step — Phase 20 (OPS-03)
+- `fr/CHANGELOG.md` aspirational reference — Phase 20 (OPS-04, decision)
+- Venv shebangs hardcoded to `/home/loc/workspace/solaris/ketu/venv/bin/python3` — workaround documented; not in v1.2 scope
+
+**Working-tree leftovers (NOT v1.2 scope):**
 
 - Stash `pre-release-merge: unrelated phase09/11 plan drift` left as-is
 
-**Downstream impact (v1.1 BREAKING):**
+**Downstream impact (carried over from v1.1 BREAKING):**
 
 - Kala (`solaris/kala`) — KetuAdapter must explicitly request `aspects=EXTENDED` for v1.0 behavior parity (documented in UPGRADING.md)
 - Lilith consumers — recompute any cached values; ~180° shift on every date
 
+**v1.2 framing constraints:**
+
+- Non-breaking minor strict — all new APIs additive; no defaults changed; no exports removed
+- Pure-NumPy contract preserved (no scipy / no swisseph runtime)
+- Coverage gates: ≥90% project / ≥85% per module / ≥95% on new modules (`ketu/charts/`, `ketu/parts/`)
+
 ## Session Continuity
 
-v1.2 milestone initialized 2026-05-08. Next: `/gsd-plan-phase 13` once REQUIREMENTS.md and ROADMAP.md are written.
+v1.2 roadmap written 2026-05-08. Next: `/gsd-plan-phase 13` to scaffold Phase 13 (Doc Gates & CI Foundation).
