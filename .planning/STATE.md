@@ -5,15 +5,16 @@
 See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** v1.2 Astrologie relationnelle et prédictive — roadmap defined (Phases 13-20), ready to plan Phase 13.
+**Current focus:** v1.2 Astrologie relationnelle et prédictive — roadmap defined (Phases 13-20), Phase 13 context captured, ready to plan.
 
 ## Current Position
 
-Phase: 13 — pending
+Phase: 13 — context gathered
 Plan: —
-Status: Roadmap defined, ready to plan Phase 13
+Status: Phase 13 context captured (4 areas discussed); ready for `/gsd-plan-phase 13`
 Progress: [░░░░░░░░░░] 0/8 v1.2 phases complete (0/37 REQs)
-Last activity: 2026-05-08 — v1.2 roadmap written by `gsd-roadmapper`; 37 REQs mapped across 8 phases
+Last activity: 2026-05-08 — Phase 13 CONTEXT.md written; decisions on dev-deps group, numpydoc warning→Phase 20 flip, clean baseline, "enforced by CI" reformulation
+Resume file: `.planning/phases/13-doc-gates-and-ci-foundation/13-CONTEXT.md`
 
 ## Performance Metrics
 
