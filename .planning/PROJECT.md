@@ -14,16 +14,34 @@ Cycle calculations must be correct, tested, and performant. If the math is wrong
 
 v1.1 evolved Ketu from a pure astronomical engine into an astronomical-astrological framework: configurable aspect sets (CLASSICAL default = 5 majors, opt-in TRADITIONAL/EXTENDED), extensible houses module (Placidus / Koch / Porphyry), and a Lilith formula correction (~180° shift, was computing perigee). Argparse CLI with subcommands replaced the legacy interactive `input()` prompt. 724 tests pass; mypy `--strict` clean; houses module at 96.75% coverage.
 
-## Next Milestone Goals (v1.2 — TBD)
+## Next Milestone Goals (v1.2 — Astrologie relationnelle et prédictive)
 
-Candidates surfaced during v1.1 close:
+Scope agreed with user 2026-05-08 post-v1.1 close. Pre-research working documents:
 
-- **Docs hardening in CI** — wire `interrogate ≥95%` and `numpydoc validate` (currently aspirational header references only)
-- **Workflow refresh** — Node.js 20 → 24 across `actions/checkout@v4`, `actions/setup-python@v5`, `actions/upload-artifact@v4` before Sept 2026 deprecation
+- [.planning/research/v1.2-SCOPE.md](research/v1.2-SCOPE.md) — three-tier scope sketch with risk register
+- [.planning/research/v1.2-OPEN_QUESTIONS.md](research/v1.2-OPEN_QUESTIONS.md) — questions for `/gsd-new-milestone` to resolve
+
+**Tier 1 — structural features:**
+
+- **Additional house systems** — Whole Sign, Equal, Regiomontanus (registry pattern from v1.1 already supports it)
+- **Synastry** — inter-chart aspect calculation between two natal charts
+- **Composite chart** — midpoint fusion of two charts for relationship analysis
+- **Solar return (révolution solaire)** — predictive chart for Sun's return to natal longitude
+
+**Tier 2 — useful primitives:**
+
+- **Part of Fortune + Arabic Parts framework** — extensible `PARTS` registry, ship 7 Hermetic Lots minimum
+- **`Chart` abstraction** — upstream architectural decision for synastry/composite/solar-return (see `v1.2-OPEN_QUESTIONS.md` Q1)
+
+**Tier 3 — ops debt (deadline-driven before September 2026):**
+
+- **CI documentation gates** — wire `interrogate ≥95%` + `numpydoc validate`
+- **Workflow refresh** — Node.js 20 → 24 across `actions/checkout@v4`, `actions/setup-python@v5`, `actions/upload-artifact@v4`
 - **`fr/CHANGELOG.md`** — create or remove the aspirational header reference
-- **eps_true upgrade** — current obliquity uses mean ε; investigate true ε with full nutation
-- **Additional house systems** — Whole Sign, Equal, Regiomontanus (architecture already supports via registry)
-- **True/Osculating Lilith (h13)** — instantaneous apogee variant alongside Mean Apogee
+
+**Explicitly DEFERRED to v1.3:**
+
+- **Chiron** — Centaur asteroid, very widely used in modern astrology, but requires either swisseph dependency or a Chebyshev-by-segment polynomial fit pipeline. User chose to make Chiron a dedicated v1.3 milestone (likely with other Centaurs: Pholus, Nessus, Chariklo). See `v1.2-SCOPE.md` § Out of scope for the technical reasoning.
 
 ## Requirements
 
