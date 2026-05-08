@@ -216,11 +216,30 @@ def test_compute_chart_polar_porphyry_substitutes() -> None:
     assert str(chart["system"]) == "placidus"
 
 
-def test_compute_chart_polar_fallback_invalid_raises_value_error() -> None:
-    """Invalid ``polar_fallback`` propagates ValueError from calculate_houses."""
+@pytest.mark.parametrize(
+    ("label", "lat", "lon"),
+    [
+        ("non_polar_paris", 48.8566, 2.3522),
+        ("polar_lat_80",    80.0,    0.0),
+    ],
+)
+def test_compute_chart_polar_fallback_invalid_raises_value_error(
+    label: str, lat: float, lon: float,
+) -> None:
+    """Invalid ``polar_fallback`` propagates ValueError regardless of latitude.
+
+    Pin both validation trajectories: at non-polar latitudes the error
+    must surface (calculate_houses currently validates eagerly, before
+    the polar check), AND at polar latitudes the error must surface
+    (the polar branch is also reached). If a future refactor moves
+    validation into the polar branch only, the non-polar case will go
+    red here and force the regression to be addressed deliberately —
+    this is the IN-04 ratchet.
+    """
+    del label  # only used for pytest IDs
     with pytest.raises(ValueError, match="polar_fallback"):
         compute_chart(
-            2451545.0, 48.8566, 2.3522,
+            2451545.0, lat, lon,
             polar_fallback="invalid_choice",  # type: ignore[arg-type]
         )
 
