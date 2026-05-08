@@ -9,12 +9,15 @@ cover:
 - body positions cross-checked against the underlying vectorised
   primitive (``calc_planet_position_batch``),
 - retrograde sign on :data:`body_speeds` (Mercury retrograde 2025-03-25),
-- aspect block sentinel state until plan 14-03 wires it,
+- diagonal-sentinel ratchet on the populated aspect block,
 - polar fallback pass-through (raise + porphyry, D-11),
 - AGPL boundary ratchet (no swisseph in ``ketu.charts.*``).
 
-Plan 14-03 will REPLACE :func:`test_compute_chart_aspect_matrix_sentinel_until_wave_03`
-with assertions on the populated aspect block (diagonal stays at sentinel).
+The dense aspect block is wired by plan 14-03; off-diagonal contents
+are exhaustively covered in :mod:`tests.charts.test_aspect_matrix`. The
+diagonal-only ratchet here is the structural counterpart that keeps the
+"a body has no aspect with itself" invariant pinned to ``compute_chart``
+itself (D-06).
 """
 from __future__ import annotations
 
@@ -160,24 +163,30 @@ def test_compute_chart_body_speeds_negative_for_retrograde() -> None:
 
 
 # ---------------------------------------------------------------------------
-# Aspect block (sentinel until plan 14-03)
+# Aspect block diagonal ratchet (D-06)
 # ---------------------------------------------------------------------------
 
 
-def test_compute_chart_aspect_matrix_sentinel_until_wave_03() -> None:
-    """Plan 14-02 ratchet: aspect block is sentinel-initialised until 14-03.
+def test_compute_chart_aspect_matrix_diagonal_is_sentinel() -> None:
+    """D-06 ratchet: a body has no aspect with itself.
 
-    Plan 14-03 will REPLACE this test with non-sentinel assertions on the
-    off-diagonal entries. The diagonal will stay at the sentinel state
-    (a body has no aspect with itself).
+    The off-diagonal entries are now populated by ``_build_aspect_matrix``
+    (plan 14-03) and exhaustively covered in
+    :mod:`tests.charts.test_aspect_matrix`. This test pins the
+    structural invariant on ``compute_chart`` itself: regardless of the
+    aspect set requested, the diagonal of ``aspect_matrix`` must stay at
+    ``-1`` and the diagonal of ``aspect_orbs`` must stay at ``NaN``.
     """
     chart = compute_chart(2451545.0, 48.8566, 2.3522)
-    assert (chart["aspect_matrix"] == -1).all(), (
-        "aspect_matrix must be fully -1 (sentinel) until plan 14-03"
-    )
-    assert np.isnan(chart["aspect_orbs"]).all(), (
-        "aspect_orbs must be fully NaN (sentinel) until plan 14-03"
-    )
+    for i in range(13):
+        assert int(chart["aspect_matrix"][i, i]) == -1, (
+            f"aspect_matrix[{i}, {i}] expected -1 (sentinel); "
+            f"got {int(chart['aspect_matrix'][i, i])}"
+        )
+        assert np.isnan(chart["aspect_orbs"][i, i]), (
+            f"aspect_orbs[{i}, {i}] expected NaN (sentinel); "
+            f"got {float(chart['aspect_orbs'][i, i])}"
+        )
 
 
 # ---------------------------------------------------------------------------
