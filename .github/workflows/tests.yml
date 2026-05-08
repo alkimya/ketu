@@ -43,6 +43,11 @@ jobs:
       run: |
         pytest tests/ --cov=ketu --cov-fail-under=70 -q
 
+    - name: Doc coverage gate (interrogate ≥95%)
+      if: matrix.python-version == '3.13'
+      run: |
+        python -m interrogate ketu/
+
     - name: Upload coverage reports to Codecov
       if: matrix.python-version == '3.13'
       uses: codecov/codecov-action@v4
