@@ -57,44 +57,44 @@ CYCLE_DTYPE = np.dtype([
 
 @dataclass
 class CycleState:
-    """Instantaneous state of a planetary cycle
+    """Instantaneous state of a planetary cycle.
 
     Attributes
     ----------
     julian_day : float
-        Julian date of calculation
+        Julian date of calculation.
     body1_id : int
-        First body ID
+        First body ID.
     body2_id : int
-        Second body ID
+        Second body ID.
     body1_lon : float
-        Longitude of body 1 (0-360°)
+        Longitude of body 1 (0-360°).
     body2_lon : float
-        Longitude of body 2 (0-360°)
+        Longitude of body 2 (0-360°).
     angular_separation : float
-        Angular distance (0-360°, in direction of cycle)
+        Angular distance (0-360°, in direction of cycle).
     cycle_progress : float
-        Normalized progress through cycle (0.0-1.0)
+        Normalized progress through cycle (0.0-1.0).
     cycle_phase : int
-        1 for waxing (0→180°), -1 for waning (180→360°)
+        1 for waxing (0→180°), -1 for waning (180→360°).
     body1_velocity : float
-        Velocity of body 1 (deg/day)
+        Velocity of body 1 (deg/day).
     body2_velocity : float
-        Velocity of body 2 (deg/day)
+        Velocity of body 2 (deg/day).
     relative_velocity : float
-        Relative velocity (deg/day)
+        Relative velocity (deg/day).
     body1_retro : bool
-        Is body 1 retrograde
+        Is body 1 retrograde.
     body2_retro : bool
-        Is body 2 retrograde
+        Is body 2 retrograde.
     nearest_aspect : float
-        Nearest major aspect angle
+        Nearest major aspect angle.
     aspect_distance : float
-        Signed distance to nearest aspect
+        Signed distance to nearest aspect.
     in_aspect : bool
-        Whether currently within orb of an aspect
+        Whether currently within orb of an aspect.
     aspect_orb : float
-        Current orb value if in aspect
+        Current orb value if in aspect.
     """
     julian_day: float
     body1_id: int
@@ -134,7 +134,7 @@ def generate_cycle_series(
     use_cache: bool = True,
     cache: Optional["EphemerisCache"] = None,
 ) -> np.ndarray:
-    """Generate cycle state series for a planetary pair
+    """Generate cycle state series for a planetary pair.
 
     Calculates the instantaneous state of the cycle between two bodies
     at each provided timestamp. Optimized for vectorized operations.
@@ -142,22 +142,22 @@ def generate_cycle_series(
     Parameters
     ----------
     body1 : str or int
-        First body (name or ID) - typically the faster body
+        First body (name or ID) - typically the faster body.
     body2 : str or int
-        Second body (name or ID) - typically the slower body
+        Second body (name or ID) - typically the slower body.
     timestamps : numpy.ndarray or list of datetime
-        Array of timestamps (datetime or Julian dates)
+        Array of timestamps (datetime or Julian dates).
     include_aspects : bool, optional
-        Calculate aspect proximity info (default: True)
+        Calculate aspect proximity info (default: True).
     use_cache : bool, optional
-        Use EphemerisCache for faster lookups (default: True)
+        Use EphemerisCache for faster lookups (default: True).
     cache : EphemerisCache, optional
-        Optional EphemerisCache instance (uses default if None)
+        Optional EphemerisCache instance (uses default if None).
 
     Returns
     -------
     numpy.ndarray
-        Structured numpy array with CYCLE_DTYPE
+        Structured numpy array with CYCLE_DTYPE.
 
     Examples
     --------
@@ -308,25 +308,25 @@ def generate_multi_cycle_series(
     use_cache: bool = True,
     cache: Optional["EphemerisCache"] = None,
 ) -> dict:
-    """Generate cycle series for multiple planetary pairs
+    """Generate cycle series for multiple planetary pairs.
 
     Parameters
     ----------
     planet_pairs : list of tuple
-        List of (body1, body2) tuples
+        List of (body1, body2) tuples.
     timestamps : numpy.ndarray or list of datetime
-        Array of timestamps
+        Array of timestamps.
     include_aspects : bool, optional
-        Calculate aspect proximity (default: True)
+        Calculate aspect proximity (default: True).
     use_cache : bool, optional
-        Use EphemerisCache for faster lookups (default: True)
+        Use EphemerisCache for faster lookups (default: True).
     cache : EphemerisCache, optional
-        Optional EphemerisCache instance (uses default if None)
+        Optional EphemerisCache instance (uses default if None).
 
     Returns
     -------
     dict of {str: numpy.ndarray}
-        Dict mapping pair names to structured arrays
+        Dict mapping pair names to structured arrays.
 
     Examples
     --------
