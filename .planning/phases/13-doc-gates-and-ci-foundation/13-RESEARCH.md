@@ -628,22 +628,22 @@ grep -rni "interrog\|numpydoc\|≥95\|>= *95\|95 *%\|95%\|aspirat" \
 | A2 | The single READMEparagraph added in Plan 5 is the only "positive" public-doc text needed to close OPS-01/OPS-02 traceability. | Aspirational Refs Audit | If the user expects a more detailed contributor doc (e.g., a docstring style guide section), Plan 5 will be under-scoped. Mitigated by the planner offering the option in the plan-checker review or `/gsd-discuss-phase` re-entry. `[ASSUMED]` from CONTEXT Specifics + D-11 wording, not directly confirmed with user. |
 | A3 | Suppressing GL01 during the warning phase (numpydoc) is acceptable and the 59 GL01 hits will be fixed in a single mechanical pass right before the Phase 20 blocking-flip. | Code Examples / numpydoc config | If the planner or user prefers to fix all 59 in Phase 13 (option B in the GL01 note), Plan 3's scope grows by ~1 hour of mechanical regex edits. Mitigated by surfacing the choice explicitly in the `[tool.numpydoc_validation]` block. `[ASSUMED]` based on signal-to-noise tradeoff; user has not been asked. |
 
-## Open Questions
+## Open Questions (RESOLVED)
 
 1. **Should `make doc-gates` (Sophie-flavored local one-shot) actually land?**
    - What we know: CONTEXT Specifics says it's optional but Sophie-flavored; the Makefile already has the `houses-coverage` precedent; recipe is 4 lines.
    - What's unclear: User preference for "yes ship it" vs "leave it to contributors' shell aliases".
-   - Recommendation: **Ship it.** Makefile precedent is set; cost is minimal; contributor experience is improved. Planner can include in Plan 4 or Plan 5.
+   - **RESOLVED:** Recommendation: **Ship it.** Makefile precedent is set; cost is minimal; contributor experience is improved. Planner can include in Plan 4 or Plan 5. _(Resolution: Plan 02 ships `make doc-gates`; consistent with the plan set as written.)_
 
 2. **Plan 3 vs Plan 4 scope split — single load-bearing plan or two?**
    - What we know: Plan 3 (numpydoc config + audit + fix all gaps) is the largest plan in the phase. Plan 4 (wire numpydoc into CI) is a 5-line change.
    - What's unclear: Whether the planner will want to split Plan 3 by file (e.g., one plan for `complex.py` alone, one for `calculations.py`+rest) given that `complex.py` is 124/231 of the issues.
-   - Recommendation: Single Plan 3 covering all files, but the plan's task list can naturally chunk by file. The fix is mechanical enough that file-level chunking inside one plan is preferable to plan-level chunking — keeps the merge surface small.
+   - **RESOLVED:** Recommendation: Single Plan 3 covering all files, but the plan's task list can naturally chunk by file. The fix is mechanical enough that file-level chunking inside one plan is preferable to plan-level chunking — keeps the merge surface small. _(Resolution: Plan 03 is a single plan with 3 tasks chunked by file group; consistent with the plan set as written.)_
 
 3. **`pip install -e ".[dev]"` vs `pip install -e ".[dev,test]"` in CI?**
    - What we know: Currently CI runs `pip install -e ".[dev]" || pip install -e .` then `pip install pytest pytest-cov` separately (line 28-29 of tests.yml). `test = ["pysweph"]` is the AGPL group.
    - What's unclear: Whether the existing CI install verb covers pysweph for tests that need it. Line 28's plain `pip install pytest pytest-cov` doesn't pull pysweph; presumably tests that need it `pytest.importorskip("swisseph")`.
-   - Recommendation: **Don't change the install verb in Phase 13.** D-02 says "the fallback can stay (defensive)". If pysweph-related test runs need the AGPL extra later, that's a separate change in OPS-03/Phase 20, not here. Out of scope.
+   - **RESOLVED:** Recommendation: **Don't change the install verb in Phase 13.** D-02 says "the fallback can stay (defensive)". If pysweph-related test runs need the AGPL extra later, that's a separate change in OPS-03/Phase 20, not here. Out of scope. _(Resolution: install verb left untouched in all 5 plans; consistent with the plan set as written.)_
 
 ## Sources
 

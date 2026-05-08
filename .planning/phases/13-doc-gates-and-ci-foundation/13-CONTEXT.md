@@ -47,6 +47,9 @@ CI infrastructure that gates docstring quality on every commit, with the v1.1 co
 - **D-12:** `.planning/` files are NOT touched in this phase's reformulation pass — `STATE.md`, `PROJECT.md`, `MILESTONES.md` are tracking documents that record "was aspirational, now wired" as part of the v1.2 narrative; they get updated by the normal `update_state` / milestone-tracking flow, not as CHANGELOG-style edits. (User chose "Replace with 'enforced by CI'" for the public-facing claim — `.planning/` is internal and follows its own update cadence.)
 - **D-13:** No new aspirational claims are added in Phase 13. If a future phase needs a new gate, it wires it in the same phase that adds the claim — never in a "we'll wire it later" comment.
 
+### GL01 deferral exception (D-14)
+- **D-14:** GL01 (summary line on same line as opening triple-quote) is the SOLE permitted exception to D-08. Reasoning: GL01 is a cosmetic line-placement issue, not a documentation content gap; suppressing it via `[tool.numpydoc_validation].checks` during the warning phase keeps the build log readable while Plans 03/04 land. Phase 20 plan author MUST remove `"GL01"` from the suppression list and run a mechanical sed pass to fix all ~59 hits before flipping numpydoc to blocking. This deferral does not extend to GL08, PR01, RT01, or any substantive content code.
+
 ### Claude's Discretion
 - Pin versions or use floor `>=X.Y` for `interrogate` and `numpydoc` — researcher decides based on PyPI release cadence and Python 3.10–3.13 compatibility.
 - Whether `numpydoc validate` runs as a separate CI step or piggybacks on the existing `Type check` step — planner decides based on signal-to-noise on the build log.

@@ -78,7 +78,14 @@ These apply to every v1.2 phase:
 3. The aspirational `interrogate ≥95%` and `numpydoc validate` references in CHANGELOG / README are now backed by real CI status — no aspirational references left.
 4. Re-running the gates on the v1.1 codebase produces a clean baseline (any pre-existing gaps fixed in this phase, not deferred).
 
-**Plans**: TBD
+**Plans:** 5 plans
+
+Plans:
+- [ ] 13-01-PLAN.md — Add `dev` extras group + `[tool.interrogate]` config; fix the 4 `_ra_formula_cusp_*` docstrings (interrogate green locally)
+- [ ] 13-02-PLAN.md — Wire `interrogate` as BLOCKING CI step in `tests.yml`; add `make doc-gates` Makefile target
+- [ ] 13-03-PLAN.md — Add `[tool.numpydoc_validation]` config; fix all numpydoc gaps in 9 source files (numpydoc clean locally)
+- [ ] 13-04-PLAN.md — Wire `numpydoc lint` as WARNING-only CI step in `tests.yml` with Phase 20 flip-target YAML comment
+- [ ] 13-05-PLAN.md — Positive-add of "Documentation Quality Gates" section in README + `## [Unreleased]` `### Added` entry in CHANGELOG citing OPS-01/OPS-02
 
 ### Phase 14: Chart Abstraction Foundation
 
@@ -218,7 +225,7 @@ These apply to every v1.2 phase:
 | 10. Houses Module                      | v1.1      | 6/6            | ✓ Complete    | 2026-05-07 |
 | 11. CLI Refactor & Integration         | v1.1      | 6/6            | ✓ Complete    | 2026-05-07 |
 | 12. Release Preparation v1.1.0         | v1.1      | 4/4            | ✓ Complete    | 2026-05-08 |
-| 13. Doc Gates & CI Foundation          | v1.2      | 0/?            | Not started   | —          |
+| 13. Doc Gates & CI Foundation          | v1.2      | 0/5            | Planned       | —          |
 | 14. Chart Abstraction Foundation       | v1.2      | 0/?            | Not started   | —          |
 | 15. Additional House Systems           | v1.2      | 0/?            | Not started   | —          |
 | 16. Synastry                           | v1.2      | 0/?            | Not started   | —          |
@@ -231,4 +238,4 @@ These apply to every v1.2 phase:
 
 *v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`*
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
-*Roadmap last updated: 2026-05-08 — v1.2 phases 13-20 planned.*
+*Roadmap last updated: 2026-05-08 — v1.2 phases 13-20 planned; Phase 13 plans scaffolded (5 plans, 3 waves).*
