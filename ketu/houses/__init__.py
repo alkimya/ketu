@@ -43,6 +43,7 @@ from . import koch       # noqa: F401  registers 'koch' in SYSTEMS
 from . import porphyry   # noqa: F401  registers 'porphyry' in SYSTEMS
 from . import whole_sign  # noqa: F401  registers 'whole_sign' in SYSTEMS
 from . import equal       # noqa: F401  registers 'equal' in SYSTEMS
+from . import regiomontanus  # noqa: F401  registers 'regiomontanus' in SYSTEMS
 
 __all__ = [
     "HOUSES_DTYPE",
