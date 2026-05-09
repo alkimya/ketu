@@ -39,11 +39,17 @@ def test_dtype_supports_vectorized_construction() -> None:
 
 
 def test_dtype_string_field_capacity() -> None:
-    """system field is U10 — fits 'placidus', 'koch', 'porphyry', 'whole_sign'."""
-    for name in ("placidus", "koch", "porphyry", "whole_sign"):
+    """system field is U16 — fits all v1.2 system names including 'regiomontanus' (13 chars)."""
+    for name in (
+        "placidus", "koch", "porphyry",
+        "whole_sign", "equal", "regiomontanus",
+    ):
         arr = np.zeros(1, dtype=HOUSES_DTYPE)
         arr["system"][0] = name
-        assert arr["system"][0] == name
+        assert arr["system"][0] == name, (
+            f"system field truncated {name!r} to {arr['system'][0]!r}; "
+            "did the U16 bump regress?"
+        )
 
 
 def test_dtype_scalar_zero_dim_construction() -> None:

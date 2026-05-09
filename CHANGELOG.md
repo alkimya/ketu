@@ -17,6 +17,15 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   installs both tools (`pip install -e .[dev]`); `make doc-gates`
   runs the full suite locally. (OPS-01, OPS-02)
 
+### Changed
+
+- `ketu.houses.HOUSES_DTYPE['system']` : largeur étendue de `U10` à
+  `U16` pour accommoder `"regiomontanus"` (13 chars) sans troncature.
+  **Non-breaking** : NumPy cast U10⇄U16 transparent à l'assignation ;
+  les comparaisons par contenu restent identiques ; aucun consommateur
+  Kala ou test ne dépend de la largeur exacte. Premier consommateur :
+  Phase 15 (HOU2-03 Regiomontanus). (Phase 15 / HOU2-05)
+
 ## [1.1.0] - 2026-05-08
 
 ### BREAKING / Numerical Behavior Changes (Summary)
