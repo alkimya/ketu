@@ -456,9 +456,9 @@ def is_day_chart(
     >>> bool(is_day_chart(jd, 48.8566, 2.3522)[1])
     True
 
-    Polar safety (Tromso, J2000 noon — Porphyry fallback prevents raise):
+    Polar safety (Tromso, midsummer noon — Porphyry fallback prevents raise):
 
-    >>> bool(is_day_chart(2451545.0, 69.65, 18.96))
+    >>> bool(is_day_chart(2451727.0, 69.65, 18.96))
     True
     """
     # 1. Broadcast (mirror compute_chart / calculate_houses).
