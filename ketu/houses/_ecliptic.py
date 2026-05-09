@@ -98,3 +98,58 @@ def ascensional_difference(lat: np.ndarray, decl: np.ndarray) -> np.ndarray:
     s_safe = np.where(np.abs(s) < 1.0, s, np.nan)
     result: np.ndarray = np.rad2deg(np.arcsin(s_safe))
     return result
+
+
+def _asc1(
+    x: np.ndarray,
+    lat: np.ndarray,
+    sin_eps: np.ndarray,
+    cos_eps: np.ndarray,
+) -> np.ndarray:
+    """Return the ecliptic longitude crossed by a great circle.
+
+    Mirrors swisseph's ``Asc1(x, f, sine, cose)`` (``swehouse.c`` line
+    2056). For ``x = ARMC + 90`` and ``f = lat`` this collapses to the
+    standard Ascendant formula::
+
+        asc = atan2(cos(armc), -(tan(lat)·sin(eps) + cos(eps)·sin(armc)))
+
+    Used by Koch (Plan 10-05) and Regiomontanus (Plan 15-03). When the
+    caller passes a *pole height* (e.g. ``atan(tan(geo_lat)·X)``) instead
+    of the geographic latitude, the result is the cusp of an intermediate
+    Regiomontanus great circle.
+
+    Parameters
+    ----------
+    x : np.ndarray
+        Angle (degrees) — for cusp ``k`` this is ``ARMC + offset_k``.
+    lat : np.ndarray
+        Geographic latitude OR pole height (degrees) depending on caller.
+        For Koch this is the geographic latitude; for Regiomontanus this
+        is the great-circle pole height (Pitfall 4 from 15-RESEARCH.md).
+    sin_eps : np.ndarray
+        Pre-computed ``sin`` of the obliquity (radians) — passed in to
+        avoid repeating the trig inside the per-cusp loop.
+    cos_eps : np.ndarray
+        Pre-computed ``cos`` of the obliquity (radians) — passed in to
+        avoid repeating the trig inside the per-cusp loop.
+
+    Returns
+    -------
+    np.ndarray
+        Ecliptic longitude (degrees, ``[0, 360)``).
+
+    Notes
+    -----
+    The leading underscore signals "internal API"; callers within
+    ``ketu.houses`` import via ``from ._ecliptic import _asc1``.
+    Public consumers should NOT depend on this symbol.
+    """
+    x_norm = x % 360.0
+    x_rad = np.deg2rad(x_norm)
+    lat_rad = np.deg2rad(lat)
+    num = np.cos(x_rad - np.pi / 2.0)
+    den = -(np.tan(lat_rad) * sin_eps + cos_eps * np.sin(x_rad - np.pi / 2.0))
+    lam = np.arctan2(num, den)
+    result: np.ndarray = np.rad2deg(lam) % 360.0
+    return result

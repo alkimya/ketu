@@ -30,6 +30,7 @@ from __future__ import annotations
 
 import numpy as np
 
+from ._ecliptic import _asc1
 from .registry import register
 
 #: Iteration cap kept for API parity with Placidus tests; Koch is closed-form
@@ -39,54 +40,6 @@ MAX_ITER: int = 50
 
 #: Convergence threshold (degrees) — same comment as :data:`MAX_ITER`.
 TOL_DEG: float = 1e-7
-
-
-def _asc1(
-    x: np.ndarray,
-    lat: np.ndarray,
-    sin_eps: np.ndarray,
-    cos_eps: np.ndarray,
-) -> np.ndarray:
-    """Return the ecliptic longitude crossed by a great circle.
-
-    Mirrors swisseph's ``Asc1(x, f, sine, cose)`` (``swehouse.c`` line
-    2056). For ``x = ARMC + 90`` and ``f = lat`` this collapses to the
-    standard Ascendant formula::
-
-        asc = atan2(cos(armc), -(tan(lat)·sin(eps) + cos(eps)·sin(armc)))
-
-    Parameters
-    ----------
-    x : np.ndarray
-        Angle (degrees) — for cusp ``k`` this is ``ARMC + offset_k``.
-    lat : np.ndarray
-        Geographic latitude (degrees).
-    sin_eps, cos_eps : np.ndarray
-        Pre-computed ``sin``/``cos`` of the obliquity (radians) — passed
-        in to avoid repeating the trig inside the per-cusp loop.
-
-    Returns
-    -------
-    np.ndarray
-        Ecliptic longitude (degrees, ``[0, 360)``).
-    """
-    x_norm = x % 360.0
-    x_rad = np.deg2rad(x_norm)
-    lat_rad = np.deg2rad(lat)
-    # The classical asc-style formula evaluated at the shifted argument:
-    #   tan(λ) = sin(x − 90 + 90) / (−tan(lat)·sin(eps) + cos(eps)·cos(x − 90 + 90))
-    # which equals
-    #   tan(λ) = cos(x − 90) / (−tan(lat)·sin(eps) − cos(eps)·sin(x − 90))
-    # Using x directly (without the −90 shift) corresponds to evaluating Asc1
-    # whose argument is ``ARMC + offset`` — when offset=90 we get the ASC.
-    # Swisseph's Asc1(x) implements the same identity via a quadrant-folded
-    # recursion using Asc2; the ``arctan2`` below is the closed-form
-    # equivalent.
-    num = np.cos(x_rad - np.pi / 2.0)
-    den = -(np.tan(lat_rad) * sin_eps + cos_eps * np.sin(x_rad - np.pi / 2.0))
-    lam = np.arctan2(num, den)
-    result: np.ndarray = np.rad2deg(lam) % 360.0
-    return result
 
 
 @register("koch")
