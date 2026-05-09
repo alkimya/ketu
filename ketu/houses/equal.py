@@ -12,8 +12,9 @@ Per swisseph C source (``swehouse.c`` case ``'E'``):
 The function is mathematically defined at all latitudes (it depends only
 on the Ascendant). Polar-safe by construction — no NaN propagation.
 
-Caveat — ``cusps[9]`` is NOT the astronomical MC
--------------------------------------------------
+Notes
+-----
+Caveat — ``cusps[9]`` is NOT the astronomical MC:
 For Placidus / Koch / Porphyry / Regiomontanus, ``cusps[9] == mc`` (the
 astronomical Medium Coeli, computed via :func:`compute_ascmc`). For
 Equal house, ``cusps[9] = (asc + 270) mod 360``, which only coincides
