@@ -21,7 +21,7 @@
 - [x] **HOU2-01** : Whole Sign houses — chaque maison = un signe, démarrant au signe de l'ASC ; polar-safe ; enregistré dans `SYSTEMS`
 - [x] **HOU2-02** : Equal houses — cusps espacés de 30° depuis l'ASC ; polar-safe ; enregistré dans `SYSTEMS`
 - [x] **HOU2-03** : Regiomontanus houses — division de l'équateur céleste projetée via le prime vertical ; enregistré dans `SYSTEMS`
-- [ ] **HOU2-04** : `--list-house-systems` retourne désormais `placidus, koch, porphyry, whole_sign, equal, regiomontanus` (5+ systèmes)
+- [x] **HOU2-04** : `--list-house-systems` retourne désormais `placidus, koch, porphyry, whole_sign, equal, regiomontanus` (5+ systèmes)
 - [x] **HOU2-05** : Chaque nouveau système validé contre Swiss Ephemeris sur les 10 reference charts existants (gate identique v1.1) ; max ASC delta documenté
 
 ### Synastry (Tier 1 — relational)
@@ -113,7 +113,7 @@ Each REQ-ID maps to exactly one phase. Filled by `gsd-roadmapper` 2026-05-08.
 | HOU2-01   | Phase 15 | Complete |
 | HOU2-02   | Phase 15 | Complete |
 | HOU2-03   | Phase 15 | Complete |
-| HOU2-04   | Phase 15 | Pending |
+| HOU2-04   | Phase 15 | Complete |
 | HOU2-05   | Phase 15 | Complete |
 | SYN-01    | Phase 16 | Pending |
 | SYN-02    | Phase 16 | Pending |
