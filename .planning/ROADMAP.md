@@ -227,7 +227,7 @@ Plans:
 | 12. Release Preparation v1.1.0         | v1.1      | 4/4            | ✓ Complete    | 2026-05-08 |
 | 13. Doc Gates & CI Foundation          | v1.2      | 0/5            | Planned       | —          |
 | 14. Chart Abstraction Foundation       | v1.2      | 5/5            | ✓ Complete    | 2026-05-09 |
-| 15. Additional House Systems           | v1.2      | 1/4 | In Progress|  |
+| 15. Additional House Systems           | v1.2      | 2/4 | In Progress|  |
 | 16. Synastry                           | v1.2      | 0/?            | Not started   | —          |
 | 17. Composite Chart (Midpoint)         | v1.2      | 0/?            | Not started   | —          |
 | 18. Solar Return (Standard + Relocated)| v1.2      | 0/?            | Not started   | —          |

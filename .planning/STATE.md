@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: executing
-last_updated: "2026-05-09T07:27:21.235Z"
+last_updated: "2026-05-09T07:41:21.639Z"
 last_activity: 2026-05-09
 progress:
   total_phases: 8
   completed_phases: 2
   total_plans: 14
-  completed_plans: 11
-  percent: 79
+  completed_plans: 12
+  percent: 86
 ---
 
 # Project State
@@ -25,9 +25,9 @@ See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 ## Current Position
 
 Phase: 15 (additional-house-systems) — EXECUTING
-Plan: 2 of 4
+Plan: 3 of 4
 Status: Ready to execute
-Progress: [████████░░] 79%
+Progress: [█████████░] 86%
 Last activity: 2026-05-09
 Resume file: None
 
@@ -48,6 +48,7 @@ Resume file: None
 | 11. CLI Refactor & Integration | 6     | ~34m 52s                                        | ~5m 49s       |
 | 12. Release Preparation v1.1.0 | 4     | ~20m 26s active (~3h elapsed incl. checkpoints) | ~5m 6s active |
 | Phase 15 P01 | 6 | 5 tasks | 9 files |
+| Phase 15 P02 | 8min | 7 tasks | 7 files |
 
 ## Accumulated Context
 
