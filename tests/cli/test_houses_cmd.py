@@ -17,7 +17,10 @@ class TestHousesCmdMatchesPythonAPI:
     SYDNEY = ("2026-05-06T12:00:00Z", -33.87, 151.21)
     GREENWICH = ("2000-01-01T12:00:00Z", 51.4769, 0.0)
 
-    @pytest.mark.parametrize("system", ["placidus", "koch", "porphyry"])
+    @pytest.mark.parametrize("system", [
+        "placidus", "koch", "porphyry",
+        "whole_sign", "equal", "regiomontanus",
+    ])
     @pytest.mark.parametrize("loc", [PARIS, SYDNEY, GREENWICH])
     def test_cli_cusps_match_python_api(self, invoke_main, capsys, system, loc):
         date_iso, lat, lon = loc
@@ -50,13 +53,31 @@ class TestHousesCmdFlags:
         assert exc.value.code == 2
 
     def test_invalid_system_rejected(self, invoke_main, capsys):
+        """argparse rejects unregistered system names with exit code 2.
+
+        Pitfall 7 (15-RESEARCH §11): in v1.1 this test pinned ``regiomontanus``
+        as invalid. Phase 15 makes it valid (HOU2-03) — the test now uses an
+        impossible name to ratchet the rejection path without depending on
+        a specific blacklist.
+        """
         with pytest.raises(SystemExit) as exc:
             invoke_main([
                 "houses", "--date", "2000-01-01T12:00:00Z",
                 "--lat", "48.85", "--lon", "2.35",
-                "--system", "regiomontanus",
+                "--system", "nonexistent_xyz",
             ])
         assert exc.value.code == 2
+
+    def test_v12_systems_accepted(self, invoke_main, capsys):
+        """HOU2-01..03: v1.2 systems are accepted by the parser (no SystemExit)."""
+        for system in ("whole_sign", "equal", "regiomontanus"):
+            rc = invoke_main([
+                "houses", "--date", "2000-01-01T12:00:00Z",
+                "--lat", "48.85", "--lon", "2.35",
+                "--system", system,
+                "--polar-fallback", "porphyry",  # safe at all latitudes
+            ])
+            assert rc == 0, f"system {system!r} unexpectedly rejected"
 
     def test_default_system_is_placidus(self, invoke_main, capsys):
         rc = invoke_main([
