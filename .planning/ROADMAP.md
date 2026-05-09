@@ -39,7 +39,7 @@ Full details archived to `.planning/milestones/v1.1-ROADMAP.md`.
 
 ### 📋 v1.2 Astrologie relationnelle et prédictive (Phases 13-20)
 
-- [ ] **Phase 13: Doc Gates & CI Foundation** — Wire `interrogate ≥95%` and `numpydoc validate` early so they apply to every v1.2 module
+- [x] **Phase 13: Doc Gates & CI Foundation** — Wire `interrogate ≥95%` and `numpydoc validate` early so they apply to every v1.2 module *(2026-05-08)*
 - [x] **Phase 14: Chart Abstraction Foundation** — `ketu/charts/` subpackage with `CHART_DTYPE`, `compute_chart`, `is_day_chart` — keystone upstream of SYN/COMP/RET *(2026-05-09)*
 - [x] **Phase 15: Additional House Systems** — Whole Sign, Equal, Regiomontanus via existing `SYSTEMS` registry; Swiss Ephemeris validation *(2026-05-09)*
 - [ ] **Phase 16: Synastry** — `calculate_synastry(chart_a, chart_b)` with `SYNASTRY_DTYPE`, dense + filtered output modes, dedicated synastry orbs
@@ -225,7 +225,7 @@ Plans:
 | 10. Houses Module                      | v1.1      | 6/6            | ✓ Complete    | 2026-05-07 |
 | 11. CLI Refactor & Integration         | v1.1      | 6/6            | ✓ Complete    | 2026-05-07 |
 | 12. Release Preparation v1.1.0         | v1.1      | 4/4            | ✓ Complete    | 2026-05-08 |
-| 13. Doc Gates & CI Foundation          | v1.2      | 0/5            | Planned       | —          |
+| 13. Doc Gates & CI Foundation          | v1.2      | 5/5            | ✓ Complete    | 2026-05-08 |
 | 14. Chart Abstraction Foundation       | v1.2      | 5/5            | ✓ Complete    | 2026-05-09 |
 | 15. Additional House Systems           | v1.2      | 4/4            | ✓ Complete    | 2026-05-09 |
 | 16. Synastry                           | v1.2      | 0/?            | Not started   | —          |

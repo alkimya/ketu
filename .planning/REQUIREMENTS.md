@@ -60,8 +60,8 @@
 
 ### Tier 3 — ops debt (deadline septembre 2026)
 
-- [ ] **OPS-01** : `interrogate ≥95%` installé en `[project.optional-dependencies]` (test-only) et wiré dans CI ; échoue le build si en dessous du seuil
-- [ ] **OPS-02** : `numpydoc validate` wiré dans CI sur les modules publics ; warnings non-bloquants au début, gate à activer en fin de milestone
+- [x] **OPS-01** : `interrogate ≥95%` installé en `[project.optional-dependencies]` (test-only) et wiré dans CI ; échoue le build si en dessous du seuil
+- [x] **OPS-02** : `numpydoc validate` wiré dans CI sur les modules publics ; warnings non-bloquants au début, gate à activer en fin de milestone
 - [ ] **OPS-03** : Workflows refresh — `actions/checkout@v5+`, `actions/setup-python@v6+`, `actions/upload-artifact@v5+` (Node.js 24) ; tous les warnings Node 20 supprimés
 - [ ] **OPS-04** : `fr/CHANGELOG.md` créé (synthétisé depuis l'anglais, pas double-maintenu) OU la référence aspirationnelle retirée — décision finale documentée
 - [ ] **OPS-05** : v1.2 release published on PyPI as `ketu==1.2.0` via OIDC trusted publishing ; GitHub release avec sdist + wheel ; CHANGELOG `[1.2.0]` + UPGRADING.md migration recipes (additive only)
@@ -137,8 +137,8 @@ Each REQ-ID maps to exactly one phase. Filled by `gsd-roadmapper` 2026-05-08.
 | PARTS-06  | Phase 19 | Pending |
 | PARTS-07  | Phase 19 | Pending |
 | PARTS-08  | Phase 19 | Pending |
-| OPS-01    | Phase 13 | Pending |
-| OPS-02    | Phase 13 | Pending |
+| OPS-01    | Phase 13 | Complete |
+| OPS-02    | Phase 13 | Complete |
 | OPS-03    | Phase 20 | Pending |
 | OPS-04    | Phase 20 | Pending |
 | OPS-05    | Phase 20 | Pending |
