@@ -1,5 +1,6 @@
 ---
 status: complete
+final_status: all_passed_after_fix
 phase: 14-chart-abstraction-foundation
 source:
   - 14-01-SUMMARY.md
@@ -54,14 +55,12 @@ evidence: "AGPL boundary OK — no swisseph in sys.modules after compute_chart +
 
 ### 6. Doctest examples in `ketu/charts/`
 expected: `pytest --doctest-modules ketu/charts/` returns exit 0 and runs >=3 doctests (is_day_chart Examples block).
-result: issue
-reported: "1 doctest fails: ketu.charts.api.is_day_chart line 461 expects bool(is_day_chart(2451545.0, 69.65, 18.96)) == True (Tromsø J2000 noon), but code returns False. The code is physically correct (Tromsø at 69.65°N is in polar night on Jan 1 — Sun never rises). The docstring example was correct under the OLD `sun_house >= 7` formulation (which falsely reported polar-night locations as 'day' based on which house the Sun mapped to, ignoring whether it was actually above the horizon). The WR-01 refactor (commit 40696eb) fixed the geometry to ASC-delta, which now correctly returns False for polar night — but the docstring example at api.py:461 was not updated."
-severity: minor
-fix_needed: |
-  Update ketu/charts/api.py:459-462 to either:
-    (a) Change Expected from True to False with a clarifying comment ("Tromsø J2000 noon — polar night, Sun never rises in January"), OR
-    (b) Pick a non-polar-night fixture (e.g. Tromsø in July: 2451725.0 = 2000-07-01 noon) where the answer IS True and Porphyry fallback IS demonstrating safety without changing the sect answer.
-  Option (b) is cleaner — it preserves the docstring's intent ("polar safety means we get a valid bool, not raise") without conflating it with sect outcome.
+result: pass
+evidence: "3 passed in 0.13s (after fix commit c8c5071)"
+fix_history:
+  - issue: "Stale doctest at api.py:461 — Tromsø J2000 noon expected True, code correctly returns False (polar night)."
+  - fix: "Commit c8c5071 — switched example to JD 2451727.0 (Tromsø 2000-07-01 noon UT, midsummer). Sun above horizon, Porphyry fallback still demonstrated, no conflation with polar-night sect outcome."
+  - root_cause: "WR-01 refactor (commit 40696eb) fixed is_day_chart geometry to ASC-delta but did not update the polar-safety docstring example. The 134-test charts suite passed because no test pinned the OLD docstring as a behavior contract — only --doctest-modules surfaced it."
 
 ### 7. Full test suite zero-regression
 expected: `pytest tests/ --no-cov -x` returns exit 0; total >=858 tests passing (was 844 pre-fix; code-review-fix added +14 ratchets).
@@ -81,28 +80,12 @@ evidence: |
 ## Summary
 
 total: 8
-passed: 7
-issues: 1
+passed: 8
+issues: 0
 pending: 0
 skipped: 0
+issues_fixed_inline: 1
 
 ## Gaps
 
-- truth: "is_day_chart docstring example for Tromsø J2000 noon (api.py:459-462) must agree with code behavior"
-  status: failed
-  reason: "Stale doctest: docstring expects True (old sun_house >= 7 formulation), code returns False (correct ASC-delta after WR-01 fix). Tromsø at lat=69.65 in January is physical polar night — code answer is correct. Docstring lags code."
-  severity: minor
-  test: 6
-  artifacts:
-    - ketu/charts/api.py:459-462
-  missing: []
-  diagnosis: "Code-review fix WR-01 (commit 40696eb) refactored is_day_chart to ASC-delta semantics, which correctly identifies Tromsø J2000 as polar night (False). The docstring example was not updated. The 134-test charts suite passed because no test pinned the OLD docstring example as a behavior contract — only --doctest-modules surfaces it."
-  recommended_fix: |
-    Edit ketu/charts/api.py:459-462. Two options:
-    (a) Change ``True`` → ``False`` with a comment line above: "Tromsø J2000 noon — polar night in January, hence False":
-        >>> bool(is_day_chart(2451545.0, 69.65, 18.96))
-        False
-    (b) Switch to a polar-summer fixture where Porphyry safety demonstrates without conflating with sect outcome. JD 2451725.0 = 2000-07-01 noon UT, Tromsø lat=69.65, lon=18.96 — Sun is well above horizon (midnight sun period). Expected: True.
-        >>> bool(is_day_chart(2451725.0, 69.65, 18.96))
-        True
-    Option (b) is cleaner: it preserves the docstring intent ("polar safety means a clean bool, not a HighLatitudeError") without mixing the polar-night edge case with the sect calculation.
+[none — Test 6 issue was diagnosed and fixed inline in commit c8c5071, Tests 1-8 all green after fix]
