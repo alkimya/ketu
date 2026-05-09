@@ -24,6 +24,25 @@ from .registry import get_system
 
 ArrayLike = Union[float, np.ndarray]
 
+#: Set of house systems that are mathematically defined at all latitudes
+#: (no declination-dependent singularity). The polar gate in
+#: :func:`calculate_houses` is bypassed when the requested system is in
+#: this set, so callers can write ``calculate_houses(jd, 80, 0,
+#: system='whole_sign')`` without setting ``polar_fallback='porphyry'``.
+#:
+#: - ``"porphyry"``: closed-form trisection of the (MC, ASC) and
+#:   (ASC, IC) arcs; doubles as the polar fallback for Placidus/Koch.
+#: - ``"whole_sign"``: sign-floor (``floor(asc/30)*30``) — no latitude
+#:   dependence in the cusp construction beyond the closed-form ASC.
+#: - ``"equal"``: ASC-anchored 30° spacing (``asc + 30k mod 360``) — same
+#:   reasoning as whole_sign.
+#:
+#: Phase 15 (HOU2-01, HOU2-02) extends this set from the original
+#: ``{"porphyry"}`` (v1.1) to its current size.
+POLAR_SAFE_SYSTEMS: frozenset[str] = frozenset(
+    {"porphyry", "whole_sign", "equal"}
+)
+
 
 def calculate_houses(
     jd: ArrayLike,
@@ -115,15 +134,17 @@ def calculate_houses(
     armc = np.asarray(ascmc["armc"], dtype=np.float64)
     eps = np.asarray(ascmc["eps"], dtype=np.float64)
 
-    # Detect polar elements (|lat| > polar_circle(jd)). Porphyry is itself
-    # the polar fallback path — mathematically defined at all latitudes
-    # including 89° — so the polar gate does NOT apply when the user
-    # explicitly requested Porphyry. Skipping the gate here lets users
-    # call ``calculate_houses(jd, 80, 0, system='porphyry')`` directly
+    # Detect polar elements (|lat| > polar_circle(jd)). Polar-safe systems
+    # (POLAR_SAFE_SYSTEMS) are mathematically defined at all latitudes —
+    # the polar gate does NOT apply when the user explicitly requested
+    # one of them. Skipping the gate here lets users write
+    # ``calculate_houses(jd, 80, 0, system='whole_sign')`` directly,
     # without redundant ``polar_fallback='porphyry'`` boilerplate.
+    # Phase 15 (HOU2-01, HOU2-02) extended the set from {'porphyry'} to
+    # {'porphyry', 'whole_sign', 'equal'}.
     polar_mask_raw = is_polar(lat_b, jd_b)
     polar_mask = np.asarray(polar_mask_raw, dtype=bool)
-    any_polar = bool(polar_mask.any()) and system_lower != "porphyry"
+    any_polar = bool(polar_mask.any()) and system_lower not in POLAR_SAFE_SYSTEMS
 
     if any_polar and polar_fallback == "raise":
         # First offending element drives the diagnostic.
