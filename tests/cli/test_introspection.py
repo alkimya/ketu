@@ -19,11 +19,46 @@ class TestListAspectSets:
 
 class TestListHouseSystems:
     def test_lists_registered_systems(self, invoke_main, capsys):
+        """HOU2-04: --list-house-systems retourne 6 systèmes triés alphabétiquement."""
         rc = invoke_main(["--list-house-systems"])
         assert rc == 0
         out = capsys.readouterr().out
-        for name in ("placidus", "koch", "porphyry"):
-            assert name in out
+        # All 6 v1.2 systems must appear.
+        for name in ("placidus", "koch", "porphyry",
+                     "whole_sign", "equal", "regiomontanus"):
+            assert name in out, f"system {name!r} missing from --list-house-systems output"
+
+    def test_systems_listed_in_alphabetical_order(self, invoke_main, capsys):
+        """D-03 verrouillé: ordre alphabétique déterministe via sorted(SYSTEMS.keys())."""
+        invoke_main(["--list-house-systems"])
+        out = capsys.readouterr().out
+        # Find the line index of each system name; they should be in
+        # alphabetical order: equal, koch, placidus, porphyry, regiomontanus, whole_sign.
+        expected_order = ["equal", "koch", "placidus", "porphyry", "regiomontanus", "whole_sign"]
+        positions = []
+        for name in expected_order:
+            # Match the formatted line "  NAME ... : ..." (variable padding for long names).
+            idx = out.find(f"  {name} ")
+            if idx < 0:
+                # Long names like 'regiomontanus' may not have a trailing space before ':'
+                idx = out.find(f"  {name}")
+            assert idx >= 0, f"system {name!r} not found in CLI output"
+            positions.append(idx)
+        # Verify monotonically increasing.
+        assert positions == sorted(positions), (
+            f"systems not in alphabetical order; positions: {positions}"
+        )
+
+    def test_every_registered_system_has_description(self, invoke_main, capsys):
+        """Sophie hint (PATTERNS §14.5): no system shall fall through to the
+        '(no description available)' default — _SYSTEM_DESCRIPTIONS must
+        cover every entry in SYSTEMS."""
+        invoke_main(["--list-house-systems"])
+        out = capsys.readouterr().out
+        assert "(no description available)" not in out, (
+            "Some registered system lacks a _SYSTEM_DESCRIPTIONS entry; "
+            "extend ketu/cli/introspection.py:_SYSTEM_DESCRIPTIONS."
+        )
 
     def test_mentions_polar_fallback_hint(self, invoke_main, capsys):
         invoke_main(["--list-house-systems"])
