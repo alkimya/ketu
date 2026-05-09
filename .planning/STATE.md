@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
-status: in-progress
-last_updated: "2026-05-09T00:00:00.000Z"
-last_activity: 2026-05-09 -- Phase 14 complete (CHART-01..05, 844 tests, 100% coverage)
+status: executing
+last_updated: "2026-05-09T07:27:21.235Z"
+last_activity: 2026-05-09
 progress:
   total_phases: 8
   completed_phases: 2
-  total_plans: 10
-  completed_plans: 10
-  percent: 25
+  total_plans: 14
+  completed_plans: 11
+  percent: 79
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 15 — Additional House Systems (next up)
+**Current focus:** Phase 15 — additional-house-systems
 
 ## Current Position
 
-Phase: 14 — COMPLETE (2026-05-09) — `ketu/charts/` keystone delivered
-Plan: 5 of 5 (CHART-01..05 satisfied)
-Status: Phase 14 closed; ready for Phase 15 (independent of CHART) or Phases 16/17/18/19 (CHART-dependent)
-Progress: [██░░░░░░░░] 2/8 v1.2 phases complete (10/37 REQs)
-Last activity: 2026-05-09 -- Phase 14 complete (844 tests, 100% coverage `ketu/charts/`, 0 critical review findings)
-Resume file: `.planning/phases/14-chart-abstraction-foundation/14-VERIFICATION.md`
+Phase: 15 (additional-house-systems) — EXECUTING
+Plan: 2 of 4
+Status: Ready to execute
+Progress: [████████░░] 79%
+Last activity: 2026-05-09
+Resume file: None
 
 ## Performance Metrics
 
@@ -47,6 +47,7 @@ Resume file: `.planning/phases/14-chart-abstraction-foundation/14-VERIFICATION.m
 | 10. Houses Module              | 6     | ~58m 10s                                        | ~9m 42s       |
 | 11. CLI Refactor & Integration | 6     | ~34m 52s                                        | ~5m 49s       |
 | 12. Release Preparation v1.1.0 | 4     | ~20m 26s active (~3h elapsed incl. checkpoints) | ~5m 6s active |
+| Phase 15 P01 | 6 | 5 tasks | 9 files |
 
 ## Accumulated Context
 
