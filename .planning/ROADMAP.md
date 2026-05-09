@@ -227,7 +227,7 @@ Plans:
 | 12. Release Preparation v1.1.0         | v1.1      | 4/4            | ✓ Complete    | 2026-05-08 |
 | 13. Doc Gates & CI Foundation          | v1.2      | 0/5            | Planned       | —          |
 | 14. Chart Abstraction Foundation       | v1.2      | 5/5            | ✓ Complete    | 2026-05-09 |
-| 15. Additional House Systems           | v1.2      | 3/4 | In Progress|  |
+| 15. Additional House Systems           | v1.2      | 4/4            | ✓ Complete    | 2026-05-09 |
 | 16. Synastry                           | v1.2      | 0/?            | Not started   | —          |
 | 17. Composite Chart (Midpoint)         | v1.2      | 0/?            | Not started   | —          |
 | 18. Solar Return (Standard + Relocated)| v1.2      | 0/?            | Not started   | —          |
@@ -238,4 +238,4 @@ Plans:
 
 *v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`*
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
-*Roadmap last updated: 2026-05-09 — Phase 14 complete (5/5 plans, CHART-01..05 satisfied, 844 tests, 100% coverage `ketu/charts/`).*
+*Roadmap last updated: 2026-05-09 — Phase 15 complete (4/4 plans, HOU2-01..05 satisfied, 909 tests, 6 systems registered : equal/koch/placidus/porphyry/regiomontanus/whole_sign).*

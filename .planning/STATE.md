@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: executing
-last_updated: "2026-05-09T07:54:20.804Z"
+last_updated: "2026-05-09T08:03:31Z"
 last_activity: 2026-05-09
 progress:
   total_phases: 8
-  completed_phases: 2
+  completed_phases: 3
   total_plans: 14
-  completed_plans: 13
-  percent: 93
+  completed_plans: 14
+  percent: 100
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 ## Current Position
 
-Phase: 15 (additional-house-systems) — EXECUTING
+Phase: 15 (additional-house-systems) — COMPLETE
 Plan: 4 of 4
-Status: Ready to execute
-Progress: [█████████░] 93%
+Status: All plans complete (HOU2-01..05 satisfied)
+Progress: [██████████] 100%
 Last activity: 2026-05-09
 Resume file: None
 
@@ -50,6 +50,7 @@ Resume file: None
 | Phase 15 P01 | 6 | 5 tasks | 9 files |
 | Phase 15 P02 | 8min | 7 tasks | 7 files |
 | Phase 15 P03 | 7min | 5 tasks | 5 files |
+| Phase 15 P04 | 7min | 7 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -94,7 +95,10 @@ Resume file: None
 - Plan 15-03: REYKJAVIK_REGIO_TOL_ARCMIN pinned at 1.0' (measured 0.86' on 2026-05-09) — decision-tree case <1' bucket per Plan 15-03 Task 5.
 - Plan 15-03: Pole-height naming convention (`pole_height_outer_deg` / `pole_height_inner_deg`) as visual ratchet against Pitfall 4 (geographic latitude vs pole height); grep gate enforces no `_asc1` call receives raw geographic latitude in `regiomontanus.py`.
 - Plan 15-03: Regiomontanus follows Koch-style NaN propagation at polar boundary (D-02 verrouillé in 15-CONTEXT.md), NOT swisseph `MC<->IC` swap; existing `api.py` `polar_fallback` machinery routes NaN to Porphyry without modification (verified by 2 dedicated integration tests).
+- Plan 15-04: Parser dispatcher dynamique via `choices=sorted(SYSTEMS.keys())` (D-07 verrouillé) — future-proof, Campanus/Topocentric/Alcabitius en v1.3 ne nécessiteront aucune modification du parser.
+- Plan 15-04: Top-level `--list-house-systems` help rendu statique générique (`"List all registered house systems and exit."`) — évite la dette de maintenance ; détails dans le subcommand `--system` help.
+- Plan 15-04: Pitfall 7 affecte 2 emplacements (test_houses_cmd.py ET test_parser.py) — auto-fix Rule 1 sur le second emplacement non identifié dans le plan ; substitution `regiomontanus` → `nonexistent_xyz` ratchet la sémantique CLI sans dépendance à la blacklist.
 
 ## Session Continuity
 
-v1.2 roadmap written 2026-05-08. Phase 15 Wave 2 progressing: 15-01 (foundation), 15-02 (whole_sign + equal), 15-03 (regiomontanus) all complete. Next: Plan 15-04 (CLI integration finale) — `/gsd-execute-plan 15-04`.
+v1.2 roadmap written 2026-05-08. Phase 15 close : 15-01 (foundation), 15-02 (whole_sign + equal), 15-03 (regiomontanus), 15-04 (CLI integration + phase gates) tous complétés. HOU2-01..05 satisfaits ; 909 tests verts ; 6 systèmes registrés ; 4 success criteria de Phase 15 verified end-to-end. Next: Phase 16 (Synastry) ou Phase 13 (Doc Gates & CI Foundation, en attente).
