@@ -74,10 +74,16 @@ import swisseph as swe  # noqa: E402  (after importorskip is project convention)
 #   b"K" = Koch
 #   b"O" = Porphyry  (closed-form; finite at all latitudes — used as the
 #                    polar fallback in Plan 10-05)
+#   b"W" = Whole Sign  (Phase 15 ; sign-floor ; polar-safe by construction)
+#   b"E" = Equal       (Phase 15 ; ASC-anchored 30° spacing ; polar-safe)
+#   b"R" = Regiomontanus (Phase 15 ; closed-form trig ; NaN at polar boundary)
 SYSTEM_BYTES: dict[str, bytes] = {
     "placidus": b"P",
     "koch": b"K",
     "porphyry": b"O",
+    "whole_sign": b"W",       # Phase 15 — HOU2-01
+    "equal": b"E",            # Phase 15 — HOU2-02
+    "regiomontanus": b"R",    # Phase 15 — HOU2-03
 }
 
 # Path to the snapshotted oracle JSON. Computed once at import time using
