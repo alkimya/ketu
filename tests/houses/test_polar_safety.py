@@ -95,6 +95,38 @@ def test_porphyry_does_not_yield_nan_above_polar_circle() -> None:
         )
 
 
+def test_whole_sign_does_not_yield_nan_above_polar_circle() -> None:
+    """Whole Sign remains finite at lat 70°, 80°, 89° (polar-safe by construction)."""
+    from ketu.houses.whole_sign import whole_sign_cusps
+    for lat in (70.0, 80.0, 89.0):
+        ascmc = compute_ascmc(2451545.0, lat, 0.0)
+        cusps = whole_sign_cusps(
+            np.asarray(ascmc["armc"]),
+            np.asarray(lat),
+            np.asarray(ascmc["eps"]),
+        )
+        assert not np.isnan(cusps).any(), (
+            f"Whole Sign NaN at lat={lat}°; sign-floor is polar-safe by "
+            "construction (HOU2-01)"
+        )
+
+
+def test_equal_does_not_yield_nan_above_polar_circle() -> None:
+    """Equal remains finite at lat 70°, 80°, 89° (polar-safe by construction)."""
+    from ketu.houses.equal import equal_cusps
+    for lat in (70.0, 80.0, 89.0):
+        ascmc = compute_ascmc(2451545.0, lat, 0.0)
+        cusps = equal_cusps(
+            np.asarray(ascmc["armc"]),
+            np.asarray(lat),
+            np.asarray(ascmc["eps"]),
+        )
+        assert not np.isnan(cusps).any(), (
+            f"Equal NaN at lat={lat}°; ASC-anchored 30° spacing is "
+            "polar-safe (HOU2-02)"
+        )
+
+
 def test_polar_circle_is_time_varying_not_hardcoded() -> None:
     """``polar_circle`` is ``90 - ε(jd)``; ε drifts ~46.81″ per century.
 
