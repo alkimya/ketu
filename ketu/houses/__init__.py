@@ -41,6 +41,8 @@ from .registry import SYSTEMS, get_system, register
 from . import placidus  # noqa: F401  registers 'placidus' in SYSTEMS
 from . import koch       # noqa: F401  registers 'koch' in SYSTEMS
 from . import porphyry   # noqa: F401  registers 'porphyry' in SYSTEMS
+from . import whole_sign  # noqa: F401  registers 'whole_sign' in SYSTEMS
+from . import equal       # noqa: F401  registers 'equal' in SYSTEMS
 
 __all__ = [
     "HOUSES_DTYPE",
