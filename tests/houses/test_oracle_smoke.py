@@ -81,7 +81,10 @@ def test_loaded_reference_snapshot_matches_oracle(
         assert label in loaded_reference_snapshot["charts"], (
             f"Snapshot missing chart {label}"
         )
-        for sys_name in ("placidus", "koch", "porphyry"):
+        for sys_name in (
+            "placidus", "koch", "porphyry",
+            "whole_sign", "equal", "regiomontanus",
+        ):
             snap = loaded_reference_snapshot["charts"][label]["systems"][sys_name]
             live = swe_oracle(chart["jd"], chart["lat"], chart["lon"], sys_name)
             if "error" in snap:

@@ -3,7 +3,8 @@
 /docs/build/
 /docs/_build/
 /docs/RELEASE.md
-/scripts/
+/scripts/*
+!/scripts/snapshot_reference_charts.py
 /.venv/
 /ketu/__pycache__
 /tests/__pycache__
