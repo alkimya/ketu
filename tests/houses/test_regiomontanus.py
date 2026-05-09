@@ -39,11 +39,18 @@ ALGO_TOL_DEG: float = 1e-6
 
 #: Reykjavik (lat=64.15°N) sits inside the high-latitude band where
 #: eps_mean vs eps_true drift in the snapshot oracle propagates through
-#: the pole-height formulas. The exact tolerance is MEASURED EMPIRICALLY
-#: during plan execution (see Task 5 of Plan 15-03) and pinned here.
-#: Initial value 5.0' is the upper bound from 15-RESEARCH §14.3 estimate;
-#: the actual measured value tightens it after the empirical run.
-REYKJAVIK_REGIO_TOL_ARCMIN: float = 5.0 * ARCMIN_DEG  # initial cap; tighten after measurement
+#: the pole-height formulas. The 15-RESEARCH §14.3 estimate was 2-5
+#: arcmin; the empirical measurement on 2026-05-09 yielded a max drift
+#: of **0.8581 arcmin** (well below the initial 5' cap and below 1' too).
+#: Pinned at 1.0 arcmin per Plan 15-03 Task 5 decision-tree (< 1 arcmin
+#: case): "Regio est plus précis que prévu", margin ~0.14' against
+#: future drift via the 1.0' bound. If a future regen of the snapshot
+#: pushes the drift above 1', tighten or relax with a fresh measurement
+#: rather than blanket-relax this constant.
+#:
+#: Measurement reproduction:
+#:     pytest tests/houses/test_regiomontanus.py::test_regiomontanus_reykjavik_drift_measured_and_pinned -s
+REYKJAVIK_REGIO_TOL_ARCMIN: float = 1.0 * ARCMIN_DEG  # measured 0.86' on 2026-05-09
 
 #: Charts that should match the oracle within the standard 1-arcmin
 #: tolerance (excludes Reykjavik, polar, and equator-degenerate cases).
