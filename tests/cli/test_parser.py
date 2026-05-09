@@ -56,6 +56,13 @@ class TestBuildParser:
         assert args.system == "placidus"
 
     def test_houses_system_choices_enforced(self, capsys):
+        """argparse rejects unregistered system names with exit code 2.
+
+        Pitfall 7 (15-RESEARCH §11): in v1.1 this test pinned ``regiomontanus``
+        as invalid. Phase 15 (Plan 15-03) makes it a registered system —
+        the test now uses an impossible name to ratchet the rejection path
+        without depending on a specific blacklist.
+        """
         parser = build_parser()
         with pytest.raises(SystemExit) as exc:
             parser.parse_args(
@@ -68,12 +75,12 @@ class TestBuildParser:
                     "--lon",
                     "2.35",
                     "--system",
-                    "regiomontanus",
+                    "nonexistent_xyz",
                 ]
             )
         assert exc.value.code == 2
         err = capsys.readouterr().err
-        assert "regiomontanus" in err or "invalid choice" in err
+        assert "nonexistent_xyz" in err or "invalid choice" in err
 
     def test_houses_polar_fallback_default_is_raise(self):
         parser = build_parser()
