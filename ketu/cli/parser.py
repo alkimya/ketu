@@ -14,6 +14,8 @@ from __future__ import annotations
 import argparse
 from typing import Sequence
 
+from ketu.houses import SYSTEMS as _HOUSE_SYSTEMS
+
 from .aspects_cmd import cmd_aspects
 from .harmonics_spec import parse_harmonics_spec
 from .houses_cmd import cmd_houses
@@ -53,9 +55,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument(
         "--list-house-systems",
         action="store_true",
-        help=(
-            "List available house systems (placidus, koch, porphyry) and exit."
-        ),
+        help="List all registered house systems and exit.",
     )
 
     # Top-level --harmonics SPEC. Plan 11-02 wires type=parse_harmonics_spec
@@ -132,9 +132,13 @@ def build_parser() -> argparse.ArgumentParser:
     )
     p_houses.add_argument(
         "--system",
-        choices=["placidus", "koch", "porphyry"],
+        choices=sorted(_HOUSE_SYSTEMS.keys()),
         default="placidus",
-        help="House system (default: placidus).",
+        help=(
+            "House system (default: placidus). Available: "
+            f"{', '.join(sorted(_HOUSE_SYSTEMS.keys()))}. "
+            "Use --list-house-systems for descriptions."
+        ),
     )
     p_houses.add_argument(
         "--polar-fallback",
