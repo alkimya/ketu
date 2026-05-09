@@ -23,6 +23,9 @@ _SYSTEM_DESCRIPTIONS = {
     "placidus": "Time-based; iterative trisection of the diurnal/nocturnal arcs (v1.1)",
     "koch": "Birthplace-based; closed-form trisection of the oblique-ascension arc (v1.1)",
     "porphyry": "Space-based; equal trisection of the ARMC quadrants — works at all latitudes (v1.1, also the polar fallback)",
+    "whole_sign": "Sign-based; cusp 1 = start of rising sign, then 30° spacing — oldest historical system; polar-safe (v1.2)",
+    "equal": "Equal-house; cusp 1 = ASC, then 30° spacing — note cusp 10 ≠ astronomical MC; polar-safe (v1.2)",
+    "regiomontanus": "Space-based; equal 30° divisions of celestial equator projected through prime vertical; NaN at polar (v1.2)",
 }
 
 
