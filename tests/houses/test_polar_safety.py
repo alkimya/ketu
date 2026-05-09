@@ -127,6 +127,31 @@ def test_equal_does_not_yield_nan_above_polar_circle() -> None:
         )
 
 
+def test_regiomontanus_yields_nan_above_polar_circle_in_safety_suite() -> None:
+    """Regiomontanus follows Koch's NaN-propagation contract above polar circle.
+
+    Plan 15-03 (D-02 verrouillé in 15-CONTEXT.md): the Regiomontanus
+    formula degenerates at ``|lat| >= 90 - eps`` because ``tan(lat)``
+    diverges in the pole-height computations. We mirror Koch's
+    NaN-propagation strategy (NOT swisseph's MC<->IC swap), so that
+    :func:`calculate_houses` can route via ``polar_fallback`` per HOU-06.
+    """
+    from ketu.houses.regiomontanus import regiomontanus_cusps
+    jd = 2451545.0
+    pc = float(polar_circle(jd))
+    lat = pc + 1.0
+    ascmc = compute_ascmc(jd, lat, 0.0)
+    cusps = regiomontanus_cusps(
+        np.asarray(ascmc["armc"]),
+        np.asarray(lat),
+        np.asarray(ascmc["eps"]),
+    )
+    assert np.isnan(cusps).any(), (
+        f"Regiomontanus 1° beyond polar circle (lat={lat}°) must NaN at "
+        "least one cusp (D-02 verrouillé in 15-CONTEXT.md)"
+    )
+
+
 def test_polar_circle_is_time_varying_not_hardcoded() -> None:
     """``polar_circle`` is ``90 - ε(jd)``; ε drifts ~46.81″ per century.
 

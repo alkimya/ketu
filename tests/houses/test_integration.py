@@ -266,6 +266,37 @@ def test_calculate_houses_polar_fallback_polar_cusps_match_porphyry_directly() -
     )
 
 
+def test_polar_fallback_routes_regiomontanus_to_porphyry() -> None:
+    """At lat=80° with ``system='regiomontanus'`` and
+    ``polar_fallback='porphyry'``, cusps come from Porphyry (no NaN).
+
+    Plan 15-03 verifies the existing ``polar_fallback`` machinery in
+    ``api.py`` automatically routes Regiomontanus' NaN cusps to
+    Porphyry — no api.py modification required for HOU2-03.
+    """
+    r = calculate_houses(
+        2451545.0, 80.0, 0.0,
+        system="regiomontanus",
+        polar_fallback="porphyry",
+    )
+    assert not np.isnan(r["cusps"]).any(), (
+        "polar_fallback='porphyry' must replace NaN cusps with Porphyry values"
+    )
+    # The system field reports the user's request (not the fallback).
+    assert str(r["system"]) == "regiomontanus"
+
+
+def test_polar_fallback_raise_for_regiomontanus() -> None:
+    """At lat=80° with ``system='regiomontanus'`` and
+    ``polar_fallback='raise'``, ``HighLatitudeError`` is raised
+    (default behaviour, HOU-06).
+    """
+    with pytest.raises(HighLatitudeError) as exc:
+        calculate_houses(2451545.0, 80.0, 0.0, system="regiomontanus")
+    assert exc.value.system == "regiomontanus"
+    assert abs(exc.value.lat - 80.0) < 1e-9
+
+
 def test_calculate_houses_system_field_preserved_under_fallback() -> None:
     """``system`` field reflects user request, even when porphyry was substituted.
 
