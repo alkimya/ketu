@@ -15,8 +15,9 @@ on the Ascendant, which is closed-form via :func:`compute_ascmc` for
 ``|lat| < 90°``). Polar-safe by construction — no NaN propagation, no
 ``HighLatitudeError`` path.
 
-Caveat — ``cusps[0]`` divergence
---------------------------------
+Notes
+-----
+Caveat — ``cusps[0]`` divergence:
 For Placidus / Koch / Porphyry / Equal / Regiomontanus, ``cusps[0] == asc``.
 For Whole Sign, ``cusps[0]`` is the start of the sign (Aries 0° if asc in
 [0°, 30°), Taurus 0° if asc in [30°, 60°), etc.). The actual Ascendant is
