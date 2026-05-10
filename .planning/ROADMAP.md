@@ -140,7 +140,14 @@ Plans:
 4. Three reference synastry pairs (hand-validated against Astro.com or Solar Fire) are pinned as oracle tests; max orb delta is reported in the test output.
 5. Coverage on the synastry module is ≥95%; UTC-only contract restated loudly in the API docstring (the most common user error in relational charts).
 
-**Plans**: TBD
+**Plans:** 5 plans
+
+Plans:
+- [ ] 16-01-PLAN.md — Foundation: `ketu/synastry/` skeleton + frozen `SYNASTRY_DTYPE` (8 fields) + `orbs.py` (formula + `_PRESETS_BY_NAME` + `resolve_orb_set` + ASC_MC default 8°) + structural/formula tests
+- [ ] 16-02-PLAN.md — Compute API: `calculate_synastry()` cross-product (15×15 = 225 pairs incl. self-pairs) + dense/filtered modes + velocity-based `applying` field + unit + idempotency tests
+- [ ] 16-03-PLAN.md — Oracle tests: 3 hand-validated couples (Curie, Diana/Charles, Lennon/Ono) JSON fixtures + `test_oracle.py` with max-orb-delta reporter
+- [ ] 16-04-PLAN.md — CLI sub-command: `ketu synastry --date-a/--lat-a/--lon-a/--date-b/...` + `--mode` + `--system` + `--json` + `--list-orbs` introspection + tests
+- [ ] 16-05-PLAN.md — Phase close-out: `make synastry-coverage` (≥95% gate) + `synastry_coverage_gate` marker + See Also cross-refs + CHANGELOG `[Unreleased]` entry + 5-criteria smoke
 
 ### Phase 17: Composite Chart (Midpoint Variant)
 
@@ -228,7 +235,7 @@ Plans:
 | 13. Doc Gates & CI Foundation          | v1.2      | 5/5            | ✓ Complete    | 2026-05-08 |
 | 14. Chart Abstraction Foundation       | v1.2      | 5/5            | ✓ Complete    | 2026-05-09 |
 | 15. Additional House Systems           | v1.2      | 4/4            | ✓ Complete    | 2026-05-09 |
-| 16. Synastry                           | v1.2      | 0/?            | Not started   | —          |
+| 16. Synastry                           | v1.2      | 0/5            | Planned       | —          |
 | 17. Composite Chart (Midpoint)         | v1.2      | 0/?            | Not started   | —          |
 | 18. Solar Return (Standard + Relocated)| v1.2      | 0/?            | Not started   | —          |
 | 19. Arabic Parts Framework + 8 Parts   | v1.2      | 0/?            | Not started   | —          |
