@@ -5,6 +5,7 @@
 /docs/RELEASE.md
 /scripts/*
 !/scripts/snapshot_reference_charts.py
+!/scripts/check_planning_coherence.py
 /.venv/
 /ketu/__pycache__
 /tests/__pycache__
