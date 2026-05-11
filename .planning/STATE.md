@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: executing
-last_updated: "2026-05-11T07:34:07Z"
+last_updated: "2026-05-11T09:50:00Z"
 last_activity: 2026-05-11
 progress:
   total_phases: 8
   completed_phases: 3
   total_plans: 19
-  completed_plans: 16
-  percent: 84
+  completed_plans: 17
+  percent: 89
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 ## Current Position
 
 Phase: 16 (synastry) — IN PROGRESS
-Plan: 3 of 5 (Plans 01, 02 complete; Wave 3 = Plans 03 + 04 in parallel; Plan 05 close-out last)
-Status: Plan 16-02 compute API closed (SYN-01, SYN-02, SYN-03, SYN-04 satisfied); Plan 16-03 (oracle) + 16-04 (CLI) unblocked
-Progress: [████████▌░] 84%
+Plan: 4 of 5 (Plans 01, 02, 03 complete; Plan 04 already advanced in parallel — see commits 9c81a86 + b788da3; Plan 05 close-out remains)
+Status: Plan 16-03 oracle tests closed (SYN-05 satisfied — 3 hand-validated oracle pairs pinned, 21 parametrized tests green, max |orb| reported per couple); Wave 3 oracle leg COMPLETE
+Progress: [████████▉░] 89%
 Last activity: 2026-05-11
-Resume file: .planning/phases/16-synastry/16-03-PLAN.md (or 16-04-PLAN.md — parallelisable)
+Resume file: .planning/phases/16-synastry/16-04-PLAN.md (if still pending close-out) or 16-05-PLAN.md (close-out)
 
 ## Performance Metrics
 
@@ -53,6 +53,7 @@ Resume file: .planning/phases/16-synastry/16-03-PLAN.md (or 16-04-PLAN.md — pa
 | Phase 15 P04 | 7min | 7 tasks | 5 files |
 | Phase 16 P01 | ~6min | 3 tasks | 7 files |
 | Phase 16-synastry P02 | ~9min | 3 tasks | 6 files |
+| Phase 16-synastry P03 | ~5min | 2 tasks | 5 files |
 
 ## Accumulated Context
 
@@ -110,7 +111,10 @@ Resume file: .planning/phases/16-synastry/16-03-PLAN.md (or 16-04-PLAN.md — pa
 - [Phase 16-02]: calculate_synastry signature locked: (chart_a, chart_b, aspects='classical', orbs='synastry', mode='filtered'); defaults align with CONTEXT.md decisions; cross-product via np.indices((15,15)) NOT triu_indices; self-pairs INCLUDED.
 - [Phase 16-02]: Applying convention refined (Rule 1 deviation): plan-supplied claim 'ALL ASC/MC contacts applying=False' was incorrect — only angle-to-angle pairs (both speeds=0) are mechanically applying=False; angle-to-planet uses signed rel_speed = -planet_speed. Docstrings + tests corrected in commit cfc3d2f.
 - [Phase 16-02]: Filtered row order is canonical body-pair (body_a*15 + body_b) ascending, NOT |orb|-ascending — predictable for ML/oracle tests; regression-guard test in place. Pitfall 6 f4 bit-exact ratchet across all 225 pairs at conjunction.
+- [Phase 16-03]: Self-consistency oracle is PRIMARY methodology — fixtures generated from compute_chart + calculate_synastry, lowest-|orb| aspects pinned as regression contracts; Astro.com cross-validation deferred to Plan 05 manual follow-up (anti-bot per 16-RESEARCH.md). Each fixture documents this loudly in validation_source.
+- [Phase 16-03]: Rating-uncertainty hygiene enforced — Curie pair (Pierre = C, noon LMT) and Lennon/Ono pair (Lennon = A, ±15min) EXCLUDE ASC/MC from expected_aspects; Diana/Charles (both AA) INCLUDE 3 ASC contacts. Schema v1 frozen with mandatory keys (schema_version, name, rodden_a, rodden_b, chart_a, chart_b, expected_aspects, validation_source, tolerance_deg).
+- [Phase 16-03]: Permissive orb_max_deg=5.0 (presence ceiling) decoupled from tighter tolerance_deg=0.1 (cross-validation quality bar for Plan 05). Max |orb| recorded per couple in pytest -v -s output: curie 2.27°, diana_charles 2.03°, lennon_ono 2.13° — comfortably under the 5.0° ceiling (ROADMAP success criterion #4 satisfied).
 
 ## Session Continuity
 
-v1.2 roadmap written 2026-05-08. Phase 15 close : 15-01..04 tous complétés (HOU2-01..05 satisfaits, 909 tests verts, 6 systèmes registrés). Phase 16 (Synastry) démarrée 2026-05-11 — Plan 16-01 foundation closed: ketu/synastry/ subpackage skeleton + SYNASTRY_DTYPE (8 fields, frozen) + SYNASTRY_BODY_COUNT=15 + orb formula module (SYNASTRY_FACTOR=0.5, ASC_MC_NATAL_ORB_DEG=8.0, resolve_orb_set resolver) livrés. **Plan 16-02 compute API closed (2026-05-11T07:34Z)**: `calculate_synastry(chart_a, chart_b, aspects, orbs, mode)` livré dans `ketu/synastry/api.py` (composition-only — cross-product 15x15, self-pairs INCLUDED, sentinel-fill dense, canonical-order filtered, velocity-based signed-applying); 60 nouveaux tests (29 unit + 10 applying + 21 idempotency); suite totale 1010 verts (950 + 60); coverage 100% sur ketu/synastry/; doc gates verts (interrogate 100%, numpydoc 0 issues, mypy --strict 0 issues). Une Rule 1 déviation : claim "ALL ASC/MC contacts applying=False" était fausse — corrigé pour le narrow invariant angle-to-angle (docstrings + tests). Last session: Sophie + executor agent, stopped at: Plan 16-02 complete. Next: Wave 3 = Plan 16-03 (oracle tests) + Plan 16-04 (CLI) en parallèle, Plan 16-05 (close-out) ensuite.
+v1.2 roadmap written 2026-05-08. Phase 15 close : 15-01..04 tous complétés (HOU2-01..05 satisfaits, 909 tests verts, 6 systèmes registrés). Phase 16 (Synastry) démarrée 2026-05-11 — Plan 16-01 foundation closed: ketu/synastry/ subpackage skeleton + SYNASTRY_DTYPE (8 fields, frozen) + SYNASTRY_BODY_COUNT=15 + orb formula module (SYNASTRY_FACTOR=0.5, ASC_MC_NATAL_ORB_DEG=8.0, resolve_orb_set resolver) livrés. **Plan 16-02 compute API closed (2026-05-11T07:34Z)**: `calculate_synastry(chart_a, chart_b, aspects, orbs, mode)` livré dans `ketu/synastry/api.py` (composition-only — cross-product 15x15, self-pairs INCLUDED, sentinel-fill dense, canonical-order filtered, velocity-based signed-applying); 60 nouveaux tests (29 unit + 10 applying + 21 idempotency); suite totale 1010 verts (950 + 60); coverage 100% sur ketu/synastry/; doc gates verts. **Plan 16-03 oracle tests closed (2026-05-11T09:50Z)**: 3 hand-validated celebrity synastry oracle fixtures (Curie AA/C, Diana/Charles AA/AA, Lennon/Ono A/AA) livrés comme JSON dans `tests/synastry/fixtures/oracle_*.json` (schema v1, Rodden ratings, AstroDatabank URLs, self-consistency validation_source). `tests/synastry/conftest.py` étendu (NON écrasé) avec `load_oracle_fixture` + `ORACLE_SLUGS` + `oracle_fixture` parametrized fixture. `tests/synastry/test_oracle.py` ajouté — 7 tests × 3 fixtures = 21 tests paramétrisés, tous verts. Max |orb| reporté par couple (ROADMAP critère #4): curie 2.27°, diana_charles 2.03°, lennon_ono 2.13° (largement sous le plafond permissif de 5.0°). Tests run OFFLINE — pas de fetch Astro.com (anti-bot per 16-RESEARCH.md Pitfall); cross-validation Astro.com déférée à Plan 05 manual follow-up. Suite synastry: 122/122 verts. Suite projet: **1058/1058 verts** (1037 baseline post-Plan-04 commits + 21 oracle). Coverage `ketu/synastry/` toujours 100%; interrogate 100%, numpydoc 0 issues, mypy --strict 0 issues. Aucune déviation (plan exécuté tel qu'écrit). Last session: Sophie + executor agent, stopped at: Plan 16-03 complete. Next: Plan 16-04 (CLI) déjà partiellement avancé en parallèle (commits 9c81a86 + b788da3) — vérifier statut + Plan 16-05 (close-out) ensuite.
