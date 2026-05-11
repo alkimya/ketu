@@ -76,3 +76,55 @@ class TestIntrospectionShortCircuits:
     def test_list_house_systems_no_subcommand(self, invoke_main):
         rc = invoke_main(["--list-house-systems"])
         assert rc == 0
+
+    def test_list_orbs_no_subcommand(self, invoke_main):
+        """--list-orbs short-circuits without requiring a subcommand."""
+        rc = invoke_main(["--list-orbs"])
+        assert rc == 0
+
+
+class TestListOrbs:
+    """Phase 16-04: --list-orbs prints synastry orb presets + formula."""
+
+    def test_cmd_list_orbs_runs_without_error(self, capsys):
+        """Calling cmd_list_orbs() directly produces non-empty stdout."""
+        from ketu.cli.introspection import cmd_list_orbs
+
+        cmd_list_orbs()
+        out = capsys.readouterr().out
+        assert out.strip() != ""
+
+    def test_cmd_list_orbs_lists_both_presets(self, capsys):
+        """Captured stdout contains both 'synastry' and 'classical' preset names."""
+        from ketu.cli.introspection import cmd_list_orbs
+
+        cmd_list_orbs()
+        out = capsys.readouterr().out
+        assert "synastry" in out
+        assert "classical" in out
+
+    def test_cmd_list_orbs_includes_formula_derivation(self, capsys):
+        """Captured stdout contains the canonical formula derivation."""
+        from ketu.cli.introspection import cmd_list_orbs
+
+        cmd_list_orbs()
+        out = capsys.readouterr().out
+        assert "(orb[b1] + orb[b2]) / 2 * coef[asp] * factor" in out
+
+    def test_cmd_list_orbs_cites_asc_mc_default(self, capsys):
+        """Captured stdout mentions the 8° ASC/MC default natal orb."""
+        from ketu.cli.introspection import cmd_list_orbs
+
+        cmd_list_orbs()
+        out = capsys.readouterr().out
+        # The exact float repr can be '8.0' or '8.0°' depending on format.
+        assert "8.0" in out
+
+    def test_cmd_list_orbs_examples_block(self, capsys):
+        """Captured stdout contains at least one Sun-Moon example line."""
+        from ketu.cli.introspection import cmd_list_orbs
+
+        cmd_list_orbs()
+        out = capsys.readouterr().out
+        # Conjunction Sun↔Moon example uses the unicode arrow ↔.
+        assert "Sun" in out and "Moon" in out and "6.0" in out
