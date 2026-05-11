@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: executing
-last_updated: "2026-05-09T08:03:31Z"
-last_activity: 2026-05-09
+last_updated: "2026-05-11T07:21:26Z"
+last_activity: 2026-05-11
 progress:
   total_phases: 8
   completed_phases: 3
-  total_plans: 14
-  completed_plans: 14
-  percent: 100
+  total_plans: 19
+  completed_plans: 15
+  percent: 79
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 15 — additional-house-systems
+**Current focus:** Phase 16 — synastry
 
 ## Current Position
 
-Phase: 15 (additional-house-systems) — COMPLETE
-Plan: 4 of 4
-Status: All plans complete (HOU2-01..05 satisfied)
-Progress: [██████████] 100%
-Last activity: 2026-05-09
-Resume file: None
+Phase: 16 (synastry) — IN PROGRESS
+Plan: 2 of 5 (Plan 01 complete; Plan 02 ready to start)
+Status: Plan 16-01 foundation closed (SYN-01 satisfied)
+Progress: [████████░░] 79%
+Last activity: 2026-05-11
+Resume file: .planning/phases/16-synastry/16-02-PLAN.md
 
 ## Performance Metrics
 
@@ -51,6 +51,7 @@ Resume file: None
 | Phase 15 P02 | 8min | 7 tasks | 7 files |
 | Phase 15 P03 | 7min | 5 tasks | 5 files |
 | Phase 15 P04 | 7min | 7 tasks | 5 files |
+| Phase 16 P01 | ~6min | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -98,7 +99,14 @@ Resume file: None
 - Plan 15-04: Parser dispatcher dynamique via `choices=sorted(SYSTEMS.keys())` (D-07 verrouillé) — future-proof, Campanus/Topocentric/Alcabitius en v1.3 ne nécessiteront aucune modification du parser.
 - Plan 15-04: Top-level `--list-house-systems` help rendu statique générique (`"List all registered house systems and exit."`) — évite la dette de maintenance ; détails dans le subcommand `--system` help.
 - Plan 15-04: Pitfall 7 affecte 2 emplacements (test_houses_cmd.py ET test_parser.py) — auto-fix Rule 1 sur le second emplacement non identifié dans le plan ; substitution `regiomontanus` → `nonexistent_xyz` ratchet la sémantique CLI sans dépendance à la blacklist.
+- Plan 16-01: SYNASTRY_DTYPE record-style verrouillé (anti-axis-style ratchet test) — un schéma unique pour dense + filtered modes via sentinelles `aspect_type=-1` / `orb=NaN`.
+- Plan 16-01: 8 fields locked as floor — 5 ROADMAP-mandatory + 3 metadata (lon_a, lon_b, orb_limit) rendent les rows auto-suffisants, pas de re-join CHART_DTYPE downstream.
+- Plan 16-01: SYNASTRY_FACTOR = 0.5 single-source-of-truth (cité astro.com FAQ "Partner horoscopes") — no parallel hardcoded orb table, multiplicatif uniquement sur la formule natale `(orb_a + orb_b)/2 * coef`.
+- Plan 16-01: ASC_MC_NATAL_ORB_DEG = 8.0 (mid-tier, matches Mercury/Mars/Uranus/Neptune in ketu.core.bodies) — donne 4° sur ASC-planète conjunction après factor 0.5, conforme à la pratique astro.com.
+- Plan 16-01: `_PRESET_BY_NAME` singulier (matches `ketu/aspects/presets.py:91`) — ratchet test en place contre la dérive pluralisée.
+- Plan 16-01: `OrbSetSpec = Union[None, str]` (no dict/callable/Sequence en v1.2) — surface narrow MVP.
+- Plan 16-01: `calculate_synastry` deferred to Plan 02 — foundation surface frozen first; `__init__.py` exports 6 names actuellement (SYNASTRY_DTYPE, SYNASTRY_BODY_COUNT, SYNASTRY_FACTOR, ASC_MC_NATAL_ORB_DEG, resolve_orb_set, OrbSetSpec).
 
 ## Session Continuity
 
-v1.2 roadmap written 2026-05-08. Phase 15 close : 15-01 (foundation), 15-02 (whole_sign + equal), 15-03 (regiomontanus), 15-04 (CLI integration + phase gates) tous complétés. HOU2-01..05 satisfaits ; 909 tests verts ; 6 systèmes registrés ; 4 success criteria de Phase 15 verified end-to-end. Next: Phase 16 (Synastry) ou Phase 13 (Doc Gates & CI Foundation, en attente).
+v1.2 roadmap written 2026-05-08. Phase 15 close : 15-01..04 tous complétés (HOU2-01..05 satisfaits, 909 tests verts, 6 systèmes registrés). Phase 16 (Synastry) démarrée 2026-05-11 — Plan 16-01 foundation closed: ketu/synastry/ subpackage skeleton + SYNASTRY_DTYPE (8 fields, frozen) + SYNASTRY_BODY_COUNT=15 + orb formula module (SYNASTRY_FACTOR=0.5, ASC_MC_NATAL_ORB_DEG=8.0, resolve_orb_set resolver) livrés. Tests: 41 new (18 dtype + 23 orbs); suite totale 950 verts (909 baseline + 41); coverage 100% sur ketu/synastry/; doc gates green (interrogate 100%, numpydoc 0 issues, mypy --strict 0 issues). Last session: Sophie + executor agent, stopped at: Plan 16-01 complete. Next: Plan 16-02 (compute API — calculate_synastry).
