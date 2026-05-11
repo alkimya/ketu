@@ -1,0 +1,34 @@
+{
+    "schema_version": 1,
+    "name": "lennon_ono",
+    "rodden_a": "A",
+    "rodden_b": "AA",
+    "chart_a": {
+        "subject_name": "John Lennon",
+        "iso_date": "1940-10-09T18:30:00Z",
+        "lat": 53.41,
+        "lon": -2.99,
+        "source": "https://www.astro.com/astro-databank/Lennon,_John",
+        "rating_note": "A-rated per AstroDatabank (birth time 18:30 GMT Liverpool widely cited but contested by some sources; +/-15 min uncertainty). ASC/MC EXCLUDED from expected_aspects due to rating-uncertainty hygiene."
+    },
+    "chart_b": {
+        "subject_name": "Yoko Ono",
+        "iso_date": "1933-02-18T11:30:00Z",
+        "lat": 35.69,
+        "lon": 139.69,
+        "source": "https://www.astro.com/astro-databank/Ono,_Yoko",
+        "rating_note": "AA per AstroDatabank Rodden rating (birth-time documented 20:30 JST Tokyo; UTC = 20:30 - 9h = 11:30). ASC/MC reliable for Ono but EXCLUDED here because Lennon partner is A-rated."
+    },
+    "expected_aspects": [
+        {"body_a": "Rahu",    "body_b": "Saturn",  "aspect": "Trine",      "orb_max_deg": 5.0, "note": "Lennon Rahu trine Ono Saturn - tightest contact"},
+        {"body_a": "Saturn",  "body_b": "Venus",   "aspect": "Square",     "orb_max_deg": 5.0, "note": "Lennon Saturn square Ono Venus - structure/love tension"},
+        {"body_a": "Rahu",    "body_b": "Moon",    "aspect": "Sextile",    "orb_max_deg": 5.0, "note": "Lennon Rahu sextile Ono Moon - karmic emotional link"},
+        {"body_a": "Mercury", "body_b": "Rahu",    "aspect": "Trine",      "orb_max_deg": 5.0, "note": "Lennon Mercury trine Ono Rahu - intellectual karma"},
+        {"body_a": "Jupiter", "body_b": "Venus",   "aspect": "Square",     "orb_max_deg": 5.0, "note": "Lennon Jupiter square Ono Venus - growth/love friction"},
+        {"body_a": "Mercury", "body_b": "Mercury", "aspect": "Trine",      "orb_max_deg": 5.0, "note": "Mercury self-pair trine - communication compatibility"},
+        {"body_a": "Mars",    "body_b": "Lilith",  "aspect": "Trine",      "orb_max_deg": 5.0, "note": "Lennon Mars trine Ono Lilith - assertive/shadow alignment"},
+        {"body_a": "Sun",     "body_b": "Venus",   "aspect": "Trine",      "orb_max_deg": 5.0, "note": "Lennon Sun trine Ono Venus - classic harmonic ego/love contact"}
+    ],
+    "tolerance_deg": 0.1,
+    "validation_source": "Self-consistency oracle - generated from compute_chart + calculate_synastry on 2026-05-11 using ketu v1.2 (Phase 16 Plan 03 execution). Selected the 8 lowest-|orb| aspects from filtered mode (mode='filtered', orbs='synastry', aspects='classical'), excluding ASC/MC contacts due to Lennon's A-rated time uncertainty. Cross-validation against Astro.com is an optional manual follow-up tracked in 16-05-SUMMARY.md."
+}

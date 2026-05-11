@@ -1,0 +1,36 @@
+{
+    "schema_version": 1,
+    "name": "diana_charles",
+    "rodden_a": "AA",
+    "rodden_b": "AA",
+    "chart_a": {
+        "subject_name": "Princess Diana",
+        "iso_date": "1961-07-01T18:45:00Z",
+        "lat": 52.83,
+        "lon": 0.50,
+        "source": "https://www.astro.com/astro-databank/Diana,_Princess_of_Wales",
+        "rating_note": "AA per AstroDatabank (birth-time documented 19:45 BST Sandringham; UTC = 18:45). ASC/MC permitted in expected_aspects."
+    },
+    "chart_b": {
+        "subject_name": "Prince Charles (Charles III)",
+        "iso_date": "1948-11-14T21:14:00Z",
+        "lat": 51.50,
+        "lon": -0.17,
+        "source": "https://www.astro.com/astro-databank/Charles_III,_King_of_England",
+        "rating_note": "AA per AstroDatabank (birth-time documented 21:14 GMT Buckingham Palace, London; GMT = UTC in November). ASC/MC permitted in expected_aspects."
+    },
+    "expected_aspects": [
+        {"body_a": "Lilith",  "body_b": "Venus",   "aspect": "Sextile",     "orb_max_deg": 5.0, "note": "Diana Lilith sextile Charles Venus - tightest contact"},
+        {"body_a": "Jupiter", "body_b": "ASC",     "aspect": "Opposition",  "orb_max_deg": 5.0, "note": "Diana Jupiter opposite Charles ASC - public expansion on partner's identity"},
+        {"body_a": "Pluto",   "body_b": "Mercury", "aspect": "Sextile",     "orb_max_deg": 5.0, "note": "Diana Pluto sextile Charles Mercury - transformative communication"},
+        {"body_a": "Rahu",    "body_b": "Moon",    "aspect": "Trine",       "orb_max_deg": 5.0, "note": "Diana North Node trine Charles Moon - karmic emotional connection"},
+        {"body_a": "Rahu",    "body_b": "Jupiter", "aspect": "Trine",       "orb_max_deg": 5.0, "note": "Diana North Node trine Charles Jupiter"},
+        {"body_a": "Lilith",  "body_b": "Pluto",   "aspect": "Conjunction", "orb_max_deg": 5.0, "note": "Diana Lilith conjunct Charles Pluto - intense shadow connection"},
+        {"body_a": "Pluto",   "body_b": "Saturn",  "aspect": "Conjunction", "orb_max_deg": 5.0, "note": "Diana Pluto conjunct Charles Saturn - generational/karmic"},
+        {"body_a": "ASC",     "body_b": "Pluto",   "aspect": "Trine",       "orb_max_deg": 5.0, "note": "Diana ASC trine Charles Pluto - identity transformation"},
+        {"body_a": "Uranus",  "body_b": "Sun",     "aspect": "Square",      "orb_max_deg": 5.0, "note": "Diana Uranus square Charles Sun - disruption/individuation tension"},
+        {"body_a": "Venus",   "body_b": "Sun",     "aspect": "Opposition",  "orb_max_deg": 5.0, "note": "Diana Venus opposite Charles Sun - classic relationship polarity"}
+    ],
+    "tolerance_deg": 0.1,
+    "validation_source": "Self-consistency oracle - generated from compute_chart + calculate_synastry on 2026-05-11 using ketu v1.2 (Phase 16 Plan 03 execution). Selected the 10 lowest-|orb| aspects from filtered mode (mode='filtered', orbs='synastry', aspects='classical'). Both partners AA-rated so ASC/MC contacts permitted. Cross-validation against Astro.com is an optional manual follow-up tracked in 16-05-SUMMARY.md."
+}

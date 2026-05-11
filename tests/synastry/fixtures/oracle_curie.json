@@ -1,0 +1,33 @@
+{
+    "schema_version": 1,
+    "name": "curie",
+    "rodden_a": "AA",
+    "rodden_b": "C",
+    "chart_a": {
+        "subject_name": "Marie Curie",
+        "iso_date": "1867-11-07T10:36:00Z",
+        "lat": 52.23,
+        "lon": 21.01,
+        "source": "https://www.astro.com/astro-databank/Curie,_Marie",
+        "rating_note": "AA per AstroDatabank Baptism Certificate (noon LMT Warsaw); UTC = 12:00 LMT - lon/15h = 12:00 - 1:24h = 10:36 UTC. Noon birth time means ASC/MC are NOT reliable; expected_aspects exclude angles."
+    },
+    "chart_b": {
+        "subject_name": "Pierre Curie",
+        "iso_date": "1859-05-15T11:51:00Z",
+        "lat": 48.85,
+        "lon": 2.35,
+        "source": "https://www.astro.com/astro-databank/Curie,_Pierre",
+        "rating_note": "C-rated per AstroDatabank (date known, time uncertain); using noon LMT Paris convention. UTC = 12:00 LMT - 2.35/15 h = 11:51 UTC. ASC/MC unreliable; expected_aspects exclude angles."
+    },
+    "expected_aspects": [
+        {"body_a": "Neptune", "body_b": "Mars",    "aspect": "Sextile",    "orb_max_deg": 5.0, "note": "Curie Neptune sextile Pierre Mars - tightest contact (creative/imaginative drive bonding)"},
+        {"body_a": "Mars",    "body_b": "Lilith",  "aspect": "Sextile",    "orb_max_deg": 5.0, "note": "Curie Mars sextile Pierre Lilith"},
+        {"body_a": "Moon",    "body_b": "Mars",    "aspect": "Square",     "orb_max_deg": 5.0, "note": "Curie Moon square Pierre Mars - emotional/drive tension"},
+        {"body_a": "Jupiter", "body_b": "Mercury", "aspect": "Sextile",    "orb_max_deg": 5.0, "note": "Curie Jupiter sextile Pierre Mercury - intellectual exchange"},
+        {"body_a": "Saturn",  "body_b": "Neptune", "aspect": "Trine",      "orb_max_deg": 5.0, "note": "Curie Saturn trine Pierre Neptune - shared idealism with structure"},
+        {"body_a": "Mercury", "body_b": "Uranus",  "aspect": "Opposition", "orb_max_deg": 5.0, "note": "Curie Mercury opposite Pierre Uranus - intellectual polarity"},
+        {"body_a": "Venus",   "body_b": "Sun",     "aspect": "Opposition", "orb_max_deg": 5.0, "note": "Curie Venus opposite Pierre Sun - classic relationship contact"}
+    ],
+    "tolerance_deg": 0.1,
+    "validation_source": "Self-consistency oracle - generated from compute_chart + calculate_synastry on 2026-05-11 using ketu v1.2 (Phase 16 Plan 03 execution). Selected the 7 lowest-|orb| aspects from filtered mode (mode='filtered', orbs='synastry', aspects='classical'), excluding ASC/MC contacts due to Pierre Curie's C-rated time uncertainty. Cross-validation against Astro.com is an optional manual follow-up tracked in 16-05-SUMMARY.md."
+}
