@@ -199,3 +199,83 @@ class TestMainDispatch:
         with pytest.raises(SystemExit) as exc:
             invoke_main(["nonexistent-subcommand"])
         assert exc.value.code == 2
+
+
+# --------------------------------------------------------------------------- #
+# Phase 16-04: synastry subparser registration + --list-orbs flag             #
+# --------------------------------------------------------------------------- #
+
+
+class TestSynastrySubparser:
+    """Plan 16-04: argparse tree shape for the synastry subcommand."""
+
+    _SYN_OK = [
+        "synastry",
+        "--date-a", "2000-01-01T12:00:00Z", "--lat-a", "48.85", "--lon-a", "2.35",
+        "--date-b", "2000-01-01T12:00:00Z", "--lat-b", "40.71", "--lon-b", "-74.01",
+    ]
+
+    def test_parser_has_synastry_subparser(self):
+        """`ketu synastry ...` dispatches to ketu.cli.synastry_cmd.cmd_synastry."""
+        from ketu.cli.synastry_cmd import cmd_synastry
+
+        parser = build_parser()
+        args = parser.parse_args(self._SYN_OK)
+        assert args.func is cmd_synastry
+
+    def test_parser_synastry_default_mode_filtered(self):
+        """args.mode defaults to 'filtered' when --mode is not specified."""
+        parser = build_parser()
+        args = parser.parse_args(self._SYN_OK)
+        assert args.mode == "filtered"
+
+    def test_parser_synastry_default_system_placidus(self):
+        """args.system defaults to 'placidus' when --system is not specified."""
+        parser = build_parser()
+        args = parser.parse_args(self._SYN_OK)
+        assert args.system == "placidus"
+
+
+class TestListOrbsFlag:
+    """Plan 16-04: top-level --list-orbs flag parsing and dispatch."""
+
+    def test_parser_list_orbs_flag_recognized(self):
+        """build_parser().parse_args(['--list-orbs']) sets args.list_orbs = True."""
+        parser = build_parser()
+        args = parser.parse_args(["--list-orbs"])
+        assert args.list_orbs is True
+
+    def test_main_dispatches_list_orbs(self, invoke_main, capsys):
+        """main(['--list-orbs']) returns 0 and stdout contains the orbs preset header."""
+        rc = invoke_main(["--list-orbs"])
+        assert rc == 0
+        out = capsys.readouterr().out
+        assert "synastry" in out
+        assert "classical" in out
+
+    def test_list_flags_collision_first_wins(self, invoke_main, capsys):
+        """M-1 ratchet: multiple --list-* flags → only the first ladder branch executes.
+
+        The early-return ladder in :func:`ketu.cli.parser.main` is intentional
+        FIRST-WINS (research §Pitfall 8). Ladder order is:
+        ``--list-aspect-sets`` -> ``--list-house-systems`` -> ``--list-orbs``.
+        Passing ``--list-orbs --list-house-systems`` together must therefore
+        emit the house-systems output (first reached in the ladder) and
+        suppress the orbs preset header (otherwise both would print). The
+        invariant the test pins is: never both, always exactly one.
+        """
+        rc = invoke_main(["--list-orbs", "--list-house-systems"])
+        assert rc == 0
+        out = capsys.readouterr().out
+        # Exactly one of the two ladder branches must have executed; we don't
+        # over-specify which (the production ladder is the source of truth),
+        # but the contract is "first wins, the other is silent".
+        orbs_header = "Available synastry orb presets"
+        house_header = "Available house systems"
+        emitted_orbs = orbs_header in out
+        emitted_house = house_header in out
+        assert emitted_orbs ^ emitted_house, (
+            "Expected exactly one --list-* branch to emit; "
+            f"got orbs={emitted_orbs}, house_systems={emitted_house}. "
+            "The early-return ladder in main() must be FIRST-WINS, not run-both."
+        )
