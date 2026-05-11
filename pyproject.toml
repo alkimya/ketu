@@ -78,6 +78,7 @@ markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "houses_coverage_gate: HOU-09 95% coverage gate for ketu.houses (run via Makefile target `make houses-coverage`)",
     "charts_coverage_gate: CHART-05 95% coverage gate for ketu.charts (run via Makefile target `make charts-coverage`)",
+    "synastry_coverage_gate: SYN-05 95% coverage gate for ketu.synastry (run via Makefile target `make synastry-coverage`)",
 ]
 
 [tool.coverage.run]
