@@ -164,7 +164,13 @@ Plans:
 3. Two reference composite pairs (hand-validated against Astro.com) are pinned as oracle tests with documented max longitude delta.
 4. Davison composite is explicitly out of scope and labeled as deferred-to-v1.3 in the module docstring (no aspirational reference).
 
-**Plans**: TBD
+**Plans:** 4 plans
+
+Plans:
+- [ ] 17-01-PLAN.md — Foundation: `ketu/composite/` skeleton + `circular_midpoint` helper (vectorisable; `mid(359°, 1°) == 0.0` pinned regression) + module docstring with Davison-deferred-to-v1.3 Notes block (no aspirational reference)
+- [ ] 17-02-PLAN.md — Compute API: `calculate_composite(chart_a, chart_b, system="placidus") -> CHART_DTYPE` with Approach A (inlined Porphyry trisection on composite ASC + composite MC; NO `calculate_houses` call) + inline aspect-matching loop on composite body_lons + COMP-01/COMP-03 ratchets (swap-symmetric, polar-safe, no-`compute_chart` grep ratchet)
+- [ ] 17-03-PLAN.md — Oracle tests: 3 hand-validated composite fixtures (Curie bodies-only, Diana/Charles + Lennon/Ono with ASC/MC) at `tolerance_deg=0.0001` self-consistency; `test_oracle.py` with max-|delta| reporter; Astro.com cross-check deferred to Plan 17-04 (bot-blocked per 17-RESEARCH)
+- [ ] 17-04-PLAN.md — Phase close-out: `make composite-coverage` (≥95% gate) + `composite_coverage_gate` pytest marker + sentinel test + See Also cross-refs (charts <-> composite <-> synastry) + CHANGELOG `[Unreleased]` entry citing COMP-01..04 + REQUIREMENTS status flips + 4-criteria smoke + Astro.com manual cross-check follow-up note
 
 ### Phase 18: Solar Return (Standard + Relocated)
 
@@ -236,7 +242,7 @@ Plans:
 | 14. Chart Abstraction Foundation       | v1.2      | 5/5            | ✓ Complete    | 2026-05-09 |
 | 15. Additional House Systems           | v1.2      | 4/4            | ✓ Complete    | 2026-05-09 |
 | 16. Synastry                           | v1.2      | 5/5            | ✓ Complete    | 2026-05-11 |
-| 17. Composite Chart (Midpoint)         | v1.2      | 0/?            | Not started   | —          |
+| 17. Composite Chart (Midpoint)         | v1.2      | 0/4            | Not started   | —          |
 | 18. Solar Return (Standard + Relocated)| v1.2      | 0/?            | Not started   | —          |
 | 19. Arabic Parts Framework + 8 Parts   | v1.2      | 0/?            | Not started   | —          |
 | 20. Release Preparation v1.2.0         | v1.2      | 0/?            | Not started   | —          |
