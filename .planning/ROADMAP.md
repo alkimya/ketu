@@ -42,7 +42,7 @@ Full details archived to `.planning/milestones/v1.1-ROADMAP.md`.
 - [x] **Phase 13: Doc Gates & CI Foundation** — Wire `interrogate ≥95%` and `numpydoc validate` early so they apply to every v1.2 module *(2026-05-08)*
 - [x] **Phase 14: Chart Abstraction Foundation** — `ketu/charts/` subpackage with `CHART_DTYPE`, `compute_chart`, `is_day_chart` — keystone upstream of SYN/COMP/RET *(2026-05-09)*
 - [x] **Phase 15: Additional House Systems** — Whole Sign, Equal, Regiomontanus via existing `SYSTEMS` registry; Swiss Ephemeris validation *(2026-05-09)*
-- [ ] **Phase 16: Synastry** — `calculate_synastry(chart_a, chart_b)` with `SYNASTRY_DTYPE`, dense + filtered output modes, dedicated synastry orbs
+- [x] **Phase 16: Synastry** — `calculate_synastry(chart_a, chart_b)` with `SYNASTRY_DTYPE`, dense + filtered output modes, dedicated synastry orbs *(2026-05-11)*
 - [ ] **Phase 17: Composite Chart (Midpoint)** — `calculate_composite(chart_a, chart_b)` with circular midpoint helper and composite-derived houses
 - [ ] **Phase 18: Solar Return (Standard + Relocated)** — `solar_return(...)` with pure-NumPy root-finding handling 360°→0° wrap; <1 arcsecond convergence
 - [ ] **Phase 19: Arabic Parts Framework + 8 Parts** — `ketu/parts/` registry, sect-aware `calculate_part`, 7 Hermetic Lots + Marriage, `--list-parts` CLI
@@ -235,7 +235,7 @@ Plans:
 | 13. Doc Gates & CI Foundation          | v1.2      | 5/5            | ✓ Complete    | 2026-05-08 |
 | 14. Chart Abstraction Foundation       | v1.2      | 5/5            | ✓ Complete    | 2026-05-09 |
 | 15. Additional House Systems           | v1.2      | 4/4            | ✓ Complete    | 2026-05-09 |
-| 16. Synastry                           | v1.2      | 0/5            | Planned       | —          |
+| 16. Synastry                           | v1.2      | 5/5            | ✓ Complete    | 2026-05-11 |
 | 17. Composite Chart (Midpoint)         | v1.2      | 0/?            | Not started   | —          |
 | 18. Solar Return (Standard + Relocated)| v1.2      | 0/?            | Not started   | —          |
 | 19. Arabic Parts Framework + 8 Parts   | v1.2      | 0/?            | Not started   | —          |
@@ -245,4 +245,4 @@ Plans:
 
 *v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`*
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
-*Roadmap last updated: 2026-05-09 — Phase 15 complete (4/4 plans, HOU2-01..05 satisfied, 909 tests, 6 systems registered : equal/koch/placidus/porphyry/regiomontanus/whole_sign).*
+*Roadmap last updated: 2026-05-11 — Phase 16 complete (5/5 plans, SYN-01..05 satisfied, 1065 tests, `calculate_synastry` + `SYNASTRY_DTYPE` + `ketu synastry` CLI + `--list-orbs`, coverage 100% sur `ketu/synastry/`).*
