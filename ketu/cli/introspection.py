@@ -10,6 +10,11 @@ import numpy as np
 from ketu.aspects.presets import resolve_aspect_set
 from ketu.core import aspects as _CORE_ASPECTS
 from ketu.houses import SYSTEMS as _HOUSE_SYSTEMS
+from ketu.synastry.orbs import (
+    ASC_MC_NATAL_ORB_DEG,
+    SYNASTRY_FACTOR,
+    _PRESET_BY_NAME as _ORB_PRESETS,
+)
 
 
 _PRESET_DESCRIPTIONS = {
@@ -58,3 +63,63 @@ def cmd_list_house_systems() -> None:
     print()
     print("At polar latitudes, use --polar-fallback porphyry to substitute Porphyry")
     print("cusps for offending elements (default: --polar-fallback raise).")
+
+
+_ORB_PRESET_DESCRIPTIONS = {
+    "synastry": (
+        f"Tightened natal formula x {SYNASTRY_FACTOR} (astro.com convention; "
+        "default for ketu synastry). Sun-Moon conjunction = 6°."
+    ),
+    "classical": (
+        "Full natal formula (factor 1.0); for expert comparison views. "
+        "Same widths as ketu aspects default."
+    ),
+}
+
+
+def cmd_list_orbs() -> None:
+    """Print available synastry orb presets with descriptions to stdout.
+
+    Emits a header, the per-pair-aspect orb formula, the ASC/MC default
+    orb annotation, then the preset table iterated from
+    :data:`ketu.synastry.orbs._PRESET_BY_NAME` (sorted alphabetically),
+    followed by three worked examples and a Rahu/Ketu/Lilith zero-orb
+    edge-case note.
+
+    Data-driven: the preset loop iterates ``sorted(_ORB_PRESETS.keys())``
+    so a v1.3 in-place dict extension (e.g. a ``"liz_greene"`` preset)
+    automatically surfaces in the CLI output without code changes here.
+    """
+    print(
+        "Available synastry orb presets (use with --orbs SPEC on "
+        "`ketu synastry`):"
+    )
+    print()
+    print(
+        "  Formula: orb_synastry(b1, b2, asp) = "
+        "(orb[b1] + orb[b2]) / 2 * coef[asp] * factor"
+    )
+    print(
+        f"  ASC/MC use a default natal orb of {ASC_MC_NATAL_ORB_DEG}° "
+        "(not in ketu.core.bodies)."
+    )
+    print()
+    for name in sorted(_ORB_PRESETS.keys()):
+        factor = _ORB_PRESETS[name]
+        desc = _ORB_PRESET_DESCRIPTIONS.get(name, "(no description available)")
+        print(f"  {name:12} (factor {factor:.2f}) : {desc}")
+    print()
+    print("Examples (synastry preset):")
+    print("  Sun↔Moon conjunction : (12+12)/2 * 1.00 * 0.5 =  6.0°")
+    print("  Sun↔Mars  square     : (12+ 8)/2 * 0.50 * 0.5 =  2.5°")
+    print("  ASC↔Sun  conjunction : ( 8+12)/2 * 1.00 * 0.5 =  5.0°")
+    print()
+    print(
+        "Note: Rahu/Ketu/Lilith have natal orb=0 in ketu.core.bodies — "
+        "synastry self-pairs"
+    )
+    print(
+        "involving them require exact-degree matches (documented "
+        "behavior; v1.3 may add"
+    )
+    print("a per-body override map).")
