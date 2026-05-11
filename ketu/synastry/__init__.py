@@ -19,10 +19,14 @@ Public API surface (SYN-01..02 of the v1.2 milestone — Plans 16-01 + 16-02):
 
 See Also
 --------
-ketu.charts.compute_chart : Computes the per-partner :data:`ketu.charts.CHART_DTYPE`
-    records consumed by synastry (Phase 14 foundation).
-ketu.aspects.calculate_aspects_vectorized : Intra-chart aspect engine that
-    inspires the synastry orb formula and signed-orb convention.
+ketu.charts.compute_chart : Compute a single CHART_DTYPE — input to
+    :func:`calculate_synastry`.
+ketu.charts.CHART_DTYPE : Frozen layout consumed by
+    :func:`calculate_synastry`.
+ketu.aspects.calculate_aspects_vectorized : Intra-chart aspect engine
+    (natal, single chart).
+ketu.aspects.presets.resolve_aspect_set : Aspect-set spec resolver
+    (re-used for synastry's ``aspects=`` parameter).
 
 Notes
 -----

@@ -167,12 +167,14 @@ def calculate_synastry(
 
     See Also
     --------
-    ketu.charts.compute_chart : Computes the per-partner CHART_DTYPE
-        scalar records consumed by this function.
-    ketu.synastry.orbs.resolve_orb_set : Preset resolver for the
-        ``orbs=`` parameter.
-    ketu.aspects.presets.resolve_aspect_set : Preset resolver for the
-        ``aspects=`` parameter.
+    ketu.charts.compute_chart : Build CHART_DTYPE inputs.
+    ketu.synastry.orbs.resolve_orb_set : Resolve the ``orbs=`` parameter.
+    ketu.synastry.orbs.synastry_orb_limit : Per-pair orb formula (scalar
+        form).
+    ketu.aspects.presets.resolve_aspect_set : Resolve the ``aspects=``
+        parameter.
+    ketu.aspects.calculate_aspects_vectorized : Intra-chart aspect engine
+        (single-chart counterpart).
 
     Notes
     -----

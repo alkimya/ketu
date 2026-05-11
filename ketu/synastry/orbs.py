@@ -123,6 +123,14 @@ def synastry_orb_limit(
         aspect angle). Zero when either body has a zero natal orb (Rahu, Ketu,
         Lilith in :data:`ketu.core.bodies`).
 
+    See Also
+    --------
+    ketu.aspects.calculator.get_orb : Natal-orb formula
+        (``factor=1.0`` equivalent).
+    ketu.synastry.orbs.resolve_orb_set : Preset name -> factor resolver.
+    ketu.synastry.calculate_synastry : Public entry point that uses this
+        formula in vectorised form.
+
     Examples
     --------
     >>> from ketu.synastry.orbs import synastry_orb_limit
@@ -176,6 +184,15 @@ def resolve_orb_set(spec: OrbSetSpec) -> float:
         If ``spec`` is an unknown preset name, or a non-string non-``None``
         type. The error message enumerates the valid preset names so the
         caller can correct the spec without reading source code.
+
+    See Also
+    --------
+    ketu.aspects.presets.resolve_aspect_set : Sibling resolver for
+        ``aspects=`` specs.
+    ketu.synastry.orbs.synastry_orb_limit : Scalar orb computation using
+        the resolved factor.
+    ketu.synastry.calculate_synastry : Public entry point invoking this
+        resolver once at entry.
 
     Examples
     --------
