@@ -83,11 +83,13 @@ def _extend_body_data(chart: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     Notes
     -----
     ASC and MC have no per-day speed in the static natal-chart sense;
-    assigning ``0.0`` means contacts involving ASC or MC are always
-    classified as **non-applying** (``applying=False``) by the velocity
-    convention. This is consistent with the static-chart synastry
-    interpretation: the angles are anchored to a birth time and place,
-    not moving relative to the partner planets.
+    assigning ``0.0`` propagates into the applying calculation as a
+    zero contribution from the angle side. Angle-to-angle contacts
+    (both sides ASC or MC) therefore have ``rel_speed = 0`` and are
+    mechanically classified as ``applying=False``. An angle vs a planet
+    has ``rel_speed = -planet_speed`` (or ``planet_speed`` when the
+    angle is on partner B) and resolves applying/separating purely from
+    the planet's natal motion sign and the signed ``delta``.
     """
     lons = np.concatenate([
         np.asarray(chart["body_lons"], dtype=np.float64),
@@ -204,8 +206,12 @@ def calculate_synastry(
     applying when ``sign(delta) * (speed_a - speed_b) > 0``, where
     ``delta = aspect_angle - distance`` (signed; positive when the
     bodies are still approaching the exact aspect along the shorter arc).
-    ASC and MC contacts are always classified as ``applying=False``
-    (speed = 0 by convention; see :func:`_extend_body_data`).
+    ASC and MC carry ``speed = 0`` by convention
+    (see :func:`_extend_body_data`); angle-to-angle contacts
+    (ASC <-> ASC, ASC <-> MC, MC <-> MC) therefore have ``rel_speed = 0``
+    and are mechanically classified as ``applying=False``. An angle vs a
+    planet (e.g. ASC_A <-> Moon_B) has ``rel_speed = -planet_speed`` and
+    can be either applying or separating depending on ``sign(delta)``.
 
     Examples
     --------
