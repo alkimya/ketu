@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: executing
-last_updated: "2026-05-11T07:21:26Z"
+last_updated: "2026-05-11T07:34:07Z"
 last_activity: 2026-05-11
 progress:
   total_phases: 8
   completed_phases: 3
   total_plans: 19
-  completed_plans: 15
-  percent: 79
+  completed_plans: 16
+  percent: 84
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 ## Current Position
 
 Phase: 16 (synastry) — IN PROGRESS
-Plan: 2 of 5 (Plan 01 complete; Plan 02 ready to start)
-Status: Plan 16-01 foundation closed (SYN-01 satisfied)
-Progress: [████████░░] 79%
+Plan: 3 of 5 (Plans 01, 02 complete; Wave 3 = Plans 03 + 04 in parallel; Plan 05 close-out last)
+Status: Plan 16-02 compute API closed (SYN-01, SYN-02, SYN-03, SYN-04 satisfied); Plan 16-03 (oracle) + 16-04 (CLI) unblocked
+Progress: [████████▌░] 84%
 Last activity: 2026-05-11
-Resume file: .planning/phases/16-synastry/16-02-PLAN.md
+Resume file: .planning/phases/16-synastry/16-03-PLAN.md (or 16-04-PLAN.md — parallelisable)
 
 ## Performance Metrics
 
@@ -52,6 +52,7 @@ Resume file: .planning/phases/16-synastry/16-02-PLAN.md
 | Phase 15 P03 | 7min | 5 tasks | 5 files |
 | Phase 15 P04 | 7min | 7 tasks | 5 files |
 | Phase 16 P01 | ~6min | 3 tasks | 7 files |
+| Phase 16-synastry P02 | ~9min | 3 tasks | 6 files |
 
 ## Accumulated Context
 
@@ -106,7 +107,10 @@ Resume file: .planning/phases/16-synastry/16-02-PLAN.md
 - Plan 16-01: `_PRESET_BY_NAME` singulier (matches `ketu/aspects/presets.py:91`) — ratchet test en place contre la dérive pluralisée.
 - Plan 16-01: `OrbSetSpec = Union[None, str]` (no dict/callable/Sequence en v1.2) — surface narrow MVP.
 - Plan 16-01: `calculate_synastry` deferred to Plan 02 — foundation surface frozen first; `__init__.py` exports 6 names actuellement (SYNASTRY_DTYPE, SYNASTRY_BODY_COUNT, SYNASTRY_FACTOR, ASC_MC_NATAL_ORB_DEG, resolve_orb_set, OrbSetSpec).
+- [Phase 16-02]: calculate_synastry signature locked: (chart_a, chart_b, aspects='classical', orbs='synastry', mode='filtered'); defaults align with CONTEXT.md decisions; cross-product via np.indices((15,15)) NOT triu_indices; self-pairs INCLUDED.
+- [Phase 16-02]: Applying convention refined (Rule 1 deviation): plan-supplied claim 'ALL ASC/MC contacts applying=False' was incorrect — only angle-to-angle pairs (both speeds=0) are mechanically applying=False; angle-to-planet uses signed rel_speed = -planet_speed. Docstrings + tests corrected in commit cfc3d2f.
+- [Phase 16-02]: Filtered row order is canonical body-pair (body_a*15 + body_b) ascending, NOT |orb|-ascending — predictable for ML/oracle tests; regression-guard test in place. Pitfall 6 f4 bit-exact ratchet across all 225 pairs at conjunction.
 
 ## Session Continuity
 
-v1.2 roadmap written 2026-05-08. Phase 15 close : 15-01..04 tous complétés (HOU2-01..05 satisfaits, 909 tests verts, 6 systèmes registrés). Phase 16 (Synastry) démarrée 2026-05-11 — Plan 16-01 foundation closed: ketu/synastry/ subpackage skeleton + SYNASTRY_DTYPE (8 fields, frozen) + SYNASTRY_BODY_COUNT=15 + orb formula module (SYNASTRY_FACTOR=0.5, ASC_MC_NATAL_ORB_DEG=8.0, resolve_orb_set resolver) livrés. Tests: 41 new (18 dtype + 23 orbs); suite totale 950 verts (909 baseline + 41); coverage 100% sur ketu/synastry/; doc gates green (interrogate 100%, numpydoc 0 issues, mypy --strict 0 issues). Last session: Sophie + executor agent, stopped at: Plan 16-01 complete. Next: Plan 16-02 (compute API — calculate_synastry).
+v1.2 roadmap written 2026-05-08. Phase 15 close : 15-01..04 tous complétés (HOU2-01..05 satisfaits, 909 tests verts, 6 systèmes registrés). Phase 16 (Synastry) démarrée 2026-05-11 — Plan 16-01 foundation closed: ketu/synastry/ subpackage skeleton + SYNASTRY_DTYPE (8 fields, frozen) + SYNASTRY_BODY_COUNT=15 + orb formula module (SYNASTRY_FACTOR=0.5, ASC_MC_NATAL_ORB_DEG=8.0, resolve_orb_set resolver) livrés. **Plan 16-02 compute API closed (2026-05-11T07:34Z)**: `calculate_synastry(chart_a, chart_b, aspects, orbs, mode)` livré dans `ketu/synastry/api.py` (composition-only — cross-product 15x15, self-pairs INCLUDED, sentinel-fill dense, canonical-order filtered, velocity-based signed-applying); 60 nouveaux tests (29 unit + 10 applying + 21 idempotency); suite totale 1010 verts (950 + 60); coverage 100% sur ketu/synastry/; doc gates verts (interrogate 100%, numpydoc 0 issues, mypy --strict 0 issues). Une Rule 1 déviation : claim "ALL ASC/MC contacts applying=False" était fausse — corrigé pour le narrow invariant angle-to-angle (docstrings + tests). Last session: Sophie + executor agent, stopped at: Plan 16-02 complete. Next: Wave 3 = Plan 16-03 (oracle tests) + Plan 16-04 (CLI) en parallèle, Plan 16-05 (close-out) ensuite.
