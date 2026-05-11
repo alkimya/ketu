@@ -16,6 +16,62 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   into `tests.yml`. New `[project.optional-dependencies].dev` group
   installs both tools (`pip install -e .[dev]`); `make doc-gates`
   runs the full suite locally. (OPS-01, OPS-02)
+- **`ketu.synastry` subpackage** — `calculate_synastry(chart_a,
+  chart_b)` returns a `SYNASTRY_DTYPE`-formatted structured array
+  (8 fields, record-style; cross-product enumeration of 15 bodies
+  including ASC/MC; self-pairs included per locked decision). Supports
+  `mode="filtered"` (default) and `mode="dense"` outputs sharing the
+  same schema. Default `orbs="synastry"` applies a 0.5 multiplicative
+  tightening to Ketu's natal orb formula (Astrodienst convention;
+  cited in `ketu.synastry.orbs.SYNASTRY_FACTOR`). The `applying`
+  field is computed from natal speeds (`CHART_DTYPE.body_speeds`)
+  per the static-chart convention. Cross-product is full 15x15 = 225
+  ordered pairs; filtered rows ordered canonically by
+  `(body_a * 15 + body_b)` ascending. UTC-only contract restated
+  loudly in the API docstring. (SYN-01, SYN-02 / Phase 16)
+- **`ketu.synastry.orbs`** — `_PRESET_BY_NAME` registry (`synastry`,
+  `classical`), `resolve_orb_set(spec)` resolver,
+  `synastry_orb_limit(b1, b2, asp)` scalar formula,
+  `SYNASTRY_FACTOR=0.5`, `ASC_MC_NATAL_ORB_DEG=8.0` constants. The
+  preset surface is name-only string (rich override deferred to v1.3
+  per 16-RESEARCH.md Open Question 2). (SYN-01)
+- **`ketu synastry` CLI sub-command** — `ketu synastry --date-a ISO
+  --lat-a F --lon-a F --date-b ISO --lat-b F --lon-b F [--mode
+  filtered|dense] [--system NAME] [--polar-fallback raise|porphyry]
+  [--json]`. Aligned ASCII table by default, JSON list-of-dicts
+  opt-in (11 keys per row: 8 SYNASTRY_DTYPE fields + `body_a_name` +
+  `body_b_name` + `aspect_name`). Mirrors `ketu houses` CLI
+  conventions; STDERR diagnostics layered on top of
+  `emit_resolved_config` (`# Synastry mode: <mode>` +
+  `# Orbs: synastry (factor 0.5 — astro.com convention)`). (SYN-04 /
+  Phase 16)
+- **`ketu --list-orbs`** — top-level introspection flag printing the
+  synastry orb preset table (`synastry` factor 0.5, `classical`
+  factor 1.0) with formula derivation, ASC/MC default annotation,
+  and worked examples. Sibling of `--list-aspect-sets` and
+  `--list-house-systems`; first-wins early-return ladder pinned by
+  the M-1 collision ratchet test. (SYN-04)
+- **3 hand-validated synastry oracle fixtures** — Marie + Pierre
+  Curie, Princess Diana + Prince Charles, John Lennon + Yoko Ono
+  pinned in `tests/synastry/fixtures/oracle_*.json` (schema v1,
+  Rodden ratings, AstroDatabank URLs, self-consistency
+  `validation_source`). `tests/synastry/test_oracle.py` parametrises
+  7 tests over the 3 fixtures (21 oracle tests total); max |orb|
+  delta per couple reported in `pytest -v -s` output (curie 2.27°,
+  diana_charles 2.03°, lennon_ono 2.13°, all under the permissive
+  5.0° presence ceiling). (SYN-03 / Phase 16)
+- **`make synastry-coverage`** Makefile target — asserting ≥95% line
+  coverage on `ketu/synastry/` (mirror of `make charts-coverage` and
+  `make houses-coverage`; two-step pattern to avoid the NumPy
+  `_NoValueType` reload bug). Coverage measured: 100% (98/98
+  statements). (SYN-05)
+- **`synastry_coverage_gate` pytest marker** — registered in
+  `pyproject.toml [tool.pytest.ini_options].markers` (mirroring the
+  project's existing mechanism; no `tests/conftest.py` exists or
+  was created). Sentinel test in
+  `tests/synastry/test_synastry_coverage_gate.py` ratchets marker
+  recognition (no `PytestUnknownMarkWarning`) and module import.
+  (SYN-05)
 
 ### Changed
 
