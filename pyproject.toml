@@ -76,8 +76,9 @@ python_functions = "test_*"
 addopts = "-v --cov=ketu --cov-report=term-missing"
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
-    "houses_coverage_gate: HOU-09 95% coverage gate for ketu.houses (run via Makefile target `make houses-coverage`)",
     "charts_coverage_gate: CHART-05 95% coverage gate for ketu.charts (run via Makefile target `make charts-coverage`)",
+    "composite_coverage_gate: COMP-05 95% coverage gate for ketu.composite (run via Makefile target `make composite-coverage`)",
+    "houses_coverage_gate: HOU-09 95% coverage gate for ketu.houses (run via Makefile target `make houses-coverage`)",
     "synastry_coverage_gate: SYN-05 95% coverage gate for ketu.synastry (run via Makefile target `make synastry-coverage`)",
 ]
 
