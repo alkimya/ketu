@@ -1,0 +1,58 @@
+{
+  "kind": "solar",
+  "natal": {
+    "jd": 2403277.941667,
+    "lat": 52.23,
+    "lon": 21.01,
+    "sun_lon_deg": 224.57617863827747
+  },
+  "target_year": 1900,
+  "return_lat": null,
+  "return_lon": null,
+  "system": "placidus",
+  "expected": {
+    "jd_return": 2415330.943458484,
+    "asc_deg": 282.8008051394573,
+    "mc_deg": 229.28533679950877,
+    "body_lons_deg": [
+      224.57615865155165,
+      51.01018110236945,
+      245.69269233945195,
+      184.5978676235238,
+      143.94762701544084,
+      254.915934199654,
+      273.1478409448858,
+      252.3663976418514,
+      90.33153750307248,
+      78.94794134557925,
+      242.78956422458205,
+      224.57044902944358,
+      189.07904617932823
+    ],
+    "cusps_deg": [
+      282.8008051394573,
+      337.4820756755119,
+      22.30218507743896,
+      49.28533679950874,
+      68.2811945027155,
+      84.73220854124179,
+      102.80080513945728,
+      157.48207567551185,
+      202.30218507743896,
+      229.28533679950877,
+      248.2811945027155,
+      264.7322085412418
+    ]
+  },
+  "tolerance_deg": 0.0001,
+  "cross_check_tolerance_deg": 0.001,
+  "wrap_around": false,
+  "notes": "Long-projection solar return -- Marie Curie natal (1867), target_year=1900; 33-year span exercises seed-drift robustness.",
+  "cross_check_astro_com": {
+    "performed": false,
+    "date_performed": null,
+    "delta_max_arcsec": null,
+    "astro_com_settings": null,
+    "notes": "Deferred follow-up; see 18-04-NOTES.md"
+  }
+}

@@ -1,0 +1,59 @@
+{
+  "kind": "lunar",
+  "natal": {
+    "jd": 2447894.5833333335,
+    "lat": 0.0,
+    "lon": 0.0,
+    "moon_lon_deg": 355.09954611861406
+  },
+  "target_jd": 2447908.5833333335,
+  "return_lat": null,
+  "return_lon": null,
+  "system": "placidus",
+  "expected": {
+    "jd_return": 2447921.8271816312,
+    "asc_deg": 335.25529898747624,
+    "mc_deg": 248.79569624741612,
+    "body_lons_deg": [
+      310.15821347856286,
+      355.0994183968041,
+      285.1145253801638,
+      292.2570121414279,
+      270.61150378805496,
+      92.1066343717313,
+      289.104907241383,
+      277.5711868622432,
+      283.2306920107805,
+      227.88193418046123,
+      316.9780059686343,
+      310.15255994188834,
+      219.6885143500992
+    ],
+    "cusps_deg": [
+      335.25529898747624,
+      7.707910656660696,
+      39.47764400282945,
+      68.79569624741612,
+      96.49958910703015,
+      124.73509393438877,
+      155.25529898747618,
+      187.7079106566607,
+      219.47764400282944,
+      248.79569624741612,
+      276.49958910703015,
+      304.7350939343888
+    ]
+  },
+  "tolerance_deg": 0.0001,
+  "cross_check_tolerance_deg": 0.001,
+  "wrap_around": true,
+  "day_after_target": false,
+  "notes": "WRAP-AROUND lunar return -- synthetic natal with Moon near 0/360 seam (natal_jd=2447894.5833, natal_moon=355.0995 deg); target_jd 14 d later. End-to-end pin of helper-level wrap-around handling for Moon.",
+  "cross_check_astro_com": {
+    "performed": false,
+    "date_performed": null,
+    "delta_max_arcsec": null,
+    "astro_com_settings": null,
+    "notes": "Deferred follow-up; see 18-04-NOTES.md"
+  }
+}

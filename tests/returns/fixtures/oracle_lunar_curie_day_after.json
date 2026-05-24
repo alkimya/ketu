@@ -1,0 +1,59 @@
+{
+  "kind": "lunar",
+  "natal": {
+    "jd": 2403277.941667,
+    "lat": 52.23,
+    "lon": 21.01,
+    "moon_lon_deg": 346.13564550994806
+  },
+  "target_jd": 2415025.498211095,
+  "return_lat": null,
+  "return_lon": null,
+  "system": "placidus",
+  "expected": {
+    "jd_return": 2415025.539886834,
+    "asc_deg": 215.13561511892087,
+    "mc_deg": 138.08367246435714,
+    "body_lons_deg": [
+      285.28273454397396,
+      346.13575960614384,
+      266.0479500895432,
+      313.18168801358013,
+      288.56703838106506,
+      243.31921104981026,
+      269.7119638192784,
+      251.7508044258486,
+      86.51520473837182,
+      76.85788038528347,
+      258.96209610302935,
+      285.276946001946,
+      154.89992135801737
+    ],
+    "cusps_deg": [
+      215.13561511892087,
+      243.02879537314942,
+      278.58653348150676,
+      318.08367246435716,
+      351.30378926216554,
+      16.258549916252605,
+      35.135615118920896,
+      63.02879537314942,
+      98.58653348150676,
+      138.08367246435714,
+      171.30378926216554,
+      196.2585499162526
+    ]
+  },
+  "tolerance_deg": 0.0001,
+  "cross_check_tolerance_deg": 0.001,
+  "wrap_around": false,
+  "day_after_target": true,
+  "notes": "DAY-AFTER-TARGET lunar return -- Curie natal, target_jd=2415025.498211 set 1h before known return jd_return=2415025.539878; resolved JD must fall on the next calendar day UTC. LRET-04 binding pin.",
+  "cross_check_astro_com": {
+    "performed": false,
+    "date_performed": null,
+    "delta_max_arcsec": null,
+    "astro_com_settings": null,
+    "notes": "Deferred follow-up; see 18-04-NOTES.md"
+  }
+}

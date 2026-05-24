@@ -1,0 +1,58 @@
+{
+  "kind": "solar",
+  "natal": {
+    "jd": 2437482.28125,
+    "lat": 52.83,
+    "lon": 0.5,
+    "sun_lon_deg": 99.66460300771527
+  },
+  "target_year": 1980,
+  "return_lat": null,
+  "return_lon": null,
+  "system": "placidus",
+  "expected": {
+    "jd_return": 2444421.8718736717,
+    "asc_deg": 155.0699413704649,
+    "mc_deg": 56.25536079872564,
+    "body_lons_deg": [
+      99.6647298289213,
+      317.79209000853575,
+      114.61744217596708,
+      76.14445047442734,
+      175.11038353692544,
+      156.334395789462,
+      171.78265050638035,
+      232.16297383444495,
+      261.0914698408905,
+      199.40477473442877,
+      142.31532664423082,
+      99.65904983061947,
+      189.69421142079753
+    ],
+    "cusps_deg": [
+      155.0699413704649,
+      175.21895735523083,
+      201.80147169018053,
+      236.25536079872563,
+      275.05383387289817,
+      308.56312293717923,
+      335.0699413704649,
+      355.2189573552308,
+      21.801471690180506,
+      56.25536079872564,
+      95.05383387289818,
+      128.56312293717923
+    ]
+  },
+  "tolerance_deg": 0.0001,
+  "cross_check_tolerance_deg": 0.001,
+  "wrap_around": false,
+  "notes": "Standard solar return -- Diana natal (1961-07-01), target_year=1980; natal Sun ~9 deg Cancer, far from seam.",
+  "cross_check_astro_com": {
+    "performed": false,
+    "date_performed": null,
+    "delta_max_arcsec": null,
+    "astro_com_settings": null,
+    "notes": "Deferred follow-up; see 18-04-NOTES.md"
+  }
+}

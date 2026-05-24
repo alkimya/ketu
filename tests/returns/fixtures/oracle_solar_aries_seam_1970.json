@@ -1,0 +1,58 @@
+{
+  "kind": "solar",
+  "natal": {
+    "jd": 2458930.0417,
+    "lat": 0.0,
+    "lon": 0.0,
+    "sun_lon_deg": 1.3719778109639553
+  },
+  "target_year": 1970,
+  "return_lat": null,
+  "return_lon": null,
+  "system": "placidus",
+  "expected": {
+    "jd_return": 2440667.9234109377,
+    "asc_deg": 63.927619270346135,
+    "mc_deg": 329.83040082900743,
+    "body_lons_deg": [
+      1.3718448463193147,
+      174.050399546305,
+      0.2908193092617538,
+      15.333045766107073,
+      41.181853625861635,
+      215.0431827637843,
+      37.51556834507306,
+      187.44148429134358,
+      241.2152896898461,
+      176.55344950259925,
+      341.09994862750835,
+      1.366062815475833,
+      131.70872349161138
+    ],
+    "cusps_deg": [
+      63.927619270346135,
+      91.76905125332894,
+      119.7561730736915,
+      149.83040082900743,
+      182.10142525210014,
+      214.18393214480886,
+      243.92761927034613,
+      271.76905125332894,
+      299.7561730736915,
+      329.83040082900743,
+      2.1014252521001335,
+      34.18393214480888
+    ]
+  },
+  "tolerance_deg": 0.0001,
+  "cross_check_tolerance_deg": 0.001,
+  "wrap_around": true,
+  "notes": "WRAP-AROUND solar return -- synthetic natal with Sun near 0 deg Aries (2020-03-21 ~13:00 UT); target_year=1970 (back-projection). End-to-end pin of helper-level wrap-around handling (Plan 18-01).",
+  "cross_check_astro_com": {
+    "performed": false,
+    "date_performed": null,
+    "delta_max_arcsec": null,
+    "astro_com_settings": null,
+    "notes": "Deferred follow-up; see 18-04-NOTES.md"
+  }
+}
