@@ -15,6 +15,10 @@ ketu.houses.calculate_houses : House cusps used internally by
     :func:`compute_chart`.
 ketu.aspects.calculate_aspects_vectorized : Aspect engine projected into
     ``aspect_matrix``.
+ketu.synastry.calculate_synastry : Inter-chart aspect computation
+    consuming two CHART_DTYPE records (Phase 16).
+ketu.composite.calculate_composite : Derive a midpoint composite
+    chart from two CHART_DTYPE records (Phase 17).
 
 Notes
 -----

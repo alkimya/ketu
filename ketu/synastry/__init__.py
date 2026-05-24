@@ -27,6 +27,9 @@ ketu.aspects.calculate_aspects_vectorized : Intra-chart aspect engine
     (natal, single chart).
 ketu.aspects.presets.resolve_aspect_set : Aspect-set spec resolver
     (re-used for synastry's ``aspects=`` parameter).
+ketu.composite.calculate_composite : Derive a midpoint composite
+    chart from the same CHART_DTYPE pair (Phase 17; complementary
+    pair-chart operation).
 
 Notes
 -----
