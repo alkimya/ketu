@@ -26,7 +26,7 @@ chosen over Brent / Newton / secant for:
 
 Wrap-around handling: ``_signed_residual_deg(lon, ref)`` lifts the
 naive ``lon - ref`` (in [-360, +360]) to the signed short arc
-(-180, +180]. Same algebra as ``circular_midpoint`` in
+[-180, +180). Same algebra as ``circular_midpoint`` in
 ``ketu/composite/core.py:79-81`` and ``porphyry_cusps`` in
 ``ketu/houses/porphyry.py:159``.
 
@@ -59,11 +59,13 @@ _TROPICAL_MONTH_D: float = 27.321582  # Tropical month (Moon returns to equinox-
 
 
 def _signed_residual_deg(lon: np.ndarray, ref: float) -> np.ndarray:
-    """Signed short-arc residual in degrees, on ``(-180, +180]``.
+    """Signed short-arc residual in degrees, on ``[-180, +180)``.
 
     Same wrap-around algebra as ``circular_midpoint``
     (``ketu/composite/core.py:79-81``) and ``porphyry_cusps``
-    (``ketu/houses/porphyry.py:159``).
+    (``ketu/houses/porphyry.py:159``). The antipodal case
+    ``lon - ref == 180`` collapses to ``-180`` under
+    ``((180 + 540) % 360) - 180 = -180`` (the interval is right-open).
 
     Parameters
     ----------
@@ -75,14 +77,14 @@ def _signed_residual_deg(lon: np.ndarray, ref: float) -> np.ndarray:
     Returns
     -------
     np.ndarray
-        Signed residual ``lon - ref`` lifted to ``(-180, +180]``.
+        Signed residual ``lon - ref`` lifted to ``[-180, +180)``.
         Scalar input returns a 0-d array.
 
     Notes
     -----
     Algebra: ``((lon - ref + 540) % 360) - 180``. The ``+ 540`` shift
     is the canonical Ketu wrap-around trick — adding 1.5 turns before
-    the modulo guarantees the result lands in ``(-180, +180]`` for any
+    the modulo guarantees the result lands in ``[-180, +180)`` for any
     input in ``[-360, +360]``. Bit-identical at the seam, no trig
     rounding, vectorisable.
 
