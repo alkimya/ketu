@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: executing
-last_updated: "2026-05-24T11:50:37Z"
+last_updated: "2026-05-24T13:10:37Z"
 last_activity: 2026-05-24
 progress:
   total_phases: 8
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 23
-  completed_plans: 22
-  percent: 96
+  completed_plans: 23
+  percent: 100
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 ## Current Position
 
-Phase: 17 (composite-chart-midpoint-variant) — IN PROGRESS (3 of 4 plans complete)
-Plan: 3 of 4 (Plans 01 + 02 + 03 complete; 04 pending)
-Status: Plan 17-03 shipped (COMP-04 / ROADMAP success criterion #3 satisfied — three composite oracle fixtures pinned: `oracle_curie.json` bodies-only + `oracle_diana_charles.json` PRIMARY both-AA + `oracle_lennon_ono.json` SECONDARY both-AA; expected_composite block contains 10 pinned body longitudes (Sun..Pluto) with `tolerance_deg=0.0001` each, plus asc/mc for the two AA pairs; self-consistency methodology documented in every fixture's `validation_source`; Astro.com cross-check deferred to Plan 17-04 via `cross_check_astro_com.performed=false` flag on all three; `tests/composite/conftest.py` extended (not overwritten) with `ORACLE_SLUGS` tuple + `load_oracle_fixture` helper + `oracle_fixture` parametrized fixture; `tests/composite/test_oracle.py` adds 4 test classes / 18 PASS + 2 SKIPPED (Curie ASC + Curie MC by design); max body |delta| ~5e-7° per fixture (curie:Jupiter 4.93e-7, diana_charles:Mars 4.98e-7, lennon_ono:Saturn 4.62e-7); project suite 1176 PASS + 2 SKIPPED at 98.27% coverage; composite-scoped coverage now 100% (up from 98%, close-orbed natal pairs exercise the conjunction match-found break at api.py:245-246 — exactly as predicted in 17-02-SUMMARY.md "Next Phase Readiness"). Plan 17-04 next: close-out (composite_coverage_gate marker + make composite-coverage target + CHANGELOG Unreleased entry + optional Astro.com cross-check flip).
-Progress: [█████████▌] 96%
+Phase: 17 (composite-chart-midpoint-variant) — COMPLETE (4 of 4 plans complete)
+Plan: 4 of 4 (Plans 01 + 02 + 03 + 04 all complete)
+Status: Plan 17-04 shipped (Phase 17 close-out — `make composite-coverage` ≥95% gate live measuring 100% on `ketu/composite/` (95/95 statements); `composite_coverage_gate` pytest marker registered alphabetically in `pyproject.toml [tool.pytest.ini_options].markers`; sentinel test `tests/composite/test_composite_coverage_gate.py` ratchets marker recognition + module import; cross-module See Also graph closed via back-references in `ketu/charts/__init__.py` + `ketu/synastry/__init__.py` pointing to `ketu.composite.calculate_composite` (Phase 13 importable-Python-path lesson honoured); CHANGELOG.md `## [Unreleased]` `### Added` extended with 8 new bullets citing COMP-01..04 + COMP-05 (composite subpackage, circular_midpoint, Porphyry-trisection houses, 3 oracle fixtures, Makefile target, pytest marker, Davison deferred-to-v1.3); `.planning/REQUIREMENTS.md` COMP-01..04 statuses flipped from `[ ]` Pending to `[x]` Done + COMP-05 row added; 4 ROADMAP Phase 17 success criteria smoke-tested PASS with output excerpts captured in 17-04-SUMMARY.md (SC#1 calculate_composite returns CHART_DTYPE with composite-ASC/MC-derived houses; SC#2 circular_midpoint(359,1)==0.0 pinned; SC#3 three reference composite pairs with documented max delta; SC#4 Davison labeled deferred-to-v1.3 with zero aspirational reference); Astro.com manual cross-check documented as deferred follow-up (bot-blocked; NOT a Phase 17 blocker); project suite 1177 PASS + 2 SKIPPED at 98.27% coverage; doc gates green (interrogate 100%, numpydoc lint clean, mypy --strict 0 issues on 54 files). Phase 17 100% complete — ready for /gsd:verify-phase 17.
+Progress: [██████████] 100%
 Last activity: 2026-05-24
-Resume file: ready for /gsd:execute-phase 17 plan 04 (close-out)
+Resume file: ready for /gsd:verify-phase 17 (Phase 17 complete) — next phase Phase 18 (Solar Return) per ROADMAP
 
 ## Performance Metrics
 
@@ -61,6 +61,7 @@ Resume file: ready for /gsd:execute-phase 17 plan 04 (close-out)
 | Phase 17 P02 | ~29min | 2 tasks | 6 files |
 | Phase 17 P02 | 29min | 2 tasks | 6 files |
 | Phase 17 P03 | ~18min | 2 tasks | 5 files |
+| Phase 17 P04 | ~29min | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -144,6 +145,11 @@ Resume file: ready for /gsd:execute-phase 17 plan 04 (close-out)
 - [Phase 17-03]: Lennon/Ono fixture INCLUDES ASC/MC despite Lennon's A rating (contrast with synastry oracle which EXCLUDED ASC/MC). Justification: composite ASC/MC is the function's own determinism contract (`tolerance_deg=0.0001°` against its own output, not against an external truth), unlike synastry's per-contact tight-orb gate against real-world ephemerides. Lennon's ±15min uncertainty propagates equally to both sides of the self-consistency equation — the cross-check tolerance (`0.1°` advisory, deferred to Plan 17-04) is the appropriate slack for Astro.com comparison.
 - [Phase 17-03]: ORACLE_SLUGS as immutable tuple (composite) vs list (synastry) — accidental mutation rejected at the type level; `TestOracleSlugsExported` test class pins the exact tuple contents `("curie", "diana_charles", "lennon_ono")` as SSOT ratchet against future drift.
 - [Phase 17-03]: Composite-scoped coverage now 100% (up from Plan 17-02's 98%) — lines 245-246 of `ketu/composite/api.py` (the conjunction match-found `break` in the inline aspect-matching loop) are exercised by close-orbed natal pairs in the oracle fixtures, exactly as predicted in 17-02-SUMMARY.md's "Next Phase Readiness" section.
+- [Phase 17]: [Phase 17-04]: composite_coverage_gate marker registered alphabetically between charts_coverage_gate and houses_coverage_gate in pyproject.toml [tool.pytest.ini_options].markers; entire markers list re-alphabetised at the same time (Rule 2 auto-fix — the plan's 'insert alphabetically' instruction implied the rest should be sorted).
+- [Phase 17]: [Phase 17-04]: Makefile composite-coverage target uses the two-step pattern (pytest tests/composite/ + coverage report --include='ketu/composite/*' --fail-under=95) inherited from Phase 16-05 synastry-coverage and Phase 14 charts-coverage — avoids the NumPy _NoValueType reload bug from sub-package source narrowing.
+- [Phase 17]: [Phase 17-04]: COMP-05 added as Plan 17-04 close-out convention addition (not in original COMP-01..04 spec); mirrors SYN-05 / CHART-05 / HOU-09 convention; documented in REQUIREMENTS body + status table for symmetry.
+- [Phase 17]: [Phase 17-04]: Cross-module See Also graph closed — forward refs (composite -> charts + synastry) from Plans 17-01/17-02 + back-references (charts + synastry -> composite) from this plan use importable Python paths only (Phase 13 BLOCKER lesson honoured). 5 files numpydoc lint clean post-edit.
+- [Phase 17]: [Phase 17-04]: 4 ROADMAP Phase 17 success criteria smoke-tested PASS with output excerpts in 17-04-SUMMARY.md: SC#1 dtype/cusps[0]==asc/cusps[9]==mc; SC#2 mid(359,1)==0.0 strict equality; SC#3 three oracle fixtures with max body delta lines (curie/diana_charles/lennon_ono); SC#4 Davison-deferred label PRESENT, zero aspirational reference. Astro.com manual cross-check deferred (bot-blocked; not a blocker).
 
 ## Session Continuity
 
