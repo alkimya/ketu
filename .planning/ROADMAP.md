@@ -44,7 +44,7 @@ Full details archived to `.planning/milestones/v1.1-ROADMAP.md`.
 - [x] **Phase 15: Additional House Systems** — Whole Sign, Equal, Regiomontanus via existing `SYSTEMS` registry; Swiss Ephemeris validation *(2026-05-09)*
 - [x] **Phase 16: Synastry** — `calculate_synastry(chart_a, chart_b)` with `SYNASTRY_DTYPE`, dense + filtered output modes, dedicated synastry orbs *(2026-05-11)*
 - [x] **Phase 17: Composite Chart (Midpoint)** — `calculate_composite(chart_a, chart_b)` with circular midpoint helper and composite-derived houses *(2026-05-24)*
-- [ ] **Phase 18: Solar Return (Standard + Relocated)** — `solar_return(...)` with pure-NumPy root-finding handling 360°→0° wrap; <1 arcsecond convergence
+- [ ] **Phase 18: Solar + Lunar Returns (Standard + Relocated)** — `solar_return(...)` + `lunar_return(...)` sharing a pure-NumPy `_solve_return` helper handling 360°→0° wrap; <1 arcsecond convergence on both
 - [ ] **Phase 19: Arabic Parts Framework + 8 Parts** — `ketu/parts/` registry, sect-aware `calculate_part`, 7 Hermetic Lots + Marriage, `--list-parts` CLI
 - [ ] **Phase 20: Release Preparation v1.2.0** — Workflow refresh (Node 24), `fr/CHANGELOG.md` decision, PyPI publish via OIDC
 
@@ -172,21 +172,22 @@ Plans:
 - [ ] 17-03-PLAN.md — Oracle tests: 3 hand-validated composite fixtures (Curie bodies-only, Diana/Charles + Lennon/Ono with ASC/MC) at `tolerance_deg=0.0001` self-consistency; `test_oracle.py` with max-|delta| reporter; Astro.com cross-check deferred to Plan 17-04 (bot-blocked per 17-RESEARCH)
 - [ ] 17-04-PLAN.md — Phase close-out: `make composite-coverage` (≥95% gate) + `composite_coverage_gate` pytest marker + sentinel test + See Also cross-refs (charts <-> composite <-> synastry) + CHANGELOG `[Unreleased]` entry citing COMP-01..04 + REQUIREMENTS status flips + 4-criteria smoke + Astro.com manual cross-check follow-up note
 
-### Phase 18: Solar Return (Standard + Relocated)
+### Phase 18: Solar + Lunar Returns (Standard + Relocated)
 
-**Goal**: Users compute the solar return chart for any natal birth and any target year, optionally relocating the return chart to a different lat/lon, with arc-second convergence on the resolved return time.
+**Goal**: Users compute the solar return chart for any natal birth and any target year **and** the lunar return chart for any natal birth and any target date (≥27.32-day periodicity), optionally relocating either return chart to a different lat/lon, with arc-second convergence on both resolved return times — Solar and Lunar share a single pure-NumPy `_solve_return` core.
 
 **Depends on**: Phase 14 (CHART_DTYPE); independent of Phases 15, 16, 17, 19
 
-**Requirements**: RET-01, RET-02, RET-03, RET-04, RET-05
+**Requirements**: RET-01, RET-02, RET-03, RET-04, RET-05, LRET-01, LRET-02, LRET-03, LRET-04, LRET-05
 
 **Success Criteria** (what must be TRUE):
 
-1. `solar_return(natal_jd, natal_lat, natal_lon, target_year, return_lat=None, return_lon=None, system="placidus")` returns a `CHART_DTYPE` for the resolved return moment; passing `return_lat`/`return_lon` produces a relocated chart, `None` (default) uses the natal lat/lon (standard return).
-2. The pure-NumPy root-finder on `Sun_longitude(t) − natal_Sun_longitude` correctly handles the 360°→0° wraparound (pre-unwrap or atan2-style residual approach), pinned by a wrap-around regression test.
-3. The resolved return time converges to <1 arc-second of the target Sun longitude (pro-tools convention), reported as the test verdict.
-4. Three reference solar returns (including one wrap-around year, hand-validated against Astro.com) are pinned as oracle tests with documented arc-second deltas.
-5. The docstring distinguishes loudly between `natal_lat/lon` (used for the natal Sun longitude reference) and `return_lat/lon` (used for return-chart houses) — common-error prevention.
+1. `solar_return(natal_jd, natal_lat, natal_lon, target_year, return_lat=None, return_lon=None, system="placidus")` returns a `CHART_DTYPE` for the resolved Sun-return moment; passing `return_lat`/`return_lon` produces a relocated chart, `None` (default) uses the natal lat/lon (standard return).
+2. `lunar_return(natal_jd, natal_lat, natal_lon, target_jd, return_lat=None, return_lon=None, system="placidus")` returns a `CHART_DTYPE` for the **first Moon-return moment ≥ `target_jd`** (Moon sidereal period ≈ 27.32 d); same relocation contract as `solar_return`. Note the API asymmetry: solar takes `target_year` (calendar-anchored), lunar takes `target_jd` (instant-anchored) — documented loudly in both docstrings.
+3. The pure-NumPy root-finder on `body_longitude(t) − natal_body_longitude` is factored into a single internal helper `_solve_return(body, natal_jd, natal_lon_ref, t0, t_window, ...)`; **`solar_return` and `lunar_return` both call it**, parametrised only by body identity and the search window. Wrap-around 360°→0° is handled centrally (pre-unwrap or atan2-style residuals), pinned by wrap-around regression tests on both Sun and Moon.
+4. Both returns converge to <1 arc-second of the target body longitude (pro-tools convention), reported per-return as the test verdict.
+5. Three reference solar returns and three reference lunar returns (each set including one wrap-around case, hand-validated against Astro.com) are pinned as oracle tests with documented arc-second deltas. The lunar oracle set also includes one case where the return falls on the calendar day *after* `target_jd` to lock the "first return ≥ target" contract.
+6. Both docstrings distinguish loudly between `natal_lat/lon` (used for the natal body longitude reference) and `return_lat/lon` (used for return-chart houses) — common-error prevention shared with RET-05/LRET-05.
 
 **Plans**: TBD
 
@@ -243,7 +244,7 @@ Plans:
 | 15. Additional House Systems           | v1.2      | 4/4            | ✓ Complete    | 2026-05-09 |
 | 16. Synastry                           | v1.2      | 5/5            | ✓ Complete    | 2026-05-11 |
 | 17. Composite Chart (Midpoint)         | v1.2      | 4/4            | ✓ Complete    | 2026-05-24 |
-| 18. Solar Return (Standard + Relocated)| v1.2      | 0/?            | Not started   | —          |
+| 18. Solar + Lunar Returns (Std + Reloc)| v1.2      | 0/?            | Not started   | —          |
 | 19. Arabic Parts Framework + 8 Parts   | v1.2      | 0/?            | Not started   | —          |
 | 20. Release Preparation v1.2.0         | v1.2      | 0/?            | Not started   | —          |
 
@@ -251,4 +252,4 @@ Plans:
 
 *v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`*
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
-*Roadmap last updated: 2026-05-24 — Phase 17 complete (4/4 plans, COMP-01..04 satisfied, 1177 tests, `calculate_composite` + `circular_midpoint` + inline Porphyry trisection, coverage 100% sur `ketu/composite/`). Astro.com manual cross-check on 3 oracle fixtures deferred to pre-Phase-20 follow-up (anti-bot constraint, per synastry Plan 16-05 precedent).*
+*Roadmap last updated: 2026-05-24 — Phase 17 complete (4/4 plans, COMP-01..04 satisfied, 1177 tests, `calculate_composite` + `circular_midpoint` + inline Porphyry trisection, coverage 100% sur `ketu/composite/`). Astro.com manual cross-check on 3 oracle fixtures deferred to pre-Phase-20 follow-up (anti-bot constraint, per synastry Plan 16-05 precedent). Phase 18 scope extended same day to bundle Solar + Lunar Returns behind a shared `_solve_return` helper (LRET-01..05 added; root-finder factorisation locked in success criteria #3).*

@@ -48,6 +48,14 @@
 - [ ] **RET-04** : Tests solar return vs Astro.com sur 3+ années cibles (incluant un cas wrap-around)
 - [ ] **RET-05** : Documentation explicite de la distinction `natal_lat/lon` (pour le longitude natal du Soleil) vs `return_lat/lon` (pour les houses de retour)
 
+### Lunar return (Tier 1 — predictive)
+
+- [ ] **LRET-01** : `lunar_return(natal_jd, natal_lat, natal_lon, target_jd, return_lat=None, return_lon=None, system="placidus") → CHART_DTYPE` ; résout le premier retour lunaire ≥ `target_jd` (~27.32 jours de période sidérale) ; relocation via `return_lat/lon` (None = standard)
+- [ ] **LRET-02** : Root-finding pure-NumPy sur `Moon_longitude(t) − natal_Moon_longitude` partageant la même infrastructure de wrap-around 360°→0° que `solar_return` (pre-unwrap ou résidus atan2-style) ; **factorisation explicite** d'un helper interne `_solve_return(body, ...)` réutilisé par les deux returns
+- [ ] **LRET-03** : Convergence tolerance `<1 arc-second` sur le temps résolu (même convention pro-tools que RET-03)
+- [ ] **LRET-04** : Tests lunar return vs Astro.com sur 3+ dates cibles (incluant un cas wrap-around et un cas où le retour tombe à cheval sur le jour suivant le `target_jd`)
+- [ ] **LRET-05** : Documentation explicite des sémantiques de `target_jd` (cible temporelle, pas une année comme RET-01) et de la distinction `natal_lat/lon` vs `return_lat/lon` (mêmes pièges que RET-05)
+
 ### Arabic Parts framework (Tier 2)
 
 - [ ] **PARTS-01** : `ketu/parts/` subpackage avec `PARTS` registry extensible (analogue à `SYSTEMS`)
@@ -129,6 +137,11 @@ Each REQ-ID maps to exactly one phase. Filled by `gsd-roadmapper` 2026-05-08.
 | RET-01    | Phase 18 | Pending |
 | RET-02    | Phase 18 | Pending |
 | RET-03    | Phase 18 | Pending |
+| LRET-01   | Phase 18 | Pending |
+| LRET-02   | Phase 18 | Pending |
+| LRET-03   | Phase 18 | Pending |
+| LRET-04   | Phase 18 | Pending |
+| LRET-05   | Phase 18 | Pending |
 | RET-04    | Phase 18 | Pending |
 | RET-05    | Phase 18 | Pending |
 | PARTS-01  | Phase 19 | Pending |
