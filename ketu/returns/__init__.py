@@ -72,4 +72,6 @@ return chart are within ~20 arcsec for Sun, sub-arcsec for Moon.
 """
 from __future__ import annotations
 
-__all__: list[str] = []  # solar_return and lunar_return land in Plans 18-02 and 18-03
+from ketu.returns.solar import solar_return
+
+__all__: list[str] = ["solar_return"]  # lunar_return appended in Plan 18-03
