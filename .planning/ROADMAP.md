@@ -189,7 +189,14 @@ Plans:
 5. Three reference solar returns and three reference lunar returns (each set including one wrap-around case, hand-validated against Astro.com) are pinned as oracle tests with documented arc-second deltas. The lunar oracle set also includes one case where the return falls on the calendar day *after* `target_jd` to lock the "first return ≥ target" contract.
 6. Both docstrings distinguish loudly between `natal_lat/lon` (used for the natal body longitude reference) and `return_lat/lon` (used for return-chart houses) — common-error prevention shared with RET-05/LRET-05.
 
-**Plans**: TBD
+**Plans:** 5 plans
+
+Plans:
+- [ ] 18-01-PLAN.md — Foundation: `ketu/returns/` subpackage skeleton + shared pure-NumPy `_solve_return` bisection helper (Success Criterion #3 binding) + wrap-around regression suite pinned for BOTH Sun and Moon at the helper level + `returns_coverage_gate` marker registered alphabetically + `make returns-coverage` Makefile target
+- [ ] 18-02-PLAN.md — Solar API: `solar_return(natal_jd, natal_lat, natal_lon, target_year, return_lat, return_lon, system) -> CHART_DTYPE` delegating to `_solve_return` (NO inline bisection); RET-01..03/RET-05 ratchets (relocation, leap-year, polar, natal_lat irrelevance, target_year type guard); session-scoped natal fixtures duplicated from composite/synastry
+- [ ] 18-03-PLAN.md — Lunar API: `lunar_return(natal_jd, natal_lat, natal_lon, target_jd, return_lat, return_lon, system) -> CHART_DTYPE` delegating to `_solve_return` with n=0,1,2 seed-cycle search (first-return-≥-target_jd contract); LRET-01..03/LRET-05 ratchets incl. day-after-target pre-oracle pin; API asymmetry vs solar_return documented LOUDLY
+- [ ] 18-04-PLAN.md — Oracle fixtures: 3 solar + 3 lunar oracles at `tolerance_deg=0.0001` self-consistency (each set incl. one wrap-around; lunar incl. one day-after-target); pyswisseph cross-check at `cross_check_tolerance_deg=0.001` (NEW CI-runnable sub-arcsec validation vs Phase 17); Astro-Seek WebFetch probe; Astro.com manual cross-check deferred note
+- [ ] 18-05-PLAN.md — Phase close-out: `make returns-coverage` ≥95% gate verification + cross-module See Also graph (charts ↔ composite ↔ synastry ↔ returns) + CHANGELOG `[Unreleased]` entry citing RET-01..06 + LRET-01..05 + REQUIREMENTS status flips (10 entries + new RET-06) + 6-ROADMAP-criteria smoke + Astro.com deferred follow-up copied into SUMMARY
 
 ### Phase 19: Arabic Parts Framework + 8 Parts
 
