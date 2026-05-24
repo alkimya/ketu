@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "name": "diana_charles",
+  "rodden_a": "AA",
+  "rodden_b": "AA",
+  "chart_a": {
+    "subject_name": "Princess Diana",
+    "iso_date": "1961-07-01T18:45:00Z",
+    "lat": 52.83,
+    "lon": 0.5,
+    "source": "https://www.astro.com/astro-databank/Diana,_Princess_of_Wales",
+    "rating_note": "AA per AstroDatabank (birth-time documented 19:45 BST Sandringham; UTC = 18:45). ASC/MC permitted in expected_aspects."
+  },
+  "chart_b": {
+    "subject_name": "Prince Charles (Charles III)",
+    "iso_date": "1948-11-14T21:14:00Z",
+    "lat": 51.5,
+    "lon": -0.17,
+    "source": "https://www.astro.com/astro-databank/Charles_III,_King_of_England",
+    "rating_note": "AA per AstroDatabank (birth-time documented 21:14 GMT Buckingham Palace, London; GMT = UTC in November). ASC/MC permitted in expected_aspects."
+  },
+  "expected_composite": {
+    "body_lons": {
+      "Sun": {
+        "deg": 166.044059,
+        "tolerance_deg": 0.0001
+      },
+      "Moon": {
+        "deg": 357.412029,
+        "tolerance_deg": 0.0001
+      },
+      "Mercury": {
+        "deg": 154.95165,
+        "tolerance_deg": 0.0001
+      },
+      "Venus": {
+        "deg": 125.545032,
+        "tolerance_deg": 0.0001
+      },
+      "Mars": {
+        "deg": 206.694816,
+        "tolerance_deg": 0.0001
+      },
+      "Jupiter": {
+        "deg": 288.110791,
+        "tolerance_deg": 0.0001
+      },
+      "Saturn": {
+        "deg": 227.259011,
+        "tolerance_deg": 0.0001
+      },
+      "Uranus": {
+        "deg": 117.263677,
+        "tolerance_deg": 0.0001
+      },
+      "Neptune": {
+        "deg": 206.999101,
+        "tolerance_deg": 0.0001
+      },
+      "Pluto": {
+        "deg": 147.151591,
+        "tolerance_deg": 0.0001
+      }
+    },
+    "asc": {
+      "deg": 11.89508,
+      "tolerance_deg": 0.0001
+    },
+    "mc": {
+      "deg": 288.15794,
+      "tolerance_deg": 0.0001
+    }
+  },
+  "validation_source": "Self-consistency oracle - generated from compute_chart + calculate_composite on 2026-05-24 using ketu v1.2. Cross-validation against Astro.com is deferred to Plan 17-04 close-out per 17-RESEARCH section 'Astro.com Oracle Pairs' (bot-blocked from automated retrieval; manual cross-check by a developer required).",
+  "cross_check_astro_com": {
+    "performed": false,
+    "tolerance_deg": 0.1,
+    "notes": "Deferred to Plan 17-04 close-out; bot-blocked from automated retrieval. Astro.com defaults to the reference-place method, which produces different ASC/MC than the pure midpoint method (17-RESEARCH Pitfall 5) - body longitudes should agree tightly, ASC/MC may differ by 0.5deg-2deg depending on Astro.com's user-account method preset."
+  }
+}

@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "name": "curie",
+  "rodden_a": "AA",
+  "rodden_b": "C",
+  "chart_a": {
+    "subject_name": "Marie Curie",
+    "iso_date": "1867-11-07T10:36:00Z",
+    "lat": 52.23,
+    "lon": 21.01,
+    "source": "https://www.astro.com/astro-databank/Curie,_Marie",
+    "rating_note": "AA per AstroDatabank Baptism Certificate (noon LMT Warsaw); UTC = 12:00 LMT - lon/15h = 12:00 - 1:24h = 10:36 UTC. Noon birth time means ASC/MC are NOT reliable; expected_aspects exclude angles."
+  },
+  "chart_b": {
+    "subject_name": "Pierre Curie",
+    "iso_date": "1859-05-15T11:51:00Z",
+    "lat": 48.85,
+    "lon": 2.35,
+    "source": "https://www.astro.com/astro-databank/Curie,_Pierre",
+    "rating_note": "C-rated per AstroDatabank (date known, time uncertain); using noon LMT Paris convention. UTC = 12:00 LMT - 2.35/15 h = 11:51 UTC. ASC/MC unreliable; expected_aspects exclude angles."
+  },
+  "expected_composite": {
+    "body_lons": {
+      "Sun": {
+        "deg": 139.327979,
+        "tolerance_deg": 0.0001
+      },
+      "Moon": {
+        "deg": 281.621812,
+        "tolerance_deg": 0.0001
+      },
+      "Mercury": {
+        "deg": 317.787373,
+        "tolerance_deg": 0.0001
+      },
+      "Venus": {
+        "deg": 308.087219,
+        "tolerance_deg": 0.0001
+      },
+      "Mars": {
+        "deg": 157.93576,
+        "tolerance_deg": 0.0001
+      },
+      "Jupiter": {
+        "deg": 28.037934,
+        "tolerance_deg": 0.0001
+      },
+      "Saturn": {
+        "deg": 182.801344,
+        "tolerance_deg": 0.0001
+      },
+      "Uranus": {
+        "deg": 84.733731,
+        "tolerance_deg": 0.0001
+      },
+      "Neptune": {
+        "deg": 6.636299,
+        "tolerance_deg": 0.0001
+      },
+      "Pluto": {
+        "deg": 43.540081,
+        "tolerance_deg": 0.0001
+      }
+    }
+  },
+  "validation_source": "Self-consistency oracle - generated from compute_chart + calculate_composite on 2026-05-24 using ketu v1.2. Cross-validation against Astro.com is deferred to Plan 17-04 close-out per 17-RESEARCH section 'Astro.com Oracle Pairs' (bot-blocked from automated retrieval; manual cross-check by a developer required).",
+  "cross_check_astro_com": {
+    "performed": false,
+    "tolerance_deg": 0.1,
+    "notes": "Deferred to Plan 17-04 close-out; bot-blocked from automated retrieval. Astro.com defaults to the reference-place method, which produces different ASC/MC than the pure midpoint method (17-RESEARCH Pitfall 5) - body longitudes should agree tightly, ASC/MC may differ by 0.5deg-2deg depending on Astro.com's user-account method preset."
+  },
+  "notes": "Pierre Curie's birth time is C-rated (uncertain); composite ASC/MC are unreliable for this pair and are EXCLUDED from the oracle. Bodies-only ratchet."
+}

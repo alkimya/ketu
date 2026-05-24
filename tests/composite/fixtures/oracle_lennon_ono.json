@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "name": "lennon_ono",
+  "rodden_a": "A",
+  "rodden_b": "AA",
+  "chart_a": {
+    "subject_name": "John Lennon",
+    "iso_date": "1940-10-09T18:30:00Z",
+    "lat": 53.41,
+    "lon": -2.99,
+    "source": "https://www.astro.com/astro-databank/Lennon,_John",
+    "rating_note": "A-rated per AstroDatabank (birth time 18:30 GMT Liverpool widely cited but contested by some sources; +/-15 min uncertainty). ASC/MC EXCLUDED from expected_aspects due to rating-uncertainty hygiene."
+  },
+  "chart_b": {
+    "subject_name": "Yoko Ono",
+    "iso_date": "1933-02-18T11:30:00Z",
+    "lat": 35.69,
+    "lon": 139.69,
+    "source": "https://www.astro.com/astro-databank/Ono,_Yoko",
+    "rating_note": "AA per AstroDatabank Rodden rating (birth-time documented 20:30 JST Tokyo; UTC = 20:30 - 9h = 11:30). ASC/MC reliable for Ono but EXCLUDED here because Lennon partner is A-rated."
+  },
+  "expected_composite": {
+    "body_lons": {
+      "Sun": {
+        "deg": 262.840591,
+        "tolerance_deg": 0.0001
+      },
+      "Moon": {
+        "deg": 277.117289,
+        "tolerance_deg": 0.0001
+      },
+      "Mercury": {
+        "deg": 278.454922,
+        "tolerance_deg": 0.0001
+      },
+      "Venus": {
+        "deg": 233.816605,
+        "tolerance_deg": 0.0001
+      },
+      "Mars": {
+        "deg": 175.256444,
+        "tolerance_deg": 0.0001
+      },
+      "Jupiter": {
+        "deg": 108.235894,
+        "tolerance_deg": 0.0001
+      },
+      "Saturn": {
+        "deg": 357.323509,
+        "tolerance_deg": 0.0001
+      },
+      "Uranus": {
+        "deg": 38.928299,
+        "tolerance_deg": 0.0001
+      },
+      "Neptune": {
+        "deg": 168.443017,
+        "tolerance_deg": 0.0001
+      },
+      "Pluto": {
+        "deg": 119.04103,
+        "tolerance_deg": 0.0001
+      }
+    },
+    "asc": {
+      "deg": 119.842145,
+      "tolerance_deg": 0.0001
+    },
+    "mc": {
+      "deg": 15.182393,
+      "tolerance_deg": 0.0001
+    }
+  },
+  "validation_source": "Self-consistency oracle - generated from compute_chart + calculate_composite on 2026-05-24 using ketu v1.2. Cross-validation against Astro.com is deferred to Plan 17-04 close-out per 17-RESEARCH section 'Astro.com Oracle Pairs' (bot-blocked from automated retrieval; manual cross-check by a developer required).",
+  "cross_check_astro_com": {
+    "performed": false,
+    "tolerance_deg": 0.1,
+    "notes": "Deferred to Plan 17-04 close-out; bot-blocked from automated retrieval. Astro.com defaults to the reference-place method, which produces different ASC/MC than the pure midpoint method (17-RESEARCH Pitfall 5) - body longitudes should agree tightly, ASC/MC may differ by 0.5deg-2deg depending on Astro.com's user-account method preset."
+  }
+}
