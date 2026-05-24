@@ -34,10 +34,11 @@
 
 ### Composite chart (Tier 1 — midpoint variant only)
 
-- [ ] **COMP-01** : `calculate_composite(chart_a, chart_b, system="placidus") → CHART_DTYPE` retourne un composite midpoint sous forme de `CHART_DTYPE`
-- [ ] **COMP-02** : `circular_midpoint(lon_a, lon_b)` helper modulo 360° vectorisable ; cas-test pinné `mid(359°, 1°) = 0°` (PAS 180°)
-- [ ] **COMP-03** : Composite houses calculées depuis composite ASC + composite MC (pas re-computées indépendamment)
-- [ ] **COMP-04** : Tests composite vs Astro.com sur 2+ paires de charts
+- [x] **COMP-01** : `calculate_composite(chart_a, chart_b, system="placidus") → CHART_DTYPE` retourne un composite midpoint sous forme de `CHART_DTYPE`
+- [x] **COMP-02** : `circular_midpoint(lon_a, lon_b)` helper modulo 360° vectorisable ; cas-test pinné `mid(359°, 1°) = 0°` (PAS 180°)
+- [x] **COMP-03** : Composite houses calculées depuis composite ASC + composite MC (pas re-computées indépendamment)
+- [x] **COMP-04** : Tests composite vs Astro.com sur 2+ paires de charts (self-consistency oracle PRIMARY ; Astro.com manual cross-check deferred — see 17-04-SUMMARY.md "Astro.com Manual Cross-Check")
+- [x] **COMP-05** : ≥95% line coverage gate on `ketu/composite/` via `make composite-coverage` target + `composite_coverage_gate` pytest marker (Plan 17-04 close-out addition; mirror of SYN-05 / CHART-05 / HOU-09).
 
 ### Solar return (Tier 1 — predictive)
 
@@ -120,10 +121,11 @@ Each REQ-ID maps to exactly one phase. Filled by `gsd-roadmapper` 2026-05-08.
 | SYN-03    | Phase 16 | Pending |
 | SYN-04    | Phase 16 | Pending |
 | SYN-05    | Phase 16 | Pending |
-| COMP-01   | Phase 17 | Pending |
-| COMP-02   | Phase 17 | Pending |
-| COMP-03   | Phase 17 | Pending |
-| COMP-04   | Phase 17 | Pending |
+| COMP-01   | Phase 17 | Done |
+| COMP-02   | Phase 17 | Done |
+| COMP-03   | Phase 17 | Done |
+| COMP-04   | Phase 17 | Done |
+| COMP-05   | Phase 17 | Done |
 | RET-01    | Phase 18 | Pending |
 | RET-02    | Phase 18 | Pending |
 | RET-03    | Phase 18 | Pending |

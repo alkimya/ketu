@@ -72,6 +72,30 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   `tests/synastry/test_synastry_coverage_gate.py` ratchets marker
   recognition (no `PytestUnknownMarkWarning`) and module import.
   (SYN-05)
+- **`ketu.composite` subpackage** — midpoint composite chart derivation
+  from two `CHART_DTYPE` records via `calculate_composite(chart_a,
+  chart_b, system="placidus") -> CHART_DTYPE` (COMP-01, COMP-03).
+- **`ketu.composite.circular_midpoint(lon_a, lon_b)`** — vectorisable
+  short-arc midpoint on the unit circle, modulo 360°; pinned
+  regression `circular_midpoint(359.0, 1.0) == 0.0` (COMP-02).
+- **Composite house cusps** derived from composite ASC + composite MC
+  via Porphyry-style trisection (NOT recomputed from any partner's
+  geographic context — COMP-03 literal compliance).
+- **Three composite oracle fixtures** (`oracle_curie.json`,
+  `oracle_diana_charles.json`, `oracle_lennon_ono.json`) pinned at
+  `tolerance_deg=0.0001` (machine-precision self-consistency
+  regression; cross-validation against Astro.com deferred —
+  bot-blocked) (COMP-04).
+- **`make composite-coverage`** Makefile target — ≥95% coverage gate
+  scoped to `ketu/composite/`, mirroring `make synastry-coverage`
+  and `make charts-coverage`.
+- **`composite_coverage_gate` pytest marker** registered in
+  `pyproject.toml [tool.pytest.ini_options].markers` for selective
+  invocation of the close-out gate.
+- **Davison composite** explicitly labeled as deferred-to-v1.3 in the
+  `ketu.composite` module docstring; no aspirational stub or TODO
+  reference anywhere in the subpackage (ROADMAP Phase 17 success
+  criterion #4).
 
 ### Changed
 
