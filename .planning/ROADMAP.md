@@ -43,7 +43,7 @@ Full details archived to `.planning/milestones/v1.1-ROADMAP.md`.
 - [x] **Phase 14: Chart Abstraction Foundation** — `ketu/charts/` subpackage with `CHART_DTYPE`, `compute_chart`, `is_day_chart` — keystone upstream of SYN/COMP/RET *(2026-05-09)*
 - [x] **Phase 15: Additional House Systems** — Whole Sign, Equal, Regiomontanus via existing `SYSTEMS` registry; Swiss Ephemeris validation *(2026-05-09)*
 - [x] **Phase 16: Synastry** — `calculate_synastry(chart_a, chart_b)` with `SYNASTRY_DTYPE`, dense + filtered output modes, dedicated synastry orbs *(2026-05-11)*
-- [ ] **Phase 17: Composite Chart (Midpoint)** — `calculate_composite(chart_a, chart_b)` with circular midpoint helper and composite-derived houses
+- [x] **Phase 17: Composite Chart (Midpoint)** — `calculate_composite(chart_a, chart_b)` with circular midpoint helper and composite-derived houses *(2026-05-24)*
 - [ ] **Phase 18: Solar Return (Standard + Relocated)** — `solar_return(...)` with pure-NumPy root-finding handling 360°→0° wrap; <1 arcsecond convergence
 - [ ] **Phase 19: Arabic Parts Framework + 8 Parts** — `ketu/parts/` registry, sect-aware `calculate_part`, 7 Hermetic Lots + Marriage, `--list-parts` CLI
 - [ ] **Phase 20: Release Preparation v1.2.0** — Workflow refresh (Node 24), `fr/CHANGELOG.md` decision, PyPI publish via OIDC
@@ -242,7 +242,7 @@ Plans:
 | 14. Chart Abstraction Foundation       | v1.2      | 5/5            | ✓ Complete    | 2026-05-09 |
 | 15. Additional House Systems           | v1.2      | 4/4            | ✓ Complete    | 2026-05-09 |
 | 16. Synastry                           | v1.2      | 5/5            | ✓ Complete    | 2026-05-11 |
-| 17. Composite Chart (Midpoint)         | v1.2      | 0/4            | Not started   | —          |
+| 17. Composite Chart (Midpoint)         | v1.2      | 4/4            | ✓ Complete    | 2026-05-24 |
 | 18. Solar Return (Standard + Relocated)| v1.2      | 0/?            | Not started   | —          |
 | 19. Arabic Parts Framework + 8 Parts   | v1.2      | 0/?            | Not started   | —          |
 | 20. Release Preparation v1.2.0         | v1.2      | 0/?            | Not started   | —          |
@@ -251,4 +251,4 @@ Plans:
 
 *v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`*
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
-*Roadmap last updated: 2026-05-11 — Phase 16 complete (5/5 plans, SYN-01..05 satisfied, 1065 tests, `calculate_synastry` + `SYNASTRY_DTYPE` + `ketu synastry` CLI + `--list-orbs`, coverage 100% sur `ketu/synastry/`).*
+*Roadmap last updated: 2026-05-24 — Phase 17 complete (4/4 plans, COMP-01..04 satisfied, 1177 tests, `calculate_composite` + `circular_midpoint` + inline Porphyry trisection, coverage 100% sur `ketu/composite/`). Astro.com manual cross-check on 3 oracle fixtures deferred to pre-Phase-20 follow-up (anti-bot constraint, per synastry Plan 16-05 precedent).*

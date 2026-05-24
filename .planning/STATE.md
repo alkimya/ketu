@@ -20,7 +20,7 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 17 — composite chart (midpoint variant)
+**Current focus:** Phase 17 COMPLETE — next: Phase 18 (Solar Return Standard + Relocated)
 
 ## Current Position
 
@@ -29,7 +29,7 @@ Plan: 4 of 4 (Plans 01 + 02 + 03 + 04 all complete)
 Status: Plan 17-04 shipped (Phase 17 close-out — `make composite-coverage` ≥95% gate live measuring 100% on `ketu/composite/` (95/95 statements); `composite_coverage_gate` pytest marker registered alphabetically in `pyproject.toml [tool.pytest.ini_options].markers`; sentinel test `tests/composite/test_composite_coverage_gate.py` ratchets marker recognition + module import; cross-module See Also graph closed via back-references in `ketu/charts/__init__.py` + `ketu/synastry/__init__.py` pointing to `ketu.composite.calculate_composite` (Phase 13 importable-Python-path lesson honoured); CHANGELOG.md `## [Unreleased]` `### Added` extended with 8 new bullets citing COMP-01..04 + COMP-05 (composite subpackage, circular_midpoint, Porphyry-trisection houses, 3 oracle fixtures, Makefile target, pytest marker, Davison deferred-to-v1.3); `.planning/REQUIREMENTS.md` COMP-01..04 statuses flipped from `[ ]` Pending to `[x]` Done + COMP-05 row added; 4 ROADMAP Phase 17 success criteria smoke-tested PASS with output excerpts captured in 17-04-SUMMARY.md (SC#1 calculate_composite returns CHART_DTYPE with composite-ASC/MC-derived houses; SC#2 circular_midpoint(359,1)==0.0 pinned; SC#3 three reference composite pairs with documented max delta; SC#4 Davison labeled deferred-to-v1.3 with zero aspirational reference); Astro.com manual cross-check documented as deferred follow-up (bot-blocked; NOT a Phase 17 blocker); project suite 1177 PASS + 2 SKIPPED at 98.27% coverage; doc gates green (interrogate 100%, numpydoc lint clean, mypy --strict 0 issues on 54 files). Phase 17 100% complete — ready for /gsd:verify-phase 17.
 Progress: [██████████] 100%
 Last activity: 2026-05-24
-Resume file: ready for /gsd:verify-phase 17 (Phase 17 complete) — next phase Phase 18 (Solar Return) per ROADMAP
+Resume file: Phase 17 verified (status=human_needed → user approved 2026-05-24; 8/8 observable truths PASS, 4/4 ROADMAP SC PASS at implementation level; Astro.com manual cross-check on 3 oracle fixtures deferred to pre-Phase-20 follow-up per synastry Plan 16-05 precedent); next phase Phase 18 (Solar Return Standard + Relocated) per ROADMAP
 
 ## Performance Metrics
 
