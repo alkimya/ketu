@@ -54,6 +54,7 @@ incorrect midpoints with no error signal.
 """
 from __future__ import annotations
 
+from .api import calculate_composite
 from .core import circular_midpoint
 
-__all__ = ["circular_midpoint"]
+__all__ = ["calculate_composite", "circular_midpoint"]
