@@ -96,6 +96,56 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   `ketu.composite` module docstring; no aspirational stub or TODO
   reference anywhere in the subpackage (ROADMAP Phase 17 success
   criterion #4).
+- `ketu.returns` subpackage — Solar and Lunar return chart derivation
+  with relocation support. Two public functions sharing a single
+  pure-NumPy bisection root-finder (ROADMAP Success Criterion #3
+  factorisation lock).
+- `ketu.returns.solar_return(natal_jd, natal_lat, natal_lon,
+  target_year, return_lat=None, return_lon=None, system="placidus")
+  -> CHART_DTYPE` — resolved solar return chart for a target year;
+  arc-second convergence on the resolved Sun-return instant
+  (RET-01, RET-03).
+- `ketu.returns.lunar_return(natal_jd, natal_lat, natal_lon,
+  target_jd, return_lat=None, return_lon=None, system="placidus")
+  -> CHART_DTYPE` — FIRST lunar return moment >= ``target_jd``
+  (~27.32 d periodicity); arc-second convergence (LRET-01, LRET-03).
+- Shared internal helper `ketu.returns._solve._solve_return`:
+  pure-NumPy bisection on the signed-short-arc body-longitude
+  residual `((body_lon(t) - natal_lon_ref + 540) % 360) - 180`
+  (wrap-around 360°->0° handled centrally, same convention as
+  `ketu.composite.circular_midpoint` and `ketu.houses.porphyry`).
+  Both `solar_return` and `lunar_return` call this single helper
+  (RET-02, LRET-02).
+- Wrap-around regression tests pinned for BOTH Sun and Moon at
+  helper-level AND end-to-end oracle level (RET-02 + LRET-02
+  binding).
+- Relocation contract: passing `return_lat`/`return_lon` produces a
+  relocated chart; `None` (default) reuses `natal_lat`/`natal_lon`
+  for a "standard return" (RET-05 + LRET-05). `polar_fallback="porphyry"`
+  is hard-wired internally — extreme `return_lat` does NOT raise
+  `HighLatitudeError`.
+- 3 solar + 3 lunar oracle fixtures pinned at `tolerance_deg=0.0001`
+  (machine-precision self-consistency regression — the PRIMARY gate)
+  with a TEST-ONLY pyswisseph cross-check at per-body
+  `cross_check_tolerance_deg` (solar 0.01 deg, lunar 0.75 deg,
+  convention-aligned via `FLG_TRUEPOS | FLG_NOABERR` and bounded by
+  the measured Ketu-vs-Moshier ephemeris-theory gap). The cross-check
+  is CI-runnable external validation (NEW in Phase 18 vs Phase 17
+  which had only Astro.com deferred); pyswisseph stays a TEST-ONLY
+  optional dependency — no runtime dependency added. Includes one
+  wrap-around case per body and one lunar day-after-target_jd case
+  (RET-04, LRET-04).
+- `make returns-coverage` Makefile target — >=95% coverage gate
+  scoped to `ketu/returns/`, mirroring `make composite-coverage` /
+  `make synastry-coverage` (RET-06). Coverage measured: 100%.
+- `returns_coverage_gate` pytest marker registered in
+  `pyproject.toml [tool.pytest.ini_options].markers`.
+- API asymmetry between `solar_return` (integer `target_year`) and
+  `lunar_return` (Julian Date `target_jd`) is documented LOUDLY in
+  both docstrings (LRET-05); distinction between `natal_lat/lon`
+  (signature symmetry only; never used for the geocentric body
+  longitude resolution) and `return_lat/lon` (return chart houses)
+  is documented LOUDLY in both docstrings (RET-05 + LRET-05).
 
 ### Changed
 

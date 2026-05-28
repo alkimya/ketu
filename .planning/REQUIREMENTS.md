@@ -42,19 +42,20 @@
 
 ### Solar return (Tier 1 — predictive)
 
-- [ ] **RET-01** : `solar_return(natal_jd, natal_lat, natal_lon, target_year, return_lat=None, return_lon=None, system="placidus") → CHART_DTYPE` ; si `return_lat/lon` sont None, utilise lat/lon natals (standard) ; sinon relocated
-- [ ] **RET-02** : Root-finding pure-NumPy sur `Sun_longitude(t) − natal_Sun_longitude` ; gestion explicite du wrap-around 360°→0° (pre-unwrap ou résidus atan2-style)
-- [ ] **RET-03** : Convergence tolerance `<1 arc-second` sur le temps résolu (convention pro-tools)
-- [ ] **RET-04** : Tests solar return vs Astro.com sur 3+ années cibles (incluant un cas wrap-around)
-- [ ] **RET-05** : Documentation explicite de la distinction `natal_lat/lon` (pour le longitude natal du Soleil) vs `return_lat/lon` (pour les houses de retour)
+- [x] **RET-01** : `solar_return(natal_jd, natal_lat, natal_lon, target_year, return_lat=None, return_lon=None, system="placidus") → CHART_DTYPE` ; si `return_lat/lon` sont None, utilise lat/lon natals (standard) ; sinon relocated
+- [x] **RET-02** : Root-finding pure-NumPy sur `Sun_longitude(t) − natal_Sun_longitude` ; gestion explicite du wrap-around 360°→0° (pre-unwrap ou résidus atan2-style)
+- [x] **RET-03** : Convergence tolerance `<1 arc-second` sur le temps résolu (convention pro-tools)
+- [x] **RET-04** : Tests solar return vs Astro.com sur 3+ années cibles (incluant un cas wrap-around)
+- [x] **RET-05** : Documentation explicite de la distinction `natal_lat/lon` (pour le longitude natal du Soleil) vs `return_lat/lon` (pour les houses de retour)
+- [x] **RET-06** : ≥95% line coverage gate on `ketu/returns/` via `make returns-coverage` target + `returns_coverage_gate` pytest marker (Plan 18-01 close-out addition; mirror of COMP-05 / SYN-05 / CHART-05 / HOU-09).
 
 ### Lunar return (Tier 1 — predictive)
 
-- [ ] **LRET-01** : `lunar_return(natal_jd, natal_lat, natal_lon, target_jd, return_lat=None, return_lon=None, system="placidus") → CHART_DTYPE` ; résout le premier retour lunaire ≥ `target_jd` (~27.32 jours de période sidérale) ; relocation via `return_lat/lon` (None = standard)
-- [ ] **LRET-02** : Root-finding pure-NumPy sur `Moon_longitude(t) − natal_Moon_longitude` partageant la même infrastructure de wrap-around 360°→0° que `solar_return` (pre-unwrap ou résidus atan2-style) ; **factorisation explicite** d'un helper interne `_solve_return(body, ...)` réutilisé par les deux returns
-- [ ] **LRET-03** : Convergence tolerance `<1 arc-second` sur le temps résolu (même convention pro-tools que RET-03)
-- [ ] **LRET-04** : Tests lunar return vs Astro.com sur 3+ dates cibles (incluant un cas wrap-around et un cas où le retour tombe à cheval sur le jour suivant le `target_jd`)
-- [ ] **LRET-05** : Documentation explicite des sémantiques de `target_jd` (cible temporelle, pas une année comme RET-01) et de la distinction `natal_lat/lon` vs `return_lat/lon` (mêmes pièges que RET-05)
+- [x] **LRET-01** : `lunar_return(natal_jd, natal_lat, natal_lon, target_jd, return_lat=None, return_lon=None, system="placidus") → CHART_DTYPE` ; résout le premier retour lunaire ≥ `target_jd` (~27.32 jours de période sidérale) ; relocation via `return_lat/lon` (None = standard)
+- [x] **LRET-02** : Root-finding pure-NumPy sur `Moon_longitude(t) − natal_Moon_longitude` partageant la même infrastructure de wrap-around 360°→0° que `solar_return` (pre-unwrap ou résidus atan2-style) ; **factorisation explicite** d'un helper interne `_solve_return(body, ...)` réutilisé par les deux returns
+- [x] **LRET-03** : Convergence tolerance `<1 arc-second` sur le temps résolu (même convention pro-tools que RET-03)
+- [x] **LRET-04** : Tests lunar return vs Astro.com sur 3+ dates cibles (incluant un cas wrap-around et un cas où le retour tombe à cheval sur le jour suivant le `target_jd`)
+- [x] **LRET-05** : Documentation explicite des sémantiques de `target_jd` (cible temporelle, pas une année comme RET-01) et de la distinction `natal_lat/lon` vs `return_lat/lon` (mêmes pièges que RET-05)
 
 ### Arabic Parts framework (Tier 2)
 
@@ -134,16 +135,17 @@ Each REQ-ID maps to exactly one phase. Filled by `gsd-roadmapper` 2026-05-08.
 | COMP-03   | Phase 17 | Done |
 | COMP-04   | Phase 17 | Done |
 | COMP-05   | Phase 17 | Done |
-| RET-01    | Phase 18 | Pending |
-| RET-02    | Phase 18 | Pending |
-| RET-03    | Phase 18 | Pending |
-| LRET-01   | Phase 18 | Pending |
-| LRET-02   | Phase 18 | Pending |
-| LRET-03   | Phase 18 | Pending |
-| LRET-04   | Phase 18 | Pending |
-| LRET-05   | Phase 18 | Pending |
-| RET-04    | Phase 18 | Pending |
-| RET-05    | Phase 18 | Pending |
+| RET-01    | Phase 18 | Done |
+| RET-02    | Phase 18 | Done |
+| RET-03    | Phase 18 | Done |
+| LRET-01   | Phase 18 | Done |
+| LRET-02   | Phase 18 | Done |
+| LRET-03   | Phase 18 | Done |
+| LRET-04   | Phase 18 | Done |
+| LRET-05   | Phase 18 | Done |
+| RET-04    | Phase 18 | Done |
+| RET-05    | Phase 18 | Done |
+| RET-06    | Phase 18 | Done |
 | PARTS-01  | Phase 19 | Pending |
 | PARTS-02  | Phase 19 | Pending |
 | PARTS-03  | Phase 19 | Pending |
