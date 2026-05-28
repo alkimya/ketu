@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: executing
-last_updated: "2026-05-28T19:27:08Z"
+last_updated: "2026-05-28T19:33:19Z"
 last_activity: 2026-05-28
 progress:
   total_phases: 8
   completed_phases: 6
   total_plans: 31
-  completed_plans: 29
-  percent: 94
+  completed_plans: 30
+  percent: 97
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 18 (Solar + Lunar Returns) CLOSED — all 5 plans complete (18-01 foundation + 18-02 solar_return + 18-03 lunar_return + 18-04 oracle fixtures + 18-05 close-out). Ready for `/gsd:verify-phase 18`.
+**Current focus:** Phase 19 (Arabic Parts Framework) — IN PROGRESS (2 of 3 plans complete). Plan 19-02 CLI introspection shipped.
 
 ## Current Position
 
-Phase: 19 (arabic-parts-framework) — IN PROGRESS (1 of 3 plans complete)
-Plan: 1 of 3 (Plan 19-01 ketu/parts/ registry + API + built-ins complete)
-Status: Plan 19-01 shipped (2026-05-28, ~4m, 3 tasks, 3 files created). **ketu/parts/ subpackage live.** `PartSpec` frozen dataclass + `PARTS` dict + `register()`/`get_part()` in `registry.py`; `calculate_part` (sect-aware, no if/elif, calls `is_day_chart` fresh per D-12) + `calculate_all_parts` in `api.py`; 3 built-in parts registered in `__init__.py`: Fortune (day=ASC+Moon-Sun, night=ASC+Sun-Moon), Spirit (mirror), Marriage (fixed `(2*ASC+180-Venus)%360`, `night_formula=day_formula` identity). Smoke test: Fortune day=329.22°, night=252.07° (differ ✓); Marriage day=351.98°, night=316.97° (per-chart formula re-derives correctly ✓). 1 Rule-1 auto-fix: numpydoc SS06 one-line summary in `api.py`. **Suite: 1253 PASS + 2 SKIP** (baseline unchanged — no tests yet; Plan 03 brings the test suite). interrogate 100% (8/8 new objects). numpydoc lint clean.
-Progress: [█░░] 33% (1 of 3 plans complete)
+Phase: 19 (arabic-parts-framework) — IN PROGRESS (2 of 3 plans complete)
+Plan: 2 of 3 (Plan 19-02 --list-parts CLI flag + cmd_list_parts() complete)
+Status: Plan 19-02 shipped (2026-05-28, ~2m, 2 tasks, 2 files modified). **`--list-parts` CLI introspection flag live (PARTS-08).** `cmd_list_parts()` + `_PART_DESCRIPTIONS` in `ketu/cli/introspection.py` iterating `sorted(_PARTS.keys())`; `--list-parts` store_true flag in `build_parser()` + first-wins short-circuit appended LAST in `main()` (after `list_orbs`). `ketu --list-parts` prints 3 sorted parts + formula summaries + Marriage fixed trailing note; exits 0. `test_list_flags_collision_first_wins` unaffected. interrogate 100% (5/5). Suite: 1253 PASS + 2 SKIP (unchanged).
+Progress: [██░] 67% (2 of 3 plans complete)
 Last activity: 2026-05-28
-Resume file: Phase 19 Plan 02 next — CLI `--list-parts` flag + `cmd_list_parts()` in `ketu/cli/introspection.py`.
+Resume file: Phase 19 Plan 03 next — test suite (CLI tests for --list-parts + unit tests for calculate_part / calculate_all_parts).
 
 ---
 
@@ -75,6 +75,8 @@ Resume file: Phase 19 Plan 02 next — CLI `--list-parts` flag + `cmd_list_parts
 | Phase 18 P03 | ~17min | 2 tasks | 3 files |
 | Phase 18 P04 | continuation close-out | 3 tasks (2 pre-continuation) | 8 files |
 | Phase 18 P05 | ~54m | 3 tasks | 6 files |
+| Phase 19 P01 | ~4min | 3 tasks | 3 files |
+| Phase 19 P02 | ~2min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -202,10 +204,13 @@ Resume file: Phase 19 Plan 02 next — CLI `--list-parts` flag + `cmd_list_parts
 - [Phase 19-01]: Marriage formula simplified to `(2*ASC+180-Venus)%360` (avoids throwaway Descendant variable; RESEARCH Pitfall 4). Description string contains `"fixed - no sect inversion"` (required by Plan 02 CLI + plan spec).
 - [Phase 19-01]: Built-in registrations inline in `__init__.py` (3 simple lambdas; `_parts_builtin.py` not needed for this small set — RESEARCH §__init__.py sanctions either approach).
 - [Phase 19-01]: `sorted(PARTS.keys())` default order in `calculate_all_parts` — deterministic alphabetical (fortune, marriage, spirit) for ML pipelines and oracle tests (RESEARCH Pitfall 5).
+- [Phase 19-02]: `--list-parts` appended LAST in first-wins ladder (after `list_orbs`) — preserves `test_list_flags_collision_first_wins` regression pin (Phase 16-04 decision: ladder order = source-declaration order, NOT alphabetical).
+- [Phase 19-02]: `cmd_list_parts()` iterates `sorted(_PARTS.keys())` (data-driven) — a v1.3 Lot registered via `register()` surfaces automatically in CLI output without touching the function.
+- [Phase 19-02]: Trailing note `"Marriage note: fixed formula - day and night formulas are identical."` as canonical location for no-sect-inversion annotation (Plan 03 CLI test asserts on it).
 
 ## Session Continuity
 
-v1.2 roadmap written 2026-05-08. **Phase 19 Plan 01 (Arabic Parts Framework — Registry + API) shipped 2026-05-28** (~4m, 3 tasks, 3 files created). `ketu/parts/` subpackage live: `PartSpec` frozen dataclass + `PARTS` dict + `register()`/`get_part()` in `registry.py`; `calculate_part` (sect-aware via `is_day_chart`, no if/elif) + `calculate_all_parts` in `api.py`; 3 built-in parts registered in `__init__.py` (Fortune day=ASC+Moon-Sun/night=ASC+Sun-Moon, Spirit mirror, Marriage fixed `(2*ASC+180-Venus)%360` with `night_formula=day_formula` identity). 1 Rule-1 auto-fix: numpydoc SS06 one-line summary in `api.py`. Suite: 1253 PASS + 2 SKIP (baseline unchanged — new `ketu/parts/` files at 0% coverage; tests land in Plan 03). interrogate 100% (8/8). numpydoc lint clean. Last session: Sophie + executor agent, stopped at: Plan 19-01 complete — **ready for /gsd:execute-phase 19 plan 02 (CLI --list-parts flag)**.
+v1.2 roadmap written 2026-05-08. **Phase 19 Plan 02 (CLI --list-parts introspection) shipped 2026-05-28** (~2m, 2 tasks, 2 files modified). `--list-parts` store_true flag live: `cmd_list_parts()` + `_PART_DESCRIPTIONS` added to `ketu/cli/introspection.py`; `--list-parts` flag in `build_parser()` + short-circuit LAST in `main()` first-wins ladder (after `list_orbs`). `ketu --list-parts` prints 3 sorted parts (fortune, marriage, spirit) with formula summaries + trailing Marriage fixed note; exits 0. `test_list_flags_collision_first_wins` unaffected. interrogate 100% (5/5). Suite: 1253 PASS + 2 SKIP (unchanged). PARTS-08 satisfied. Last session: Sophie + executor agent, stopped at: Plan 19-02 complete — **ready for /gsd:execute-phase 19 plan 03 (test suite: CLI tests for --list-parts + unit tests for calculate_part/calculate_all_parts)**.
 
 ---
 
