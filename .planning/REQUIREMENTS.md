@@ -26,11 +26,11 @@
 
 ### Synastry (Tier 1 — relational)
 
-- [ ] **SYN-01** : `calculate_synastry(chart_a, chart_b, aspects="classical", orbs="synastry") → SYNASTRY_DTYPE` calcule les aspects inter-charts (cross-product N×M des bodies)
-- [ ] **SYN-02** : `SYNASTRY_DTYPE` structured array préserve l'origine de chaque body (chart A vs chart B) + aspect type + orb + applying/separating
-- [ ] **SYN-03** : Convention d'orbs synastry (3-5° pour les majeurs) documentée et applicable via le param `orbs=`, distinct de l'orb natale (8-10°)
-- [ ] **SYN-04** : Output mode dense (matrice N×M) ET filtré (liste d'aspects orbés) — caller choisit
-- [ ] **SYN-05** : Tests synastry vs Astro.com / Solar Fire sur 3+ paires de charts (oracle hand-validated)
+- [x] **SYN-01** : `calculate_synastry(chart_a, chart_b, aspects="classical", orbs="synastry") → SYNASTRY_DTYPE` calcule les aspects inter-charts (cross-product N×M des bodies)
+- [x] **SYN-02** : `SYNASTRY_DTYPE` structured array préserve l'origine de chaque body (chart A vs chart B) + aspect type + orb + applying/separating
+- [x] **SYN-03** : Convention d'orbs synastry (3-5° pour les majeurs) documentée et applicable via le param `orbs=`, distinct de l'orb natale (8-10°)
+- [x] **SYN-04** : Output mode dense (matrice N×M) ET filtré (liste d'aspects orbés) — caller choisit
+- [x] **SYN-05** : Tests synastry vs Astro.com / Solar Fire sur 3+ paires de charts (oracle hand-validated)
 
 ### Composite chart (Tier 1 — midpoint variant only)
 
@@ -125,11 +125,11 @@ Each REQ-ID maps to exactly one phase. Filled by `gsd-roadmapper` 2026-05-08.
 | HOU2-03   | Phase 15 | Complete |
 | HOU2-04   | Phase 15 | Complete |
 | HOU2-05   | Phase 15 | Complete |
-| SYN-01    | Phase 16 | Pending |
-| SYN-02    | Phase 16 | Pending |
-| SYN-03    | Phase 16 | Pending |
-| SYN-04    | Phase 16 | Pending |
-| SYN-05    | Phase 16 | Pending |
+| SYN-01    | Phase 16 | Done |
+| SYN-02    | Phase 16 | Done |
+| SYN-03    | Phase 16 | Done |
+| SYN-04    | Phase 16 | Done |
+| SYN-05    | Phase 16 | Done |
 | COMP-01   | Phase 17 | Done |
 | COMP-02   | Phase 17 | Done |
 | COMP-03   | Phase 17 | Done |
