@@ -58,7 +58,7 @@ Changelog = "https://github.com/alkimya/ketu/blob/main/CHANGELOG.md"
 ketu = "ketu.cli:main"
 
 [tool.setuptools]
-packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.cycles", "ketu.cache", "ketu.houses", "ketu.charts", "ketu.cli", "ketu.synastry", "ketu.composite", "ketu.returns"]
+packages = ["ketu", "ketu.ephemeris", "ketu.aspects", "ketu.cycles", "ketu.cache", "ketu.houses", "ketu.charts", "ketu.cli", "ketu.synastry", "ketu.composite", "ketu.returns", "ketu.parts"]
 
 [tool.setuptools.package-data]
 ketu = ["py.typed"]
@@ -79,6 +79,7 @@ markers = [
     "charts_coverage_gate: CHART-05 95% coverage gate for ketu.charts (run via Makefile target `make charts-coverage`)",
     "composite_coverage_gate: COMP-05 95% coverage gate for ketu.composite (run via Makefile target `make composite-coverage`)",
     "houses_coverage_gate: HOU-09 95% coverage gate for ketu.houses (run via Makefile target `make houses-coverage`)",
+    "parts_coverage_gate: PARTS coverage gate (>=95%) for ketu.parts (run via Makefile target `make parts-coverage`)",
     "returns_coverage_gate: RET-06 95% coverage gate for ketu.returns (run via Makefile target `make returns-coverage`)",
     "synastry_coverage_gate: SYN-05 95% coverage gate for ketu.synastry (run via Makefile target `make synastry-coverage`)",
 ]

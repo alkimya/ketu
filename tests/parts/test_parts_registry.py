@@ -12,7 +12,7 @@ from __future__ import annotations
 import pytest
 
 from ketu.charts.api import compute_chart
-from ketu.parts import PARTS, calculate_part, get_part, register
+from ketu.parts import PARTS, calculate_all_parts, calculate_part, get_part, register
 
 #: Paris, J2000 noon — day chart fixture (confirmed day in test_parts_oracle.py).
 _CHART = compute_chart(2451545.0, 48.8566, 2.3522)
@@ -92,6 +92,32 @@ class TestRegistryIsExtensible:
     def test_cleanup_restores_exactly_three(self) -> None:
         """After the extensibility test, the registry is back to exactly 3 entries."""
         assert set(PARTS.keys()) == {"fortune", "spirit", "marriage"}
+
+
+class TestCalculateAllParts:
+    """calculate_all_parts: default (parts=None) + explicit parts=[...] filter."""
+
+    def test_default_returns_all_three(self) -> None:
+        """calculate_all_parts(chart) (parts=None) returns all 3 parts alphabetically."""
+        result = calculate_all_parts(_CHART)
+        assert set(result.keys()) == {"fortune", "spirit", "marriage"}
+
+    def test_explicit_filter_single_part(self) -> None:
+        """calculate_all_parts(chart, parts=['fortune']) returns only fortune."""
+        result = calculate_all_parts(_CHART, parts=["fortune"])
+        assert list(result.keys()) == ["fortune"]
+        assert 0.0 <= result["fortune"] < 360.0
+
+    def test_explicit_filter_two_parts(self) -> None:
+        """calculate_all_parts(chart, parts=['fortune', 'spirit']) returns two entries."""
+        result = calculate_all_parts(_CHART, parts=["fortune", "spirit"])
+        assert set(result.keys()) == {"fortune", "spirit"}
+
+    def test_all_values_in_range(self) -> None:
+        """All longitudes returned by calculate_all_parts are in [0, 360)."""
+        result = calculate_all_parts(_CHART)
+        for name, lon in result.items():
+            assert 0.0 <= lon < 360.0, f"{name}: longitude {lon} out of [0, 360)"
 
 
 class TestMarriageIdentity:

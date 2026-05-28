@@ -8,7 +8,7 @@
 
 PYTHON ?= python
 
-.PHONY: test test-fast houses-coverage charts-coverage synastry-coverage composite-coverage returns-coverage doc-gates mypy clean
+.PHONY: test test-fast houses-coverage charts-coverage synastry-coverage composite-coverage returns-coverage parts-coverage doc-gates mypy clean
 
 ## test: Run the full pytest suite with coverage report.
 test:
@@ -92,6 +92,19 @@ composite-coverage:
 returns-coverage:
 	$(PYTHON) -m pytest tests/returns/ -o addopts="" --cov --cov-report= --cov-fail-under=0
 	$(PYTHON) -m coverage report --include='ketu/returns/*' --fail-under=95 -m
+
+## parts-coverage: Run the PARTS >=95% coverage gate scoped to ketu.parts.
+##
+## Mirror of `returns-coverage` (RET-06) and `composite-coverage` (COMP-05).
+## Same two-step pattern to avoid the NumPy `_NoValueType` reload bug
+## triggered when coverage.py uses `source=ketu.parts` (sub-package).
+## With `source=ketu` (full package) coverage works cleanly. We run
+## pytest once with the project-wide `ketu` source (no `--cov-fail-under`
+## since most modules are unexercised by tests/parts/), then scope
+## the threshold check to `ketu/parts/*` via `coverage report --include`.
+parts-coverage:
+	$(PYTHON) -m pytest tests/parts/ -o addopts="" --cov --cov-report= --cov-fail-under=0
+	$(PYTHON) -m coverage report --include='ketu/parts/*' --fail-under=95 -m
 
 ## doc-gates: Run the doc-gate suite locally (interrogate + numpydoc lint).
 ##
