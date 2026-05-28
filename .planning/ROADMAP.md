@@ -44,7 +44,7 @@ Full details archived to `.planning/milestones/v1.1-ROADMAP.md`.
 - [x] **Phase 15: Additional House Systems** — Whole Sign, Equal, Regiomontanus via existing `SYSTEMS` registry; Swiss Ephemeris validation *(2026-05-09)*
 - [x] **Phase 16: Synastry** — `calculate_synastry(chart_a, chart_b)` with `SYNASTRY_DTYPE`, dense + filtered output modes, dedicated synastry orbs *(2026-05-11)*
 - [x] **Phase 17: Composite Chart (Midpoint)** — `calculate_composite(chart_a, chart_b)` with circular midpoint helper and composite-derived houses *(2026-05-24)*
-- [ ] **Phase 18: Solar + Lunar Returns (Standard + Relocated)** — `solar_return(...)` + `lunar_return(...)` sharing a pure-NumPy `_solve_return` helper handling 360°→0° wrap; <1 arcsecond convergence on both
+- [x] **Phase 18: Solar + Lunar Returns (Standard + Relocated)** — `solar_return(...)` + `lunar_return(...)` sharing a pure-NumPy `_solve_return` helper handling 360°→0° wrap; <1 arcsecond convergence on both *(2026-05-28)*
 - [ ] **Phase 19: Arabic Parts Framework + 8 Parts** — `ketu/parts/` registry, sect-aware `calculate_part`, 7 Hermetic Lots + Marriage, `--list-parts` CLI
 - [ ] **Phase 20: Release Preparation v1.2.0** — Workflow refresh (Node 24), `fr/CHANGELOG.md` decision, PyPI publish via OIDC
 
@@ -251,7 +251,7 @@ Plans:
 | 15. Additional House Systems           | v1.2      | 4/4            | ✓ Complete    | 2026-05-09 |
 | 16. Synastry                           | v1.2      | 5/5            | ✓ Complete    | 2026-05-11 |
 | 17. Composite Chart (Midpoint)         | v1.2      | 4/4            | ✓ Complete    | 2026-05-24 |
-| 18. Solar + Lunar Returns (Std + Reloc)| v1.2      | 0/?            | Not started   | —          |
+| 18. Solar + Lunar Returns (Std + Reloc)| v1.2      | 5/5            | ✓ Complete    | 2026-05-28 |
 | 19. Arabic Parts Framework + 8 Parts   | v1.2      | 0/?            | Not started   | —          |
 | 20. Release Preparation v1.2.0         | v1.2      | 0/?            | Not started   | —          |
 
@@ -259,4 +259,4 @@ Plans:
 
 *v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`*
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
-*Roadmap last updated: 2026-05-24 — Phase 17 complete (4/4 plans, COMP-01..04 satisfied, 1177 tests, `calculate_composite` + `circular_midpoint` + inline Porphyry trisection, coverage 100% sur `ketu/composite/`). Astro.com manual cross-check on 3 oracle fixtures deferred to pre-Phase-20 follow-up (anti-bot constraint, per synastry Plan 16-05 precedent). Phase 18 scope extended same day to bundle Solar + Lunar Returns behind a shared `_solve_return` helper (LRET-01..05 added; root-finder factorisation locked in success criteria #3).*
+*Roadmap last updated: 2026-05-28 — Phase 18 complete (5/5 plans, RET-01..06 + LRET-01..05 satisfied, 1253 tests, `solar_return` + `lunar_return` sharing a single pure-NumPy `_solve_return` bisection helper, coverage 100% sur `ketu/returns/`). Self-consistency oracle at 0.0001° is the PRIMARY gate; pyswisseph cross-check is TEST-ONLY (per-body tolerance relaxed with measured ephemeris-theory deltas — Ketu TRUE Sun + truncated-Meeus lunar vs Swiss Ephemeris Moshier ELP). Ketu runtime stays pure NumPy. Test-extra package typo `pysweph` → `pyswisseph` fixed. Astro.com manual cross-check on 6 resolved instants deferred to pre-Phase-20 follow-up (anti-bot; pyswisseph CI substitute strictly stronger than Phase 17).*
