@@ -219,7 +219,11 @@ Plans:
 4. `ketu --list-parts` (CLI flag, mirroring `--list-house-systems`) prints all 3 part names plus a short formula summary line each (Marriage line notes "fixed — no sect inversion").
 5. Coverage on `ketu/parts/` is ≥95%; each of the 3 parts has a hand-derived oracle test value pinned at the documented day/night sect (Fortune + Spirit pinned for BOTH a day-chart and a night-chart; Marriage pinned once, identical across sect).
 
-**Plans**: TBD
+**Plans**: 3 plans
+
+- [ ] 19-01-PLAN.md — `ketu/parts/` foundation: registry (PartSpec + PARTS + register/get_part), 3 built-in registrations (Fortune/Spirit/Marriage), api (`calculate_part` sect dispatch + `calculate_all_parts`) [PARTS-01..07]
+- [ ] 19-02-PLAN.md — `--list-parts` CLI flag (`cmd_list_parts` + first-wins short-circuit appended last) mirroring `--list-house-systems` [PARTS-08]
+- [ ] 19-03-PLAN.md — close-out: registry/CLI tests + 5 hand-derived oracle values (Fortune+Spirit day&night, Marriage once) + `parts_coverage_gate` marker + `make parts-coverage` ≥95% gate
 
 ### Phase 20: Release Preparation v1.2.0
 
