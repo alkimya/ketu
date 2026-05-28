@@ -253,3 +253,11 @@ No other deviations — Tasks 1 (Steps B-E), 2, and 3 executed exactly as writte
 All 6 ROADMAP success criteria satisfied end-to-end; 11 requirement entries Done (RET-01..06 + LRET-01..05); coverage gate 100% on `ketu/returns/` (≥95% floor); cross-module discoverability complete (charts ↔ composite ↔ synastry ↔ returns, importable paths only); CHANGELOG additive surface advertised; Astro.com manual cross-check captured as deferred follow-up with the TEST-ONLY pyswisseph CI substitute strictly stronger than the Phase 17 precedent. No runtime dependency added — `ketu/` remains pure NumPy.
 
 Pour `/gsd:verify-phase 18` : la couverture pyswisseph cross-check est CI-runnable et donne la validation cross-tool que les Phases 16 et 17 n'avaient pas. Elle reste strictement TEST-ONLY (`[project.optional-dependencies].test`) — aucune dépendance runtime ajoutée, contrat pur-NumPy préservé. La cross-check Astro.com manuelle reste un follow-up développeur de 30-45 min sans bloquer la clôture de la phase.
+
+## Self-Check: PASSED
+
+All created/modified files verified on disk; all 4 per-task commits verified in git history:
+- `347022c` test(18-05): close ketu.returns coverage gaps
+- `74c37a9` docs(18-05): complete See Also cross-references
+- `64d5daf` docs(18-05): CHANGELOG + REQUIREMENTS RET-01..06 + LRET-01..05 Done
+- `3c9990a` docs(18-05): Phase 18 close-out (6-criteria smoke + Astro.com deferred + SUMMARY)
