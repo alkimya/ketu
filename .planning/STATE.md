@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: executing
-last_updated: "2026-05-28T19:42:30Z"
+last_updated: "2026-05-28T20:20:45Z"
 last_activity: 2026-05-28
 progress:
   total_phases: 8
   completed_phases: 7
-  total_plans: 31
-  completed_plans: 31
+  total_plans: 32
+  completed_plans: 32
   percent: 100
 ---
 
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 ## Current Position
 
-Phase: 19 (arabic-parts-framework) — COMPLETE (3 of 3 plans)
-Plan: 3 of 3 (Plan 19-03 test suite + coverage gate complete)
-Status: Plan 19-03 shipped (2026-05-28, ~5m, 3 tasks, 7 files modified). **31 tests in tests/parts/ (5 files): registry + CLI + oracle + coverage gate.** 6 pinned oracle values (Fortune/Spirit/Marriage day+night) at 1e-9 tolerance. `parts_coverage_gate` marker registered. `make parts-coverage` passes at 100% on ketu/parts/. Full suite: **1284 PASS + 2 SKIP**. PARTS-01..08 all satisfied.
-Progress: [███] 100% (3 of 3 plans complete — Phase 19 CLOSED)
+Phase: 20 (release-preparation-v1-2-0) — IN PROGRESS (1 of 3 plans complete)
+Plan: 1 of 3 (Plan 20-01 action version bump complete)
+Status: Plan 20-01 shipped (2026-05-28, ~1m, 2 tasks, 2 files modified). **GitHub Actions bumped to Node-24 majors in both workflow files.** tests.yml: checkout@v5 + setup-python@v6 + codecov-action@v5. publish.yml: checkout@v5 + setup-python@v6 + upload-artifact@v5 + download-artifact@v5 (matched pair). pypa/gh-action-pypi-publish@release/v1 unchanged. Zero @v4 references remain. OPS-03 satisfied.
+Progress: [█░░] 33% (1 of 3 plans complete)
 Last activity: 2026-05-28
-Resume file: Phase 20 next — Release Preparation v1.2.0 (OPS-03, OPS-04, OPS-05).
+Resume file: Phase 20 Plan 02 next — numpydoc CI gate (OPS-02 finalization).
 
 ---
 
@@ -79,6 +79,7 @@ Resume file: Phase 20 next — Release Preparation v1.2.0 (OPS-03, OPS-04, OPS-0
 | Phase 19 P02 | ~2min | 2 tasks | 2 files |
 | Phase 19 P03 | ~5min | 3 tasks | 7 files |
 | Phase 19-arabic-parts-framework P03 | 5 | 3 tasks | 7 files |
+| Phase 20 P01 | ~1min | 2 tasks | 2 files |
 
 ## Accumulated Context
 
@@ -216,7 +217,11 @@ Resume file: Phase 20 next — Release Preparation v1.2.0 (OPS-03, OPS-04, OPS-0
 
 ## Session Continuity
 
-v1.2 roadmap written 2026-05-08. **Phase 19 (Arabic Parts Framework) COMPLETE — Plan 19-03 test suite + coverage gate shipped 2026-05-28** (~5m, 3 tasks, 7 files modified). 31 tests across 5 files in `tests/parts/`: `test_parts_registry.py` (13 tests: exactly-3, case-insensitive, ValueError, extensibility, Marriage callable identity, calculate_all_parts default+filter), `test_parts_cli.py` (9 tests: --list-parts exit 0 + 3 names + fixed note; cmd_list_parts() direct), `test_parts_coverage_gate.py` (1 test: marker sentinel), `test_parts_oracle.py` (8 tests: 6 pinned oracle values at 1e-9 + sect premise + Fortune!=Spirit mirror guard). `parts_coverage_gate` marker registered in `pyproject.toml` (alphabetically between houses and returns). `make parts-coverage` target added (two-step pattern mirror of returns-coverage); exits 0 with ketu/parts/* at **100%**. `ketu.parts` added to `[tool.setuptools].packages`. **Suite: 1284 PASS + 2 SKIP** (1253 baseline + 31 new). PARTS-01..08 all satisfied. **Phase 19 closed.** Last session: Sophie + executor agent, stopped at: Plan 19-03 complete — **ready for /gsd:execute-phase 20 plan 01 (Release Preparation v1.2.0)**.
+v1.2 roadmap written 2026-05-08. **Phase 20 (Release Preparation v1.2.0) IN PROGRESS — Plan 20-01 action version bump shipped 2026-05-28** (~1m, 2 tasks, 2 files modified). GitHub Actions bumped to Node-24 across both workflow files: tests.yml (checkout@v5, setup-python@v6, codecov-action@v5) + publish.yml (checkout@v5, setup-python@v6, upload-artifact@v5 + download-artifact@v5 matched pair). pypa/gh-action-pypi-publish@release/v1 unchanged. Zero @v4 references remain. OPS-03 satisfied. Last session: Sophie + executor agent, stopped at: Plan 20-01 complete — **ready for /gsd:execute-phase 20 plan 02 (numpydoc CI gate finalization)**. Commits: `3d6e7da` (tests.yml), `bb63b8d` (publish.yml).
+
+---
+
+**Historical context (Phase 19 Plan 03):** v1.2 roadmap written 2026-05-08. **Phase 19 (Arabic Parts Framework) COMPLETE — Plan 19-03 test suite + coverage gate shipped 2026-05-28** (~5m, 3 tasks, 7 files modified). 31 tests across 5 files in `tests/parts/`: `test_parts_registry.py` (13 tests: exactly-3, case-insensitive, ValueError, extensibility, Marriage callable identity, calculate_all_parts default+filter), `test_parts_cli.py` (9 tests: --list-parts exit 0 + 3 names + fixed note; cmd_list_parts() direct), `test_parts_coverage_gate.py` (1 test: marker sentinel), `test_parts_oracle.py` (8 tests: 6 pinned oracle values at 1e-9 + sect premise + Fortune!=Spirit mirror guard). `parts_coverage_gate` marker registered in `pyproject.toml` (alphabetically between houses and returns). `make parts-coverage` target added (two-step pattern mirror of returns-coverage); exits 0 with ketu/parts/* at **100%**. `ketu.parts` added to `[tool.setuptools].packages`. **Suite: 1284 PASS + 2 SKIP** (1253 baseline + 31 new). PARTS-01..08 all satisfied. **Phase 19 closed.** Last session: Sophie + executor agent, stopped at: Plan 19-03 complete — **ready for /gsd:execute-phase 20 plan 01 (Release Preparation v1.2.0)**.
 
 ---
 
