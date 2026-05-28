@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: executing
-last_updated: "2026-05-28T20:48:00Z"
+last_updated: "2026-05-28T21:10:00Z"
 last_activity: 2026-05-28
 progress:
   total_phases: 8
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 19 (Arabic Parts Framework) — COMPLETE (3 of 3 plans). Phase 20 (Release Preparation v1.2.0) is next.
+**Current focus:** Phase 20 (Release Preparation v1.2.0) — COMPLETE (3 of 3 plans). Only Plan 20-04 (PyPI publish) remains.
 
 ## Current Position
 
-Phase: 20 (release-preparation-v1-2-0) — IN PROGRESS (2 of 3 plans complete)
-Plan: 2 of 3 (Plan 20-02 numpydoc gate flip complete)
-Status: Plan 20-02 shipped (2026-05-28, ~25m, 2 tasks, 58 files modified). **OPS-02 finalized: numpydoc gate is now fully blocking in CI, pyproject.toml, and Makefile.** Zero violations across all 61 linted files. Rule 1 auto-fix: 214 pre-existing GL01 violations (hidden by suppression) fixed across 44 files. GL07 section-order violations fixed in 5 functions. GL02 closing-quote violations fixed in 4 docstrings. 1284 tests green, interrogate 100%.
-Progress: [██░] 67% (2 of 3 plans complete)
+Phase: 20 (release-preparation-v1-2-0) — IN PROGRESS (3 of 3 plans complete, awaiting publish)
+Plan: 3 of 3 (Plan 20-03 version/changelog/docs complete)
+Status: Plan 20-03 shipped (2026-05-28). Version bumped to 1.2.0 (pyproject.toml + ketu/__init__.py). CHANGELOG [Unreleased] promoted to dated [1.2.0] - 2026-05-28 (additive-only, no BREAKING heading; Phase 15 HOU2 + Phase 19 PARTS + OPS-03 workflow refresh entries added). fr/CHANGELOG.md created as generated French translation (OPS-04 LOCKED DECISION). UPGRADING.md v1.1->v1.2 additive section added. README What's New updated to v1.2.0. REQUIREMENTS.md PARTS-01..08 flipped to Done; OPS-03/OPS-04 flipped to Done. 1284 tests green.
+Progress: [███] 100% plans complete (release pending)
 Last activity: 2026-05-28
-Resume file: Phase 20 Plan 03 next — CHANGELOG + version bump to v1.2.0 (OPS-04/OPS-05).
+Resume file: Phase 20 Plan 04 next — PyPI publish via OIDC trusted publishing (OPS-05).
 
 ---
 
