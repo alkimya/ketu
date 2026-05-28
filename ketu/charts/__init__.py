@@ -19,6 +19,10 @@ ketu.synastry.calculate_synastry : Inter-chart aspect computation
     consuming two CHART_DTYPE records (Phase 16).
 ketu.composite.calculate_composite : Derive a midpoint composite
     chart from two CHART_DTYPE records (Phase 17).
+ketu.returns.solar_return : Compute the solar return chart for a
+    natal birth and a target year (Phase 18).
+ketu.returns.lunar_return : Compute the lunar return chart for a
+    natal birth and a target JD (Phase 18).
 
 Notes
 -----

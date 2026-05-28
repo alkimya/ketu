@@ -19,6 +19,10 @@ ketu.charts.compute_chart : Build the per-partner CHART_DTYPE inputs.
 ketu.synastry.calculate_synastry : Inter-chart aspect computation
     (the complementary pair-chart operation on the same CHART_DTYPE
     pair).
+ketu.returns.solar_return : Solar return chart from a natal birth
+    and a target year (Phase 18).
+ketu.returns.lunar_return : Lunar return chart from a natal birth
+    and a target JD (Phase 18).
 
 Notes
 -----

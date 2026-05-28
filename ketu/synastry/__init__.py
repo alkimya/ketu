@@ -30,6 +30,10 @@ ketu.aspects.presets.resolve_aspect_set : Aspect-set spec resolver
 ketu.composite.calculate_composite : Derive a midpoint composite
     chart from the same CHART_DTYPE pair (Phase 17; complementary
     pair-chart operation).
+ketu.returns.solar_return : Solar return chart (Phase 18; another
+    derivation from a natal CHART_DTYPE).
+ketu.returns.lunar_return : Lunar return chart (Phase 18; ~27.32-d
+    periodicity from a natal CHART_DTYPE).
 
 Notes
 -----
