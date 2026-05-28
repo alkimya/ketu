@@ -14,16 +14,20 @@ Cycle calculations must be correct, tested, and performant. If the math is wrong
 
 v1.2 turned Ketu into a full relational and predictive astrology framework — strictly non-breaking (every API additive). A chart-abstraction keystone (`CHART_DTYPE` / `compute_chart` / `is_day_chart`) is now the foundation for three new house systems (Whole Sign, Equal, Regiomontanus — six total), synastry, midpoint composite, solar + lunar returns (sharing one pure-NumPy `_solve_return` core, arc-second convergence), and an extensible Arabic Parts framework (Fortune, Spirit, Marriage). The v1.1 ops debt was retired: `interrogate ≥95%` + `numpydoc validate` gates are now BLOCKING in CI, and workflows moved to Node 24. 1286 tests collected; mypy `--strict` clean; 100% coverage on every new subpackage. The runtime stays pure NumPy (`pyswisseph` is test-only).
 
-## Next Milestone: v1.3 (not yet scoped)
+## Current Milestone: v1.3 Chiron & Engine Hardening
 
-v1.2 shipped 2026-05-28. The next milestone has not been defined yet — run `/gsd:new-milestone` to scope v1.3.
+**Goal:** Embed Chiron (Chebyshev-by-segment coefficients, pure-NumPy runtime) as the 14th body, after hardening the ephemeris engine and lifting quality to 100% — then bring the Sphinx docs (en+fr) up to the full v1.1/v1.2/v1.3 surface and ship `ketu==1.3.0`.
 
-**Carried-forward candidates (deferred from v1.2):**
+**Target features (ordered):**
 
-- **Chiron + Centaurs (Pholus, Nessus, Chariklo)** — widely used in modern astrology; requires either a swisseph runtime dependency or a Chebyshev-by-segment polynomial fit pipeline (tooling not in place). User previously flagged this as a likely dedicated v1.3 milestone.
-- **Davison composite** — chart for time + lat/lon midpoints; complement to the midpoint composite shipped in v1.2.
-- **5 remaining Hermetic Lots** (Eros, Necessity, Courage, Victory, Nemesis) — competing tradition variants; the v1.2 Parts registry absorbs them additively (no API change).
-- **Transits / progressions / directions** — predictive techniques beyond return charts; continuous time-series shape, distinct from the return-chart solver.
+1. **Quality** — project coverage → 100% (outlier `ketu/houses/_ecliptic.py` ~64%), fix div/0 at `orbital.py:755` (`arcsin(z/r)` guard), deepen docstring examples/Notes (interrogate/numpydoc already 100% quantitative).
+2. **Ephemeris refactor** (before Chiron) — extract the per-body if-elif in `planets.py:calc_planet_position` into a per-body strategy, split `orbital.py:get_body_position` (~856 LOC file), consolidate duplicated natal fixtures across 4 conftest.py into `tests/conftest.py`.
+3. **Spike Chiron** — validate Chebyshev-by-segment (segment size, degree, coeff size, accuracy vs Swiss < 0.01°) on real measurements before planning the implementation.
+4. **Chiron** — embedded Chebyshev coeffs (offline pyswisseph build-only generator → `.npz` in package; 100% NumPy runtime eval). 13→14 bodies: deliberately breaks the `test_body_count_frozen_at_thirteen` ratchet and the positional contract shared with Kala (coordinate the breaking change).
+5. **Docs Sphinx en+fr** — single phase: bring the 12 frozen `docs/source/` pages (stuck at v1.0, 2026-02-12) up to full v1.3 surface incl. synastry/composite/returns/parts/Chiron; fr translation via existing gettext infra (`docs/locale/`).
+6. **Release 1.3.0** — closing phase: version bump, CHANGELOG, GitHub release + PyPI via OIDC.
+
+**Breaking-change note (D-08 decision):** Chiron lifts the bodies axis 13→14, intentionally breaking the frozen-body-count ratchet (`tests/test_ketu.py:110`) and the positional array contract Kala depends on. Decided 2026-05-29 to **break the freeze in v1.3 and coordinate Kala** rather than expose Chiron as a separate additive index. Version stays **1.3.0**: the *public* Ketu API surface remains additive; the broken contract is the internal Ketu↔Kala positional array, which Kala will adapt to.
 
 ## Requirements
 
@@ -96,9 +100,19 @@ v1.2 shipped 2026-05-28. The next milestone has not been defined yet — run `/g
 
 ### Active
 
-<!-- No active milestone — v1.2 shipped 2026-05-28. Run /gsd:new-milestone to scope v1.3. -->
+<!-- v1.3 Chiron & Engine Hardening — scoped 2026-05-29. Building toward these. -->
 
-None. v1.2 is complete; the next milestone (v1.3) has not been scoped yet. See **Next Milestone** above for carried-forward candidates.
+- [ ] Project coverage → 100% (close `ketu/houses/_ecliptic.py` and remaining gaps)
+- [ ] Fix div/0 at `orbital.py:755` (`arcsin(z/r)` guard)
+- [ ] Deepen docstring examples/Notes across public API
+- [ ] Refactor `planets.py:calc_planet_position` per-body if-elif into a per-body strategy
+- [ ] Split `orbital.py:get_body_position` (~856 LOC file)
+- [ ] Consolidate duplicated natal fixtures into `tests/conftest.py`
+- [ ] Spike Chebyshev-by-segment for Chiron (accuracy vs Swiss < 0.01°)
+- [ ] Chiron as 14th body via embedded Chebyshev coeffs (pure-NumPy runtime)
+- [ ] Update body-count ratchet 13→14 and coordinate Kala positional contract
+- [ ] Bring Sphinx docs (en+fr) up to full v1.3 surface
+- [ ] Ship `ketu==1.3.0` (GitHub release + PyPI via OIDC)
 
 ### Out of Scope
 
@@ -106,10 +120,10 @@ None. v1.2 is complete; the next milestone (v1.3) has not been scoped yet. See *
 
 - True/Osculating Lilith (h13) — defer; Mean Lilith is de-facto standard in 95% of astrology software
 - Asteroid Lilith #1181 — defer; different body, separate effort
-- Davison composite — defer to v1.3; v1.2 shipped midpoint composite only
+- Davison composite — defer beyond v1.3; v1.2 shipped midpoint composite only; v1.3 focuses on Chiron + engine hardening
 - Campanus / Topocentric / Alcabitius houses — registry supports them; ship concretes if user demand surfaces (Whole Sign / Equal / Regiomontanus shipped in v1.2)
-- Chiron, Centaurs, asteroids, fixed stars — defer to v1.3+; require swisseph runtime or a Chebyshev-fit pipeline (tooling not in place)
-- 5 remaining Hermetic Lots (Eros, Necessity, Courage, Victory, Nemesis) — defer to v1.3; competing tradition variants; v1.2 registry absorbs them additively
+- Centaurs (Pholus, Nessus, Chariklo), asteroids, fixed stars — defer beyond v1.3; v1.3 ships Chiron only via the Chebyshev pipeline; other bodies follow once the pipeline is proven
+- 5 remaining Hermetic Lots (Eros, Necessity, Courage, Victory, Nemesis) — defer beyond v1.3; competing tradition variants; v1.2 registry absorbs them additively
 - Transits / progressions / directions — defer; continuous time-series shape, distinct from the return-chart solver
 - Timezone handling inside Ketu — UTC remains required; timezone conversion is caller's responsibility
 - `pyswisseph` as runtime dependency — test-only only; license (AGPL) and brand promise (NumPy-only) prevent runtime
@@ -181,6 +195,9 @@ None. v1.2 is complete; the next milestone (v1.3) has not been scoped yet. See *
 | Single shared `_solve_return` for solar + lunar (grep-ratchet enforced) | One root-finder, central 360°→0° wrap handling; no inline bisection in either public API | ✓ Good (v1.2) — Phase 18 Success Criterion #3 binding |
 | Returns oracle: self-consistency at 0.0001° PRIMARY, pyswisseph cross-check test-only with per-body tolerance | Surfaces a genuine ephemeris-theory gap (Ketu TRUE Sun + truncated-Meeus Moon vs Swiss Moshier ELP) rather than masking it; runtime stays pure NumPy | ✓ Good (v1.2) — measured deltas documented in fixtures + NOTES |
 | `is_day_chart` via ASC-delta (not horizon altitude) | Consistent with the ASC stored in the same `CHART_DTYPE` | ✓ Good (v1.2) |
+| v1.3 stays `1.3.0` despite breaking the 13→14 body freeze | Ketu is the source-of-truth library; Kala adapts to Ketu, not vice-versa. Public Ketu API stays additive; the broken contract is the internal Ketu↔Kala positional array | — Pending (v1.3) |
+| Chiron via embedded Chebyshev coeffs, NOT swisseph runtime | Preserves pure-NumPy runtime + AGPL isolation; offline pyswisseph generator is build-only → `.npz` in package, eval is 100% NumPy | — Pending (v1.3) |
+| Refactor ephemeris BEFORE adding Chiron | Chiron adds a branch to the fragile `calc_planet_position` if-elif; refactoring first makes Chiron a clean strategy, not aggravated debt | — Pending (v1.3) |
 
 ## Evolution
 
@@ -203,4 +220,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-Last updated: 2026-05-29 — after v1.2 milestone (shipped 2026-05-28; `ketu==1.2.0` on PyPI).
+Last updated: 2026-05-29 — milestone v1.3 (Chiron & Engine Hardening) started.

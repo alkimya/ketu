@@ -1,35 +1,35 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.2
-milestone_name: Astrologie relationnelle et prédictive
-status: archived
+milestone: v1.3
+milestone_name: Chiron & Engine Hardening
+status: defining-requirements
 last_updated: "2026-05-29T00:00:00Z"
 last_activity: 2026-05-29
 progress:
-  total_phases: 8
-  completed_phases: 8
-  total_plans: 35
-  completed_plans: 35
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-05-29 — after v1.2 milestone)
+See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** MILESTONE v1.2 ARCHIVED — ketu==1.2.0 live on PyPI; roadmap + requirements archived to `.planning/milestones/v1.2-*`. No active milestone. Next: `/gsd:new-milestone` to scope v1.3.
+**Current focus:** MILESTONE v1.3 (Chiron & Engine Hardening) — scoping requirements. Ordered axes: Quality (100% coverage + div/0 fix + docstring depth) → Ephemeris refactor → Spike Chiron → Chiron (13→14 bodies, embedded Chebyshev) → Sphinx docs en+fr → release 1.3.0. v1.2.0 live on PyPI; archived to `.planning/milestones/v1.2-*`.
 
 ## Current Position
 
-Phase: — (no active phase; v1.2 milestone archived 2026-05-29)
+Phase: Not started (defining requirements)
 Plan: —
-Status: MILESTONE v1.2 ARCHIVED. v1.2.0 tag (`d775663`) live on PyPI + GitHub release (sdist + wheel). Archival completed 2026-05-29: MILESTONES.md entry added; ROADMAP.md collapsed (phases 13-20 → `<details>` + link); requirements archived to `.planning/milestones/v1.2-REQUIREMENTS.md` and root `.planning/REQUIREMENTS.md` deleted; full PROJECT.md evolution review done (v1.2 reqs → Validated, Key Decisions outcomes flipped, Out of Scope audited, Context refreshed). The `gsd-tools milestone complete` CLI was run but mis-parsed (`--dry-run` absorbed into the name; counts wrong at 10/37; empty accomplishments; raw-copy archive) — all corrected by hand. Real counts: 8 phases (13-20), 35 plans, 1286 tests, 100% coverage on all new subpackages.
-Progress: [████] 100% complete — MILESTONE ARCHIVED
-Last activity: 2026-05-29
-Resume file: None — v1.2 archived. Next: `/gsd:new-milestone` for v1.3 (fresh requirements). Carried-forward candidates: Chiron/Centaurs, Davison composite, 5 remaining Hermetic Lots, transits/progressions.
+Status: Milestone v1.3 started 2026-05-29. Scope carried from pre-milestone intent (decided 2026-05-29, codebase audit commit 5c10cc5). Confirmed via questioning: 5 axes + release, ordered Quality → Refactor → Spike Chiron → Chiron → Docs → Release; doc Sphinx is a single phase near the release; D-08 = break the 13→14 body freeze in v1.3 and coordinate Kala (Kala adapts to Ketu — Ketu is the source-of-truth library); version stays 1.3.0 (public Ketu API additive; only the internal Ketu↔Kala positional contract breaks). Next: define REQUIREMENTS.md, then roadmap (phases continue from 20 → start at 21).
+Progress: [····] 0% — defining requirements
+Last activity: 2026-05-29 — Milestone v1.3 started
+Resume file: None — defining v1.3 requirements.
 
 ---
 
