@@ -63,9 +63,9 @@
 - [ ] **PARTS-02** : `Part` dtype/spec : `(name, day_formula, night_formula)` où chaque formula est `Callable[(asc_lon, body_lons), lon]`
 - [ ] **PARTS-03** : `calculate_part(part_name, chart) → lon` détermine sect via `is_day_chart`, applique la bonne formula
 - [ ] **PARTS-04** : `calculate_all_parts(chart, parts=None) → dict[str, float]` retourne tous les parts du registry (ou ceux listés)
-- [ ] **PARTS-05** : Part of Fortune livrée (Lot of Fortune) — formula day `ASC + Moon − Sun`, night `ASC + Sun − Moon`
-- [ ] **PARTS-06** : 7 Hermetic Lots livrés : Fortune, Spirit, Eros, Necessity, Courage, Victory, Nemesis
-- [ ] **PARTS-07** : Part of Marriage livré (synergie synastry)
+- [ ] **PARTS-05** : Part of Fortune livrée (Lot of Fortune) — formula day `ASC + Moon − Sun`, night `ASC + Sun − Moon` (sect-aware)
+- [ ] **PARTS-06** : Part of Spirit livrée (Lot of Spirit) — formula day `ASC + Sun − Moon`, night `ASC + Moon − Sun` (sect-aware, miroir de Fortune). *Scope réduit 2026-05-28 : les 5 autres Hermetic Lots (Eros, Necessity, Courage, Victory, Nemesis) reportés à v1.3 — variantes de tradition concurrentes, registry extensible les absorbe additivement.*
+- [ ] **PARTS-07** : Part of Marriage livré — formula `ASC + Descendant − Venus` (≡ `ASC + (ASC+180°) − Venus`), **fixe** (pas d'inversion jour/nuit ; opt-out du dispatch sect-aware)
 - [ ] **PARTS-08** : `--list-parts` flag CLI introspection, analogue à `--list-house-systems`
 
 ### Tier 3 — ops debt (deadline septembre 2026)

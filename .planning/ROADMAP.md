@@ -45,7 +45,7 @@ Full details archived to `.planning/milestones/v1.1-ROADMAP.md`.
 - [x] **Phase 16: Synastry** — `calculate_synastry(chart_a, chart_b)` with `SYNASTRY_DTYPE`, dense + filtered output modes, dedicated synastry orbs *(2026-05-11)*
 - [x] **Phase 17: Composite Chart (Midpoint)** — `calculate_composite(chart_a, chart_b)` with circular midpoint helper and composite-derived houses *(2026-05-24)*
 - [x] **Phase 18: Solar + Lunar Returns (Standard + Relocated)** — `solar_return(...)` + `lunar_return(...)` sharing a pure-NumPy `_solve_return` helper handling 360°→0° wrap; <1 arcsecond convergence on both *(2026-05-28)*
-- [ ] **Phase 19: Arabic Parts Framework + 8 Parts** — `ketu/parts/` registry, sect-aware `calculate_part`, 7 Hermetic Lots + Marriage, `--list-parts` CLI
+- [ ] **Phase 19: Arabic Parts Framework + 3 Parts** — `ketu/parts/` extensible registry, sect-aware `calculate_part`, Fortune + Spirit (sect-aware) + Marriage (fixed), `--list-parts` CLI (5 remaining Hermetic Lots deferred to v1.3)
 - [ ] **Phase 20: Release Preparation v1.2.0** — Workflow refresh (Node 24), `fr/CHANGELOG.md` decision, PyPI publish via OIDC
 
 ## Cross-Cutting Constraints (v1.2)
@@ -198,9 +198,11 @@ Plans:
 - [ ] 18-04-PLAN.md — Oracle fixtures: 3 solar + 3 lunar oracles at `tolerance_deg=0.0001` self-consistency (each set incl. one wrap-around; lunar incl. one day-after-target); pyswisseph cross-check at `cross_check_tolerance_deg=0.001` (NEW CI-runnable sub-arcsec validation vs Phase 17); Astro-Seek WebFetch probe; Astro.com manual cross-check deferred note
 - [ ] 18-05-PLAN.md — Phase close-out: `make returns-coverage` ≥95% gate verification + cross-module See Also graph (charts ↔ composite ↔ synastry ↔ returns) + CHANGELOG `[Unreleased]` entry citing RET-01..06 + LRET-01..05 + REQUIREMENTS status flips (10 entries + new RET-06) + 6-ROADMAP-criteria smoke + Astro.com deferred follow-up copied into SUMMARY
 
-### Phase 19: Arabic Parts Framework + 8 Parts
+### Phase 19: Arabic Parts Framework + 3 Parts
 
-**Goal**: Users compute any of the 7 Hermetic Lots plus Part of Marriage by name from any chart, with sect-aware day/night formula selection and an extensible registry analogous to `SYSTEMS`.
+**Goal**: Users compute Part of Fortune, Part of Spirit, and Part of Marriage by name from any chart, with sect-aware day/night formula selection (Fortune/Spirit) and an extensible registry analogous to `SYSTEMS` — built so the remaining Hermetic Lots can be added in v1.3 without API change.
+
+**Scope decision (2026-05-28)**: Reduced from 8 parts to 3 (Fortune, Spirit, Marriage). The 5 other Hermetic Lots (Eros, Necessity, Courage, Victory, Nemesis) are deferred to v1.3 — their formulas have competing tradition variants (several derive from the Lot of Spirit, not directly from bodies) that would have required a separate domain-research pass. The framework (registry + dtype + sect dispatch) is built to absorb them additively.
 
 **Depends on**: Phase 14 (`is_day_chart`, `CHART_DTYPE`); independent of Phases 15, 16, 17, 18
 
@@ -208,11 +210,14 @@ Plans:
 
 **Success Criteria** (what must be TRUE):
 
-1. `from ketu.parts import PARTS, calculate_part, calculate_all_parts` resolves; `PARTS` registry is iterable and lists exactly 8 parts: Fortune, Spirit, Eros, Necessity, Courage, Victory, Nemesis, Marriage.
-2. `calculate_part("fortune", chart)` reads `is_day_chart` from the chart, applies the day formula (`ASC + Moon − Sun`) or night formula (`ASC + Sun − Moon`) accordingly, and returns the longitude in [0°, 360°).
+1. `from ketu.parts import PARTS, calculate_part, calculate_all_parts` resolves; `PARTS` registry is iterable and lists exactly 3 parts: Fortune, Spirit, Marriage. The registry is extensible (adding a v1.3 Lot is a registry entry, no API change).
+2. `calculate_part("fortune", chart)` reads `is_day_chart` from the chart and applies the sect-correct formula, returning the longitude in [0°, 360°). Sect rules:
+   - **Fortune**: day `ASC + Moon − Sun`, night `ASC + Sun − Moon` (sect-aware).
+   - **Spirit**: day `ASC + Sun − Moon`, night `ASC + Moon − Sun` (sect-aware, mirror of Fortune).
+   - **Marriage**: `ASC + Descendant − Venus` (≡ `ASC + (ASC+180°) − Venus`), **fixed** — same formula day and night (opts out of sect inversion).
 3. `calculate_all_parts(chart)` returns a `dict[str, float]` mapping every registered part name to its longitude; passing `parts=[...]` filters the result.
-4. `ketu --list-parts` (CLI flag, mirroring `--list-house-systems`) prints all 8 part names plus a short formula summary line each.
-5. Coverage on `ketu/parts/` is ≥95%; each part has a hand-derived oracle test value pinned at the documented day/night sect.
+4. `ketu --list-parts` (CLI flag, mirroring `--list-house-systems`) prints all 3 part names plus a short formula summary line each (Marriage line notes "fixed — no sect inversion").
+5. Coverage on `ketu/parts/` is ≥95%; each of the 3 parts has a hand-derived oracle test value pinned at the documented day/night sect (Fortune + Spirit pinned for BOTH a day-chart and a night-chart; Marriage pinned once, identical across sect).
 
 **Plans**: TBD
 
@@ -252,7 +257,7 @@ Plans:
 | 16. Synastry                           | v1.2      | 5/5            | ✓ Complete    | 2026-05-11 |
 | 17. Composite Chart (Midpoint)         | v1.2      | 4/4            | ✓ Complete    | 2026-05-24 |
 | 18. Solar + Lunar Returns (Std + Reloc)| v1.2      | 5/5            | ✓ Complete    | 2026-05-28 |
-| 19. Arabic Parts Framework + 8 Parts   | v1.2      | 0/?            | Not started   | —          |
+| 19. Arabic Parts Framework + 3 Parts   | v1.2      | 0/?            | Not started   | —          |
 | 20. Release Preparation v1.2.0         | v1.2      | 0/?            | Not started   | —          |
 
 ---
