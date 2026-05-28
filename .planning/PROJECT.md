@@ -122,9 +122,9 @@ v1.2 turned Ketu into a full relational and predictive astrology framework — s
 - Asteroid Lilith #1181 — defer; different body, separate effort
 - Davison composite — defer beyond v1.3; v1.2 shipped midpoint composite only; v1.3 focuses on Chiron + engine hardening
 - Campanus / Topocentric / Alcabitius houses — registry supports them; ship concretes if user demand surfaces (Whole Sign / Equal / Regiomontanus shipped in v1.2)
-- Centaurs (Pholus, Nessus, Chariklo), asteroids, fixed stars — defer beyond v1.3; v1.3 ships Chiron only via the Chebyshev pipeline; other bodies follow once the pipeline is proven
+- Any body beyond Chiron (centaurs, asteroids, fixed stars) — no additional bodies planned; pure-NumPy contract holds and Chiron is the single deliberate addition. Future bodies are a separately-scoped decision, not a standing candidate list
 - 5 remaining Hermetic Lots (Eros, Necessity, Courage, Victory, Nemesis) — defer beyond v1.3; competing tradition variants; v1.2 registry absorbs them additively
-- Transits / progressions / directions — defer; continuous time-series shape, distinct from the return-chart solver
+- Progressions / directions — defer; predictive techniques distinct from transits (already shipped, v0.4.0) and from the return-chart solver
 - Timezone handling inside Ketu — UTC remains required; timezone conversion is caller's responsibility
 - `pyswisseph` as runtime dependency — test-only only; license (AGPL) and brand promise (NumPy-only) prevent runtime
 - scipy / other runtime deps — pure-NumPy contract non-negotiable; bespoke NumPy bisection used for returns
