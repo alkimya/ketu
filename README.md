@@ -10,33 +10,39 @@ This library was originally designed to generate biodynamic calendars and time s
 
 ![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
 
-## What's New in v1.1.0
+## What's New in v1.2.0
 
-Ketu 1.1.0 is a feature release with **two breaking behavior changes**
-from v1.0 (Lilith longitudes shift by approximately 180 deg, CLI
-default emits 5 majors instead of 14 harmonics). Migration is
-straightforward — see [UPGRADING.md](UPGRADING.md) for recipes.
+Ketu v1.2.0 is a non-breaking feature release — all v1.1 code works
+unchanged. See [UPGRADING.md](UPGRADING.md) for opt-in migration recipes
+and [CHANGELOG.md](CHANGELOG.md) for the full list of changes.
 
-- **Configurable aspects** — choose between `CLASSICAL` (5 majors,
-  default), `TRADITIONAL` (7), `EXTENDED` (14), or `ALL`, via the
-  `--harmonics` CLI flag or the `aspects=` parameter on the Python
-  API. Discover presets with `ketu --list-aspect-sets`.
-- **Houses module** — `ketu.calculate_houses(jd, lat, lon, system)`
-  with Placidus, Koch, and Porphyry systems, vectorised over the
-  broadcast of `(jd, lat, lon)`, with `polar_fallback` semantics for
-  high-latitude charts. CLI:
-  `ketu houses --system placidus --lat 48.85 --lon 2.35 --date 2026-05-07T12:00:00Z`.
-  List systems with `ketu --list-house-systems`.
-- **Lilith fix** — Mean Apogee longitudes now match Swiss Ephemeris
-  `SE_MEAN_APOG` to better than 0.01 deg (was approximately 180 deg
-  off in v1.0). See [UPGRADING.md](UPGRADING.md) for the per-date
-  shift table.
-- **CLI refactor** — argparse-based, `ketu aspects` and `ketu houses`
-  subcommands, resolved-config header on stderr, forward
-  byte-stability regression test pinning v1.1 default output.
-- **Test-only Swiss Ephemeris cross-check** —
-  `pip install ketu[test]` pulls `pysweph>=2.10.3.6` for harness
-  validation; runtime install (`pip install ketu`) stays pure-NumPy.
+- **Synastry** — `ketu.synastry.calculate_synastry(chart_a, chart_b)`
+  returns a `SYNASTRY_DTYPE` cross-product of inter-chart aspects (15
+  bodies × 15 bodies = 225 pairs; `filtered` and `dense` modes).
+  Astrodienst-style orbs (0.5× tightening). CLI `ketu synastry`;
+  `ketu --list-orbs`.
+- **Composite charts** — `ketu.composite.calculate_composite(chart_a,
+  chart_b)` returns a `CHART_DTYPE` midpoint composite. Helper
+  `circular_midpoint(lon_a, lon_b)` with pinned regression
+  `mid(359°, 1°) == 0°`.
+- **Solar and Lunar Returns** — `ketu.returns.solar_return(...,
+  target_year=<int>)` and `ketu.returns.lunar_return(...,
+  target_jd=<float>)` with arc-second convergence and optional
+  relocation (`return_lat`/`return_lon`). API asymmetry: solar takes
+  an integer year, lunar takes a Julian Date.
+- **Arabic Parts** — `ketu.parts.calculate_part(name, chart)` with
+  sect-aware dispatch (Fortune / Spirit) and fixed Marriage formula;
+  `calculate_all_parts(chart)` dict; `ketu --list-parts`.
+- **Three new house systems** — Whole Sign (`"whole_sign"`), Equal
+  (`"equal"`), Regiomontanus (`"regiomontanus"`) registered in
+  `ketu.houses.SYSTEMS`. `ketu --list-house-systems` now returns
+  six entries.
+- **CI doc gates hardened** — `interrogate ≥95%` and `numpydoc
+  validate` are both fully blocking; `make doc-gates` runs them
+  locally. 214 pre-existing GL01 violations fixed.
+- **GitHub Actions workflow refresh** — Node.js 24 actions
+  (`checkout@v5`, `setup-python@v6`, `upload-artifact@v5`); all
+  Node 20 deprecation warnings eliminated.
 
 For the full list of changes see [CHANGELOG.md](CHANGELOG.md).
 

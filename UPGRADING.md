@@ -3,6 +3,115 @@
 This guide collects migration notes between Ketu releases. Sections are
 ordered newest-first.
 
+## v1.1 -> v1.2
+
+Ketu v1.2 is a fully backward-compatible feature release. All v1.1 code
+continues to work unchanged — there are no breaking changes, no default
+value changes, and no removed exports. This section is purely
+informational: opt in to the new APIs when you are ready.
+
+### New APIs
+
+#### Synastry
+
+```python
+from ketu.synastry import calculate_synastry
+
+# chart_a and chart_b are CHART_DTYPE records from compute_chart()
+aspects = calculate_synastry(chart_a, chart_b)
+# Returns a SYNASTRY_DTYPE structured array (filtered mode, default)
+# Use mode="dense" for the full 225-row cross-product matrix.
+```
+
+#### Composite chart (midpoint variant)
+
+```python
+from ketu.composite import calculate_composite, circular_midpoint
+
+composite = calculate_composite(chart_a, chart_b)
+# Returns CHART_DTYPE — bodies, houses, and aspects derived from
+# circular midpoints of the two natal charts.
+
+mid = circular_midpoint(359.0, 1.0)  # == 0.0 (short-arc midpoint)
+```
+
+#### Solar and Lunar Returns
+
+```python
+from ketu.returns import solar_return, lunar_return
+
+# Solar return for a target calendar year
+sr = solar_return(natal_jd, natal_lat, natal_lon, target_year=2026)
+# target_year must be an integer (e.g. 2026), NOT a Julian Date.
+
+# Lunar return for the first return >= a target Julian Date
+lr = lunar_return(natal_jd, natal_lat, natal_lon, target_jd=2461000.0)
+# target_jd must be a float Julian Date (e.g. 2461000.0),
+# NOT a year integer. Passing 2026 would resolve a return near
+# JD 2026 (4677 BC) — always pass a real JD.
+
+# API asymmetry: solar_return takes target_year (int, calendar-anchored),
+# lunar_return takes target_jd (float, instant-anchored, ~27.32 d period).
+
+# Relocation: pass return_lat/return_lon to compute the chart for a
+# different location while keeping the resolved return instant.
+sr_relocated = solar_return(
+    natal_jd, natal_lat, natal_lon,
+    target_year=2026,
+    return_lat=40.71,   # New York
+    return_lon=-74.01,
+)
+```
+
+#### Arabic Parts framework
+
+```python
+from ketu.parts import calculate_part, calculate_all_parts
+
+# Single part — sect-aware (Fortune / Spirit dispatch on is_day_chart)
+fortune = calculate_part("fortune", chart)     # -> float longitude
+spirit  = calculate_part("spirit", chart)      # -> float longitude
+marriage = calculate_part("marriage", chart)   # -> float (fixed, no sect)
+
+# All registered parts at once (alphabetical key order)
+parts_dict = calculate_all_parts(chart)
+# {"fortune": <lon>, "marriage": <lon>, "spirit": <lon>}
+
+# Named subset
+subset = calculate_all_parts(chart, parts=["fortune", "spirit"])
+
+# CLI introspection
+# ketu --list-parts
+```
+
+#### Three new house systems
+
+```python
+from ketu import calculate_houses
+
+# Available from v1.2: whole_sign, equal, regiomontanus
+houses = calculate_houses(jd, lat, lon, system="whole_sign")
+houses = calculate_houses(jd, lat, lon, system="equal")
+houses = calculate_houses(jd, lat, lon, system="regiomontanus")
+
+# CLI
+# ketu houses --system whole_sign --lat 48.85 --lon 2.35 --date 2026-05-28T12:00:00Z
+```
+
+> **Note:** The v1.0 -> v1.1 section below stated that `equal` and
+> `whole_sign` were "not yet registered". They are now fully registered
+> in v1.2 — this section supersedes that caveat.
+
+### Nothing to change for existing code
+
+If your code was correct under v1.1, it remains correct under v1.2
+without modification. There are no numerical behavior changes, no
+default argument changes, and no removed symbols. The new subpackages
+(`ketu.synastry`, `ketu.composite`, `ketu.returns`, `ketu.parts`) and
+house systems are purely additive.
+
+---
+
 ## v1.0 -> v1.1
 
 Ketu v1.1 is a backward-compatible feature release (configurable
