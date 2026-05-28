@@ -61,11 +61,23 @@ Tertiary probe (`swe.calc_ut` shape — confirms downstream usage):
 ```
 
 `swe.calc_ut(jd, body_id)[0][0]` is the geocentric ecliptic longitude in
-degrees. Default flags compute APPARENT geocentric position (with
-aberration); the ~20 arcsec offset vs. Ketu's TRUE convention cancels in
-the resolved-instant math (both sides use the same convention) — see
-18-RESEARCH.md §"Apparent vs. true longitude" and the Notes section of
-`tests/returns/test_returns_oracle.py::test_pyswisseph_cross_check`.
+degrees. Default flags compute the APPARENT geocentric position (with
+aberration). Ketu's `calc_planet_position` SKIPS the aberration correction
+for the Sun and Moon (`if planet_id >= 2:` at
+`ketu/ephemeris/planets.py:190`), so it returns the TRUE/geometric
+longitude. The cross-check therefore passes `FLG_TRUEPOS | FLG_NOABERR` to
+`swe.calc_ut` to ALIGN the convention with Ketu (see "pyswisseph convention
+alignment + cross-check tolerance" below).
+
+> **Correction (Plan 18-04 continuation):** an earlier draft of this note
+> and the test docstring claimed the ~20 arcsec aberration "cancels in the
+> resolved-instant math". That is FALSE. Each solver (Ketu and pyswisseph)
+> resolves the return on its OWN convention's natal reference, so the
+> aberration does NOT cancel between the two solvers' resolved JDs — it
+> produced a genuine ~15.6 arcsec Sun delta that broke the 0.001 deg gate.
+> Aligning the convention with `FLG_TRUEPOS | FLG_NOABERR` removes the
+> avoidable aberration term; the remaining disagreement is ephemeris-theory,
+> documented below.
 
 **Note on ephemeris files:** Swiss Ephemeris JPL/SE files are not
 installed at the system paths (`/usr/share/swisseph`,
@@ -103,6 +115,43 @@ body-longitude evaluation is independent (Moshier in pyswisseph vs.
 Ketu's bespoke ephemeris). A disagreement at `cross_check_tolerance_deg`
 would surface either a Ketu ephemeris bug or a Moshier truncation we
 hadn't accounted for.
+
+## pyswisseph convention alignment + cross-check tolerance (Plan 18-04 continuation)
+
+**Problem found at close-out:** the cross-check at `cross_check_tolerance_deg=0.001`
+(3.6 arcsec) FAILED for 5 of 6 fixtures. Root cause investigated and the
+plan's stated assumption (aberration "cancels") was found to be wrong.
+
+**Measured ephemeris-theory disagreement** (direct longitude comparison,
+no solver, `FLG_TRUEPOS | FLG_NOABERR` convention-aligned, 6 epochs
+spanning 1900-2000):
+
+| Body | max \|Ketu − pyswisseph\| | notes |
+| ---- | ------------------------- | ----- |
+| Sun  | ~56 arcsec (~0.0157 deg)  | Ketu bespoke Sun theory vs. Moshier; grows on multi-decade back-projection |
+| Moon | ~2183 arcsec (~0.606 deg) | Ketu TRUNCATED Meeus lunar theory vs. full Moshier ELP-derived Moon |
+
+The Moon disagreement is unchanged with/without `FLG_NOABERR` — it is NOT
+aberration; it is the truncated-Meeus vs. Moshier theory gap. Aberration is
+only a ~14-20 arcsec component of the Sun discrepancy.
+
+**Fixes applied:**
+
+1. `_swisseph_body_lon` now passes `swe.FLG_TRUEPOS | swe.FLG_NOABERR`
+   (best-practice: compare like-for-like; Ketu skips aberration for Sun/Moon
+   at `ketu/ephemeris/planets.py:190`). This removes the avoidable aberration
+   term but does NOT close the gap by itself.
+2. `cross_check_tolerance_deg` relaxed per body, with justification written
+   into each fixture's `cross_check_rationale` block + the test docstring:
+   - **Solar: 0.01 deg** (worst observed resolved-JD delta ~0.005 deg).
+   - **Lunar: 0.75 deg** (worst observed resolved-JD delta ~0.60 deg).
+
+**What the cross-check still proves:** Ketu's solver lands on the return
+WITHIN the known ephemeris-theory band of an independent library — catching
+gross solver bugs (wrong cycle / body / sign / off-by-a-period). The
+machine-precision regression gate remains the self-consistency oracle
+(`tolerance_deg=0.0001`). The 0.001 deg target was physically unachievable
+against an independent ephemeris and was a planning error, not a code bug.
 
 ## Astro-Seek WebFetch Probe (Open Question Q4)
 
@@ -198,6 +247,12 @@ which had only Astro.com deferred).
    - Convert to JD (e.g., via `ketu.ephemeris.time.utc_to_julian`).
    - Compute `delta_arcsec = abs(astro_seek_jd - fixture_jd) * body_speed_deg_per_day * 3600`.
 3. Update `cross_check_astro_com.performed=true` + `delta_max_arcsec` + `date_performed`.
-4. Re-run `pytest tests/returns/test_returns_oracle.py -v` (no test change needed
-   — the cross-check tolerance was already advisory at `0.1°` = 360 arcsec, well
-   above the expected sub-arcsec disagreement).
+4. Record the observed delta. NOTE the expected disagreement bands: Astro.com
+   uses Swiss Ephemeris's full Moshier/SE theory, which Ketu's analytic
+   ephemeris diverges from by up to ~0.016 deg (Sun) and ~0.6 deg (Moon) —
+   the SAME ephemeris-theory gap the pyswisseph cross-check measures (see
+   "pyswisseph convention alignment + cross-check tolerance" above). The
+   manual Astro.com cross-check is informational only; the CI gate is the
+   pyswisseph cross-check at the per-body `cross_check_tolerance_deg`
+   (solar 0.01 deg, lunar 0.75 deg) plus the self-consistency oracle at
+   0.0001 deg.

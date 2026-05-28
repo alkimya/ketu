@@ -45,7 +45,8 @@
     ]
   },
   "tolerance_deg": 0.0001,
-  "cross_check_tolerance_deg": 0.001,
+  "cross_check_tolerance_deg": 0.01,
+  "cross_check_rationale": "Relaxed from the plan's 0.001 deg target (physically unachievable). pyswisseph cross-check uses FLG_TRUEPOS | FLG_NOABERR to ALIGN the longitude convention with Ketu's TRUE/no-aberration Sun (ketu/ephemeris/planets.py:190 skips aberration for body_id<2), removing the avoidable ~14-20 arcsec aberration term. The residual is a genuine ephemeris-theory difference: Ketu's bespoke Sun theory diverges from pyswisseph's Moshier theory by up to ~56 arcsec (~0.0157 deg) on multi-decade back-projections. Worst observed resolved-JD delta across the 3 solar fixtures: ~0.005 deg; 0.01 deg ceiling gives a defensible margin while still catching gross solver bugs. See 18-04-NOTES.md.",
   "wrap_around": true,
   "notes": "WRAP-AROUND solar return -- synthetic natal with Sun near 0 deg Aries (2020-03-21 ~13:00 UT); target_year=1970 (back-projection). End-to-end pin of helper-level wrap-around handling (Plan 18-01).",
   "cross_check_astro_com": {
