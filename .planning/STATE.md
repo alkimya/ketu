@@ -80,6 +80,7 @@ Resume file: Phase 20 Plan 04 next — PyPI publish via OIDC trusted publishing 
 | Phase 19 P03 | ~5min | 3 tasks | 7 files |
 | Phase 19-arabic-parts-framework P03 | 5 | 3 tasks | 7 files |
 | Phase 20 P01 | ~1min | 2 tasks | 2 files |
+| Phase 20 P03 | 8m | 3 tasks | 8 files |
 
 ## Accumulated Context
 
@@ -216,6 +217,9 @@ Resume file: Phase 20 Plan 04 next — PyPI publish via OIDC trusted publishing 
 - [Phase 19-arabic-parts-framework]: Fortune!=Spirit mirror-guard on BOTH charts (day+night); sect premise asserted at module level (import-time collection error)
 - [Phase 20-02]: GL01 suppression removal exposed 214 pre-existing violations across 44 files — the plan's "zero GL01 violations" claim was wrong (they were suppressed not absent). All fixed via Rule 1 auto-fix: summary moved to line after opening triple-quote. GL07 (5 functions) and GL02 (4 docstrings) also fixed. make doc-gates now exits non-zero on any violation.
 - [Phase 20-02]: NumPy docstring convention requires summary on the LINE AFTER opening triple-quote (not on the same line). All 61 linted ketu/*.py files now comply. Section order: Parameters → Returns → Raises → See Also → Notes → Examples.
+- [Phase 20-03]: OPS-04 LOCKED: fr/CHANGELOG.md created as generated translation (not hand-maintained); English CHANGELOG.md is authoritative (fait foi)
+- [Phase 20-03]: PARTS-01..08 marked Done in REQUIREMENTS.md (Phase 19 complete, were falsely Pending)
+- [Phase 20-03]: CHANGELOG [1.2.0] uses Infrastructure subsection for OPS-02/OPS-03 workflow items, keeping feature Added bullets clean
 
 ## Session Continuity
 
