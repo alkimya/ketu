@@ -80,6 +80,10 @@ Resume file: Phase 18 COMPLETE (5/5 plans). Next: `/gsd:verify-phase 18`, then P
 
 **Open blockers:** None.
 
+### Pending Todos
+
+- `2026-05-28-fix-runtimewarning-divide-by-zero-in-orbital-heliocentric-latitude` (area: general) — RuntimeWarning cosmétique `arcsin(z/r)` à orbital.py:733 (latitude héliocentrique inutilisée du Soleil à r=0); pré-existant à Phase 18, découvert pendant UAT 18; résultat correct (zéro NaN observable).
+
 **v1.2 roadmap structure:**
 
 - Phase 13: Doc Gates & CI Foundation (OPS-01, OPS-02) — early ops debt; gates apply to all subsequent v1.2 code
