@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
-status: complete
-last_updated: "2026-05-28T21:20:00Z"
-last_activity: 2026-05-28
+status: archived
+last_updated: "2026-05-29T00:00:00Z"
+last_activity: 2026-05-29
 progress:
   total_phases: 8
   completed_phases: 8
-  total_plans: 33
-  completed_plans: 33
+  total_plans: 35
+  completed_plans: 35
   percent: 100
 ---
 
@@ -17,19 +17,19 @@ progress:
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
+See: `.planning/PROJECT.md` (updated 2026-05-29 — after v1.2 milestone)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** MILESTONE v1.2 COMPLETE — ketu==1.2.0 live on PyPI. All phases and plans done.
+**Current focus:** MILESTONE v1.2 ARCHIVED — ketu==1.2.0 live on PyPI; roadmap + requirements archived to `.planning/milestones/v1.2-*`. No active milestone. Next: `/gsd:new-milestone` to scope v1.3.
 
 ## Current Position
 
-Phase: 20 (release-preparation-v1-2-0) — COMPLETE (4 of 4 plans complete)
-Plan: 4 of 4 (Plan 20-04 PyPI publish ceremony complete)
-Status: Plan 20-04 shipped (2026-05-28). v1.2.0 annotated tag pushed to origin. publish.yml workflow 26602811661 succeeded in 33s (build 16s + publish-to-pypi 17s via OIDC). GitHub release v1.2.0 created with sdist + wheel attached (https://github.com/alkimya/ketu/releases/tag/v1.2.0). Fresh-venv pip install ketu==1.2.0 from PyPI smoke-imports all 5 new subpackages cleanly (ketu.__version__ == importlib.metadata.version("ketu") == "1.2.0"). OPS-05 DONE. MILESTONE v1.2 COMPLETE.
-Progress: [████] 100% complete — MILESTONE SHIPPED
-Last activity: 2026-05-28
-Resume file: None — milestone v1.2 complete. Next: plan v1.3 milestone.
+Phase: — (no active phase; v1.2 milestone archived 2026-05-29)
+Plan: —
+Status: MILESTONE v1.2 ARCHIVED. v1.2.0 tag (`d775663`) live on PyPI + GitHub release (sdist + wheel). Archival completed 2026-05-29: MILESTONES.md entry added; ROADMAP.md collapsed (phases 13-20 → `<details>` + link); requirements archived to `.planning/milestones/v1.2-REQUIREMENTS.md` and root `.planning/REQUIREMENTS.md` deleted; full PROJECT.md evolution review done (v1.2 reqs → Validated, Key Decisions outcomes flipped, Out of Scope audited, Context refreshed). The `gsd-tools milestone complete` CLI was run but mis-parsed (`--dry-run` absorbed into the name; counts wrong at 10/37; empty accomplishments; raw-copy archive) — all corrected by hand. Real counts: 8 phases (13-20), 35 plans, 1286 tests, 100% coverage on all new subpackages.
+Progress: [████] 100% complete — MILESTONE ARCHIVED
+Last activity: 2026-05-29
+Resume file: None — v1.2 archived. Next: `/gsd:new-milestone` for v1.3 (fresh requirements). Carried-forward candidates: Chiron/Centaurs, Davison composite, 5 remaining Hermetic Lots, transits/progressions.
 
 ---
 

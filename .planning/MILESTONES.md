@@ -4,6 +4,65 @@ Historical record of shipped versions. Most recent first.
 
 ---
 
+## v1.2 Astrologie relationnelle et prédictive — Shipped 2026-05-28
+
+**Tag:** `v1.2.0` (commit `d775663`)
+**PyPI:** <https://pypi.org/project/ketu/1.2.0/>
+**GitHub release:** <https://github.com/alkimya/ketu/releases/tag/v1.2.0>
+**Phases:** 13-20 (8 phases)
+**Plans:** 35 (5 + 5 + 4 + 5 + 4 + 5 + 3 + 4)
+**Tests:** 1286 collected (pure-NumPy runtime; `pyswisseph` oracle suite test-only)
+**Timeline:** 2026-05-08 → 2026-05-28 (~20 days)
+**Git range:** 205 commits since `v1.1.0`
+**Coverage:** 100% on all new subpackages (`ketu/charts/`, `ketu/synastry/`, `ketu/composite/`, `ketu/returns/`, `ketu/parts/`); ≥90% project, ≥85% per module gates held; ≥95% new-module gate exceeded
+
+### Delivered
+
+Ketu became a full relational and predictive astrology framework, strictly non-breaking (every API additive — no default change, no export removed). v1.2 shipped a chart-abstraction keystone (`CHART_DTYPE` / `compute_chart` / `is_day_chart`) that synastry, composite, and returns all build on; three new house systems proving the v1.1 registry extensibility claim; relational charts (synastry + midpoint composite); predictive charts (solar + lunar returns sharing one pure-NumPy `_solve_return` core with arc-second convergence); and an extensible Arabic Parts framework. The milestone also retired the v1.1 ops debt: doc gates flipped to BLOCKING and workflows moved to Node 24, closing with `ketu==1.2.0` on PyPI via OIDC.
+
+### Key Accomplishments
+
+1. **Chart abstraction foundation** (Phase 14) — `ketu/charts/` subpackage with frozen `CHART_DTYPE` (bodies + ASC/MC/ARMC/Vertex + cusps + aspects), `compute_chart(jd, lat, lon, system, aspects)` resolving a full chart in one vectorizable call (scalar + array `jd`), and `is_day_chart` refactored to an ASC-delta sunrise-inclusive test. The keystone upstream of SYN/COMP/RET. 100% coverage.
+2. **Three new house systems** (Phase 15) — Whole Sign, Equal, Regiomontanus added through the existing `SYSTEMS` registry (Whole Sign + Equal polar-safe); `--list-house-systems` now lists six systems alphabetically; each validated against Swiss Ephemeris on the 10-reference-charts oracle.
+3. **Synastry** (Phase 16) — `calculate_synastry(chart_a, chart_b)` with `SYNASTRY_DTYPE` preserving chart-of-origin on every body, dense (N×M) and filtered output modes, synastry-tightened orbs distinct from natal; 3 hand-validated couples (Curie, Diana/Charles, Lennon/Ono) as oracle fixtures.
+4. **Composite (midpoint)** (Phase 17) — `calculate_composite(chart_a, chart_b)` returning `CHART_DTYPE` with `circular_midpoint` helper (`mid(359°, 1°) == 0.0` pinned), composite houses derived from composite ASC/MC; Davison explicitly deferred to v1.3. 100% coverage on `ketu/composite/`.
+5. **Solar + Lunar Returns** (Phase 18) — `solar_return` (calendar-anchored `target_year`) and `lunar_return` (instant-anchored `target_jd`, first return ≥ target) sharing a single pure-NumPy `_solve_return` bisection helper with central 360°→0° wrap handling; arc-second convergence; self-consistency oracle at 0.0001° is the PRIMARY gate, pyswisseph cross-check is test-only (per-body tolerance relaxed with measured ephemeris-theory deltas). Ketu runtime stays pure NumPy. 100% coverage on `ketu/returns/`.
+6. **Arabic Parts framework** (Phase 19) — `ketu/parts/` extensible registry analogous to `SYSTEMS`, sect-aware `calculate_part` (Fortune/Spirit invert day/night) + fixed Marriage (no sect inversion), `calculate_all_parts`, `--list-parts` CLI. Scope reduced to 3 parts; 5 remaining Hermetic Lots deferred to v1.3 (framework absorbs them additively). 100% coverage on `ketu/parts/`.
+7. **Ops debt retired + release** (Phases 13, 20) — `interrogate ≥95%` + `numpydoc validate` wired early (Phase 13) then flipped to BLOCKING (Phase 20); workflows moved to Node 24 (`actions/checkout@v5`, `setup-python@v6`, `upload-artifact@v5`); version → 1.2.0; dated additive `[1.2.0]` CHANGELOG; `ketu==1.2.0` published on PyPI via OIDC (run 26602811661, ~33s), GitHub release with sdist + wheel, fresh-venv smoke green.
+
+### Decisions Made (Outcomes)
+
+- **Chart abstraction as keystone before SYN/COMP/RET** — ✓ Good. `CHART_DTYPE` reused unchanged by all four downstream modules.
+- **`is_day_chart` via ASC-delta (not horizon altitude)** — ✓ Good. Consistent with the ASC stored in the same `CHART_DTYPE`.
+- **Single shared `_solve_return` for solar + lunar** (Phase 18 Success Criterion #3 binding) — ✓ Good. No inline bisection in either public API; grep ratchet enforces it.
+- **Self-consistency oracle at 0.0001° as PRIMARY gate; pyswisseph cross-check test-only with per-body tolerance** — ✓ Good. Surfaced a genuine ephemeris-theory gap (Ketu TRUE Sun + truncated-Meeus Moon vs Swiss Ephemeris Moshier ELP) rather than masking it; runtime stays pure NumPy.
+- **Reduce Arabic Parts from 8 to 3** — ✓ Good. The 5 deferred Lots had competing tradition variants; the registry absorbs them in v1.3 with no API change.
+- **`pyswisseph` stays test-only (AGPL isolation)** — ✓ Good. Carried forward from v1.1; oracle/cross-check only.
+
+### Issues Resolved
+
+- v1.1 ops debt cleared: `interrogate`/`numpydoc` gates now BLOCKING in CI; Node 20 deprecation warnings eliminated (Node 24 actions).
+- `circular_midpoint(359°, 1°)` wraparound pinned to `0.0` (not `180.0`).
+- Lunar return mean-motion seed lift (Plan 18-03 Rule-1 deviation) — the planned blunt `target_jd + n·27.32` seed would have failed for most inputs; replaced with signed-residual mean-motion lift inside the ±1.5d bracket.
+- pyswisseph cross-check premise corrected: Sun aberration does NOT cancel between the two resolved JDs; `_swisseph_body_lon` now passes `FLG_TRUEPOS | FLG_NOABERR` to align the convention with Ketu.
+- Test-extra package typo `pysweph` → `pyswisseph` fixed.
+
+### Issues Deferred (v1.3)
+
+- **Davison composite** — midpoint composite shipped; Davison (time + lat/lon midpoints) deferred.
+- **5 remaining Hermetic Lots** (Eros, Necessity, Courage, Victory, Nemesis) — competing tradition variants; need a domain-research pass.
+- **Chiron + Centaurs, asteroids, fixed stars** — require swisseph runtime or a Chebyshev-fit pipeline (tooling not in place).
+- **Transits / progressions / directions** — continuous time-series; different shape from return charts.
+- **Astro.com manual cross-check** on resolved instants — anti-bot blocked; pyswisseph CI substitute is strictly stronger.
+
+### Technical Debt Incurred
+
+None of significance — all eight phases verified PASSED at their success criteria. The deferred items above are scope decisions, not shortcuts.
+
+**Archive:** Roadmap details in `.planning/milestones/v1.2-ROADMAP.md`. Requirements in `.planning/milestones/v1.2-REQUIREMENTS.md`.
+
+---
+
 ## v1.1 Flexibility & Houses — Shipped 2026-05-08
 
 **Tag:** `v1.1.0` (commit `41ee42e`, annotated SHA `54ce673`)
@@ -98,3 +157,4 @@ Consolidated v0.4.0 development into a stable production library. Surgical refin
 6. Published on PyPI as `ketu==1.0.0` via trusted publishing OIDC.
 
 **Archive:** Roadmap details in `.planning/milestones/v1.0-ROADMAP.md`. Requirements in `.planning/milestones/v1.0-REQUIREMENTS.md`.
+
