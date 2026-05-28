@@ -10,6 +10,7 @@ import numpy as np
 from ketu.aspects.presets import resolve_aspect_set
 from ketu.core import aspects as _CORE_ASPECTS
 from ketu.houses import SYSTEMS as _HOUSE_SYSTEMS
+from ketu.parts import PARTS as _PARTS
 from ketu.synastry.orbs import (
     ASC_MC_NATAL_ORB_DEG,
     SYNASTRY_FACTOR,
@@ -123,3 +124,21 @@ def cmd_list_orbs() -> None:
         "behavior; v1.3 may add"
     )
     print("a per-body override map).")
+
+
+_PART_DESCRIPTIONS = {
+    "fortune":  "day: ASC+Moon-Sun / night: ASC+Sun-Moon (sect-aware)",
+    "spirit":   "day: ASC+Sun-Moon / night: ASC+Moon-Sun (sect-aware, mirror of Fortune)",
+    "marriage": "ASC+DESC-Venus = ASC+(ASC+180)-Venus (fixed - no sect inversion)",
+}
+
+
+def cmd_list_parts() -> None:
+    """Print available Arabic Parts with formula summaries to stdout."""
+    print("Available Arabic Parts (use with calculate_part() / calculate_all_parts()):")
+    print()
+    for name in sorted(_PARTS.keys()):
+        desc = _PART_DESCRIPTIONS.get(name, "(no description available)")
+        print(f"  {name:10} : {desc}")
+    print()
+    print("Marriage note: fixed formula - day and night formulas are identical.")
