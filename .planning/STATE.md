@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: executing
-last_updated: "2026-05-28T19:33:19Z"
+last_updated: "2026-05-28T19:42:30Z"
 last_activity: 2026-05-28
 progress:
   total_phases: 8
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 31
-  completed_plans: 30
-  percent: 97
+  completed_plans: 31
+  percent: 100
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 19 (Arabic Parts Framework) — IN PROGRESS (2 of 3 plans complete). Plan 19-02 CLI introspection shipped.
+**Current focus:** Phase 19 (Arabic Parts Framework) — COMPLETE (3 of 3 plans). Phase 20 (Release Preparation v1.2.0) is next.
 
 ## Current Position
 
-Phase: 19 (arabic-parts-framework) — IN PROGRESS (2 of 3 plans complete)
-Plan: 2 of 3 (Plan 19-02 --list-parts CLI flag + cmd_list_parts() complete)
-Status: Plan 19-02 shipped (2026-05-28, ~2m, 2 tasks, 2 files modified). **`--list-parts` CLI introspection flag live (PARTS-08).** `cmd_list_parts()` + `_PART_DESCRIPTIONS` in `ketu/cli/introspection.py` iterating `sorted(_PARTS.keys())`; `--list-parts` store_true flag in `build_parser()` + first-wins short-circuit appended LAST in `main()` (after `list_orbs`). `ketu --list-parts` prints 3 sorted parts + formula summaries + Marriage fixed trailing note; exits 0. `test_list_flags_collision_first_wins` unaffected. interrogate 100% (5/5). Suite: 1253 PASS + 2 SKIP (unchanged).
-Progress: [██░] 67% (2 of 3 plans complete)
+Phase: 19 (arabic-parts-framework) — COMPLETE (3 of 3 plans)
+Plan: 3 of 3 (Plan 19-03 test suite + coverage gate complete)
+Status: Plan 19-03 shipped (2026-05-28, ~5m, 3 tasks, 7 files modified). **31 tests in tests/parts/ (5 files): registry + CLI + oracle + coverage gate.** 6 pinned oracle values (Fortune/Spirit/Marriage day+night) at 1e-9 tolerance. `parts_coverage_gate` marker registered. `make parts-coverage` passes at 100% on ketu/parts/. Full suite: **1284 PASS + 2 SKIP**. PARTS-01..08 all satisfied.
+Progress: [███] 100% (3 of 3 plans complete — Phase 19 CLOSED)
 Last activity: 2026-05-28
-Resume file: Phase 19 Plan 03 next — test suite (CLI tests for --list-parts + unit tests for calculate_part / calculate_all_parts).
+Resume file: Phase 20 next — Release Preparation v1.2.0 (OPS-03, OPS-04, OPS-05).
 
 ---
 
@@ -77,6 +77,8 @@ Resume file: Phase 19 Plan 03 next — test suite (CLI tests for --list-parts + 
 | Phase 18 P05 | ~54m | 3 tasks | 6 files |
 | Phase 19 P01 | ~4min | 3 tasks | 3 files |
 | Phase 19 P02 | ~2min | 2 tasks | 2 files |
+| Phase 19 P03 | ~5min | 3 tasks | 7 files |
+| Phase 19-arabic-parts-framework P03 | 5 | 3 tasks | 7 files |
 
 ## Accumulated Context
 
@@ -207,10 +209,14 @@ Resume file: Phase 19 Plan 03 next — test suite (CLI tests for --list-parts + 
 - [Phase 19-02]: `--list-parts` appended LAST in first-wins ladder (after `list_orbs`) — preserves `test_list_flags_collision_first_wins` regression pin (Phase 16-04 decision: ladder order = source-declaration order, NOT alphabetical).
 - [Phase 19-02]: `cmd_list_parts()` iterates `sorted(_PARTS.keys())` (data-driven) — a v1.3 Lot registered via `register()` surfaces automatically in CLI output without touching the function.
 - [Phase 19-02]: Trailing note `"Marriage note: fixed formula - day and night formulas are identical."` as canonical location for no-sect-inversion annotation (Plan 03 CLI test asserts on it).
+- [Phase 19-03]: calculate_all_parts default (parts=None) + explicit filter branches tested in TestCalculateAllParts — api.py pushed to 100% (was 88% after Tasks 1+2; gate was already passing at 95% but 100% is cleaner).
+- [Phase 19-03]: Fortune!=Spirit mirror-guard run on BOTH charts (day+night); sect premise asserted at module level (import-time collection error if fixture sect changes, not a buried test failure).
+- [Phase 19-arabic-parts-framework]: calculate_all_parts default+filter branches tested in TestCalculateAllParts — api.py pushed to 100% (was 88% after Tasks 1+2)
+- [Phase 19-arabic-parts-framework]: Fortune!=Spirit mirror-guard on BOTH charts (day+night); sect premise asserted at module level (import-time collection error)
 
 ## Session Continuity
 
-v1.2 roadmap written 2026-05-08. **Phase 19 Plan 02 (CLI --list-parts introspection) shipped 2026-05-28** (~2m, 2 tasks, 2 files modified). `--list-parts` store_true flag live: `cmd_list_parts()` + `_PART_DESCRIPTIONS` added to `ketu/cli/introspection.py`; `--list-parts` flag in `build_parser()` + short-circuit LAST in `main()` first-wins ladder (after `list_orbs`). `ketu --list-parts` prints 3 sorted parts (fortune, marriage, spirit) with formula summaries + trailing Marriage fixed note; exits 0. `test_list_flags_collision_first_wins` unaffected. interrogate 100% (5/5). Suite: 1253 PASS + 2 SKIP (unchanged). PARTS-08 satisfied. Last session: Sophie + executor agent, stopped at: Plan 19-02 complete — **ready for /gsd:execute-phase 19 plan 03 (test suite: CLI tests for --list-parts + unit tests for calculate_part/calculate_all_parts)**.
+v1.2 roadmap written 2026-05-08. **Phase 19 (Arabic Parts Framework) COMPLETE — Plan 19-03 test suite + coverage gate shipped 2026-05-28** (~5m, 3 tasks, 7 files modified). 31 tests across 5 files in `tests/parts/`: `test_parts_registry.py` (13 tests: exactly-3, case-insensitive, ValueError, extensibility, Marriage callable identity, calculate_all_parts default+filter), `test_parts_cli.py` (9 tests: --list-parts exit 0 + 3 names + fixed note; cmd_list_parts() direct), `test_parts_coverage_gate.py` (1 test: marker sentinel), `test_parts_oracle.py` (8 tests: 6 pinned oracle values at 1e-9 + sect premise + Fortune!=Spirit mirror guard). `parts_coverage_gate` marker registered in `pyproject.toml` (alphabetically between houses and returns). `make parts-coverage` target added (two-step pattern mirror of returns-coverage); exits 0 with ketu/parts/* at **100%**. `ketu.parts` added to `[tool.setuptools].packages`. **Suite: 1284 PASS + 2 SKIP** (1253 baseline + 31 new). PARTS-01..08 all satisfied. **Phase 19 closed.** Last session: Sophie + executor agent, stopped at: Plan 19-03 complete — **ready for /gsd:execute-phase 20 plan 01 (Release Preparation v1.2.0)**.
 
 ---
 
