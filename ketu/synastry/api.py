@@ -1,4 +1,5 @@
-"""Public compute surface for the synastry subpackage — :func:`calculate_synastry`.
+"""
+Public compute surface for the synastry subpackage — :func:`calculate_synastry`.
 
 Composition-only module: consumes two :data:`ketu.charts.CHART_DTYPE`
 scalar records (Phase 14 foundation) and produces a structured array of
@@ -60,7 +61,8 @@ from .orbs import OrbSetSpec, _BODY_ORBS_15, resolve_orb_set
 
 
 def _extend_body_data(chart: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
-    """Extend a CHART_DTYPE record's 13-body axis to the 15-body synastry axis.
+    """
+    Extend a CHART_DTYPE record's 13-body axis to the 15-body synastry axis.
 
     Concatenates the 13 canonical body longitudes and speeds from
     :data:`ketu.charts.CHART_DTYPE` with the scalar ``asc`` and ``mc``
@@ -109,7 +111,8 @@ def calculate_synastry(
     orbs: OrbSetSpec = "synastry",
     mode: Literal["dense", "filtered"] = "filtered",
 ) -> np.ndarray:
-    """Compute inter-chart aspects between two natal charts.
+    """
+    Compute inter-chart aspects between two natal charts.
 
     Returns a structured array of :data:`ketu.synastry.SYNASTRY_DTYPE`
     rows. In ``mode="filtered"`` (default), only aspected pairs appear,

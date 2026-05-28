@@ -1,4 +1,5 @@
-"""Whole Sign house system implementation.
+"""
+Whole Sign house system implementation.
 
 In Whole Sign, each of the 12 houses corresponds to a complete zodiacal
 sign of 30 degrees. House 1 begins at the **start of the sign containing
@@ -41,7 +42,8 @@ def whole_sign_cusps(
     lat: np.ndarray,
     eps: np.ndarray,
 ) -> np.ndarray:
-    """Compute the 12 Whole Sign house cusps.
+    """
+    Compute the 12 Whole Sign house cusps.
 
     Closed-form per swisseph ``swehouse.c`` case ``'W'``. Polar-safe by
     construction (no latitude-dependent singularity).

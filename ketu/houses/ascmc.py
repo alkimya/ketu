@@ -1,4 +1,5 @@
-"""Closed-form ASC, MC, ARMC, and Vertex computation.
+"""
+Closed-form ASC, MC, ARMC, and Vertex computation.
 
 Shared by all registered house systems (Plans 10-04 Placidus and 10-05 Koch
 consume these as inputs to their per-cusp algorithms). Pure NumPy;
@@ -31,7 +32,8 @@ def compute_armc(
     jd: ArrayLike,
     lon: ArrayLike,
 ) -> np.ndarray:
-    """Compute the Right Ascension of the Medium Coeli (= local sidereal time).
+    """
+    Compute the Right Ascension of the Medium Coeli (= local sidereal time).
 
     ``ARMC = (GMST(jd) + lon_east) mod 360`` (Pitfall 5: explicit
     decomposition that mirrors the swisseph C source, not a hidden
@@ -75,7 +77,8 @@ def compute_ascmc(
     lat: ArrayLike,
     lon: ArrayLike,
 ) -> dict[str, np.ndarray]:
-    """Compute ASC, MC, ARMC, Vertex, and obliquity for one or many charts.
+    """
+    Compute ASC, MC, ARMC, Vertex, and obliquity for one or many charts.
 
     Closed-form via :func:`numpy.arctan2` — never single-arg
     :func:`numpy.arctan` (Pitfall 2 from research).

@@ -1,4 +1,5 @@
-"""Dispatcher for `ketu aspects ...` subcommand.
+"""
+Dispatcher for `ketu aspects ...` subcommand.
 
 Calls :func:`ketu.display.print_positions` and
 :func:`ketu.display.print_aspects` (the latter extended in Plan 11-04 to
@@ -37,7 +38,8 @@ from .formatters import emit_resolved_config
 
 
 def _preset_label_for_mask(mask: np.ndarray) -> str:
-    """Best-effort human label for the resolved-config header.
+    """
+    Best-effort human label for the resolved-config header.
 
     After ``type=parse_harmonics_spec`` runs, the original spec string is
     no longer available — we have only the length-14 mask. Map back to
@@ -64,7 +66,8 @@ def _preset_label_for_mask(mask: np.ndarray) -> str:
 
 
 def cmd_aspects(args: argparse.Namespace) -> int:
-    """Compute and print body positions + aspects for a date.
+    """
+    Compute and print body positions + aspects for a date.
 
     Parameters
     ----------

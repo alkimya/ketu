@@ -1,4 +1,5 @@
-"""Orbital elements and calculations for planetary positions.
+"""
+Orbital elements and calculations for planetary positions.
 
 This module contains the orbital elements data and functions to calculate
 planetary positions using Kepler's laws and perturbation theory.
@@ -208,7 +209,8 @@ ORBITAL_ELEMENTS = np.array(
 
 
 def normalize_angle(angle: float) -> float:
-    """Normalize angle to 0-360 degrees range.
+    """
+    Normalize angle to 0-360 degrees range.
 
     Parameters
     ----------
@@ -227,7 +229,8 @@ def normalize_angle(angle: float) -> float:
 
 
 def solve_kepler_equation(M: Union[float, np.ndarray], e: Union[float, np.ndarray], tolerance: float = 1e-8) -> Union[float, np.ndarray]:
-    """Solve Kepler's equation for eccentric anomaly (vectorized).
+    """
+    Solve Kepler's equation for eccentric anomaly (vectorized).
 
     Parameters
     ----------
@@ -267,7 +270,8 @@ def solve_kepler_equation(M: Union[float, np.ndarray], e: Union[float, np.ndarra
 
 
 def orbital_elements_at_date(body_id: int, jd: float) -> dict:
-    """Calculate orbital elements for a body at a given Julian Date.
+    """
+    Calculate orbital elements for a body at a given Julian Date.
 
     Parameters
     ----------
@@ -299,7 +303,8 @@ def orbital_elements_at_date(body_id: int, jd: float) -> dict:
 
 
 def compute_position(elem: dict) -> Tuple[float, float, float, float, float, float]:
-    """Compute heliocentric position from orbital elements.
+    """
+    Compute heliocentric position from orbital elements.
 
     Parameters
     ----------
@@ -351,7 +356,8 @@ def compute_position(elem: dict) -> Tuple[float, float, float, float, float, flo
 
 
 def apply_perturbations(body_id: int, jd: float, x: float, y: float, z: float) -> Tuple[float, float, float]:
-    """Apply perturbation corrections to planetary positions.
+    """
+    Apply perturbation corrections to planetary positions.
 
     Parameters
     ----------
@@ -466,7 +472,8 @@ def apply_perturbations(body_id: int, jd: float, x: float, y: float, z: float) -
 
 
 def get_body_position(body_id: int, jd: float) -> Tuple[float, float, float, float, float, float]:
-    """Get heliocentric position of a body at given Julian Date.
+    """
+    Get heliocentric position of a body at given Julian Date.
 
     Parameters
     ----------
@@ -499,7 +506,8 @@ def get_body_position(body_id: int, jd: float) -> Tuple[float, float, float, flo
 
 
 def get_moon_position(jd: float) -> Tuple[float, float, float]:
-    """Calculate geocentric position of the Moon.
+    """
+    Calculate geocentric position of the Moon.
 
     Parameters
     ----------
@@ -595,7 +603,8 @@ def get_moon_position(jd: float) -> Tuple[float, float, float]:
 
 
 def get_lunar_nodes(jd: float) -> Tuple[float, float]:
-    """Calculate positions of lunar nodes.
+    """
+    Calculate positions of lunar nodes.
 
     Parameters
     ----------
@@ -628,7 +637,8 @@ def get_lunar_nodes(jd: float) -> Tuple[float, float]:
 
 
 def get_lilith_position(jd: float) -> float:
-    """Calculate position of Black Moon Lilith (mean lunar apogee).
+    """
+    Calculate position of Black Moon Lilith (mean lunar apogee).
 
     Returns the geocentric ecliptic longitude (mean ecliptic of date,
     tropical, mean motion) of the Moon's Mean Apogee, in degrees in
@@ -679,7 +689,8 @@ def get_lilith_position(jd: float) -> float:
 
 
 def get_body_position_vectorized(body_id: int, jd_array: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
-    """Get heliocentric position of a body for multiple Julian Dates (vectorized).
+    """
+    Get heliocentric position of a body for multiple Julian Dates (vectorized).
 
     This function efficiently computes positions for time series by vectorizing
     the orbital calculations across multiple dates.
@@ -747,7 +758,8 @@ def get_body_position_vectorized(body_id: int, jd_array: np.ndarray) -> Tuple[np
 
 
 def get_moon_position_vectorized(jd_array: np.ndarray) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Calculate geocentric position of the Moon for multiple dates (vectorized).
+    """
+    Calculate geocentric position of the Moon for multiple dates (vectorized).
 
     Parameters
     ----------

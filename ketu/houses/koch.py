@@ -1,4 +1,5 @@
-"""Koch house system implementation.
+"""
+Koch house system implementation.
 
 Koch's "Geburtsorthäuser" trisects the ascensional difference of the MC
 on the equator, then projects each trisected angle into the ecliptic via
@@ -48,7 +49,8 @@ def koch_cusps(
     lat: np.ndarray,
     eps: np.ndarray,
 ) -> np.ndarray:
-    """Compute the 12 Koch house cusps.
+    """
+    Compute the 12 Koch house cusps.
 
     Closed-form per swisseph ``swehouse.c`` (case ``'K'``). At latitudes
     inside the polar circle (``|lat| ≥ 90° − eps``) the formula becomes

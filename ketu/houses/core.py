@@ -1,4 +1,5 @@
-"""Core types for the houses subpackage.
+"""
+Core types for the houses subpackage.
 
 Defines :data:`HOUSES_DTYPE` (structured array layout for house cusp results)
 and :class:`HighLatitudeError` (raised when latitude exceeds the polar circle
@@ -53,7 +54,8 @@ HOUSES_DTYPE: np.dtype = np.dtype([
 
 
 class HighLatitudeError(ValueError):
-    """Raised when ``|lat|`` exceeds the polar circle for the requested house system.
+    """
+    Raised when ``|lat|`` exceeds the polar circle for the requested house system.
 
     Carries the latitude, the system name, and the actual polar circle
     (90 deg - mean_obliquity(jd)) for caller diagnostics. Subclass of

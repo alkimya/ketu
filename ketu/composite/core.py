@@ -1,4 +1,5 @@
-"""Composite chart core helpers.
+"""
+Composite chart core helpers.
 
 Hosts :func:`circular_midpoint`, the only public helper introduced by this
 subpackage. The composite computation itself lives in
@@ -15,7 +16,8 @@ ArrayLike = Union[float, npt.NDArray[np.float64]]
 
 
 def circular_midpoint(lon_a: ArrayLike, lon_b: ArrayLike) -> np.ndarray:
-    """Short-arc midpoint on the unit circle, modulo 360°.
+    """
+    Short-arc midpoint on the unit circle, modulo 360°.
 
     Vectorised over inputs. ``circular_midpoint(359.0, 1.0) == 0.0``
     (NOT 180.0) — the wraparound case is pinned as a regression test
@@ -39,6 +41,11 @@ def circular_midpoint(lon_a: ArrayLike, lon_b: ArrayLike) -> np.ndarray:
         0-d array (caller can call ``.item()`` if a Python float is
         required).
 
+    See Also
+    --------
+    ketu.composite.api.calculate_composite : Consumes this helper for
+        every per-body and per-angle midpoint in the composite chart.
+
     Notes
     -----
     Implementation uses the signed short-arc-difference formulation:
@@ -57,11 +64,6 @@ def circular_midpoint(lon_a: ArrayLike, lon_b: ArrayLike) -> np.ndarray:
     in practice (it requires two partners with exactly opposing
     bodies); the behaviour is pinned in tests so future refactors
     don't silently change it.
-
-    See Also
-    --------
-    ketu.composite.api.calculate_composite : Consumes this helper for
-        every per-body and per-angle midpoint in the composite chart.
 
     Examples
     --------

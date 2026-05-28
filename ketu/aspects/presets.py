@@ -1,4 +1,5 @@
-"""Aspect set presets and resolver for configurable aspect filtering.
+"""
+Aspect set presets and resolver for configurable aspect filtering.
 
 Three named presets select subsets of the 14 aspects in :mod:`ketu.core.aspects`:
 
@@ -60,7 +61,8 @@ _EXTENDED_INDICES: npt.NDArray[np.intp] = np.arange(14, dtype=np.intp)
 
 
 def _indices_to_mask(indices: npt.NDArray[np.intp]) -> npt.NDArray[np.bool_]:
-    """Build a frozen length-14 boolean mask from an index array.
+    """
+    Build a frozen length-14 boolean mask from an index array.
 
     Parameters
     ----------
@@ -103,7 +105,8 @@ def resolve_aspect_set(
     spec: AspectSetSpec,
     default: npt.NDArray[np.bool_] = CLASSICAL,
 ) -> npt.NDArray[np.bool_]:
-    """Resolve an aspect-set spec into a length-14 boolean mask.
+    """
+    Resolve an aspect-set spec into a length-14 boolean mask.
 
     Single-call resolver: every public aspect API should call this exactly
     once at entry and pass the resulting mask down to hot loops. The mask

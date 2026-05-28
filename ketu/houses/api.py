@@ -1,4 +1,5 @@
-"""Public API for the houses subpackage.
+"""
+Public API for the houses subpackage.
 
 Two key public functions:
 
@@ -51,7 +52,8 @@ def calculate_houses(
     system: str = "placidus",
     polar_fallback: Literal["raise", "porphyry"] = "raise",
 ) -> np.ndarray:
-    """Compute house cusps for one or many ``(jd, lat, lon)`` inputs.
+    """
+    Compute house cusps for one or many ``(jd, lat, lon)`` inputs.
 
     Parameters
     ----------
@@ -190,7 +192,8 @@ def house_of(
     planet_lon: ArrayLike,
     cusps: np.ndarray,
 ) -> np.ndarray:
-    """Return the 1-indexed house number containing each planet longitude.
+    """
+    Return the 1-indexed house number containing each planet longitude.
 
     Parameters
     ----------
@@ -206,17 +209,6 @@ def house_of(
     np.ndarray of int32
         Broadcast shape over ``planet_lon`` and the leading dims of
         ``cusps``. Values in ``{1, ..., 12}``.
-
-    Examples
-    --------
-    >>> import numpy as np
-    >>> r = calculate_houses(2451545.0, 48.8566, 2.3522)
-    >>> int(house_of(45.0, r["cusps"]))   # 1..12
-    2
-    >>> # vectorised: 5 planets at once
-    >>> planet_lons = np.array([0.0, 45.0, 90.0, 180.0, 270.0])
-    >>> house_of(planet_lons, r["cusps"]).shape
-    (5,)
 
     Notes
     -----
@@ -234,6 +226,17 @@ def house_of(
     that index via :func:`numpy.argmax` (which returns the first ``True``
     when multiple are present, the conventional choice for degenerate
     cusps).
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> r = calculate_houses(2451545.0, 48.8566, 2.3522)
+    >>> int(house_of(45.0, r["cusps"]))   # 1..12
+    2
+    >>> # vectorised: 5 planets at once
+    >>> planet_lons = np.array([0.0, 45.0, 90.0, 180.0, 270.0])
+    >>> house_of(planet_lons, r["cusps"]).shape
+    (5,)
     """
     planet_lon_a = np.asarray(planet_lon, dtype=np.float64) % 360.0
     cusps_a = np.asarray(cusps, dtype=np.float64)

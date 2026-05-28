@@ -115,8 +115,8 @@ doc-gates:
 	$(PYTHON) -m numpydoc lint $$(find ketu -name "*.py" \
 	    ! -path "*/__pycache__/*" \
 	    ! -name "lunar_calendar.py" \
-	    ! -name "_*.py") || true
-	@echo "Doc gates OK (numpydoc warnings shown above; not blocking until v1.2.0)."
+	    ! -name "_*.py")
+	@echo "Doc gates OK (interrogate + numpydoc both blocking)."
 
 ## mypy: Run mypy --strict over the whole package.
 mypy:

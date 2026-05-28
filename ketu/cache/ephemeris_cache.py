@@ -1,4 +1,5 @@
-"""Ephemeris cache for fast planetary position lookups.
+"""
+Ephemeris cache for fast planetary position lookups.
 
 Pre-computes daily planetary positions and provides fast O(1) lookups
 with linear interpolation for intra-day times.
@@ -37,7 +38,8 @@ BODY_IDS = {
 
 
 class EphemerisCache:
-    """Cache for pre-computed planetary ephemeris data.
+    """
+    Cache for pre-computed planetary ephemeris data.
 
     Stores daily positions for all 13 celestial bodies and provides
     fast lookups with linear interpolation for any timestamp.
@@ -62,7 +64,8 @@ class EphemerisCache:
     """
 
     def __init__(self, cache_dir: Optional[Union[str, Path]] = None):
-        """Initialize the ephemeris cache
+        """
+        Initialize the ephemeris cache
 
         Parameters
         ----------
@@ -81,11 +84,13 @@ class EphemerisCache:
         self._loaded_months: set[Tuple[int, int]] = set()
 
     def _cache_path(self, year: int, month: int) -> Path:
-        """Get path to cache file for a given month."""
+        """
+        Get path to cache file for a given month."""
         return self.cache_dir / f"{year:04d}-{month:02d}-ephemeris.npy"
 
     def _compute_month(self, year: int, month: int) -> np.ndarray:
-        """Compute ephemeris data for an entire month
+        """
+        Compute ephemeris data for an entire month
 
         Parameters
         ----------
@@ -123,7 +128,8 @@ class EphemerisCache:
         return result
 
     def ensure_month(self, year: int, month: int, force_recompute: bool = False) -> None:
-        """Ensure a month is cached (compute if needed).
+        """
+        Ensure a month is cached (compute if needed).
 
         Parameters
         ----------
@@ -161,7 +167,8 @@ class EphemerisCache:
         end_month: int,
         force_recompute: bool = False,
     ) -> None:
-        """Ensure a range of months is cached.
+        """
+        Ensure a range of months is cached.
 
         Parameters
         ----------
@@ -193,7 +200,8 @@ class EphemerisCache:
         body_id: int,
         interpolate: bool = True,
     ) -> np.ndarray:
-        """Get position for a single body at a specific time.
+        """
+        Get position for a single body at a specific time.
 
         Parameters
         ----------
@@ -274,7 +282,8 @@ class EphemerisCache:
         timestamp: datetime,
         interpolate: bool = True,
     ) -> np.ndarray:
-        """Get positions for all bodies at a specific time.
+        """
+        Get positions for all bodies at a specific time.
 
         Parameters
         ----------
@@ -299,7 +308,8 @@ class EphemerisCache:
         body_id: int,
         interpolate: bool = True,
     ) -> np.ndarray:
-        """Get positions for a single body across multiple timestamps (slow path).
+        """
+        Get positions for a single body across multiple timestamps (slow path).
 
         For better performance, use get_positions_vectorized().
 
@@ -327,7 +337,8 @@ class EphemerisCache:
         timestamps: List[datetime],
         body_id: int,
     ) -> Tuple[np.ndarray, np.ndarray]:
-        """Get longitude and velocity for a body across timestamps (vectorized).
+        """
+        Get longitude and velocity for a body across timestamps (vectorized).
 
         This is the fast path - uses numpy vectorized operations instead of
         Python loops. ~10x faster than get_positions_batch for large arrays.
@@ -438,7 +449,8 @@ class EphemerisCache:
         timestamps: List[datetime],
         body_id: int,
     ) -> np.ndarray:
-        """Get longitudes only for a single body (fast path).
+        """
+        Get longitudes only for a single body (fast path).
 
         Parameters
         ----------
@@ -456,12 +468,15 @@ class EphemerisCache:
         return longitudes
 
     def clear_memory(self) -> None:
-        """Clear in-memory cache (disk cache remains)."""
+        """
+        Clear in-memory cache (disk cache remains).
+        """
         self._memory_cache.clear()
         self._loaded_months.clear()
 
     def cache_stats(self) -> Dict[str, Union[int, float, List[str]]]:
-        """Get cache statistics.
+        """
+        Get cache statistics.
 
         Returns
         -------
@@ -488,7 +503,8 @@ _default_cache: Optional[EphemerisCache] = None
 
 
 def get_default_cache() -> EphemerisCache:
-    """Get the default global cache instance.
+    """
+    Get the default global cache instance.
 
     Returns
     -------

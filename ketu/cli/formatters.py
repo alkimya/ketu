@@ -1,4 +1,5 @@
-"""Resolved-config header — CLI-06.
+"""
+Resolved-config header — CLI-06.
 
 Emitted to STDERR (NOT stdout) so the byte-identical CLI-03 escape hatch
 (`--harmonics all` matching v1.0 stdout) is preserved. Stdout = data,
@@ -19,7 +20,8 @@ def emit_resolved_config(
     preset_name: str | None,
     house_system: str | None = None,
 ) -> None:
-    """Echo the resolved CLI configuration to STDERR.
+    """
+    Echo the resolved CLI configuration to STDERR.
 
     Parameters
     ----------

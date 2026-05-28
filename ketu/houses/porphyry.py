@@ -1,4 +1,5 @@
-"""Porphyry house system — closed-form trisection.
+"""
+Porphyry house system — closed-form trisection.
 
 Used as the polar fallback for Placidus and Koch (HOU-06). Mathematically
 defined at all latitudes including 90° because it depends only on ASC/MC,
@@ -33,7 +34,8 @@ POLAR_EPS_TOL: float = 1e-9
 
 
 def polar_circle(jd: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
-    """Return the polar circle latitude (degrees) at the given Julian date.
+    """
+    Return the polar circle latitude (degrees) at the given Julian date.
 
     ``polar_circle = 90° − mean_obliquity(jd)``.
 
@@ -60,7 +62,8 @@ def is_polar(
     lat: Union[float, np.ndarray],
     jd: Union[float, np.ndarray],
 ) -> Union[bool, np.ndarray]:
-    """Return ``True`` where ``|lat| > polar_circle(jd) − POLAR_EPS_TOL``.
+    """
+    Return ``True`` where ``|lat| > polar_circle(jd) − POLAR_EPS_TOL``.
 
     Used by the public ``calculate_houses`` (Plan 10-06) to route polar
     elements to either :class:`HighLatitudeError` or
@@ -103,7 +106,8 @@ def porphyry_cusps(
     lat: np.ndarray,
     eps: np.ndarray,
 ) -> np.ndarray:
-    """Compute the 12 Porphyry house cusps.
+    """
+    Compute the 12 Porphyry house cusps.
 
     Closed-form (no iteration). Works at all latitudes including 89° —
     Porphyry is the polar fallback path for Placidus and Koch.

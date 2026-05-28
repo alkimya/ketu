@@ -1,4 +1,5 @@
-"""Public API for the charts subpackage: :func:`compute_chart` and :func:`is_day_chart`.
+"""
+Public API for the charts subpackage: :func:`compute_chart` and :func:`is_day_chart`.
 
 Two public functions, both vectorised over ``(jd, lat, lon)`` of any
 broadcast-compatible shape:
@@ -56,7 +57,8 @@ _BODY_COUNT: int = len(_CANONICAL_BODIES)
 def _vectorised_body_properties(
     jd_b: np.ndarray,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Compute per-body lon/lat/speed for a broadcast jd array.
+    """
+    Compute per-body lon/lat/speed for a broadcast jd array.
 
     Loops over the 13 canonical bodies (NOT over the leading shape S).
     Each iteration calls :func:`ketu.ephemeris.planets.calc_planet_position_batch`,
@@ -110,7 +112,8 @@ def _build_aspect_matrix(
     jd_b: np.ndarray,
     aspects: AspectSetSpec,
 ) -> tuple[np.ndarray, np.ndarray]:
-    """Build the dense ``(13, 13)`` aspect matrix and orb matrix over leading shape ``S``.
+    """
+    Build the dense ``(13, 13)`` aspect matrix and orb matrix over leading shape ``S``.
 
     Loops over ``S`` in Python (per D-16); each ``S``-element call to
     :func:`ketu.aspects.calculator.calculate_aspects_vectorized` is
@@ -198,7 +201,8 @@ def compute_chart(
     aspects: AspectSetSpec = None,
     polar_fallback: Literal["raise", "porphyry"] = "raise",
 ) -> np.ndarray:
-    """Compute a fully-resolved natal chart in one vectorisable call.
+    """
+    Compute a fully-resolved natal chart in one vectorisable call.
 
     Returns a structured array of :data:`ketu.charts.CHART_DTYPE` carrying
     body positions, ASC/MC/ARMC/Vertex, the 12 house cusps, and a dense
@@ -362,7 +366,8 @@ def is_day_chart(
     lat: ArrayLike,
     lon: ArrayLike,
 ) -> np.ndarray:
-    """Return True when the Sun is at or above the horizon (sunrise inclusive).
+    """
+    Return True when the Sun is at or above the horizon (sunrise inclusive).
 
     Vectorised sect helper required by Arabic Parts (Phase 19). Each
     output element is ``True`` when the natal Sun lies in the

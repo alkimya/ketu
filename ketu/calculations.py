@@ -1,4 +1,5 @@
-"""Astronomical and astrological calculations for Ketu.
+"""
+Astronomical and astrological calculations for Ketu.
 
 This module contains position, velocity, and time conversion calculations for planetary bodies.
 For aspect calculations, see the aspects module.
@@ -24,7 +25,8 @@ from .ephemeris.planets import (
 # ========== Utility Functions ==========
 
 def dd_to_dms(deg: float) -> np.ndarray:
-    """Convert decimal degrees to degrees, minutes, seconds.
+    """
+    Convert decimal degrees to degrees, minutes, seconds.
 
     Parameters
     ----------
@@ -54,7 +56,8 @@ decimal_degrees_to_dms = dd_to_dms
 
 
 def distance(pos1: Union[float, np.ndarray], pos2: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
-    """Calculate angular distance between two positions (vectorized).
+    """
+    Calculate angular distance between two positions (vectorized).
 
     Works with scalars or arrays via NumPy broadcasting.
     Always returns the shortest angular distance (0-180 degrees).
@@ -93,7 +96,8 @@ def distance(pos1: Union[float, np.ndarray], pos2: Union[float, np.ndarray]) -> 
 
 @lru_cache(maxsize=1024)
 def body_properties(jdate: float, body: int) -> np.ndarray:
-    """Cached wrapper for body_properties to maintain API compatibility.
+    """
+    Cached wrapper for body_properties to maintain API compatibility.
 
     Uses LRU cache (maxsize=1024) for optimal performance with repeated calculations.
     Benchmark shows 6.7x speedup vs no cache, and better performance than unbounded cache.
@@ -137,7 +141,8 @@ def body_properties(jdate: float, body: int) -> np.ndarray:
 
 
 def body_name(body: int) -> str:
-    """Get the name of an astronomical body.
+    """
+    Get the name of an astronomical body.
 
     Parameters
     ----------
@@ -171,7 +176,8 @@ def body_name(body: int) -> str:
 
 
 def body_id(b_name: str) -> int:
-    """Get the ID of an astronomical body by name.
+    """
+    Get the ID of an astronomical body by name.
 
     Parameters
     ----------
@@ -202,7 +208,8 @@ def body_id(b_name: str) -> int:
 
 
 def long(jdate: float, body: int) -> float:
-    """Get ecliptic longitude of a body.
+    """
+    Get ecliptic longitude of a body.
 
     Parameters
     ----------
@@ -234,7 +241,8 @@ def long(jdate: float, body: int) -> float:
 
 
 def lat(jdate: float, body: int) -> float:
-    """Get ecliptic latitude of a body.
+    """
+    Get ecliptic latitude of a body.
 
     Parameters
     ----------
@@ -261,7 +269,8 @@ def lat(jdate: float, body: int) -> float:
 
 
 def dist_au(jdate: float, body: int) -> float:
-    """Get distance of a body from Earth.
+    """
+    Get distance of a body from Earth.
 
     Parameters
     ----------
@@ -289,7 +298,8 @@ def dist_au(jdate: float, body: int) -> float:
 
 
 def long_velocity(jdate: float, body: int) -> float:
-    """Get longitude velocity of a body.
+    """
+    Get longitude velocity of a body.
 
     Parameters
     ----------
@@ -317,7 +327,8 @@ def long_velocity(jdate: float, body: int) -> float:
 
 
 def lat_velocity(jdate: float, body: int) -> float:
-    """Get latitude velocity of a body.
+    """
+    Get latitude velocity of a body.
 
     Parameters
     ----------
@@ -344,7 +355,8 @@ def lat_velocity(jdate: float, body: int) -> float:
 
 
 def dist_velocity_au(jdate: float, body: int) -> float:
-    """Get distance velocity of a body.
+    """
+    Get distance velocity of a body.
 
     Parameters
     ----------
@@ -371,7 +383,8 @@ def dist_velocity_au(jdate: float, body: int) -> float:
 
 
 def is_retrograde(jdate: float, body: int) -> bool:
-    """Check if a body is in retrograde motion.
+    """
+    Check if a body is in retrograde motion.
 
     Parameters
     ----------
@@ -398,7 +411,8 @@ def is_retrograde(jdate: float, body: int) -> bool:
 
 
 def is_ascending(jdate: float, body: int) -> bool:
-    """Check if a body's latitude is rising.
+    """
+    Check if a body's latitude is rising.
 
     Parameters
     ----------
@@ -425,7 +439,8 @@ def is_ascending(jdate: float, body: int) -> bool:
 
 
 def body_sign(b_long: float) -> Tuple[int, int, int, int]:
-    """Convert longitude to zodiac sign position.
+    """
+    Convert longitude to zodiac sign position.
 
     Parameters
     ----------
@@ -459,7 +474,8 @@ def body_sign(b_long: float) -> Tuple[int, int, int, int]:
 
 
 def positions(jdate: float, l_bodies: np.ndarray = bodies) -> np.ndarray:
-    """Get ecliptic longitudes of all bodies.
+    """
+    Get ecliptic longitudes of all bodies.
 
     Parameters
     ----------

@@ -1,4 +1,5 @@
-"""Introspection commands — CLI-05.
+"""
+Introspection commands — CLI-05.
 
 Human-readable indented list to STDOUT. JSON output deferred to v1.2
 (research §Open Question 4).
@@ -36,7 +37,9 @@ _SYSTEM_DESCRIPTIONS = {
 
 
 def cmd_list_aspect_sets() -> None:
-    """Print available aspect-set presets with descriptions to stdout."""
+    """
+    Print available aspect-set presets with descriptions to stdout.
+    """
     print("Available aspect sets (use with --harmonics SPEC):")
     print()
     for name in ("classical", "traditional", "extended", "all"):
@@ -55,7 +58,9 @@ def cmd_list_aspect_sets() -> None:
 
 
 def cmd_list_house_systems() -> None:
-    """Print available house systems with descriptions to stdout."""
+    """
+    Print available house systems with descriptions to stdout.
+    """
     print("Available house systems (use with --system NAME on `ketu houses`):")
     print()
     for name in sorted(_HOUSE_SYSTEMS.keys()):
@@ -79,7 +84,8 @@ _ORB_PRESET_DESCRIPTIONS = {
 
 
 def cmd_list_orbs() -> None:
-    """Print available synastry orb presets with descriptions to stdout.
+    """
+    Print available synastry orb presets with descriptions to stdout.
 
     Emits a header, the per-pair-aspect orb formula, the ASC/MC default
     orb annotation, then the preset table iterated from
@@ -134,7 +140,9 @@ _PART_DESCRIPTIONS = {
 
 
 def cmd_list_parts() -> None:
-    """Print available Arabic Parts with formula summaries to stdout."""
+    """
+    Print available Arabic Parts with formula summaries to stdout.
+    """
     print("Available Arabic Parts (use with calculate_part() / calculate_all_parts()):")
     print()
     for name in sorted(_PARTS.keys()):

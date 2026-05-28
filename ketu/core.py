@@ -1,4 +1,5 @@
-"""Core data structures and constants for Ketu astrological calculations.
+"""
+Core data structures and constants for Ketu astrological calculations.
 
 This module contains the fundamental astronomical and astrological data structures
 used throughout the Ketu library, including planetary bodies, aspects, and zodiac signs.

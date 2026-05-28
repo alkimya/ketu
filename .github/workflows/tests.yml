@@ -48,12 +48,8 @@ jobs:
       run: |
         python -m interrogate ketu/
 
-    # Phase 20 (OPS-02 finalization): remove `continue-on-error: true` and
-    # the `"GL01"` suppression in `[tool.numpydoc_validation].checks` to
-    # flip this gate to blocking (per Phase 13 decisions D-04 / D-05).
-    - name: Doc style audit (numpydoc — warning only, blocking from v1.2.0)
+    - name: Doc style audit (numpydoc — blocking)
       if: matrix.python-version == '3.13'
-      continue-on-error: true
       run: |
         FILES=$(find ketu -name "*.py" \
             ! -path "*/__pycache__/*" \

@@ -1,4 +1,5 @@
-"""Library formatters for Ketu astronomical output.
+"""
+Library formatters for Ketu astronomical output.
 
 Provides ``print_positions`` and ``print_aspects`` — pure-stdout
 formatted dumps used by the CLI (``ketu.cli.aspects_cmd``) and
@@ -28,7 +29,8 @@ if TYPE_CHECKING:
 
 
 def print_positions(jdate: float) -> None:
-    """Print formatted positions of all bodies for a given date.
+    """
+    Print formatted positions of all bodies for a given date.
 
     Parameters
     ----------
@@ -47,7 +49,8 @@ def print_aspects(
     jdate: float,
     aspects: "AspectSetSpec" = None,
 ) -> None:
-    """Print formatted aspects between all bodies for a given date.
+    """
+    Print formatted aspects between all bodies for a given date.
 
     Parameters
     ----------

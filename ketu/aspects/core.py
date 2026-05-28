@@ -1,4 +1,5 @@
-"""Core algorithms for aspect and transit calculations (internal module).
+"""
+Core algorithms for aspect and transit calculations (internal module).
 
 This module contains shared algorithms used by both aspect_windows and transits modules.
 It should not be imported directly by users.
@@ -21,7 +22,8 @@ from ketu.ephemeris.planets import calc_planet_position_batch
 # ========== Input Validation ==========
 
 def get_body_id(body: Union[str, int]) -> int:
-    """Convert body name or ID to integer ID.
+    """
+    Convert body name or ID to integer ID.
 
     Parameters
     ----------
@@ -39,7 +41,8 @@ def get_body_id(body: Union[str, int]) -> int:
 
 
 def get_aspect_index(aspect: Union[str, int, float]) -> int:
-    """Get aspect index from name, index, or angle.
+    """
+    Get aspect index from name, index, or angle.
 
     Parameters
     ----------
@@ -71,7 +74,8 @@ def get_aspect_index(aspect: Union[str, int, float]) -> int:
 
 @lru_cache(maxsize=256)
 def _cached_planet_position_batch(jd_tuple: tuple, planet_id: int) -> np.ndarray:
-    """Cached version of calc_planet_position_batch.
+    """
+    Cached version of calc_planet_position_batch.
 
     Note: jd_tuple must be a tuple (immutable) for caching to work.
     """
@@ -80,7 +84,8 @@ def _cached_planet_position_batch(jd_tuple: tuple, planet_id: int) -> np.ndarray
 
 
 def get_cached_positions(jd_array: np.ndarray, planet_id: int) -> np.ndarray:
-    """Get planet positions with caching.
+    """
+    Get planet positions with caching.
 
     Caches results for repeated calculations on same time grid.
 
@@ -109,7 +114,8 @@ def refine_exact_moment(
     max_iterations: int = 50,
     tolerance: float = 1e-7,
 ) -> Optional[float]:
-    """Refine exact moment using binary search (bisection method).
+    """
+    Refine exact moment using binary search (bisection method).
 
     Generic function that works for both aspects and transits.
     Uses a callback to calculate the distance/error at any given time.
@@ -186,7 +192,8 @@ def find_orb_boundaries(
     jd_exact: float,
     search_days: float = 30,
 ) -> Tuple[Optional[float], Optional[float]]:
-    """Find orb entry and exit times using binary search.
+    """
+    Find orb entry and exit times using binary search.
 
     Generic function that works for both aspects and transits.
     Uses a callback to check if within orb at any given time.
@@ -256,7 +263,8 @@ def find_orb_boundaries(
 # ========== Core Algorithm: Local Minima Detection ==========
 
 def find_local_minima(error_array: np.ndarray, threshold: float) -> np.ndarray:
-    """Find indices of local minima in error array.
+    """
+    Find indices of local minima in error array.
 
     A local minimum at index i means: error[i-1] > error[i] < error[i+1]
 
@@ -295,7 +303,8 @@ def interpolate_minimum(
     idx: int,
     step_size: float,
 ) -> Tuple[float, float]:
-    """Interpolate exact position of minimum using quadratic fit.
+    """
+    Interpolate exact position of minimum using quadratic fit.
 
     Fits a parabola through 3 points to find the minimum.
 
@@ -338,7 +347,8 @@ def calculate_adaptive_step(
     max_step: float = 1.0,
     points_per_orb: int = 10,
 ) -> float:
-    """Calculate adaptive step size based on body speeds.
+    """
+    Calculate adaptive step size based on body speeds.
 
     Faster bodies need finer sampling to avoid missing crossings.
 
@@ -383,7 +393,8 @@ def calculate_adaptive_step(
 # ========== Utility Functions ==========
 
 def detect_retrograde_motion(velocity: float) -> str:
-    """Detect if motion is direct or retrograde.
+    """
+    Detect if motion is direct or retrograde.
 
     Parameters
     ----------
@@ -399,7 +410,8 @@ def detect_retrograde_motion(velocity: float) -> str:
 
 
 def estimate_duration_hours(jd_begin: float, jd_end: float) -> float:
-    """Estimate duration in hours between two Julian Dates.
+    """
+    Estimate duration in hours between two Julian Dates.
 
     Parameters
     ----------

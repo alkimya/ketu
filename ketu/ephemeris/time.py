@@ -1,4 +1,5 @@
-"""Time conversion functions for astronomical calculations.
+"""
+Time conversion functions for astronomical calculations.
 
 This module provides functions to convert between different time systems
 used in astronomical calculations, replacing pyswisseph time functions.
@@ -10,7 +11,8 @@ from typing import Union, Tuple
 
 
 def utc_to_julian(dtime: datetime) -> float:
-    """Convert UTC datetime to Julian Date.
+    """
+    Convert UTC datetime to Julian Date.
 
     Parameters
     ----------
@@ -60,7 +62,8 @@ def utc_to_julian(dtime: datetime) -> float:
 
 
 def julian_to_utc(jd: float) -> datetime:
-    """Convert Julian Date to UTC datetime.
+    """
+    Convert Julian Date to UTC datetime.
 
     Parameters
     ----------
@@ -122,7 +125,8 @@ def julian_to_utc(jd: float) -> datetime:
 
 
 def delta_t(year: float) -> float:
-    """Calculate Delta T (TT - UT1) for a given year.
+    """
+    Calculate Delta T (TT - UT1) for a given year.
 
     Parameters
     ----------
@@ -213,7 +217,8 @@ def delta_t(year: float) -> float:
 
 
 def terrestrial_to_universal(jd_tt: float) -> float:
-    """Convert Terrestrial Time (TT) to Universal Time (UT).
+    """
+    Convert Terrestrial Time (TT) to Universal Time (UT).
 
     Parameters
     ----------
@@ -236,7 +241,8 @@ def terrestrial_to_universal(jd_tt: float) -> float:
 
 
 def universal_to_terrestrial(jd_ut: float) -> float:
-    """Convert Universal Time (UT) to Terrestrial Time (TT).
+    """
+    Convert Universal Time (UT) to Terrestrial Time (TT).
 
     Parameters
     ----------
@@ -258,7 +264,8 @@ def universal_to_terrestrial(jd_ut: float) -> float:
 
 
 def equation_of_time(jd: float) -> float:
-    """Calculate the equation of time for a given Julian Date.
+    """
+    Calculate the equation of time for a given Julian Date.
 
     Parameters
     ----------
@@ -303,7 +310,8 @@ def equation_of_time(jd: float) -> float:
 
 
 def sidereal_time(jd: float, longitude: float = 0.0) -> float:
-    """Calculate apparent Greenwich Sidereal Time (GAST) or Local Sidereal Time.
+    """
+    Calculate apparent Greenwich Sidereal Time (GAST) or Local Sidereal Time.
 
     Parameters
     ----------
@@ -367,7 +375,8 @@ def sidereal_time(jd: float, longitude: float = 0.0) -> float:
 
 
 def local_to_utc(dtime: datetime) -> datetime:
-    """Convert local time to UTC time.
+    """
+    Convert local time to UTC time.
 
     Parameters
     ----------

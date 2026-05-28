@@ -1,4 +1,5 @@
-"""Lunar return public API — LRET-01..05.
+"""
+Lunar return public API — LRET-01..05.
 
 ``lunar_return`` resolves the FIRST moment >= ``target_jd`` when the
 Moon's geocentric longitude equals its natal longitude, then assembles
@@ -58,7 +59,8 @@ def lunar_return(
     return_lon: Optional[float] = None,
     system: str = "placidus",
 ) -> np.ndarray:
-    """Compute the FIRST lunar return chart for a natal birth >= ``target_jd``.
+    """
+    Compute the FIRST lunar return chart for a natal birth >= ``target_jd``.
 
     Resolves the first moment >= ``target_jd`` at which the Moon's
     geocentric longitude equals the natal Moon longitude (within 1
@@ -128,6 +130,16 @@ def lunar_return(
         - If ``system`` is unknown (propagated from
           :func:`ketu.houses.calculate_houses`).
 
+    See Also
+    --------
+    ketu.returns.solar_return : Solar return (asymmetric API:
+        ``target_year`` integer, calendar-anchored, annual).
+    ketu.charts.compute_chart : Underlying chart-assembly call.
+    ketu.returns._solve._solve_return : Shared pure-NumPy bisection
+        helper used by both :func:`solar_return` and
+        :func:`lunar_return` (ROADMAP Phase 18 Success Criterion #3
+        binding).
+
     Notes
     -----
     **API asymmetry vs.** :func:`ketu.returns.solar_return` **-- LOUD.**
@@ -183,16 +195,6 @@ def lunar_return(
     aberration on body_id=1, see ``ketu/ephemeris/planets.py:190``).
     Moon's aberration is negligible (it's geocentric and close); the
     resolved instant agrees with Astro.com to sub-arcsec.
-
-    See Also
-    --------
-    ketu.returns.solar_return : Solar return (asymmetric API:
-        ``target_year`` integer, calendar-anchored, annual).
-    ketu.charts.compute_chart : Underlying chart-assembly call.
-    ketu.returns._solve._solve_return : Shared pure-NumPy bisection
-        helper used by both :func:`solar_return` and
-        :func:`lunar_return` (ROADMAP Phase 18 Success Criterion #3
-        binding).
 
     Examples
     --------

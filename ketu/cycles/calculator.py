@@ -1,4 +1,5 @@
-"""Cycle state calculator for planetary pairs.
+"""
+Cycle state calculator for planetary pairs.
 
 Calculates the instantaneous state of planetary cycles at given timestamps,
 optimized for vectorized operations on large timestamp arrays.
@@ -57,7 +58,8 @@ CYCLE_DTYPE = np.dtype([
 
 @dataclass
 class CycleState:
-    """Instantaneous state of a planetary cycle.
+    """
+    Instantaneous state of a planetary cycle.
 
     Attributes
     ----------
@@ -116,7 +118,8 @@ class CycleState:
 
 
 def _get_body_id(body: Union[str, int]) -> int:
-    """Convert body name or ID to ID."""
+    """
+    Convert body name or ID to ID."""
     if isinstance(body, int):
         return body
     body_idx = np.where(bodies["name"] == body.encode())[0]
@@ -134,7 +137,8 @@ def generate_cycle_series(
     use_cache: bool = True,
     cache: Optional["EphemerisCache"] = None,
 ) -> np.ndarray:
-    """Generate cycle state series for a planetary pair.
+    """
+    Generate cycle state series for a planetary pair.
 
     Calculates the instantaneous state of the cycle between two bodies
     at each provided timestamp. Optimized for vectorized operations.
@@ -308,7 +312,8 @@ def generate_multi_cycle_series(
     use_cache: bool = True,
     cache: Optional["EphemerisCache"] = None,
 ) -> dict:
-    """Generate cycle series for multiple planetary pairs.
+    """
+    Generate cycle series for multiple planetary pairs.
 
     Parameters
     ----------

@@ -1,4 +1,5 @@
-"""Registry pattern for Arabic Parts (Hermetic Lots).
+"""
+Registry pattern for Arabic Parts (Hermetic Lots).
 
 Analogous to :mod:`ketu.houses.registry`: a :class:`PartSpec` frozen
 dataclass replaces the bare :data:`ketu.houses.registry.HouseSystemFn`
@@ -47,7 +48,8 @@ PartFormula = Callable[[float, float, float, float], float]
 
 @dataclass(frozen=True)
 class PartSpec:
-    """Immutable specification for one Arabic Part / Hermetic Lot.
+    """
+    Immutable specification for one Arabic Part / Hermetic Lot.
 
     Attributes
     ----------
@@ -89,7 +91,8 @@ def register(
     night_formula: PartFormula,
     description: str = "",
 ) -> None:
-    """Register a new Arabic Part in :data:`PARTS`.
+    """
+    Register a new Arabic Part in :data:`PARTS`.
 
     Unlike :func:`ketu.houses.registry.register` which is a decorator
     (one function per system), this is a plain keyword-only function call
@@ -130,7 +133,8 @@ def register(
 
 
 def get_part(name: str) -> PartSpec:
-    """Look up an Arabic Part by name (case-insensitive).
+    """
+    Look up an Arabic Part by name (case-insensitive).
 
     Parameters
     ----------

@@ -1,4 +1,5 @@
-"""Sect-aware dispatch for Arabic Parts: :func:`calculate_part` + :func:`calculate_all_parts`.
+"""
+Sect-aware dispatch for Arabic Parts: :func:`calculate_part` + :func:`calculate_all_parts`.
 
 Both functions take a scalar :data:`ketu.charts.CHART_DTYPE` record (produced
 by :func:`ketu.charts.compute_chart`) and delegate formula selection to the
@@ -24,7 +25,8 @@ from .registry import PARTS, get_part
 
 
 def calculate_part(part_name: str, chart: np.ndarray) -> float:
-    """Return the ecliptic longitude of one Arabic Part for a given chart.
+    """
+    Return the ecliptic longitude of one Arabic Part for a given chart.
 
     Sect (day vs night) is determined fresh from the chart's ``jd``,
     ``lat``, ``lon`` fields via :func:`ketu.charts.api.is_day_chart`
@@ -94,7 +96,8 @@ def calculate_all_parts(
     chart: np.ndarray,
     parts: Optional[list[str]] = None,
 ) -> dict[str, float]:
-    """Return ecliptic longitudes for all (or a filtered subset of) Arabic Parts.
+    """
+    Return ecliptic longitudes for all (or a filtered subset of) Arabic Parts.
 
     Iterates over the registered parts and delegates each to
     :func:`calculate_part`.  Default iteration order is

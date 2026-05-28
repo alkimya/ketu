@@ -1,4 +1,5 @@
-"""Solar return public API — RET-01..05.
+"""
+Solar return public API — RET-01..05.
 
 ``solar_return`` resolves the moment when the Sun's geocentric
 longitude equals its natal longitude in a target year, then assembles
@@ -33,7 +34,8 @@ def solar_return(
     return_lon: Optional[float] = None,
     system: str = "placidus",
 ) -> np.ndarray:
-    """Compute the solar return chart for a natal birth and a target year.
+    """
+    Compute the solar return chart for a natal birth and a target year.
 
     Resolves the moment in ``target_year`` at which the Sun's
     geocentric longitude equals the natal Sun longitude (within 1
@@ -95,6 +97,13 @@ def solar_return(
         RESEARCH Open Question Q1), or if ``system`` is unknown
         (propagated from :func:`ketu.houses.calculate_houses`).
 
+    See Also
+    --------
+    ketu.charts.compute_chart : Underlying chart-assembly call.
+    ketu.returns._solve._solve_return : Shared pure-NumPy bisection
+        helper used by both :func:`solar_return` and the upcoming
+        :func:`lunar_return` (Plan 18-03).
+
     Notes
     -----
     **``natal_lat/lon`` vs ``return_lat/lon`` — distinguish LOUDLY.**
@@ -144,13 +153,6 @@ def solar_return(
     tropical-year offset, not calendar-anchored. The return falls in
     late Feb / early March of the target year (no special-casing
     needed).
-
-    See Also
-    --------
-    ketu.charts.compute_chart : Underlying chart-assembly call.
-    ketu.returns._solve._solve_return : Shared pure-NumPy bisection
-        helper used by both :func:`solar_return` and the upcoming
-        :func:`lunar_return` (Plan 18-03).
 
     Examples
     --------

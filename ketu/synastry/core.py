@@ -1,4 +1,5 @@
-"""Core types for the synastry subpackage.
+"""
+Core types for the synastry subpackage.
 
 Defines :data:`SYNASTRY_DTYPE`, the structured-array layout for ONE inter-chart
 aspect record between two natal charts, and :data:`SYNASTRY_BODY_COUNT`, the

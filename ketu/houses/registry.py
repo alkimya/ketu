@@ -1,4 +1,5 @@
-"""Registry pattern for house systems.
+"""
+Registry pattern for house systems.
 
 Plans 10-04 (Placidus) and 10-05 (Koch + Porphyry) register their
 implementations via the :func:`register` decorator. New house systems plug in
@@ -42,7 +43,8 @@ SYSTEMS: dict[str, HouseSystemFn] = {}
 
 
 def register(name: str) -> Callable[[HouseSystemFn], HouseSystemFn]:
-    """Decorator that registers a house-system implementation in :data:`SYSTEMS`.
+    """
+    Decorator that registers a house-system implementation in :data:`SYSTEMS`.
 
     The registered name is normalized to lowercase, so registration and
     lookup are case-insensitive.
@@ -80,7 +82,8 @@ def register(name: str) -> Callable[[HouseSystemFn], HouseSystemFn]:
 
 
 def get_system(name: str) -> HouseSystemFn:
-    """Look up a house system by name (case-insensitive).
+    """
+    Look up a house system by name (case-insensitive).
 
     Parameters
     ----------

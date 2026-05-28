@@ -1,4 +1,5 @@
-"""Orb formula, factor presets, and resolver for synastry calculations.
+"""
+Orb formula, factor presets, and resolver for synastry calculations.
 
 Implements the synastry orb-resolution surface for :mod:`ketu.synastry`:
 
@@ -56,7 +57,8 @@ ASC_MC_NATAL_ORB_DEG: float = 8.0
 
 
 def _build_body_orbs_15() -> np.ndarray:
-    """Build the frozen 15-entry orb table (13 canonical + ASC + MC).
+    """
+    Build the frozen 15-entry orb table (13 canonical + ASC + MC).
 
     Returns
     -------
@@ -97,7 +99,8 @@ OrbSetSpec = Union[None, str]
 def synastry_orb_limit(
     b1: int, b2: int, asp: int, factor: float = SYNASTRY_FACTOR,
 ) -> float:
-    """Compute the synastry orb tolerance for a body-pair + aspect.
+    """
+    Compute the synastry orb tolerance for a body-pair + aspect.
 
     Reuses the natal formula ``(orb_a + orb_b) / 2 * coef`` (from
     :func:`ketu.aspects.calculator.get_orb` at line 50) and tightens by
@@ -158,7 +161,8 @@ _PRESET_BY_NAME: dict[str, float] = {
 
 
 def resolve_orb_set(spec: OrbSetSpec) -> float:
-    """Resolve the ``orbs=`` parameter to a multiplicative factor.
+    """
+    Resolve the ``orbs=`` parameter to a multiplicative factor.
 
     Single-call resolver: the public ``calculate_synastry`` API (Plan 16-02)
     invokes this exactly once at entry and passes the resulting scalar

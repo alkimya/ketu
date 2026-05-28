@@ -1,4 +1,5 @@
-"""High-level planetary calculation functions.
+"""
+High-level planetary calculation functions.
 
 This module provides the main interface for calculating planetary positions,
 replacing the pyswisseph dependency with numpy-based calculations.
@@ -67,7 +68,8 @@ SWE_IDS = {
 
 @lru_cache(maxsize=128)
 def calc_planet_position(jd: float, planet_id: int, flags: int = 0) -> np.ndarray:
-    """Calculate planet position compatible with pyswisseph interface.
+    """
+    Calculate planet position compatible with pyswisseph interface.
 
     Parameters
     ----------
@@ -196,7 +198,8 @@ def calc_planet_position(jd: float, planet_id: int, flags: int = 0) -> np.ndarra
 
 
 def get_planet_name(planet_id: int) -> str:
-    """Get planet name from ID (Swiss Ephemeris compatible).
+    """
+    Get planet name from ID (Swiss Ephemeris compatible).
 
     Parameters
     ----------
@@ -227,7 +230,8 @@ def get_planet_name(planet_id: int) -> str:
 
 
 def calculate_all_positions(jd: float) -> Dict[str, np.ndarray]:
-    """Calculate positions for all bodies.
+    """
+    Calculate positions for all bodies.
 
     Parameters
     ----------
@@ -253,7 +257,8 @@ def calculate_all_positions(jd: float) -> Dict[str, np.ndarray]:
 
 
 def body_properties(jd: float, body_id: int) -> np.ndarray:
-    """Get body properties compatible with ketu interface.
+    """
+    Get body properties compatible with ketu interface.
 
     Parameters
     ----------
@@ -273,7 +278,8 @@ def body_properties(jd: float, body_id: int) -> np.ndarray:
 def find_exact_aspect(
     jd_start: float, jd_end: float, body1_id: int, body2_id: int, aspect_angle: float, orb: float = 1.0
 ) -> Optional[float]:
-    """Find exact aspect between two bodies within time range.
+    """
+    Find exact aspect between two bodies within time range.
 
     Parameters
     ----------
@@ -300,7 +306,8 @@ def find_exact_aspect(
     tolerance = 0.001  # 0.001 days = ~1.5 minutes
 
     def get_angle_diff(jd):
-        """Compute signed angular difference from target aspect angle.
+        """
+        Compute signed angular difference from target aspect angle.
 
         Parameters
         ----------
@@ -356,7 +363,8 @@ def find_exact_aspect(
 
 
 def find_all_aspects(jd_start: float, jd_end: float, body1_id: int, body2_id: int, aspects: list = []) -> list:
-    """Find all aspects between two bodies in time range.
+    """
+    Find all aspects between two bodies in time range.
 
     Parameters
     ----------
@@ -399,7 +407,8 @@ def find_all_aspects(jd_start: float, jd_end: float, body1_id: int, body2_id: in
 
 
 def calculate_speed_ratio(jd: float, body_id: int) -> float:
-    """Calculate speed ratio compared to average speed.
+    """
+    Calculate speed ratio compared to average speed.
 
     Parameters
     ----------
@@ -442,7 +451,8 @@ def calculate_speed_ratio(jd: float, body_id: int) -> float:
 
 
 def calc_planet_position_batch(jd_array: np.ndarray, planet_id: int, flags: int = 0) -> np.ndarray:
-    """Calculate planet positions for multiple Julian Dates (vectorized/batch).
+    """
+    Calculate planet positions for multiple Julian Dates (vectorized/batch).
 
     This function is optimized for calculating time series by vectorizing
     calculations across multiple dates.

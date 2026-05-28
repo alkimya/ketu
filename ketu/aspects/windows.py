@@ -1,4 +1,5 @@
-"""Advanced aspect window calculations with retrograde handling.
+"""
+Advanced aspect window calculations with retrograde handling.
 
 This module provides high-level APIs for finding aspect timing windows (begin, exact, end)
 with support for retrograde motion detection and multiple exact moments.
@@ -57,7 +58,8 @@ AspectMoment = namedtuple(
     ["begin", "exact", "end", "orb_used", "motion"],
     defaults=[None, None, None, None, "direct"],
 )
-"""Named tuple representing a single aspect moment.
+"""
+Named tuple representing a single aspect moment.
 
 Attributes:
     begin (datetime): Entry into orb (aspect begins)
@@ -73,7 +75,8 @@ AspectWindow = namedtuple(
     ["body1", "body2", "aspect", "moments", "retrograde_count"],
     defaults=[None, None, None, [], 0],
 )
-"""Named tuple representing complete aspect window information.
+"""
+Named tuple representing complete aspect window information.
 
 Attributes:
     body1 (str): Name of first body
@@ -96,7 +99,8 @@ def _adaptive_grid_search(
     jd_start: float,
     jd_end: float,
 ) -> List[Tuple[float, float, str]]:
-    """Vectorized grid search to find all aspect crossing candidates
+    """
+    Vectorized grid search to find all aspect crossing candidates
 
     Uses adaptive sampling based on relative velocity of the two bodies.
     Automatically detects retrograde motion and multiple crossings.
@@ -172,7 +176,8 @@ def _adaptive_grid_search(
 
 
 def _make_aspect_distance_callback(body1_id: int, body2_id: int, aspect_angle: float):
-    """Create callback for aspect distance calculation (for refinement)
+    """
+    Create callback for aspect distance calculation (for refinement)
 
     Parameters
     ----------
@@ -197,7 +202,8 @@ def _make_aspect_distance_callback(body1_id: int, body2_id: int, aspect_angle: f
 
 
 def _make_aspect_orb_callback(body1_id: int, body2_id: int, aspect_angle: float, orb: float):
-    """Create callback to check if within orb (for boundary finding)
+    """
+    Create callback to check if within orb (for boundary finding)
 
     Parameters
     ----------
@@ -236,7 +242,8 @@ def find_aspect_window(
     custom_orb: Optional[float] = None,
     detect_retrograde: bool = True,
 ) -> AspectWindow:
-    """Find aspect window with begin, exact, and end times.
+    """
+    Find aspect window with begin, exact, and end times.
 
     This is the main API function for finding aspect timing windows.
     It automatically handles retrograde motion and can detect up to 3
@@ -396,7 +403,8 @@ def find_aspects_timeline(
     custom_orb: Optional[float] = None,
     detect_retrograde: bool = True,
 ) -> List[AspectWindow]:
-    """Find timeline of multiple aspects between two bodies.
+    """
+    Find timeline of multiple aspects between two bodies.
 
     This function finds all specified aspects between two bodies within
     a date range, sorted chronologically by exact aspect time.

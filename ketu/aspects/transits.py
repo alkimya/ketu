@@ -1,4 +1,5 @@
-"""Transit calculations - planetary movements relative to fixed reference positions.
+"""
+Transit calculations - planetary movements relative to fixed reference positions.
 
 This module provides APIs for calculating transits, which occur when moving planets
 form aspects with fixed reference positions (e.g., natal chart positions).
@@ -66,7 +67,8 @@ TransitMoment = namedtuple(
     ["begin", "exact", "end", "orb_used", "motion"],
     defaults=[None, None, None, None, "direct"],
 )
-"""Named tuple representing a single transit moment.
+"""
+Named tuple representing a single transit moment.
 
 Attributes:
     begin (datetime): Entry into orb (transit begins)
@@ -82,7 +84,8 @@ TransitWindow = namedtuple(
     ["transiting_body", "reference_longitude", "aspect", "moments", "retrograde_count"],
     defaults=[None, None, None, [], 0],
 )
-"""Named tuple representing complete transit window information.
+"""
+Named tuple representing complete transit window information.
 
 Attributes:
     transiting_body (str): Name of transiting body
@@ -97,7 +100,8 @@ NatalPosition = namedtuple(
     "NatalPosition",
     ["body", "longitude", "latitude", "distance"],
 )
-"""Named tuple for natal/reference planetary position.
+"""
+Named tuple for natal/reference planetary position.
 
 Attributes:
     body (str): Body name
@@ -111,7 +115,8 @@ TransitAspect = namedtuple(
     "TransitAspect",
     ["transiting_body", "natal_body", "aspect", "exact_time", "orb_used"],
 )
-"""Named tuple for a transit aspect between two positions.
+"""
+Named tuple for a transit aspect between two positions.
 
 Attributes:
     transiting_body (str): Name of transiting body
@@ -133,7 +138,8 @@ def _find_transit_crossings(
     jd_start: float,
     jd_end: float,
 ) -> List[Tuple[float, float, str]]:
-    """Find all transit crossing candidates using vectorized search
+    """
+    Find all transit crossing candidates using vectorized search
 
     Similar to _adaptive_grid_search but for transits (one moving body vs fixed position).
 
@@ -203,7 +209,8 @@ def _find_transit_crossings(
 
 
 def _make_transit_distance_callback(body_id: int, reference_lon: float, aspect_angle: float):
-    """Create callback for transit distance calculation (for refinement)
+    """
+    Create callback for transit distance calculation (for refinement)
 
     Parameters
     ----------
@@ -227,7 +234,8 @@ def _make_transit_distance_callback(body_id: int, reference_lon: float, aspect_a
 
 
 def _make_transit_orb_callback(body_id: int, reference_lon: float, aspect_angle: float, orb: float):
-    """Create callback to check if within orb (for boundary finding)
+    """
+    Create callback to check if within orb (for boundary finding)
 
     Parameters
     ----------
@@ -264,7 +272,8 @@ def find_transits_to_position(
     custom_orb: Optional[float] = None,
     detect_retrograde: bool = True,
 ) -> List[TransitWindow]:
-    """Find transits of a moving body to a fixed longitude.
+    """
+    Find transits of a moving body to a fixed longitude.
 
     This function finds when a transiting planet forms aspects with a fixed
     reference position (e.g., natal planet position).
@@ -432,7 +441,8 @@ def get_natal_positions(
     reference_date: Union[datetime, str, float],
     bodies_list: Optional[List[Union[str, int]]] = None,
 ) -> Dict[str, NatalPosition]:
-    """Get planetary positions at a reference date (e.g., natal chart).
+    """
+    Get planetary positions at a reference date (e.g., natal chart).
 
     Parameters
     ----------
@@ -489,7 +499,8 @@ def compare_dates_transits(
     aspects_list: Optional[List[Union[str, int]]] = None,
     custom_orb: Optional[float] = None,
 ) -> List[TransitAspect]:
-    """Compare two dates and find all transiting aspects.
+    """
+    Compare two dates and find all transiting aspects.
 
     This function compares all planetary positions at two different dates
     and finds which transiting planets are forming aspects with natal positions.

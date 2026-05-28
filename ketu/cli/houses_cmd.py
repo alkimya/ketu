@@ -1,4 +1,5 @@
-"""Dispatcher for `ketu houses ...` subcommand.
+"""
+Dispatcher for `ketu houses ...` subcommand.
 
 Calls :func:`ketu.calculate_houses` (Phase 10 deliverable) — registry
 dispatch, no inline if/elif. Formats the 12 cusps + ASC + MC for stdout.
@@ -21,7 +22,8 @@ from .formatters import emit_resolved_config
 
 
 def _format_cusp(cusp_deg: float) -> str:
-    """Format a cusp longitude as ``'SIGN  DD°MM'SS"'`` for stdout.
+    """
+    Format a cusp longitude as ``'SIGN  DD°MM'SS"'`` for stdout.
 
     Parameters
     ----------
@@ -41,7 +43,8 @@ def _format_cusp(cusp_deg: float) -> str:
 
 
 def cmd_houses(args: argparse.Namespace) -> int:
-    """Compute and print the 12 house cusps + ASC + MC.
+    """
+    Compute and print the 12 house cusps + ASC + MC.
 
     Parameters
     ----------

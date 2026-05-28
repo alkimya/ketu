@@ -1,4 +1,5 @@
-"""Regiomontanus house system implementation.
+"""
+Regiomontanus house system implementation.
 
 Regiomontanus divides the celestial equator into 12 equal 30° arcs, then
 projects each arc into the ecliptic via great circles passing through the
@@ -61,7 +62,8 @@ def regiomontanus_cusps(
     lat: np.ndarray,
     eps: np.ndarray,
 ) -> np.ndarray:
-    """Compute the 12 Regiomontanus house cusps.
+    """
+    Compute the 12 Regiomontanus house cusps.
 
     Closed-form per swisseph ``swehouse.c`` case ``'R'``. At latitudes
     inside the polar circle (``|lat| ≥ 90° − eps``) the formula becomes

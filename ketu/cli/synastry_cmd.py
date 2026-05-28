@@ -1,4 +1,5 @@
-"""Dispatcher for ``ketu synastry ...`` subcommand.
+"""
+Dispatcher for ``ketu synastry ...`` subcommand.
 
 Computes synastry between two natal charts and emits either an aligned
 ASCII table (default) or a JSON list-of-dicts (``--json`` opt-in). Mirrors
@@ -45,7 +46,8 @@ _BODY_LABELS_15: list[str] = [
 
 
 def _body_label(idx: int) -> str:
-    """Map a 15-body synastry axis index to a human-readable label.
+    """
+    Map a 15-body synastry axis index to a human-readable label.
 
     Parameters
     ----------
@@ -69,7 +71,8 @@ def _body_label(idx: int) -> str:
 
 
 def _row_to_jsonable(row: np.void) -> dict[str, Any]:
-    """Convert one :data:`ketu.synastry.SYNASTRY_DTYPE` row to a JSON-friendly dict.
+    """
+    Convert one :data:`ketu.synastry.SYNASTRY_DTYPE` row to a JSON-friendly dict.
 
     Sentinel values (``aspect_type == -1`` / ``NaN`` orb / ``NaN`` orb_limit)
     are serialised as ``None`` per JSON convention; the body indices are
@@ -110,7 +113,8 @@ def _row_to_jsonable(row: np.void) -> dict[str, Any]:
 
 
 def cmd_synastry(args: argparse.Namespace) -> int:
-    """Compute synastry between two charts and emit table or JSON.
+    """
+    Compute synastry between two charts and emit table or JSON.
 
     Workflow: emits the resolved-config STDERR header (CLI-06); parses
     both ISO date strings to Julian Dates; computes both charts via

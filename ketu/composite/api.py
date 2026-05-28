@@ -1,4 +1,5 @@
-"""Public compute surface for the composite subpackage — :func:`calculate_composite`.
+"""
+Public compute surface for the composite subpackage — :func:`calculate_composite`.
 
 Composition-only module: consumes two :data:`ketu.charts.CHART_DTYPE` scalar
 records (Phase 14 foundation) and produces a third scalar :data:`ketu.charts.CHART_DTYPE`
@@ -84,7 +85,8 @@ def calculate_composite(
     chart_b: np.ndarray,
     system: str = "placidus",
 ) -> np.ndarray:
-    """Compute a midpoint composite chart from two natal charts.
+    """
+    Compute a midpoint composite chart from two natal charts.
 
     Returns a scalar :data:`ketu.charts.CHART_DTYPE` whose body
     longitudes, ASC, MC, ARMC, and Vertex are circular midpoints of
@@ -124,6 +126,15 @@ def calculate_composite(
     ------
     ValueError
         If ``system`` is not a registered house system name.
+
+    See Also
+    --------
+    ketu.composite.circular_midpoint : The short-arc midpoint helper.
+    ketu.charts.compute_chart : Build the per-partner CHART_DTYPE
+        inputs.
+    ketu.charts.CHART_DTYPE : The frozen output dtype.
+    ketu.synastry.calculate_synastry : The complementary pair-chart
+        operation on the same CHART_DTYPE pair.
 
     Notes
     -----
@@ -167,15 +178,6 @@ def calculate_composite(
     matches the package-wide :data:`ketu.aspects.presets.CLASSICAL`
     default; the composite signature deliberately omits an
     ``aspects=`` parameter (COMP-01..04 do not mention it).
-
-    See Also
-    --------
-    ketu.composite.circular_midpoint : The short-arc midpoint helper.
-    ketu.charts.compute_chart : Build the per-partner CHART_DTYPE
-        inputs.
-    ketu.charts.CHART_DTYPE : The frozen output dtype.
-    ketu.synastry.calculate_synastry : The complementary pair-chart
-        operation on the same CHART_DTYPE pair.
 
     Examples
     --------

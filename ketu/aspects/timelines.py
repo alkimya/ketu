@@ -1,4 +1,5 @@
-"""Generate aspect timelines between celestial bodies for ML/research applications.
+"""
+Generate aspect timelines between celestial bodies for ML/research applications.
 
 This module provides tools to generate time series data of planetary aspects
 optimized for machine learning, deep learning, and research.
@@ -39,7 +40,8 @@ _CLASSICAL_NAMES = tuple(
 
 @dataclass
 class AspectEvent:
-    """Single aspect event with full cycle information for ML/research.
+    """
+    Single aspect event with full cycle information for ML/research.
 
     Attributes:
         timestamp: UTC datetime of exact aspect
@@ -101,7 +103,8 @@ class AspectEvent:
 
 @dataclass
 class AspectTimeline:
-    """Timeline of aspect events between two bodies with ML-ready export methods.
+    """
+    Timeline of aspect events between two bodies with ML-ready export methods.
 
     This class represents a complete timeline of aspects between two celestial bodies,
     enriched with all necessary features for ML/deep learning applications.
@@ -126,11 +129,13 @@ class AspectTimeline:
     detect_retrograde: bool = True
 
     def __len__(self) -> int:
-        """Return number of events in timeline."""
+        """
+        Return number of events in timeline."""
         return len(self.events)
 
     def to_dict_list(self) -> List[Dict[str, Any]]:
-        """Convert events to list of dictionaries.
+        """
+        Convert events to list of dictionaries.
 
         Returns
         -------
@@ -165,7 +170,8 @@ class AspectTimeline:
         return result
 
     def to_numpy(self) -> np.ndarray:
-        """Convert to NumPy structured array (dense format for ML).
+        """
+        Convert to NumPy structured array (dense format for ML).
 
         Returns
         -------
@@ -200,7 +206,8 @@ class AspectTimeline:
         return np.array(data, dtype=self._get_numpy_dtype())
 
     def to_json(self) -> Dict[str, Any]:
-        """Convert to JSON-serializable dictionary.
+        """
+        Convert to JSON-serializable dictionary.
 
         Returns
         -------
@@ -223,7 +230,8 @@ class AspectTimeline:
 
     @staticmethod
     def _get_numpy_dtype():
-        """Get NumPy dtype for structured array."""
+        """
+        Get NumPy dtype for structured array."""
         return np.dtype([
             ('julian_day', 'f8'),
             ('body1_id', 'i4'),
@@ -253,7 +261,8 @@ def _enrich_aspect_event(
     aspect_name: str,
     orb_tolerance: float,
 ) -> AspectEvent:
-    """Enrich aspect moment with cycle and retrograde information
+    """
+    Enrich aspect moment with cycle and retrograde information
 
     Parameters
     ----------
@@ -350,7 +359,8 @@ def generate_aspect_timeline(
     timezone: Optional[Union[str, ZoneInfo]] = None,
     detect_retrograde: bool = True,
 ) -> AspectTimeline:
-    """Generate aspect timeline between two bodies for ML/research applications.
+    """
+    Generate aspect timeline between two bodies for ML/research applications.
 
     This function generates a complete timeline of planetary aspects between two bodies
     within a specified date range. The output is optimized for machine learning,

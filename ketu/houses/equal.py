@@ -1,4 +1,5 @@
-"""Equal house system implementation (ASC-anchored).
+"""
+Equal house system implementation (ASC-anchored).
 
 In Equal house, each cusp is exactly 30° east of the previous, starting
 from the Ascendant. This is the simplest possible house system — used as
@@ -42,7 +43,8 @@ def equal_cusps(
     lat: np.ndarray,
     eps: np.ndarray,
 ) -> np.ndarray:
-    """Compute the 12 Equal house cusps (ASC-anchored).
+    """
+    Compute the 12 Equal house cusps (ASC-anchored).
 
     Closed-form per swisseph ``swehouse.c`` case ``'E'``. Polar-safe.
 

@@ -1,4 +1,5 @@
-"""Argparse tree builder + main() dispatch for ketu CLI.
+"""
+Argparse tree builder + main() dispatch for ketu CLI.
 
 Subcommand pattern uses ``set_defaults(func=...)`` per subparser so
 ``main()`` dispatches via ``args.func(args)`` rather than an
@@ -29,7 +30,8 @@ from .synastry_cmd import cmd_synastry
 
 
 def build_parser() -> argparse.ArgumentParser:
-    """Construct the top-level argparse tree.
+    """
+    Construct the top-level argparse tree.
 
     Returns
     -------
@@ -271,7 +273,8 @@ def build_parser() -> argparse.ArgumentParser:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    """CLI entry point.
+    """
+    CLI entry point.
 
     Parameters
     ----------

@@ -1,4 +1,5 @@
-"""Core types for the charts subpackage.
+"""
+Core types for the charts subpackage.
 
 Defines :data:`CHART_DTYPE`, the structured-array layout for a fully-resolved
 natal chart (positions + ASC/MC/ARMC/Vertex + cusps + aspects). The dtype is

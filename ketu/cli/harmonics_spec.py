@@ -1,4 +1,5 @@
-"""--harmonics SPEC argparse type validator.
+"""
+--harmonics SPEC argparse type validator.
 
 Accepts a string spec and returns a length-14 ``np.bool_`` mask suitable
 for filtering ``ketu.core.aspects``. The mask is produced by
@@ -40,7 +41,8 @@ _PRESET_NAMES: FrozenSet[str] = frozenset(
 
 
 def parse_harmonics_spec(value: str) -> npt.NDArray[np.bool_]:
-    """Parse a ``--harmonics SPEC`` string into a length-14 boolean mask.
+    """
+    Parse a ``--harmonics SPEC`` string into a length-14 boolean mask.
 
     Parameters
     ----------
