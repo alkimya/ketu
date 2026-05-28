@@ -1,169 +1,158 @@
 # External Integrations
 
-**Analysis Date:** 2026-02-12
+**Analysis Date:** 2026-05-29
 
 ## Overview
 
-Ketu is a **self-contained library with minimal external integrations**. It performs pure numerical computation without network calls or external APIs.
+**Ketu is a standalone library with zero runtime external service dependencies.** All calculations are pure NumPy (deterministic, fully offline). Ketu produces structured NumPy arrays for downstream ML consumption and feeds the Solaris trading ecosystem (Kala, Surya) but contains no bidirectional integrations, network calls, or authentication itself.
 
 ## APIs & External Services
 
-**None**
+**None in production.** Ketu is purely computational:
+- No HTTP/REST APIs consumed
+- No webhooks received or sent
+- No rate-limited external oracles
+- No API keys required or configured
 
-Ketu does not depend on:
-- Ephemeris web APIs (e.g., JPL Horizons, Astropy)
-- Astrology data services
-- Real-time feeds
-- Third-party calculation services
-
-All astronomical calculations are implemented in pure Python/NumPy using orbital elements and perturbation theory.
+Rationale: Ketu is a *library*, not a service. Consumers (Kala, Surya, user scripts) call Ketu's Python API to get arrays.
 
 ## Data Storage
 
-**No persistent external storage used.**
+**Databases:**
+- None. Ketu stores no data in traditional databases (PostgreSQL, MongoDB, etc.)
 
-**Local Cache (Optional):**
-- Type: NumPy binary format (.npy files)
-- Location: User's system cache directory (configurable in `EphemerisCache`)
-- Contents: Pre-computed daily planetary positions (all 13 bodies)
-- Module: `ketu/cache/ephemeris_cache.py`
-- Persistence: Survives application restarts
-- Clearing: Manual deletion of cache directory
+**File Storage:**
+- **Local filesystem only** - Ephemeris cache (optional, for performance):
+  - Location: `~/.ketu/ephemeris_cache/` (configurable via `EphemerisCache(cache_dir=...)` in `ketu/cache/ephemeris_cache.py` line 66)
+  - Format: NumPy binary (`.npy` files), one per month per body set
+  - Size: ~230 KB/year for 13 bodies, ~19 KB/month
+  - Lifecycle: Persistent across runs; created on-demand; user-managed (no automatic pruning)
+  - Example file: `~/.ketu/ephemeris_cache/2026-05-ephemeris.npy`
 
-**No database connections:**
-- Ketu operates purely in-memory or with local file caching
-- No SQL, PostgreSQL, or TimescaleDB integration
+**Caching:**
+- In-memory cache: Python dicts in `EphemerisCache._memory_cache` (session-only, not persisted between interpreter runs unless explicitly saved)
+- LRU memoization: `functools.lru_cache` for expensive calculations (e.g., `ketu.aspects.calculator.get_orb()` at line ~100)
 
 ## Authentication & Identity
 
-**None**
-
-Ketu does not authenticate with external services or require API keys.
+**Auth Provider:**
+- None required. Ketu is a pure computational library; no identity/auth model.
 
 ## Monitoring & Observability
 
 **Error Tracking:**
-- None
+- None (no error reporting service integrated)
 
 **Logs:**
-- Standard Python logging (via `logging` module if needed by calling code)
-- No external log aggregation
+- **Approach:** Standard Python `logging` module (not integrated in core; CLI uses `print()` for output in `ketu/cli/formatters.py`)
+- CLI writes to stdout (user-readable tables, JSON optional)
+- Errors raised as Python exceptions (caller responsibility to handle/log)
 
 ## CI/CD & Deployment
 
-**Hosting & Distribution:**
-- **PyPI** - Python Package Index (read-only)
-  - Package: `ketu` (https://pypi.org/project/ketu/)
-  - Publication: Via GitHub Actions workflow (manual trigger)
-  - Automatic testing before publish
+**Hosting:**
+- **PyPI** (Python Package Index) - Primary distribution channel
+- **GitHub** (github.com/alkimya/ketu) - Source control and CI platform
+- **Read the Docs** (ketu.readthedocs.io) - Auto-built documentation (referenced in `pyproject.toml` line 52)
 
-**Documentation Hosting:**
-- **ReadTheDocs** - Sphinx HTML documentation
-  - Primary: English (`docs/en/`)
-  - Secondary: French (`docs/fr/`)
-  - Auto-rebuild: On git push to main branch (when enabled)
+**CI Pipeline:**
+- **GitHub Actions** (free tier):
+  - `.github/workflows/tests.yml` - Test suite on push/PR, all Python 3.10–3.13
+  - `.github/workflows/publish.yml` - Build & publish on git tags
+  - No external CI services (CircleCI, Travis, etc.)
 
-**Code Repository:**
-- **GitHub** (alkimya/ketu)
-  - Read-only for Ketu library
-  - GitHub Actions for CI/CD (test + publish workflows)
+**Trusted Publishing:**
+- **OIDC (OpenID Connect)** via GitHub to PyPI (Phase 20, hardened)
+- No PyPI API tokens stored in repo (`publish.yml` uses `pypa/gh-action-pypi-publish@release/v1` with `permissions.id-token: write`)
+- Eliminates credential rotation burden; leverages GitHub-issued ephemeral JWTs
 
 ## Environment Configuration
 
-**Required Environment Variables:**
-- None
+**Required env vars:**
+- None. Ketu runs with zero mandatory environment variables.
 
-**Optional Environment Variables:**
-- `XDG_CACHE_HOME` - Custom cache directory (used by `EphemerisCache`)
-- If not set, uses system default (e.g., `~/.cache/` on Linux)
+**Optional env vars:**
+- None documented or used in code.
 
-**Secrets Location:**
-- None needed for library operation
-- PyPI tokens stored in GitHub Actions secrets (for publishing)
-  - `PYPI_API_TOKEN` - Production PyPI upload
-  - `TEST_PYPI_API_TOKEN` - TestPyPI pre-release upload
-  - `CODECOV_TOKEN` - Code coverage reporting (optional)
+**Secrets location:**
+- No secrets in codebase. PyPI publishing uses OIDC trusted publishing (no API keys).
 
 ## Webhooks & Callbacks
 
 **Incoming:**
-- None
+- None. Ketu does not expose or consume webhooks.
 
 **Outgoing:**
-- None
+- None. Ketu does not make outbound API calls or fire webhooks.
 
-## Data Flow
+## Test-Only Oracle: pyswisseph
 
-### Input Sources
+**Purpose:** Validation and cross-checking of Ketu's pure-NumPy calculations against the industry-standard Swiss Ephemeris C library.
 
-**User-provided data:**
-1. **Timestamps** - UTC datetime objects or Julian dates
-2. **Body names** - Astronomical bodies: Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Rahu (Mean North Node), Ketu (Mean South Node), Lilith (Black Moon)
+**Integration Pattern:**
+- **Dependency:** `pyswisseph` ≥2.10.0 in `pyproject.toml` line 43 (`[project.optional-dependencies] test`)
+- **License:** AGPL-3.0 (pyswisseph) — incompatible with Ketu's MIT license at runtime
+- **Isolation Strategy:** Test-only via `pytest.importorskip("swisseph")` gates in:
+  - `tests/houses/conftest.py` (lines 32–50) - oracle helper for house cusp validation
+  - `tests/charts/conftest.py` (lines 32–50) - oracle helper for chart validation
+  - `tests/returns/conftest.py` - oracle for return chart validation
+  - `tests/test_lilith_cross_check.py` - black moon (Lilith) formula validation
+  - `tests/houses/test_lst_obliquity_precision.py` - obliquity and LST cross-checks
+  - `ketu.houses` and `ketu.charts` modules: pure NumPy, zero swisseph imports (verified by test at `tests/houses/test_integration.py` and `tests/charts/test_compute_chart.py`)
+- **Workflow:**
+  1. Module-level `pytest.importorskip("swisseph")` skips entire test module if swisseph absent
+  2. Then `import swisseph as swe` (mypy overrides at `pyproject.toml` lines 144–146 ignore missing stubs)
+  3. Oracle functions call `swe.calc_ut()`, `swe.houses_ex()`, etc.
+  4. Returns compared against Ketu's NumPy calculations
+- **Critical Constraint:** NumPy must be imported BEFORE swisseph (see `tests/houses/conftest.py` lines 34–43) to prevent `_NoValueType` sentinel mismatch when coverage.py reloads modules mid-flight
+- **Result:** Ketu shipped product is MIT-clean, AGPL-uncontaminated; test suite can leverage pyswisseph for validation without licensing conflict
 
-**Embedded data:**
-- Orbital elements (J2000.0 epoch) hardcoded in `ketu/ephemeris/orbital.py`
-- Aspect definitions hardcoded in `ketu/complex.py`
-- Harmonic series hardcoded in `ketu/resonance.py`
+## Downstream Consumers (Solaris Ecosystem)
 
-### Output Destinations
+**Not integrations into Ketu, but Ketu is a dependency for:**
 
-**Programmatic output:**
-- In-memory NumPy arrays (positions, velocities, aspects)
-- Python data structures (dataclasses for `AspectWindow`, `TransitAspect`, etc.)
-- Structured arrays for ML-ready feature generation
+**Kala (sibling project):**
+- Consumes: `ketu` library via pip dependency
+- Adapter: KetuDataAdapter (in separate Kala codebase, not in Ketu repo)
+- Data flow: Ketu outputs numpy arrays (`CHART_DTYPE`, `CYCLE_DTYPE`, etc.) → Kala ingests for ML training
+- Dependency version: v1.1+ (v1.0 migration required; see `UPGRADING.md` ASP-04 section)
+- Key change in v1.1: `aspects=CLASSICAL` default; Kala explicitly opts into `aspects=EXTENDED` to match v1.0 behavior (1284 tests verify no regression)
 
-**File exports (optional):**
-1. **SVG charts** - Zodiacal visualization via matplotlib (if installed)
-   - Written to user-specified location
-   - Module: `ketu/export.py` → `draw_zodiacal_chart()`
+**Surya (trading agent):**
+- Consumes: `ketu` library for ephemeris/cycle calculations
+- Integration: Python API calls (no separate adapter documented)
 
-2. **iCalendar files** (.ics) - Aspect/lunation calendars
-   - Written to user-specified location
-   - Module: `ketu/export.py`
-   - Functions: `export_lunations_to_ical()`, `export_aspects_to_ical()`, `export_transits_to_ical()`
+**No return integrations:** Ketu does not import or depend on Kala, Surya, or other Solaris components. Ketu is **upstream-only** in the dependency graph.
 
-3. **NumPy cache files** (.npy) - Ephemeris cache
-   - Location: System cache directory (typically `~/.cache/ketu/`)
-   - Module: `ketu/cache/ephemeris_cache.py`
-   - Naming: `ephemeris_{year}_{month:02d}.npy`
+## Package Distribution
 
-## Integration Patterns in Solaris Ecosystem
+**PyPI Publishing (OIDC Trusted):**
+- Registry: https://pypi.org/project/ketu/
+- Current version: 1.2.0 (published 2026-05-28)
+- Build artifact types: sdist (`.tar.gz`), wheel (`.whl`)
+- Trigger: Git tag push matching `v*.*.*` → GitHub Action → OIDC JWT → PyPI
+- Validation gate: twine check (prevents malformed metadata; `publish.yml` line 22)
 
-**Within Solaris (when imported as dependency):**
+## Documentation Hosting
 
-Ketu is consumed by **Kala** (ML analysis module):
-- Import: `from ketu import ...` in `kala/` code
-- Data flow: Ketu provides cycle features → Kala generates ML signals
-- No bidirectional communication
+**Read the Docs:**
+- URL: https://ketu.readthedocs.io
+- Build trigger: webhook on GitHub push (auto-docs via RTD integration)
+- Source: `docs/` directory (Sphinx + numpydoc)
+- No authentication required; public read access
 
-Ketu is independent of:
-- **Soma** (data pipeline) - No coupling
-- **Surya** (agent framework) - No coupling
-- **Solaris** database - No direct database connection
-  - (Note: Solaris framework may load cache-compatible data, but Ketu doesn't read from DB)
+## Summary: No External Runtime Dependencies
 
-**Shared concepts:**
-- Cycle phases (0-360 degrees)
-- Body identifiers (Sun, Moon, planets)
-- Timestamp formats (UTC aware datetime or Julian dates)
-
-## Library-Only Characteristics
-
-**No network I/O:**
-- All calculations are deterministic (same inputs → same outputs)
-- Fully reproducible results
-- Can run offline completely
-
-**No side effects:**
-- No global state modifications
-- No files written without user request
-- Cache is optional and can be disabled
-
-**Thread-safe aspects:**
-- NumPy computations are thread-safe
-- Cache implementation uses locking (`threading.Lock` in `EphemerisCache`)
-- Aspect calculations are pure functions
+| Category | Status | Notes |
+|----------|--------|-------|
+| HTTP APIs | None | Pure NumPy calculations |
+| Databases | None | Optional local cache only |
+| Auth/OAuth | None | Not a service |
+| Webhooks | None | Stateless library |
+| Monitoring | None | Caller responsibility |
+| Secrets | None | OIDC trusted publishing |
+| External Oracles | pyswisseph (test-only) | AGPL isolated, zero runtime contamination |
 
 ---
 
-*Integration audit: 2026-02-12*
+*Integration audit: 2026-05-29*

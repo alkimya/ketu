@@ -1,252 +1,258 @@
 # Coding Conventions
 
-**Analysis Date:** 2026-02-12
+**Analysis Date:** 2026-05-29
 
 ## Naming Patterns
 
 **Files:**
-- Lowercase with underscores: `calculations.py`, `lunar_calendar.py`
-- Package directories: lowercase plural or singular: `ketu/ephemeris/`, `ketu/aspects/`, `ketu/cycles/`
-- Test files: `test_*.py` prefix pattern (e.g., `test_ketu.py`, `test_complex.py`)
+- Lowercase with underscores: `ephemeris_cache.py`, `aspect_windows.py`
+- Test files match source: `test_api.py` mirrors `api.py`
+- Module-level private symbols: prefix with `_` (e.g., `_CORE_ASPECTS`, `_TOL_DEG`)
 
 **Functions:**
-- snake_case for all functions: `utc_to_julian()`, `calculate_aspects()`, `find_aspect_window()`
-- Descriptive verb prefixes: `calculate_*`, `find_*`, `get_*`, `is_*`, `generate_*`, `to_*`
-- Private/internal functions: prefix with underscore: `_get_body_id()`, `_body_properties_uncached()`
+- Lowercase with underscores: `calculate_aspects`, `calc_planet_position`
+- Public API functions: no leading underscore
+- Private helpers in same file: `_vectorised_body_properties`, `_signed_residual_deg`
+- Vectorized operations: explicit `*_vectorized` or `*_batch` suffix (e.g., `calculate_aspects_vectorized`, `calc_planet_position_batch`)
 
 **Variables:**
-- snake_case: `jdate`, `jd_array`, `aspect_angle`, `body1_lon`
-- Boolean prefixes: `is_retrograde`, `in_aspect`, `in_orb`, `CACHE_AVAILABLE`
-- Structured array fields: snake_case in dtype definitions: `angular_separation`, `cycle_progress`, `aspect_distance`
-- Constants: UPPERCASE: `DEFAULT_PAIRS`, `CYCLE_DTYPE`, `MAJOR_ASPECTS`
+- Snake_case for local variables and parameters: `jd`, `lat`, `lon`, `body_id`, `aspect_orbs`
+- Constants: UPPERCASE with underscores: `BODY_COUNT`, `MERCURY_RETRO_JD`, `SYSTEM_BYTES`
+- Session-scoped fixture names: descriptive lowercase with underscore prefix: `natal_diana`, `natal_charles`
 
-**Types/Classes:**
-- PascalCase: `ZodiacPoint`, `CycleRatio`, `Aspect`, `LunarCycle`, `LunarCalendar`, `AspectWindow`
-- NamedTuple classes: PascalCase: `AspectMoment`, `TransitMoment`, `NatalPosition`, `AspectEvent`, `TransitAspect`
-- Exceptions: PascalCase with Error suffix (implied or explicit): `ValueError`, `ImportError`
+**Types:**
+- Class names: PascalCase: `PartSpec`, `HighLatitudeError`, `AspectSetSpec`
+- Type aliases: PascalCase or descriptive: `ArrayLike`, `PartFormula`
+- NumPy structured array dtypes: uppercase with underscore: `HOUSES_DTYPE`, `CHART_DTYPE`, `CYCLE_DTYPE`
 
 ## Code Style
 
 **Formatting:**
-- No external formatter configured; follows PEP 8
-- Line length: Implicit but generally 100-120 characters based on code samples
-- Imports grouped logically (see Import Organization below)
+- Black-style formatting (inferred from codebase consistency)
+- Line continuations: implicit multiline within function signatures and tuples
+- Imports: organized by group (stdlib, third-party, local) with blank line separators
 
 **Linting:**
-- pytest with coverage enabled via pyproject.toml configuration
-- No explicit linter config (no .flake8, .pylintrc)
-- Type hints expected throughout (see Type Hints section)
+- mypy --strict mode enabled (see pyproject.toml `[tool.mypy]`)
+- Type hints required everywhere (except test modules which have `disallow_untyped_defs = false`)
+- No `# type: ignore` without explicit discussion; pragma comments require justification
 
-## Type Hints
+**Docstrings:**
+- **Style:** numpydoc (NumPy docstring format; see `[tool.interrogate] style = "sphinx"`)
+- **CRITICAL: Summary placement** — The summary line MUST be on the line AFTER the opening `"""`, NOT on the same line. This is a BLOCKING requirement in CI (`numpydoc lint`):
+  ```python
+  # CORRECT:
+  def foo():
+      """
+      One-line summary here.
+      
+      Longer description (optional).
+      """
+  
+  # INCORRECT (GL01 gate failure):
+  def foo():
+      """One-line summary here."""
+  ```
+- **Coverage gate:** `interrogate >= 95%` fail-under enforced in CI; missing docstrings block the build
+- **Sections used:**
+  - `Parameters` (with types, via `type: description` syntax)
+  - `Returns` (with type and description)
+  - `Raises` (exceptions that can be raised)
+  - `Notes` (implementation details, algorithm notes, precision info)
+  - `Examples` (code examples; often omitted for internal helpers)
+  - `See Also` (cross-references to related functions)
+  - `Attributes` (for classes and dataclasses)
+- **Example from codebase** (`ketu/core.py`):
+  ```python
+  """
+  Core data structures and constants for Ketu astrological calculations.
 
-**Required:**
-- All function parameters must have type hints: `jdate: float`, `body: int`, `timestamps: Union[np.ndarray, List[datetime]]`
-- All function return types must be specified: `-> float`, `-> np.ndarray`, `-> Optional[Tuple]`
-- Union types with `Optional` for nullable returns: `-> Optional[Tuple]`, `-> Union[float, np.ndarray]`
+  This module contains the fundamental astronomical and astrological data structures
+  used throughout the Ketu library, including planetary bodies, aspects, and zodiac signs.
 
-**Patterns:**
-- NumPy arrays: `np.ndarray` with description of shape/dtype in docstring
-- Lists/collections: `List[datetime]`, `Sequence[Union[str, int]]`
-- Callable: `Optional[Union[str, ZoneInfo]]` for flexible parameter types
-
-**Example from `cycles/calculator.py`:**
-```python
-def generate_cycle_series(
-    body1: Union[str, int],
-    body2: Union[str, int],
-    timestamps: Union[np.ndarray, List[datetime], "pd.DatetimeIndex"],
-    include_aspects: bool = True,
-    use_cache: bool = True,
-) -> np.ndarray:
-```
+  Notes
+  -----
+  Orb values are inspired by medieval Islamic astronomers...
+  """
+  ```
 
 ## Import Organization
 
-**Order (enforced in practice):**
-1. Standard library (future imports, then standard): `from __future__ import annotations`, `from functools import lru_cache`, `from datetime import datetime`
-2. Third-party libraries: `import numpy as np`, `import pytest`
-3. Local package imports: `from ketu.core import bodies, aspects`, `from .calculations import positions`
+**Order:**
+1. `from __future__ import annotations` (if used, for forward-reference string literals)
+2. Standard library imports (`datetime`, `json`, `pathlib`, etc.)
+3. Third-party imports (`numpy`, `pytest` in tests)
+4. Local imports (`from ketu.core import`, `from .api import`)
+5. Blank line before each group
 
 **Path Aliases:**
-- Relative imports within package: `from .core import bodies`, `from .ephemeris.time import utc_to_julian`
-- Absolute imports for ketu submodules: `from ketu.core import bodies`, `from ketu.complex import degrees_to_complex`
-- Optional dependency imports wrapped in try/except:
-  ```python
-  try:
-      from ketu.cache import EphemerisCache, get_default_cache
-      CACHE_AVAILABLE = True
-  except ImportError:
-      CACHE_AVAILABLE = False
-  ```
+- Relative imports within package: `.api`, `.core`, `.registry` (e.g., `from .api import calculate_part`)
+- Absolute imports when crossing subpackage boundaries: `from ketu.core import bodies`
+- Rename on import to avoid name collision: `from ketu.core import aspects as _CORE_ASPECTS` when the parameter name needs to be free (e.g., in `calculate_aspects(aspects=...)`), see `ketu/aspects/calculator.py`
 
-**Barrel Files (used for API):**
-- `ketu/__init__.py`: Comprehensive re-export of all public APIs with `__all__` list
-- `ketu/aspects/__init__.py`: Imports from submodules (calculator, windows, timelines, transits)
-- `ketu/export/__init__.py`: Conditional exports based on optional dependency availability
+**Module-level constants** (often imported):
+- Pinned at top after docstring and imports
+- Documented with inline comments explaining origin or usage
+- Example (`ketu/core.py`): `EXPECTED_ASPECT_FINGERPRINT_V1 = "c5bd177..."`
 
 ## Error Handling
 
-**Patterns:**
-- Explicit exceptions with informative messages: `raise ValueError(f"Unknown body: {body}")`
-- Type validation at function entry: Check parameter types before use
-- Missing optional dependencies: Wrap in try/except at import time and raise ImportError with install instructions at function call
+**Pattern:** Custom exception classes inherit from standard exceptions for semantic clarity:
+- `class HighLatitudeError(ValueError)` in `ketu/houses/core.py` — raised when `|lat| > polar_circle` for latitude-dependent house systems
+- Exceptions carry diagnostic context: `HighLatitudeError` includes the latitude, system name, and polar limit in its message
 
-**Examples:**
-```python
-# From ephemeris/planets.py
-planet_name = SWE_IDS.get(planet_id)
-if planet_name is None:
-    raise ValueError(f"Unknown planet ID: {planet_id}")
+**Validation:**
+- Explicit type hints + mypy --strict + runtime asserts for critical invariants
+- Example (`tests/test_ketu.py`): assertions pinning v1.0 core.aspects byte fingerprint to catch unintended dtype changes
+- Example (`ketu/returns/_solve.py`): tolerance constant `_TOL_DEG = 0.0002777...` (1 arc-second) with explicit bounds testing
 
-# From export/icalendar.py
-if not ICALENDAR_AVAILABLE:
-    raise ImportError(
-        "icalendar library is required for export functions. "
-        "Install with: pip install icalendar"
-    )
-```
+**None / Sentinel values:**
+- Use explicit `None` for optional parameters: `return_lat=None` defaults to natal lat
+- No sentinel types; clear intent via docstring `default: "raise"` vs `"porphyry"`
 
-**No custom exceptions:** Use standard library exceptions (ValueError, ImportError, etc.)
+## Logging
+
+**Framework:** Standard library `logging` module (not used extensively):
+- Console output via `print()` for CLI utilities (see `ketu/display.py`)
+- Tests use assertions + pytest output capture; no logging instrumentation in library code
+
+**When to log:** Not applicable — library is math-focused, no runtime logging infrastructure.
 
 ## Comments
 
 **When to Comment:**
-- Complex calculations: Explain the mathematical rationale
-- Non-obvious algorithms: Document the approach
-- Important caveats: "NumPy implementation uses Gregorian proleptic calendar"
-- Inline comments for structured array field meanings
+- Explain WHY, not WHAT: comments describe algorithm choice or non-obvious logic
+- Example (`ketu/houses/api.py` line 28–29): `"The Python overhead is constant in S (Pitfall 1 from RESEARCH §5)."` — references research document
+- Example (`tests/houses/conftest.py` line 33–43): `"IMPORTANT: numpy MUST be imported BEFORE swisseph..."` — unusual import ordering with explanation
 
-**Style:**
-- Inline comments after code: `return (orbs[body1] + orbs[body2]) / 2 * coef[asp]  # Orb tolerance`
-- Block comments above logical sections: Separate with blank lines
-- Comments end with period: `# Moon speed ~13°/day.`
-
-**No Over-Commenting:**
-- Don't duplicate code in comments
-- Self-documenting code preferred: Clear function/variable names
-- Comments that contradict code are worse than no comments
-
-## Docstrings
-
-**Required:**
-- All public functions: Must have docstring
-- All classes: Must have docstring with Attributes section
-- All methods: Must have docstring
-
-**Format:** Google-style docstrings with sections:
-```python
-def get_aspect(jdate: float, body1: int, body2: int) -> Optional[Tuple]:
-    """Find aspect between two bodies at a given date.
-
-    Args:
-        jdate: Julian Date
-        body1: First body ID
-        body2: Second body ID
-
-    Returns:
-        Tuple of (body1, body2, aspect_index, orb) or None if no aspect
-    """
-```
-
-**Sections used:**
-- Args: Parameter descriptions (type + description)
-- Returns: Return value type and description
-- Raises: Exception types (not always used; not needed if no exceptions)
-- Example: Usage examples for complex functions (sometimes used)
-
-**Module docstrings:**
-- Required at top of every .py file
-- Describe purpose and sometimes list submodules/exports
-- Example from `calculations.py`:
-  ```python
-  """Astronomical and astrological calculations for Ketu.
-
-  This module contains position, velocity, and time conversion calculations
-  for planetary bodies. For aspect calculations, see the aspects module.
-  """
-  ```
+**Docstrings vs Inline Comments:**
+- Use docstrings for public APIs; use inline comments for algorithms and gotchas
+- Comments on non-obvious computational lines, e.g., `B = 0` branch for pre-Gregorian calendars in `utc_to_julian`
 
 ## Function Design
 
-**Size:**
-- Functions typically 10-50 lines
-- Vectorized functions larger (50-150 lines) with heavy NumPy operations: `calculate_aspects_batch()`
+**Size:** Functions are compact, typically 5–50 lines:
+- Vectorized functions intentionally loop over bodies (not timestamps), keeping Python loop count constant: see `_vectorised_body_properties` in `ketu/charts/api.py` (lines 57–105)
+- Helper functions extracted to reduce cognitive load (e.g., `_signed_residual_deg` for solar/lunar return residuals)
 
 **Parameters:**
-- Positional parameters for required values: `jdate`, `body1`, `body2`
-- Keyword-only parameters for optional behavior: `include_aspects: bool = True`, `use_cache: bool = True`
-- Union types for flexible input: `body: Union[str, int]`, `timestamps: Union[np.ndarray, List[datetime]]`
+- Type hints on all parameters (mypy --strict enforced)
+- No default mutable arguments; `None` as default with explicit None-checks
+- Positional parameters for required inputs; keyword-only parameters with `*` separator for options:
+  ```python
+  def calculate_houses(
+      jd: ArrayLike,
+      lat: ArrayLike,
+      lon: ArrayLike,
+      system: str = "placidus",
+      polar_fallback: Literal["raise", "porphyry"] = "raise",
+  ) -> np.ndarray:
+  ```
 
 **Return Values:**
-- Scalar numpy types or native Python: `float`, `int`, `bool`
-- NumPy arrays for bulk data: `np.ndarray` (dtype specified in docstring)
-- NamedTuple or dataclass for structured results: `AspectWindow`, `CycleState`
-- List of structured results: `List[np.ndarray]`, `List[TransitWindow]`
-- None for optional returns: `Optional[Tuple]`, `-> Optional[int]`
-
-**Example from `aspects/calculator.py`:**
-```python
-def get_orb(body1: int, body2: int, asp: int) -> float:
-    """Calculate the orb tolerance for two bodies and an aspect.
-
-    Args:
-        body1: First body ID (0-12)
-        body2: Second body ID (0-12)
-        asp: Aspect index (0-6)
-
-    Returns:
-        Orb in degrees
-    """
-    orbs, coef = bodies["orb"], aspects["coef"]
-    return (orbs[body1] + orbs[body2]) / 2 * coef[asp]
-```
+- Structured arrays (NumPy dtypes) for multi-field results: `CHART_DTYPE`, `HOUSES_DTYPE`, `CYCLE_DTYPE`
+- Scalar values wrapped in 0-d arrays when consistency with batch paths is needed
+- Type hint return type explicitly (no `Any`; mypy checks return-value assignments)
 
 ## Module Design
 
 **Exports:**
-- `__all__` list in every module with public API: See `ketu/__init__.py` (246 lines)
-- Public functions/classes: No underscore prefix
-- Private/internal: Underscore prefix (`_get_body_id`)
+- Public API via `__all__` list in `__init__.py` (e.g., `ketu.houses` exports `calculate_houses`, `HighLatitudeError`)
+- Private symbols prefixed with `_` (e.g., `_CORE_ASPECTS`, `_vectorised_body_properties`)
+- Submodules own their exports; cross-module imports are explicit (no `from .* import *`)
 
-**Structured Arrays:**
-- Heavily used as primary data structure for performance (ML-ready)
-- Defined as module-level constants: `CYCLE_DTYPE`, `MAJOR_ASPECTS_Z`
-- Fields documented in both dtype and docstring:
+**Barrel Files:**
+- `ketu/__init__.py` imports and documents all public submodules and top-level APIs
+- `ketu/parts/__init__.py` calls `register()` on built-in parts; users register custom parts via `from ketu.parts.registry import register`
+- `ketu/houses/registry.py` is analogous for house systems
+
+## Frozen Structured Arrays
+
+**Convention:** NumPy structured array dtypes are treated as immutable once defined:
+- Defined once at module load time (e.g., `CHART_DTYPE` in `ketu/charts/core.py`)
+- Changes to dtype fields require explicit review and version bump (v1.2 bumped `HOUSES_DTYPE["system"]` from U10 to U16 for `"regiomontanus"`)
+- Byte-level fingerprints tested in CI (e.g., `test_aspects_byte_fingerprint` in `tests/test_ketu.py`) to catch unintended dtype changes
+
+**Example usage:**
+```python
+CYCLE_DTYPE = np.dtype([
+    ('timestamp', 'datetime64[s]'),
+    ('body1', 'U10'),
+    ('body2', 'U10'),
+    # ... 13 more fields
+])
+```
+
+## Registry Extension Pattern
+
+**Pattern:** Extensible registries use a `frozen dataclass` + `register()` + `get_item()` pattern:
+- `ketu.houses.registry.register()` registers custom house systems (analogous to `SwissEph` hsys codes)
+- `ketu.parts.registry.register()` registers custom Arabic Parts
+- Registration is ONE-WAY: once registered, a system/part cannot be unregistered (no collision risk)
+
+**Example** (`ketu/parts/registry.py`):
+```python
+@dataclass(frozen=True)
+class PartSpec:
+    name: str
+    day_formula: PartFormula
+    night_formula: PartFormula
+    description: str = ""
+
+PARTS: dict[str, PartSpec] = {}
+
+def register(
+    name: str,
+    *,
+    day_formula: PartFormula,
+    night_formula: PartFormula,
+    description: str = "",
+) -> None:
+    """Register a new Arabic Part in PARTS."""
+    PARTS[name.lower()] = PartSpec(name.lower(), day_formula, night_formula, description)
+
+def get_part(name: str) -> PartSpec:
+    """Look up an Arabic Part by name (case-insensitive)."""
+    return PARTS[name.lower()]
+```
+
+## UTC-Only Datetime Convention
+
+**Rule:** All datetime computations use UTC (Coordinated Universal Time):
+- Parameters documented as "Datetime (timezone-aware or naive assumed UTC)" in docstrings
+- No timezone-aware arithmetic in library code; users convert to UTC before calling
+- Example (`ketu/ephemeris/time.py` line 34–39): explicit UTC handling in `utc_to_julian`:
   ```python
-  CYCLE_DTYPE = np.dtype([
-      ('julian_day', 'f8'),           # Julian date
-      ('body1_id', 'i2'),             # First body ID
-      # ... more fields
-  ])
+  if dtime.tzinfo is not None:
+      utc = dtime.astimezone(timezone.utc)
+  else:
+      utc = dtime
+  ```
+- Convention: store all computed times as float Julian Dates (JD) or `datetime.datetime` in UTC
+
+## NumPy-Vectorized Style
+
+**Hot Path Optimization:**
+- No Python loops over timestamps in vectorized paths; use NumPy broadcasting
+- Loops over bodies (small constant count, e.g., 13 bodies) are acceptable (see `_vectorised_body_properties` comment about "Pitfall 1")
+- Example pattern (`ketu/charts/api.py` lines 96–100):
+  ```python
+  for body_id in range(_BODY_COUNT):  # _BODY_COUNT = 13 (constant)
+      batch = calc_planet_position_batch(jd_flat, body_id)
+      lons[:, body_id] = batch[:, 0]
   ```
 
-**Example Package Structure (from `ketu/aspects/`):**
-- `__init__.py`: Re-exports from submodules + `__all__`
-- `calculator.py`: Core aspect calculations (get_aspect, calculate_aspects, calculate_aspects_batch)
-- `windows.py`: Aspect timing detection (AspectWindow, find_aspect_window)
-- `timelines.py`: ML-ready time series (AspectTimeline, generate_aspect_timeline)
-- `transits.py`: Transit calculations (find_transits_to_position, compare_dates_transits)
+**Batch Function Suffixes:**
+- `*_batch(jd_array, ...)` — operates on 1-D array of timestamps, returns shape `(N, ...)` results
+- `*_vectorized(...)` — broadcast-compatible shape on inputs (0-d, 1-d, 2-d, etc.), returns compatible output shape
+- Example: `calc_planet_position_batch(jd_array, body_id)` in `ketu/ephemeris/planets.py` vs `calculate_aspects_vectorized(...)` in `ketu/aspects/calculator.py`
 
-**No barrel files for internal use:** Import directly from source modules in implementation code
+## Language Mix: French/English
 
-## Vectorization Patterns
-
-**NumPy-first philosophy:**
-- Single calculations via scalar functions: `get_orb(body1, body2, asp) -> float`
-- Multiple calculations via broadcasting: Use NumPy arrays and vectorized operations
-- Batch operations with explicit names: `calculate_aspects_batch()`, `calc_planet_position_batch()`
-
-**Example from `aspects/calculator.py`:**
-```python
-# Vectorized distance calculation
-pos1 = all_positions[i_indices]
-pos2 = all_positions[j_indices]
-all_distances = distance(pos1, pos2)  # type: ignore[arg-type]
-
-# Vectorized orb checking
-in_orb = (all_distances >= aspect_angle - orbs) & (all_distances <= aspect_angle + orbs)
-```
+**Documentation and persona:** French with tutoiement (informal you) in user-facing instructions (CLAUDE.md, persona-sophie.md)
+**Code and docstrings:** English with occasional French comments for historical context (e.g., references to Abu Ma'shar, Al-Biruni)
+**Test fixtures:** Named after historical figures (Diana, Charles, Marie Curie) — no translation
 
 ---
 
-*Convention analysis: 2026-02-12*
+*Convention analysis: 2026-05-29*

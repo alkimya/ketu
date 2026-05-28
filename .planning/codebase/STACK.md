@@ -1,179 +1,126 @@
 # Technology Stack
 
-**Analysis Date:** 2026-02-12
+**Analysis Date:** 2026-05-29
 
 ## Languages
 
 **Primary:**
-- Python 3.10+ - Core library (astronomical calculations, aspect analysis, cycles)
-- Supported versions: 3.10, 3.11, 3.12, 3.13
+- Python 3.10–3.13 - Core library and runtime (via `requires-python = ">=3.10"` in `pyproject.toml`)
+
+**Secondary:**
+- None (pure Python; no C/Cython extensions in Ketu itself — pyswisseph is test-only)
 
 ## Runtime
 
 **Environment:**
-- CPython 3.10+
-- Independent virtual environment: `ketu/venv/` (separate from Solaris workspace)
+- Python 3.10, 3.11, 3.12, 3.13 (matrix tested in `.github/workflows/tests.yml`)
 
 **Package Manager:**
-- pip + setuptools
-- Lockfile: No lock file; uses `pyproject.toml` (PEP 517/518)
+- pip (standard)
+- Lockfile: `requirements.txt` (minimal; contains only `numpy>=1.20.0`)
 
-## Frameworks & Core Libraries
+## Frameworks
 
-**Core Scientific Computing:**
-- NumPy >= 1.20.0 - Vectorized numerical operations, structured arrays, ephemeris calculations
-  - Location: `ketu/ephemeris/` modules use NumPy exclusively
-  - Performance: ~208x faster than legacy implementations
+**Core:**
+- **NumPy** ≥1.20.0 - ONLY runtime dependency; structured arrays for ML interop, vectorized astronomical calculations
 
-**Optional Visualization:**
-- matplotlib >= 3.5.0 - Zodiacal chart SVG generation
-  - Module: `ketu/export.py`
-  - Installation: `pip install ketu[chart]`
-  - Not a hard requirement; graceful fallback if missing
+**Testing:**
+- **pytest** - Test runner (installed via CI in `tests.yml` line 29)
+- **pytest-cov** - Coverage reporting (installed via CI line 29)
+- **coverage.py** - Code coverage (configured in `pyproject.toml` lines 87–102; fail-under=70 global, modular gates at 95%)
 
-**Optional Calendar Export:**
-- icalendar >= 5.0.0 - iCalendar (.ics) export for aspects/lunations
-  - Module: `ketu/export.py`
-  - Installation: `pip install ketu[icalendar]`
-  - Not a hard requirement; graceful fallback if missing
+**Build/Dev:**
+- **setuptools** ≥61.0 - Package build backend (in `pyproject.toml` line 2 `[build-system]`)
+- **wheel** - Wheel distribution format (in `pyproject.toml` line 2 `[build-system]`)
+- **build** - Build frontend (installed in `publish.yml` line 17)
+- **interrogate** ≥1.7.0 - Docstring coverage audit (≥95% gate; blocking in `tests.yml` line 49, `pyproject.toml` lines 104–118)
+- **numpydoc** ≥1.10.0 - NumPy docstring style validator (blocking in `tests.yml` lines 51–59, `pyproject.toml` lines 120–135)
+- **mypy** - Static type checker (installed in `tests.yml` line 38 for Python 3.11 run; `pyproject.toml` lines 137–162 config)
+- **twine** - PyPI validation (installed in `publish.yml` line 22)
 
-**Testing & Quality:**
-- pytest - Test runner
-- pytest-cov - Code coverage reporting
-- Coverage >= 7.13.1 - Coverage analysis (target tracking)
+## Key Dependencies
 
-**Documentation:**
-- Sphinx >= 7.0.0 - Documentation generation
-- myst-parser >= 2.0.0 - Markdown support in Sphinx
-- sphinx-rtd-theme >= 2.0.0 - ReadTheDocs Sphinx theme
-- sphinx-autodoc-typehints >= 1.24.0 - Type hint documentation
-- sphinx-copybutton >= 0.5.2 - Code block copy buttons
-- sphinx-intl >= 2.1.0 - Internationalization (French documentation support)
+**Critical:**
+- **numpy** ≥1.20.0 - Sole runtime dependency; used throughout for structured arrays (`CHART_DTYPE`, `SYNASTRY_DTYPE`, `CYCLE_DTYPE`, `HOUSES_DTYPE`, `PARTS_DTYPE`), vectorized calculations in `ketu.ephemeris`, `ketu.aspects`, `ketu.calculations`
 
-**Development Tools:**
-- setuptools >= 61.0 - Package building
-- wheel - Distribution format
-- build - PEP 517 build backend
-- twine - PyPI upload tool
+**Infrastructure (test-only, optional):**
+- **pyswisseph** ≥2.10.0 - Ephemeris oracle for validation tests only (in `pyproject.toml` line 43 `[project.optional-dependencies] test`). AGPL-licensed; isolated behind `pytest.importorskip("swisseph")` gates in `tests/houses/conftest.py`, `tests/charts/conftest.py`, `tests/returns/conftest.py`, `tests/test_lilith_cross_check.py` to prevent runtime contamination. Never imported into Ketu proper (`ketu/` package); zero AGPL exposure in shipped library.
 
-## Architecture Components
+## Configuration
 
-**Ephemeris (Pure NumPy Implementation):**
-- Location: `ketu/ephemeris/` package
-- Components:
-  - `time.py` - UTC/Julian date conversions, sidereal time
-  - `orbital.py` - Orbital element data, Kepler equation solver, planet position calculations
-  - `coordinates.py` - Coordinate transformations (heliocentric→geocentric, ecliptic↔equatorial)
-  - `planets.py` - High-level planetary position interface (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Rahu/Ketu, Lilith)
-- **No external binary dependencies** (replaced pyswisseph in v0.3.0)
-- Uses numpy for all mathematical operations
+**Environment:**
+- No `.env` files required or consumed; Ketu is stateless
+- CLI accepts user input interactively (date, time, timezone) via stdin
+- Ephemeris cache directory: `~/.ketu/ephemeris_cache` (hardcoded default in `ketu/cache/ephemeris_cache.py` line 76; user-customizable via `EphemerisCache(cache_dir=...)` parameter)
 
-**Aspects & Cycles:**
-- Location: `ketu/aspects/` package and `ketu/cycles/` package
-- Components:
-  - `aspects/core.py` - 14-aspect detection system (Conjunction, Opposition, Trine, Square, Sextile, Quintile, Novile, Decile, etc.)
-  - `aspects/calculator.py` - Vectorized aspect calculation
-  - `aspects/windows.py` - Precise aspect timing (beginning, exact, end)
-  - `aspects/transits.py` - Transit calculations vs. natal positions
-  - `cycles/calculator.py` - Vectorized cycle state calculation with complex number representation
-
-**Complex Number Engine:**
-- Location: `ketu/complex.py`
-- Representation: `e^(iθ) = cos(θ) + i·sin(θ)` for zodiacal positions
-- Provides: Phase-locking, circular statistics, ML-ready features
-- Version: New in v0.4.0, fully vectorized with NumPy
-
-**Lunar Calendar:**
-- Location: `ketu/lunar_calendar.py`
-- Generates lunar phase cycles (New Moon → Full Moon → New Moon)
-- Structured arrays for batch processing
-
-**Caching:**
-- Location: `ketu/cache/ephemeris_cache.py`
-- Storage: `.npy` (NumPy binary format) files in user's cache directory
-- Performance: O(1) lookups (~0.01ms) vs. O(n) computation (~10ms)
-- Scope: Pre-computes daily positions for all 13 bodies
-
-**Export & Display:**
-- Location: `ketu/export.py`, `ketu/display.py`
-- CLI: `ketu` command (entry point in `ketu/display.py`)
-- Optional chart generation (matplotlib)
-- Optional iCalendar export (icalendar)
-
-## Configuration Files
-
-**Package Definition:**
-- `pyproject.toml` - PEP 517 project metadata
-  - Build system: setuptools + wheel
-  - Dependencies: NumPy only (core)
-  - Optional groups: `chart`, `icalendar`, `all`
-  - Packages: `ketu`, `ketu.ephemeris`, `ketu.aspects`, `ketu.cycles`, `ketu.cache`, `ketu.export`
-
-**Testing Configuration:**
-- `pyproject.toml` [tool.pytest.ini_options]
-  - Test paths: `tests/`
-  - Test discovery: `test_*.py` files
-  - Coverage: `--cov=ketu --cov-report=term-missing`
-  - Exclude: `*/tests/*`
-
-**Documentation Build:**
-- `.readthedocs.yaml` - ReadTheDocs configuration
-  - Build OS: ubuntu-22.04
-  - Python: 3.12
-  - Sphinx config: `docs/en/conf.py` (primary), `docs/fr/conf.py` (French)
-  - Output formats: HTML, PDF, EPUB
-  - Post-install: Build French docs alongside English
-
-**CI/CD:**
-- `.github/workflows/tests.yml` - Manual test workflow (disabled by default)
-  - Runs: Python 3.10, 3.11, 3.12, 3.13
-  - Coverage upload: Codecov (Python 3.12)
-- `.github/workflows/publish.yml` - Manual PyPI publish workflow
-  - Test PyPI for pre-release tags (rc, beta)
-  - Production PyPI for stable tags
+**Build:**
+- `pyproject.toml` - Project metadata, dependencies, tool configs (setuptools, pytest, coverage, interrogate, numpydoc, mypy)
+- `Makefile` - Development convenience targets:
+  - `make test` - Full pytest suite with coverage
+  - `make test-fast` - No coverage instrumentation
+  - `make houses-coverage` - HOU-09 ≥95% gate for `ketu.houses` (two-step pattern to avoid NumPy reload bug; lines 21–39)
+  - `make charts-coverage` - CHART-05 ≥95% gate for `ketu.charts` (lines 41–52)
+  - `make synastry-coverage` - SYN-05 ≥95% gate for `ketu.synastry` (lines 54–66)
+  - `make composite-coverage` - COMP-05 ≥95% gate for `ketu.composite` (lines 68–80)
+  - `make returns-coverage` - RET-06 ≥95% gate for `ketu.returns` (lines 82–94)
+  - `make parts-coverage` - PARTS ≥95% gate for `ketu.parts` (lines 96–107)
+  - `make doc-gates` - Runs interrogate + numpydoc lint locally (lines 109–119)
+  - `make mypy` - Type-check with strict mode (lines 121–123)
+  - `make clean` - Remove artifacts (lines 125–129)
 
 ## Platform Requirements
 
 **Development:**
-- Python 3.10+ (tested 3.10-3.13)
-- pip/setuptools
-- ~500MB virtual environment (with test dependencies)
+- Python 3.10+ with venv (repository uses `venv/` not `.venv/` per `CLAUDE.md`)
+- Unix-like shell (bash/zsh) for Makefile recipes and CI scripts
+- Git for version control
 
 **Production:**
-- Python 3.10+
-- NumPy >= 1.20.0
-- Optional: matplotlib, icalendar
+- Python 3.10–3.13
+- NumPy ≥1.20.0
+- ~230 KB/year for optional ephemeris cache (stored locally in `~/.ketu/ephemeris_cache/`; `.npy` format)
+- No network access required (fully offline-capable)
+- No external services (pure NumPy calculations)
 
-**Documentation:**
-- ReadTheDocs-compatible Sphinx setup
-- Builds on Ubuntu 22.04 with Python 3.12
+## CI/CD Configuration
 
-## Key Numerical Libraries
+**Tests Workflow (`.github/workflows/tests.yml`):**
+- Trigger: `push` to `main` or `develop`; `pull_request` to `main`; manual `workflow_dispatch`
+- Runs on: `ubuntu-latest`
+- Matrix: Python 3.10, 3.11, 3.12, 3.13
+- Actions versions (Node.js 24, hardened Phase 20):
+  - `actions/checkout@v5`
+  - `actions/setup-python@v6`
+  - `codecov/codecov-action@v5`
+- Steps:
+  - Install deps: pip, `[dev]` extra optional, pytest, pytest-cov
+  - Run tests: pytest with coverage (all versions)
+  - Type check: mypy --strict (Python 3.11 only)
+  - Coverage threshold: ≥70% (Python 3.13 only)
+  - Doc coverage: interrogate ≥95% (Python 3.13 only)
+  - Doc style: numpydoc lint (Python 3.13 only, blocking)
+  - Upload coverage: Codecov (Python 3.13 only)
 
-**NumPy Vectorization:**
-- Structured arrays for batch ephemeris calculations
-- Broadcasting for parallel aspect detection
-- Complex number representation (1000x speedup vs. angle arithmetic)
-- Example: `calc_planet_position_batch()` computes all 13 bodies for 10K timestamps in seconds
+**Publish Workflow (`.github/workflows/publish.yml`):**
+- Trigger: Git tags matching `v*.*.*` (semantic versioning)
+- Runs on: `ubuntu-latest`
+- Jobs:
+  1. **Build** (`build` job, Python 3.11):
+     - Checkout, setup Python
+     - Install: pip, build
+     - Build: `python -m build --sdist --wheel`
+     - Validate: twine check (safety gate)
+     - Upload artifact: `python-package-distributions`
+  2. **Publish to PyPI** (`publish-to-pypi` job):
+     - Depends on: `build` job
+     - Auth: OIDC trusted publishing (no API tokens in repo; GitHub environment `pypi` with OIDC provider)
+     - Permissions: `id-token: write`
+     - Download artifact, publish: `pypa/gh-action-pypi-publish@release/v1`
 
-**Linear Algebra:**
-- Rotation matrices for coordinate transformations (ecliptic→equatorial)
-- Spherical→rectangular coordinate conversions
+## Version
 
-## Performance Characteristics
-
-**Computation:**
-- Single position: ~1ms (NumPy)
-- Time series (10K timestamps, 1 body): ~10ms
-- Time series (10K timestamps, 13 bodies): ~130ms
-- Aspect detection (vectorized): 208x faster than legacy
-- Cache lookup (1000 cached days): ~0.01ms per query
-
-**Memory:**
-- Cache per month: ~19 KB (13 bodies × 31 days × 6 floats)
-- Cache per year: ~230 KB
-- Structured array overhead: Minimal (binary format)
+Current: **1.2.0** (shipped to PyPI 2026-05-28 via OIDC trusted publishing)
 
 ---
 
-*Stack analysis: 2026-02-12*
+*Stack analysis: 2026-05-29*

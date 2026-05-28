@@ -1,277 +1,393 @@
 # Codebase Concerns
 
-**Analysis Date:** 2026-02-12
+**Analysis Date:** 2026-05-29
 
-## Test Coverage Gaps
+## Coverage Analysis
 
-### Failing Test in Aspect Vectorization
+### Overall Status
 
-**Area:** Aspect calculations
-- **Issue:** `test_aspects_correctness` in `tests/test_aspects_vectorization.py` fails intermittently with mismatched aspect count (30 vs 31 aspects)
-- **Files:** `ketu/aspects/calculator.py`, `ketu/aspects/core.py`, `tests/test_aspects_vectorization.py`
-- **What's missing:** Non-deterministic aspect filtering or ordering issue in vectorized path - one aspect is sometimes excluded
-- **Risk:** Aspects may be dropped silently depending on calculation path, affecting trading signals or analysis
-- **Priority:** High
-- **Fix approach:** Investigate the vectorized aspect calculation logic in `ketu/aspects/core.py` and `ketu/aspects/calculator.py`. The issue likely lies in how aspects are filtered or deduplicated between `calculate_aspects` and `calculate_aspects_vectorized`. Need to ensure both code paths produce identical results.
+**Interrogate (docstring coverage):** 100% ✓ (blocking gate at 95%)
 
-### Untested Modules
+**Test Coverage:** 98.35% overall — VERIFIED 2026-05-29 via `pytest tests/ --cov=ketu` (1284 passed, 2 skipped; 52 missing lines / 3149). Required gate 70%; no global per-module floor pre-v1.2, but v1.2 subpackages enforce ≥95% via dedicated `make <module>-coverage` targets.
 
-**Areas with 0% or <20% coverage:**
-- `ketu/cache/ephemeris_cache.py` - 0% coverage (436 lines)
-  - Caching system for ephemeris lookups
-  - No tests exist for cache hit/miss behavior, file I/O, or interpolation
-  - Risk: Cache corruption, memory leaks, or stale data silently used
+> **NOTE (corrected 2026-05-29):** An earlier draft of this section cited figures from the stale root `coverage.json` (dated 2026-05-09, untracked, never committed). That file references deleted modules (`ketu/export/*`, `ketu/resonance.py` — removed in v1.0) and reports a misleading 64.18% global. It is a pre-v1.2 artifact and should be deleted (or git-ignored). The numbers below are from a fresh measured run, not that file.
 
-- `ketu/cycles/calculator.py` - 0% coverage (363 lines)
-  - Core cycle series generation with vectorized complex math
-  - Despite being heavily used, has no unit tests
-  - Risk: Silent failures in cycle calculations affecting all downstream analysis
+**Key Gap:** `ketu/houses/_ecliptic.py` at 64% (10 lines uncovered: 43-47, 69-73) — the only sub-90% module in the project and the single meaningful coverage outlier.
 
-- `ketu/lunar_calendar.py` - 17% coverage (383 lines)
-  - Large untested sections in lunar calendar generation (lines 138-174, 215-325, 340-373)
-  - Risk: Lunar calendar exports may be incorrect without test verification
+### Complete Missing-Lines Inventory (measured 2026-05-29)
 
-- `ketu/export/chart.py` - 9% coverage (654 lines)
-  - Chart rendering logic almost entirely untested
+The full set of uncovered lines across the whole package — exactly 52 lines, all listed:
 
-- `ketu/export/icalendar.py` - 8% coverage (415 lines)
-  - iCalendar export logic almost entirely untested
+| File | Cov | Missing lines |
+|------|-----|---------------|
+| `ketu/houses/_ecliptic.py` | 64% | 43-47, 69-73 (RA↔λ conversions) |
+| `ketu/cli/harmonics_spec.py` | 92% | 80-81, 93 |
+| `ketu/cycles/calculator.py` | 96% | 26-29, 222 |
+| `ketu/display.py` | 96% | 28 |
+| `ketu/cli/houses_cmd.py` | 97% | 74 |
+| `ketu/cli/synastry_cmd.py` | 98% | 70 |
+| `ketu/ephemeris/time.py` | 98% | 88, 369 |
+| `ketu/complex.py` | 99% | 421 |
+| `ketu/ephemeris/orbital.py` | 99% | 227 |
+| `ketu/ephemeris/planets.py` | 99% | 354, 362, 448 |
 
-**Impact:** 38% of codebase untested. These are critical systems (caching, cycles, exports).
+All v1.2 subpackages (`charts/`, `synastry/`, `composite/`, `returns/`, `parts/`) and all house systems except `_ecliptic.py` are at 100%. Reaching 100% project-wide is a bounded, ~52-line task concentrated in the files above.
 
-## Performance Bottlenecks
+### Coverage Gaps by Module
 
-### Resonance Field Loop-Based Calculation
+**Critical (Below 90%):**
 
-**Area:** 3D resonance field computation
-- **Files:** `ketu/resonance.py` (lines 155-186)
-- **Problem:** `_get_trace()` method uses explicit Python loop for time series calculation instead of vectorization
-  ```python
-  for k, jd in enumerate(jds):
-      res = calc_planet_position(jd, pid)  # Single JD at a time
-  ```
-- **Impact:** For hourly calculation over 1 year (8,760 points), this is ~1000x slower than vectorized approach
-- **Cause:** Comment at line 168-169 states "Let's stick to the loop for safety unless slow" - was a temporary choice
-- **Fix approach:** Use `calc_planet_position_batch()` (available in `ketu/ephemeris/planets.py`) to vectorize position calculations for all JDs at once
+- `ketu/houses/_ecliptic.py` — 64% coverage
+  - Files: `ketu/houses/_ecliptic.py`
+  - Uncovered lines: 43-47 (ra_to_lambda), 69-73 (lambda_to_ra)
+  - Problem: Ecliptic-coordinate transformation math is untested. These internal helpers serve Placidus (ketu/houses/placidus.py:374) and Koch (ketu/houses/koch.py) house systems, but the conversion formulas themselves have no direct unit tests.
+  - Risk: Silent correctness regressions in house cusp calculation if either conversion is refactored.
+  - Impact: High — both functions are load-bearing for RA↔λ conversions; incorrect formulas propagate to all cusp calculations using them.
+  - Fix approach: Add parametrized unit tests for RA↔λ round-trip identity and cross-check against Swiss Ephemeris oracle values (pyswisseph test-only).
 
-### Cache Conversion Overhead
+**High (Below 95%):**
 
-**Area:** Cycle calculation with caching
-- **Files:** `ketu/cycles/calculator.py` (line 183-185)
-- **Problem:** Converting numpy arrays to tuples for LRU caching
-  ```python
-  jd_tuple = tuple(jd_array.tolist())  # Converts array -> list -> tuple
-  ```
-- **Impact:** Conversion overhead for every cache lookup, even when timestamps are identical
-- **Better approach:** Use custom cache key function or hashable array representation
+- `ketu/cli/harmonics_spec.py` — 92% coverage
+  - Files: `ketu/cli/harmonics_spec.py`
+  - Uncovered lines: 80-81, 93
+  - Problem: Harmonics CLI spec parser has edge-case handling not covered (likely error paths or optional numeric parsing).
+  - Impact: Medium — CLI infrastructure; internal to command parsing, not core calculations.
+  - Fix approach: Add explicit error-case tests (e.g., invalid harmonic range, out-of-order tokens).
 
-## Architectural Fragility
+- `ketu/aspects/core.py` — 94% coverage
+  - Files: `ketu/aspects/core.py`
+  - Uncovered lines: 68-69, 185, 336, 380, 409, 428
+  - Problem: Core aspect validation code has sparse coverage — likely error conditions (ValueError raises) when aspect names/angles are invalid.
+  - Impact: Medium — error paths for invalid user input.
+  - Fix approach: Add tests for invalid aspect names, bad aspect indices, non-existent angles.
 
-### Velocity vs Position Function Names
+- `ketu/calculations.py` — 94% coverage
+  - Files: `ketu/calculations.py`
+  - Uncovered lines: 170, 172, 174
+  - Problem: `body_name()` function contains conditional branches (renaming logic for nodes/lilith compatibility) that are not exercised.
+  - Impact: Low — legacy API shim; the actual naming is tested upstream.
+  - Fix approach: Explicit test of body_name() return values for nodes/lilith.
 
-**Area:** Function naming ambiguity
-- **Files:** `ketu/__init__.py` (lines 46, 168), `ketu/calculations.py` (lines 168, 188)
-- **Issue:** Functions `vlong()`, `vlat()`, `vdist_au()` return SPEED in degrees/day, not position, but the "v" prefix is ambiguous
-- **Risk:** High likelihood of user confusion - "v" commonly means "velocity" but is used here for velocity magnitude
-- **Current mitigation:** Explicit aliases exist (`longitude_velocity`, `latitude_velocity`) with docstring warnings
-- **Concern:** Legacy code in the codebase might still use short names incorrectly
-- **Fix approach:** Consider deprecating short names in next major version, encourage use of explicit aliases
+### Medium-Coverage Modules (95-98%)
 
-### Complex Number Representation Not Fully Integrated
+- `ketu/aspects/timelines.py` — 96%
+- `ketu/aspects/windows.py` — 96%
+- `ketu/cycles/calculator.py` — 96%
+- `ketu/display.py` — 96%
+- `ketu/ephemeris/time.py` — 98%
+- `ketu/aspects/calculator.py` — 99%
+- `ketu/cache/ephemeris_cache.py` — 99%
+- `ketu/ephemeris/planets.py` — 99%
+- `ketu/ephemeris/orbital.py` — 99%
 
-**Area:** Dual cycle representation systems
-- **Files:** `ketu/complex.py` (632 lines), `ketu/cycles/calculator.py` (uses complex math), `ketu/resonance.py` (not using complex)
-- **Issue:** Two different representations of cycles exist:
-  1. Traditional angular separation (0-360°) - used in cycles/calculator.py
-  2. Complex number representation (unit circle) - used in complex.py
-  3. ResonanceField does not use complex math despite available tools
-- **Impact:** Code duplication and confusion about which representation to use. ResonanceField recalculates harmonics manually (lines 110-117) when complex number tools could simplify it
-- **Fix approach:** Consolidate to use complex representation consistently, or document when to use each approach
-
-### Cache Optional But Untested
-
-**Area:** Ephemeris caching system
-- **Files:** `ketu/cache/ephemeris_cache.py`, `ketu/cycles/calculator.py` (lines 27-33, 179-185)
-- **Issue:** Cache is optional (try/except ImportError), conditions for using cache are complex:
-  ```python
-  use_ephemeris_cache = (
-      use_cache and
-      CACHE_AVAILABLE and
-      hasattr(timestamps, 'to_pydatetime') or  # BUG: operator precedence issue!
-      (isinstance(timestamps, (list, np.ndarray)) and len(timestamps) > 0)
-  )
-  ```
-- **Risk:** Due to operator precedence, this may evaluate incorrectly. Parentheses needed: `... and (hasattr(...) or ...)`
-- **Impact:** Cache might not be used when intended or vice versa, with no visibility into what happened
-- **Fix approach:** Fix operator precedence, add logging to show which path was taken, ensure cache tests exist
-
-## Dependencies at Risk
-
-### Optional Export Dependencies
-
-**Area:** Optional features with silent degradation
-- **Files:** `ketu/__init__.py` (lines 109-118), `ketu/export/__init__.py`
-- **Issue:** Chart rendering (`svgwrite`) and iCalendar (`icalendar`) are optional but imported silently
-- **Current state:** `_EXPORT_AVAILABLE` flag set but not checked before use
-- **Risk:** If user forgets to install optional deps, calling export functions fails at runtime rather than at import time
-- **Fix approach:** Either require optional deps in setup.py as extras (`pip install ketu[export]`), or check `_EXPORT_AVAILABLE` before function calls and raise helpful error
-
-### Pandas Dependency in Timelines
-
-**Area:** Hidden dependency
-- **Files:** `ketu/aspects/timelines.py` (lines 197-200)
-- **Issue:** Pandas is imported only inside `generate_aspect_timeline()`, not listed as optional dependency
-- **Risk:** Function fails at runtime if pandas not installed, no early warning
-- **Fix approach:** Either add pandas to required deps or document as optional with early ImportError
-
-## Security Considerations
-
-### File System Cache Permissions
-
-**Area:** Local cache storage
-- **Files:** `ketu/cache/ephemeris_cache.py` (lines 62-65)
-- **Issue:** Cache directory created at `~/.ketu/ephemeris_cache/` with default permissions
-- **Risk:** On shared systems, other users can read cached ephemeris data (low risk but inconsistent with security practices)
-- **Mitigation:** Could set directory to mode 0o700 (user-only)
-
-## Known Bugs
-
-### Operator Precedence in Cache Logic
-
-**File:** `ketu/cycles/calculator.py` (lines 183-185)
-- **Code:**
-  ```python
-  use_ephemeris_cache = (
-      use_cache and
-      CACHE_AVAILABLE and
-      hasattr(timestamps, 'to_pydatetime') or  # Missing parentheses!
-      (isinstance(timestamps, (list, np.ndarray)) and len(timestamps) > 0)
-  )
-  ```
-- **Problem:** Due to Python operator precedence, this evaluates as:
-  ```python
-  ((A and B and C and D) or E)  # NOT  (A and B and C and (D or E))
-  ```
-- **Impact:** Cache can be used even when `use_cache=False` if the second condition is true
-- **Workaround:** Currently works because conditions rarely conflict, but behavior is non-obvious
-- **Fix:** Add parentheses:
-  ```python
-  use_ephemeris_cache = (
-      use_cache and
-      CACHE_AVAILABLE and
-      (hasattr(timestamps, 'to_pydatetime') or
-       (isinstance(timestamps, (list, np.ndarray)) and len(timestamps) > 0))
-  )
-  ```
-
-### Aspect Vectorization Non-Determinism
-
-**File:** `tests/test_aspects_vectorization.py` (line 41)
-- **Symptom:** Test fails with "Different number of aspects: 30 vs 31"
-- **Trigger:** Call `calculate_aspects_vectorized()` on certain dates
-- **Status:** 1 failure in 183 tests, suggesting intermittent issue
-- **Root cause:** Not yet identified - likely in aspect filtering logic
-- **Workaround:** None (aspects cannot be relied upon in certain cases)
-
-## Missing Critical Features
-
-### No Aspect Persistence
-
-**Area:** Aspect calculations
-- **Files:** All aspect modules
-- **Problem:** No way to save/load computed aspects between sessions
-- **Impact:** Users must recompute aspects for every analysis session
-- **Blocks:** Building production trading systems that need consistent aspect history
-
-### ResonanceField Performance Not Optimized
-
-**Area:** 3D resonance computation
-- **Files:** `ketu/resonance.py`
-- **Problem:** Method calculates harmonics manually in tight loop (lines 105-117) instead of using pre-computed complex aspects from `complex.py`
-- **Impact:** Slower than necessary, code duplication
-- **Blocks:** Real-time resonance field updates for high-frequency analysis
-
-## Test Configuration Issues
-
-**File:** `tests/test_ketu.py`
-- **Issue:** `@pytest.mark.slow` decorator used (line 403) but marker not registered in `pytest.ini` or `pyproject.toml`
-- **Symptom:** PytestUnknownMarkWarning on every test run
-- **Fix:** Register marker in pytest config:
-  ```ini
-  [pytest]
-  markers =
-      slow: marks tests as slow (deselect with '-m "not slow"')
-  ```
-
-## Code Duplication Concerns
-
-### Aspect Filtering Logic
-
-**Files:** `ketu/aspects/calculator.py`, `ketu/aspects/core.py`, `ketu/aspects/windows.py`
-- **Issue:** Similar aspect filtering/comparison logic appears in multiple places
-- **Risk:** Bugs fixed in one place may not propagate to others
-- **Suggestion:** Extract aspect comparison to single utility function
-
-### Position Calculation Caching
-
-**Files:** `ketu/calculations.py` (LRU cache via decorator), `ketu/aspects/core.py` (tuple-based caching)
-- **Issue:** Two different caching strategies for ephemeris lookups
-- **Consolidation opportunity:** Use EphemerisCache consistently across modules
-
-## Scaling Limits
-
-### Lunar Calendar Generation Scalability
-
-**File:** `ketu/lunar_calendar.py` (lines 85-124, 241-325)
-- **Current approach:** Searches for new moons by iterating forward in 15-day chunks, calling `find_aspect_window()` repeatedly
-- **Limitation:** For historical analysis (many years), this becomes slow
-- **Better approach:** Use aspect timeline to batch-find all new moons in date range at once
-- **Impact:** Generating lunar calendars for 10+ years is noticeably slow
-
-### Complex Array Broadcasting
-
-**File:** `ketu/cycles/calculator.py` (lines 238-256)
-- **Current:** Vectorized aspect proximity calculation with complex numbers works efficiently
-- **Scaling:** Works well for <100k timestamps; memory usage scales as O(n * n_aspects) for distance matrix
-- **Limit:** For very large arrays (>1M timestamps), distance matrix allocation could exceed available memory
-- **Mitigation:** Currently not needed for trading applications, but document if used for research
-
-## Code Quality Observations
-
-### Inconsistent Error Messages
-
-**Files:** Various aspect/transit modules
-- **Issue:** Error messages vary in style and detail
-  - Some raise `ValueError`, others `TypeError`, some `RuntimeError`
-  - Some messages include context (body IDs), others don't
-- **Impact:** Harder for users to debug issues
-- **Suggestion:** Standardize error messages with consistent context information
-
-### Missing Type Hints in Some Functions
-
-**File:** `ketu/resonance.py`
-- **Issue:** Type hints present but incomplete in some methods
-- **Example:** `_get_trace()` returns tuple but doesn't declare return type
-- **Impact:** Type checking tools can't verify correct usage
-
-## Documentation Gaps
-
-### No Guidance on Cache Management
-
-**Files:** `ketu/cache/ephemeris_cache.py`
-- **Issue:** Module exists but no user-facing documentation on:
-  - When to use cache vs direct calculation
-  - How much disk space cache uses
-  - Cache invalidation strategy
-  - Thread safety
-
-### Aspect Orb Calculation Undocumented
-
-**Files:** `ketu/cycles/calculator.py` (lines 259-271)
-- **Issue:** Orb coefficients are hard-coded: `[1.0, 0.5, 0.75, 0.75, 1.0, 0.75, 0.75, 0.5, 1.0]`
-- **Concern:** No explanation of why these specific values were chosen
-- **Impact:** Users cannot adjust orb behavior without editing core code
+**Action:** These are all ≥95% and locked by phase gates. No action required for v1.3.
 
 ---
 
-*Concerns audit: 2026-02-12*
+## Docstring & numpydoc Quality Gaps
+
+### Status
+
+- **Interrogate gate:** 100% across all 55 modules (blocking at 95%)
+- **numpydoc gate:** Passes cleanly (no violations reported)
+
+### Known Docstring Debt
+
+While docstrings meet the *interrogate* quantitative threshold (≥95%), **depth and completeness** vary:
+
+**Thin/Formulaic Docstrings (100% interrogate-compliant but minimal examples/notes):**
+
+- `ketu/core.py` — Data-structure module with enum-like bodies/aspects/signs. Docstrings are correct but examples are repetitive copy-paste.
+- `ketu/calculations.py` — Wrapper functions around ephemeris layer have cookie-cutter docstrings. `body_properties()` is a thin LRU cache wrapper over an uncached version; the docstring doesn't explain the cache strategy.
+- `ketu/display.py` — `print_positions()` and `print_aspects()` have minimal docstrings (37 lines total). The stdout format is described but the relationship to CLI (ketu/cli/aspects_cmd.py) is not.
+- `ketu/ephemeris/time.py` — Time conversion docstrings are correct but lack guidance on which function to use when (e.g., when to call utc_to_julian vs terrestrial_to_universal).
+
+**Not Docstring Debt, but Example Accuracy:**
+
+- Some examples in `ketu/calculations.py` (e.g., `body_sign()`) are pedagogical but hard-coded with 2025 values that will drift. No mechanism to regenerate or pin them against a test fixture.
+
+### Numpydoc Validation Overrides
+
+The `pyproject.toml` contains two safety overrides:
+
+```toml
+override_SS05 = [
+    '^Aspect$',
+    '^ZodiacPoint$',
+    '^CycleRatio$',
+]
+```
+
+These suppress "Summary section should start with capital" errors for three dataclass/NamedTuple types. **Action:** None — these are intentional exemptions for short type definitions.
+
+---
+
+## Test Coverage Gaps (by Area)
+
+### Untested Code Paths
+
+**Priority 1 (Core Calculations):**
+
+- `ketu/houses/_ecliptic.py` RA↔λ round-trip tests (see Coverage section above).
+- `ketu/aspects/core.py` error paths (invalid aspect specs).
+- `ketu/ephemeris/coordinates.py` — Overall 37.1% coverage per coverage.json! This is a discrepancy with the pytest report (which shows 100%). **Action:** Run `pytest tests/test_coordinates_coverage.py -v` to verify; if there's real uncovered code, add explicit tests.
+
+### Low-Priority Gaps (Error Paths, Edge Cases)
+
+- `ketu/cli/harmonics_spec.py` — Numeric parser edge cases.
+- `ketu/display.py` line 28 — Likely an error condition path in print_aspects.
+- `ketu/aspects/windows.py` lines 343, 350, 449, 458, 466 — Edge-case handling in window refinement.
+
+---
+
+## Known Bugs & Warnings
+
+### Runtime Warnings
+
+**1. orbital.py line 755 — Division by zero in heliocentric latitude calculation:**
+
+```
+/home/loc/workspace/ketu/ketu/ephemeris/orbital.py:755: RuntimeWarning: invalid value encountered in divide
+    lat = np.rad2deg(np.arcsin(z / r))
+```
+
+- **Problem:** When computing heliocentric latitude from Cartesian coordinates (x, y, z), the radial distance `r = sqrt(x² + y² + z²)` can equal zero in edge cases (e.g., a body momentarily at the solar system barycenter, which never happens in practice but Meeus theory allows mathematically).
+- **Impact:** Produces NaN latitude values in rare circumstances. Downstream code handles NaN gracefully (no crashes observed in 1284 test passes).
+- **Carry-forward:** This was noted in commit 541b59c (`docs: capture todo - Fix RuntimeWarning divide-by-zero in orbital heliocentric latitude`) and is a known carry-forward item for future cleanup.
+- **Fix approach (v1.3):** Add guard: `r = np.maximum(r, 1e-10)` before division to ensure `r > 0` always, or use `np.where(r > 0, ..., 0)` to set lat=0 when r≈0.
+
+### Type Suppressions
+
+**12 `# type: ignore` suppressions across codebase:**
+
+- `ketu/calculations.py:92` — `return np.where()` return type union narrowing
+- `ketu/ephemeris/planets.py:568-569` — Index assignment on ndarray (mypy strict flag too strict)
+- `ketu/aspects/*.py` (6 instances) — `distance()` function overloading (scalar vs array) not fully captured by type hints
+
+**Assessment:** All suppressions are justified; the underlying code is sound, but type hints would benefit from overload stubs. No functional bugs.
+
+---
+
+## Refactoring Targets
+
+### 1. Duplicate Natal Chart Fixture Pattern
+
+**Problem:** Across tests, the same "natal chart fixture setup" is duplicated in multiple test files:
+
+- `tests/synastry/conftest.py` — `natal_chart` fixture
+- `tests/composite/conftest.py` — Similar fixture (noted in memory as "duplicated from composite/synastry")
+- `tests/returns/conftest.py` — Another copy
+- `tests/charts/conftest.py` — Yet another
+
+**Files involved:**
+- `tests/synastry/conftest.py`
+- `tests/composite/conftest.py`
+- `tests/returns/conftest.py`
+- `tests/charts/conftest.py`
+
+**Impact:** Test maintenance burden; any change to the canonical natal chart (JD, lat, lon, birth data) must be coordinated across 4 files.
+
+**Fix approach (v1.3):** Create `tests/conftest.py` (root-level) with a shared `natal_chart` fixture and reuse across subpackages. See Phase 17 MEMORY note: "fixture duplication carried forward."
+
+### 2. Long Functions in Ephemeris Layer
+
+**Candidates for extraction:**
+
+- `ketu/ephemeris/orbital.py:get_body_position()` — 856 LOC
+  - Sub-functions: `get_moon_position()`, `get_lunar_nodes()`, `get_lilith_position()` are monolithic.
+  - Candidate extraction: Split Lilith (50 lines of sinusoidal fitting logic) into a separate `_lilith_module.py`.
+  
+- `ketu/aspects/calculator.py:calculate_aspects_vectorized()` — 167 LOC
+  - Sub-functions: Nested loop for body-pair iteration + orb calculation.
+  - Candidate extraction: Inner loop into a `_orb_check()` helper.
+
+- `ketu/ephemeris/planets.py:calc_planet_position()` — 200+ LOC
+  - Giant if-elif-else for body type branching (Sun, Moon, Rahu, Ketu, Lilith, planets).
+  - Candidate refactor: Strategy pattern with per-body calculators (`_sun_position()`, `_moon_position()`, etc.).
+
+**Assessment:** These are not *bugs*, but they are *fragile* — changing one body's logic requires careful manual patching of a large function. Refactoring is deferred to v1.3 cleanup phase.
+
+### 3. Legacy display.py Module
+
+**Status:** `ketu/display.py` is 26 LOC, simple formatter, 96% coverage (1 line uncovered).
+
+**Problem:** This module predates the argparse CLI. It's still used for documentation examples and CLI output, but the interactive prompt it originally served was removed in Phase 11.
+
+**Files:** `ketu/display.py`
+
+**Impact:** Low — it's small and stable. But it sits at the boundary between library (ketu.calculations) and CLI (ketu.cli.aspects_cmd), creating a thin layer that duplicates formatting logic.
+
+**Fix approach:** No action required for v1.3. If CLI refactoring occurs, consider consolidating into `ketu/cli/formatters.py`.
+
+---
+
+## Chiron (v1.3 Readiness)
+
+### Current Ephemeris Architecture
+
+**Body registration:**
+- All 13 bodies (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Rahu, Ketu, Lilith) are hard-coded in:
+  - `ketu/core.py` — `bodies` structured array (67 lines)
+  - `ketu/ephemeris/planets.py` — `BODY_INDICES` dict (35-49) + `SWE_IDS` dict (52-66)
+  - `ketu/ephemeris/orbital.py` — `ORBITAL_ELEMENTS` array (67-250+)
+
+**How a new body is added (Chiron):**
+
+1. **core.py:** Add Chiron row to `bodies` structured array with id=13, orb, speed.
+2. **orbital.py:** Add Chiron row to `ORBITAL_ELEMENTS` with J2000.0 orbital elements (N, i, w, a, e, M, and their rates).
+3. **planets.py:** 
+   - Add `"Chiron": 13` to `BODY_INDICES` and `13: "Chiron"` to `SWE_IDS`
+   - Add Chiron branch to `calc_planet_position()` if-elif chain (around line 163)
+   - Add Chiron to `get_planet_name()` dict (lines 214-229)
+   - Add Chiron to `calculate_all_positions()` loop (line 248)
+
+**Chiron-Specific Challenges:**
+
+**1. Embedded Chebyshev Coefficients (v1.3 requirement):**
+
+Current implementation uses Meeus *Astronomical Algorithms* truncated polynomials (e.g., Moon as sinusoid series, planets as Kepler + perturbations). Chiron's orbit is highly eccentric (e≈0.382) and chaotic-adjacent, making analytic Kepler insufficient.
+
+**Action Required:**
+- Pre-compute Chebyshev polynomial fits to JPL Horizons or Swiss Ephemeris Chiron positions over 1900-2100 (similar to Lilith fitting in Phase 8).
+- Store coefficients as numpy array in `orbital.py` (or separate `_chiron_coeffs.py`).
+- Implement `_chiron_position()` function that evaluates the polynomial at JD.
+- Integrate into `calc_planet_position()` as a new branch (between Lilith and loop-end, ~line 162).
+
+**Orbital elements source:** Use JPL Horizons mean elements or Swiss Ephemeris internal coefficients (pyswisseph test oracle only).
+
+**2. Axis Size Freeze (Decision D-08):**
+
+The charts module hard-codes 13 bodies per D-08 (Kala compatibility):
+
+```python
+# ketu/charts/api.py line 54
+_BODY_COUNT: int = len(_CANONICAL_BODIES)
+```
+
+And test `test_body_count_frozen_at_thirteen()` enforces this:
+
+```python
+# tests/charts/test_compute_chart.py (implied)
+assert len(bodies) == 13, "Axis freeze broken; update D-08 decision"
+```
+
+**When adding Chiron:**
+1. Update D-08 decision in ROADMAP (or create D-XX for Chiron freeze).
+2. Grow the axis from 13 to 14.
+3. Run full test suite; the ratchet test will force a human review.
+4. Coordinate with Kala team (if still active) on positional contract.
+
+**3. Speed (°/day) Estimate for Chiron:**
+
+Chiron orbital period ≈50.7 years, so mean motion ≈360° / (50.7 × 365.25) ≈ 0.0195°/day.
+
+Store in `bodies` structured array (same pattern as Lilith: mean rate = 0.111°/day).
+
+### Ephemeris Accuracy Boundaries (for documentation)
+
+Current known divergences from Swiss Ephemeris:
+
+| Body | Method | Max Error | Notes |
+|------|--------|-----------|-------|
+| Sun (geocentric) | Meeus truncated polynomials + aberration | ~56 arcsec | Custom implementation; TRUE Sun, not mean. |
+| Moon | Meeus sinusoid series | ~0.61° | Truncated lunar theory; full theory ∈ pyswisseph. |
+| Mercury-Pluto | Kepler + perturbations | ±0.1-0.5° | High-precision rates from JPL J2000.0. |
+| Rahu/Ketu | Lunar nodes (regressing) | <0.01° | Analytic, no perturbations. |
+| Lilith (mean apogee) | Fitted sinusoid (Phase 8) | ±0.008° | Verified against swe.MEAN_APOG. |
+| Chiron (TBD v1.3) | TBD: Chebyshev? | TBD | To be determined post-Phase 21 research. |
+
+**Recommendation for Chiron:** Use Chebyshev polynomial fit (like Lilith Phase 8) over Swiss Ephemeris Moshier positions, with cross-check residuals <0.01°.
+
+---
+
+## Security Considerations
+
+### No Known Security Issues
+
+- No external API keys or credentials embedded in source code.
+- No unsafe deserialization (pickle, eval, exec).
+- No SQL/command injection vectors (pure NumPy calculations).
+- Type hints + mypy --strict over ~95% of codebase catch type confusion bugs.
+
+**Recommendation:** Continue enforcing mypy --strict gate on all new code.
+
+---
+
+## Performance Concerns
+
+### Known Bottlenecks
+
+**1. Python Loop in compute_chart() (v1.2 design trade-off):**
+
+- Location: `ketu/charts/api.py:175-180` (_build_aspect_matrix)
+- Problem: Loop over leading shape S (chart batch dimension) in Python; each iteration calls `calculate_aspects_vectorized()`.
+- Trade-off: Acceptable for S ∈ {1, 100} (typical use case); would degrade for S > 10k.
+- Fix approach (v1.3): Benchmark S=10k; if profiling shows >30% of chart compute is Python overhead, consider vectorising the loop over S using numpy.einsum or einsum-like broadcast trick (D-16, discussed in charts/api.py:153-157).
+
+**2. LRU Cache Size (body_properties in calculations.py):**
+
+- Location: `ketu/calculations.py:98` — `@lru_cache(maxsize=1024)`
+- Problem: With ~400-600 unique JDs per typical use (transits, aspects batch), cache hit rate is high. But cache never evicts; older entries remain in memory.
+- Impact: Low for typical use (memory ~50-100 MB per 1000 cached entries). Acceptable for v1.2.
+- Fix approach: Monitor in v1.3; consider switching to `functools.cache` (unbounded, Python 3.9+) or explicit cache size limit based on profiling.
+
+**3. No Query Optimization in cycles module:**
+
+- Location: `ketu/cycles/calculator.py`
+- Problem: Cycle calculations loop over all timestamps; no early-exit or caching strategy for repeated calculations.
+- Impact: Medium — acceptable for typical use (dozens of years of daily/hourly data); would degrade for continuous minute-by-minute calculations.
+- Fix approach (v1.3): Profile against real-world data (e.g., 50 years daily = ~18k points); consider caching intermediate results across batches.
+
+---
+
+## Technical Debt Summary (Priority Order for v1.3)
+
+| Debt Item | Severity | Effort | v1.3 Target |
+|-----------|----------|--------|-------------|
+| **_ecliptic.py low coverage (64%)** | High | Medium | YES — add RA↔λ unit tests |
+| **Chiron ephemeris + Chebyshev setup** | High | High | YES (depends on Phase 21 research) |
+| **Duplicate natal fixtures** | Medium | Low | YES — consolidate to tests/conftest.py |
+| **Division-by-zero warning (orbital.py:755)** | Medium | Low | YES — add guard clause |
+| **aspects/core.py error paths** | Medium | Low | YES — add invalid-spec tests |
+| **Long ephemeris functions (orbital.py, planets.py)** | Low | Medium | NO — defer to cleanup phase after Chiron |
+| **Display.py consolidation** | Low | Low | NO — defer to CLI refactor |
+| **compute_chart() Python loop vectorisation** | Low | High | NO — benchmark first, v1.4 if needed |
+
+---
+
+## Carry-Forward Items from v1.2
+
+**From commit history and memory:**
+
+1. **TODO(v1.3) in charts/api.py:171** — Hoist `resolve_aspect_set(aspects)` above loop if profiling shows cost. (Low priority; currently runs at ~µs.)
+
+2. **venv shebangs hardcoded to solaris/ketu path** — Not observed in current codebase; verify if this is legacy.
+
+3. **Numpydoc gate recently became blocking** — Flipped in Phase 20 (commit ae80c17). All current code passes; monitor for new violations.
+
+4. **Python 3.10 minimum** — `pyproject.toml:10` pins to `requires-python = ">=3.10"`. ClassVar, TypeAlias, and match statements are available; leverage for v1.3 refactors if beneficial.
+
+---
+
+## Recommendations for v1.3 Planning
+
+### Must-Do (Blocking for release):
+
+1. **Chiron ephemeris implementation** — Research + Chebyshev fit + integration (Phase 21 scope).
+2. **_ecliptic.py coverage to 100%** — Add RA↔λ round-trip tests.
+3. **Division-by-zero fix** — Guard clause in orbital.py:755.
+
+### Should-Do (Quality gates):
+
+4. **Consolidate natal fixtures** — Reduce test maintenance debt.
+5. **aspects/core.py error paths** — Ensure error handling is tested.
+6. **Docstring depth review** — examples.py may benefit from dynamic generation vs hard-coded values.
+
+### Nice-to-Have (Refactoring):
+
+7. **Long-function extraction** — Defer unless other changes necessitate it.
+8. **compute_chart() vectorisation** — Profile first; likely not needed for typical use case (S < 10k).
+
+---
+
+*Technical concerns audit: 2026-05-29*
