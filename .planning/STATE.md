@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
-status: executing
-last_updated: "2026-05-28T21:10:00Z"
+status: complete
+last_updated: "2026-05-28T21:20:00Z"
 last_activity: 2026-05-28
 progress:
   total_phases: 8
-  completed_phases: 7
-  total_plans: 32
-  completed_plans: 32
+  completed_phases: 8
+  total_plans: 33
+  completed_plans: 33
   percent: 100
 ---
 
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 20 (Release Preparation v1.2.0) — COMPLETE (3 of 3 plans). Only Plan 20-04 (PyPI publish) remains.
+**Current focus:** MILESTONE v1.2 COMPLETE — ketu==1.2.0 live on PyPI. All phases and plans done.
 
 ## Current Position
 
-Phase: 20 (release-preparation-v1-2-0) — IN PROGRESS (3 of 3 plans complete, awaiting publish)
-Plan: 3 of 3 (Plan 20-03 version/changelog/docs complete)
-Status: Plan 20-03 shipped (2026-05-28). Version bumped to 1.2.0 (pyproject.toml + ketu/__init__.py). CHANGELOG [Unreleased] promoted to dated [1.2.0] - 2026-05-28 (additive-only, no BREAKING heading; Phase 15 HOU2 + Phase 19 PARTS + OPS-03 workflow refresh entries added). fr/CHANGELOG.md created as generated French translation (OPS-04 LOCKED DECISION). UPGRADING.md v1.1->v1.2 additive section added. README What's New updated to v1.2.0. REQUIREMENTS.md PARTS-01..08 flipped to Done; OPS-03/OPS-04 flipped to Done. 1284 tests green.
-Progress: [███] 100% plans complete (release pending)
+Phase: 20 (release-preparation-v1-2-0) — COMPLETE (4 of 4 plans complete)
+Plan: 4 of 4 (Plan 20-04 PyPI publish ceremony complete)
+Status: Plan 20-04 shipped (2026-05-28). v1.2.0 annotated tag pushed to origin. publish.yml workflow 26602811661 succeeded in 33s (build 16s + publish-to-pypi 17s via OIDC). GitHub release v1.2.0 created with sdist + wheel attached (https://github.com/alkimya/ketu/releases/tag/v1.2.0). Fresh-venv pip install ketu==1.2.0 from PyPI smoke-imports all 5 new subpackages cleanly (ketu.__version__ == importlib.metadata.version("ketu") == "1.2.0"). OPS-05 DONE. MILESTONE v1.2 COMPLETE.
+Progress: [████] 100% complete — MILESTONE SHIPPED
 Last activity: 2026-05-28
-Resume file: Phase 20 Plan 04 next — PyPI publish via OIDC trusted publishing (OPS-05).
+Resume file: None — milestone v1.2 complete. Next: plan v1.3 milestone.
 
 ---
 
