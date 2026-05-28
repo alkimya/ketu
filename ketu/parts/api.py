@@ -1,5 +1,4 @@
-"""Sect-aware dispatch for Arabic Parts: :func:`calculate_part` and
-:func:`calculate_all_parts`.
+"""Sect-aware dispatch for Arabic Parts: :func:`calculate_part` + :func:`calculate_all_parts`.
 
 Both functions take a scalar :data:`ketu.charts.CHART_DTYPE` record (produced
 by :func:`ketu.charts.compute_chart`) and delegate formula selection to the
