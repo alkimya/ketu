@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.2
 milestone_name: Astrologie relationnelle et prédictive
 status: executing
-last_updated: "2026-05-28T20:20:45Z"
+last_updated: "2026-05-28T20:48:00Z"
 last_activity: 2026-05-28
 progress:
   total_phases: 8
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-08 — v1.2 milestone initialized)
 
 ## Current Position
 
-Phase: 20 (release-preparation-v1-2-0) — IN PROGRESS (1 of 3 plans complete)
-Plan: 1 of 3 (Plan 20-01 action version bump complete)
-Status: Plan 20-01 shipped (2026-05-28, ~1m, 2 tasks, 2 files modified). **GitHub Actions bumped to Node-24 majors in both workflow files.** tests.yml: checkout@v5 + setup-python@v6 + codecov-action@v5. publish.yml: checkout@v5 + setup-python@v6 + upload-artifact@v5 + download-artifact@v5 (matched pair). pypa/gh-action-pypi-publish@release/v1 unchanged. Zero @v4 references remain. OPS-03 satisfied.
-Progress: [█░░] 33% (1 of 3 plans complete)
+Phase: 20 (release-preparation-v1-2-0) — IN PROGRESS (2 of 3 plans complete)
+Plan: 2 of 3 (Plan 20-02 numpydoc gate flip complete)
+Status: Plan 20-02 shipped (2026-05-28, ~25m, 2 tasks, 58 files modified). **OPS-02 finalized: numpydoc gate is now fully blocking in CI, pyproject.toml, and Makefile.** Zero violations across all 61 linted files. Rule 1 auto-fix: 214 pre-existing GL01 violations (hidden by suppression) fixed across 44 files. GL07 section-order violations fixed in 5 functions. GL02 closing-quote violations fixed in 4 docstrings. 1284 tests green, interrogate 100%.
+Progress: [██░] 67% (2 of 3 plans complete)
 Last activity: 2026-05-28
-Resume file: Phase 20 Plan 02 next — numpydoc CI gate (OPS-02 finalization).
+Resume file: Phase 20 Plan 03 next — CHANGELOG + version bump to v1.2.0 (OPS-04/OPS-05).
 
 ---
 
@@ -214,6 +214,8 @@ Resume file: Phase 20 Plan 02 next — numpydoc CI gate (OPS-02 finalization).
 - [Phase 19-03]: Fortune!=Spirit mirror-guard run on BOTH charts (day+night); sect premise asserted at module level (import-time collection error if fixture sect changes, not a buried test failure).
 - [Phase 19-arabic-parts-framework]: calculate_all_parts default+filter branches tested in TestCalculateAllParts — api.py pushed to 100% (was 88% after Tasks 1+2)
 - [Phase 19-arabic-parts-framework]: Fortune!=Spirit mirror-guard on BOTH charts (day+night); sect premise asserted at module level (import-time collection error)
+- [Phase 20-02]: GL01 suppression removal exposed 214 pre-existing violations across 44 files — the plan's "zero GL01 violations" claim was wrong (they were suppressed not absent). All fixed via Rule 1 auto-fix: summary moved to line after opening triple-quote. GL07 (5 functions) and GL02 (4 docstrings) also fixed. make doc-gates now exits non-zero on any violation.
+- [Phase 20-02]: NumPy docstring convention requires summary on the LINE AFTER opening triple-quote (not on the same line). All 61 linted ketu/*.py files now comply. Section order: Parameters → Returns → Raises → See Also → Notes → Examples.
 
 ## Session Continuity
 
