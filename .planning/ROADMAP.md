@@ -243,7 +243,12 @@ Plans:
 4. CHANGELOG `[1.2.0] - YYYY-MM-DD` entry summarizes additive APIs (CHART, SYN, COMP, RET, PARTS, three new house systems, doc gates, workflow refresh) with no BREAKING heading; UPGRADING.md migration recipes are additive-only.
 5. `ketu==1.2.0` published on PyPI via OIDC trusted publishing; GitHub release v1.2.0 attaches sdist + wheel; fresh-venv `pip install ketu==1.2.0` smoke-imports cleanly.
 
-**Plans**: TBD
+**Plans**: 4 plans
+
+- [ ] 20-01-action-version-bump-PLAN.md — Bump GitHub Actions to Node-24 majors in tests.yml + publish.yml (OPS-03)
+- [ ] 20-02-numpydoc-fix-and-gate-flip-PLAN.md — Fix all numpydoc violations, flip the doc gate to blocking (OPS-02 finalization)
+- [ ] 20-03-version-changelog-docs-PLAN.md — Bump to 1.2.0, dated additive [1.2.0] CHANGELOG, create fr/CHANGELOG.md, UPGRADING/README, reqs drift (OPS-04, OPS-05 prep)
+- [ ] 20-04-release-publish-PLAN.md — Pre-flight, human go/no-go, tag + publish to PyPI via OIDC, GitHub release, verify (OPS-05)
 
 ## Progress
 
@@ -262,7 +267,7 @@ Plans:
 | 17. Composite Chart (Midpoint)         | v1.2      | 4/4            | ✓ Complete    | 2026-05-24 |
 | 18. Solar + Lunar Returns (Std + Reloc)| v1.2      | 5/5            | ✓ Complete    | 2026-05-28 |
 | 19. Arabic Parts Framework + 3 Parts   | v1.2      | 3/3            | ✓ Complete    | 2026-05-28 |
-| 20. Release Preparation v1.2.0         | v1.2      | 0/?            | Not started   | —          |
+| 20. Release Preparation v1.2.0         | v1.2      | 0/4            | Planned       | —          |
 
 ---
 
