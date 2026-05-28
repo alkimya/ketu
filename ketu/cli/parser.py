@@ -23,6 +23,7 @@ from .introspection import (
     cmd_list_aspect_sets,
     cmd_list_house_systems,
     cmd_list_orbs,
+    cmd_list_parts,
 )
 from .synastry_cmd import cmd_synastry
 
@@ -69,6 +70,11 @@ def build_parser() -> argparse.ArgumentParser:
             "List available synastry orb presets (synastry, classical) with "
             "the formula derivation and exit."
         ),
+    )
+    parser.add_argument(
+        "--list-parts",
+        action="store_true",
+        help="List all registered Arabic Parts (Fortune, Spirit, Marriage) and exit.",
     )
 
     # Top-level --harmonics SPEC. Plan 11-02 wires type=parse_harmonics_spec
@@ -295,6 +301,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         return 0
     if args.list_orbs:
         cmd_list_orbs()
+        return 0
+    if args.list_parts:
+        cmd_list_parts()
         return 0
 
     # No subcommand → print help and return 0.
