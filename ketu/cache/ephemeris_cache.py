@@ -42,15 +42,23 @@ class EphemerisCache:
     Stores daily positions for all 13 celestial bodies and provides
     fast lookups with linear interpolation for any timestamp.
 
-    Attributes:
-        cache_dir: Directory for persistent cache files (.npy)
-        memory_cache: In-memory cache of loaded months
+    Parameters
+    ----------
+    cache_dir : str or Path, optional
+        Directory for persistent cache files (.npy).
+        Defaults to ``~/.ketu/ephemeris_cache``.
 
-    Example:
-        >>> cache = EphemerisCache()
-        >>> cache.ensure_range(2025, 1, 2025, 12)
-        >>> pos = cache.get_position(datetime(2025, 6, 15, 14, 30), body_id=0)
-        >>> print(f"Sun longitude: {pos[0]:.2f}°")
+    Attributes
+    ----------
+    cache_dir : Path
+        Directory for persistent cache files (.npy).
+
+    Examples
+    --------
+    >>> cache = EphemerisCache()
+    >>> cache.ensure_range(2025, 1, 2025, 12)
+    >>> pos = cache.get_position(datetime(2025, 6, 15, 14, 30), body_id=0)
+    >>> print(f"Sun longitude: {pos[0]:.2f}°")
     """
 
     def __init__(self, cache_dir: Optional[Union[str, Path]] = None):
@@ -115,7 +123,7 @@ class EphemerisCache:
         return result
 
     def ensure_month(self, year: int, month: int, force_recompute: bool = False) -> None:
-        """Ensure a month is cached (compute if needed)
+        """Ensure a month is cached (compute if needed).
 
         Parameters
         ----------
@@ -153,7 +161,7 @@ class EphemerisCache:
         end_month: int,
         force_recompute: bool = False,
     ) -> None:
-        """Ensure a range of months is cached
+        """Ensure a range of months is cached.
 
         Parameters
         ----------
@@ -185,7 +193,7 @@ class EphemerisCache:
         body_id: int,
         interpolate: bool = True,
     ) -> np.ndarray:
-        """Get position for a single body at a specific time
+        """Get position for a single body at a specific time.
 
         Parameters
         ----------
@@ -266,7 +274,7 @@ class EphemerisCache:
         timestamp: datetime,
         interpolate: bool = True,
     ) -> np.ndarray:
-        """Get positions for all bodies at a specific time
+        """Get positions for all bodies at a specific time.
 
         Parameters
         ----------
@@ -291,7 +299,7 @@ class EphemerisCache:
         body_id: int,
         interpolate: bool = True,
     ) -> np.ndarray:
-        """Get positions for a single body across multiple timestamps (slow path)
+        """Get positions for a single body across multiple timestamps (slow path).
 
         For better performance, use get_positions_vectorized().
 
@@ -319,7 +327,7 @@ class EphemerisCache:
         timestamps: List[datetime],
         body_id: int,
     ) -> Tuple[np.ndarray, np.ndarray]:
-        """Get longitude and velocity for a body across timestamps (vectorized)
+        """Get longitude and velocity for a body across timestamps (vectorized).
 
         This is the fast path - uses numpy vectorized operations instead of
         Python loops. ~10x faster than get_positions_batch for large arrays.
@@ -430,7 +438,7 @@ class EphemerisCache:
         timestamps: List[datetime],
         body_id: int,
     ) -> np.ndarray:
-        """Get longitudes only for a single body (fast path)
+        """Get longitudes only for a single body (fast path).
 
         Parameters
         ----------
@@ -453,7 +461,14 @@ class EphemerisCache:
         self._loaded_months.clear()
 
     def cache_stats(self) -> Dict[str, Union[int, float, List[str]]]:
-        """Get cache statistics."""
+        """Get cache statistics.
+
+        Returns
+        -------
+        dict
+            Dictionary with keys: ``months_in_memory``, ``months_on_disk``,
+            ``memory_bytes``, ``memory_mb``, ``disk_files``.
+        """
         disk_files = list(self.cache_dir.glob("*-ephemeris.npy"))
         memory_size = sum(
             arr.nbytes for arr in self._memory_cache.values()
@@ -473,7 +488,13 @@ _default_cache: Optional[EphemerisCache] = None
 
 
 def get_default_cache() -> EphemerisCache:
-    """Get the default global cache instance."""
+    """Get the default global cache instance.
+
+    Returns
+    -------
+    EphemerisCache
+        The module-level singleton, created on first call.
+    """
     global _default_cache
     if _default_cache is None:
         _default_cache = EphemerisCache()

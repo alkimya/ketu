@@ -30,7 +30,7 @@ from ketu.calculations import long, positions, distance
 
 
 def get_orb(body1: int, body2: int, asp: int) -> float:
-    """Calculate the orb tolerance for two bodies and an aspect
+    """Calculate the orb tolerance for two bodies and an aspect.
 
     Parameters
     ----------
@@ -51,7 +51,7 @@ def get_orb(body1: int, body2: int, asp: int) -> float:
 
 
 def get_aspect(jdate: float, body1: int, body2: int) -> Optional[Tuple]:
-    """Find aspect between two bodies at a given date
+    """Find aspect between two bodies at a given date.
 
     Parameters
     ----------
@@ -84,7 +84,7 @@ def calculate_aspects(
     l_bodies: np.ndarray = bodies,
     aspects: AspectSetSpec = None,
 ) -> np.ndarray:
-    """Calculate all aspects between bodies at a given date
+    """Calculate all aspects between bodies at a given date.
 
     Parameters
     ----------
@@ -137,7 +137,7 @@ def calculate_aspects_vectorized(
     l_bodies: np.ndarray = bodies,
     aspects: AspectSetSpec = None,
 ) -> np.ndarray:
-    """Calculate all aspects using vectorized operations (faster)
+    """Calculate all aspects using vectorized operations (faster).
 
     This function computes all planetary aspects in parallel using NumPy
     broadcasting, which is significantly faster than the loop-based approach.
@@ -254,7 +254,7 @@ def calculate_aspects_batch(
     l_bodies: np.ndarray = bodies,
     aspects: AspectSetSpec = None,
 ) -> List[np.ndarray]:
-    """Calculate aspects for multiple dates (batch processing)
+    """Calculate aspects for multiple dates (batch processing).
 
     This function efficiently computes aspects for multiple dates by leveraging
     vectorized position calculations.
@@ -381,7 +381,7 @@ def calculate_aspects_batch(
 
 
 def find_aspect_timing(jdate: float, body1: int, body2: int, aspect_value: float) -> Tuple[float, float, float]:
-    """Find beginning, exact, and end times for an aspect
+    """Find beginning, exact, and end times for an aspect.
 
     Parameters
     ----------
@@ -450,7 +450,7 @@ def find_aspects_between_dates(
     body2: Optional[int] = None,
     aspects: AspectSetSpec = None,
 ) -> List[Tuple]:
-    """Find all aspects between two dates
+    """Find all aspects between two dates.
 
     Parameters
     ----------

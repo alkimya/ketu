@@ -10,17 +10,17 @@ from typing import Union, Tuple
 
 
 def utc_to_julian(dtime: datetime) -> float:
-    """Convert UTC datetime to Julian Date
+    """Convert UTC datetime to Julian Date.
 
     Parameters
     ----------
     dtime : datetime
-        datetime object (timezone-aware or naive assumed UTC)
+        Datetime object (timezone-aware or naive assumed UTC).
 
     Returns
     -------
     float
-        Julian Date as float
+        Julian Date as float.
 
     Notes
     -----
@@ -60,17 +60,17 @@ def utc_to_julian(dtime: datetime) -> float:
 
 
 def julian_to_utc(jd: float) -> datetime:
-    """Convert Julian Date to UTC datetime
+    """Convert Julian Date to UTC datetime.
 
     Parameters
     ----------
     jd : float
-        Julian Date
+        Julian Date.
 
     Returns
     -------
     datetime
-        UTC datetime object
+        UTC datetime object.
 
     Notes
     -----
@@ -122,17 +122,17 @@ def julian_to_utc(jd: float) -> datetime:
 
 
 def delta_t(year: float) -> float:
-    """Calculate Delta T (TT - UT1) for a given year
+    """Calculate Delta T (TT - UT1) for a given year.
 
     Parameters
     ----------
     year : float
-        Year as float (can include fractional year)
+        Year as float (can include fractional year).
 
     Returns
     -------
     float
-        Delta T in seconds
+        Delta T in seconds.
 
     Notes
     -----
@@ -213,17 +213,17 @@ def delta_t(year: float) -> float:
 
 
 def terrestrial_to_universal(jd_tt: float) -> float:
-    """Convert Terrestrial Time (TT) to Universal Time (UT)
+    """Convert Terrestrial Time (TT) to Universal Time (UT).
 
     Parameters
     ----------
     jd_tt : float
-        Julian Date in Terrestrial Time
+        Julian Date in Terrestrial Time.
 
     Returns
     -------
     float
-        Julian Date in Universal Time
+        Julian Date in Universal Time.
     """
     # Extract year from Julian Date for Delta T calculation
     # Approximate conversion
@@ -236,17 +236,17 @@ def terrestrial_to_universal(jd_tt: float) -> float:
 
 
 def universal_to_terrestrial(jd_ut: float) -> float:
-    """Convert Universal Time (UT) to Terrestrial Time (TT)
+    """Convert Universal Time (UT) to Terrestrial Time (TT).
 
     Parameters
     ----------
     jd_ut : float
-        Julian Date in Universal Time
+        Julian Date in Universal Time.
 
     Returns
     -------
     float
-        Julian Date in Terrestrial Time
+        Julian Date in Terrestrial Time.
     """
     # Extract year from Julian Date for Delta T calculation
     year = (jd_ut - 2451545.0) / 365.25 + 2000.0
@@ -258,17 +258,17 @@ def universal_to_terrestrial(jd_ut: float) -> float:
 
 
 def equation_of_time(jd: float) -> float:
-    """Calculate the equation of time for a given Julian Date
+    """Calculate the equation of time for a given Julian Date.
 
     Parameters
     ----------
     jd : float
-        Julian Date
+        Julian Date.
 
     Returns
     -------
     float
-        Equation of time in minutes
+        Equation of time in minutes.
 
     Notes
     -----
@@ -311,7 +311,7 @@ def sidereal_time(jd: float, longitude: float = 0.0) -> float:
         Julian Date in UT.
     longitude : float, optional
         Observer's longitude in degrees (east positive).
-        If 0, returns apparent GST. (default: 0.0)
+        If 0, returns apparent GST (default: 0.0).
 
     Returns
     -------
@@ -367,17 +367,17 @@ def sidereal_time(jd: float, longitude: float = 0.0) -> float:
 
 
 def local_to_utc(dtime: datetime) -> datetime:
-    """Convert local time to UTC time
+    """Convert local time to UTC time.
 
     Parameters
     ----------
     dtime : datetime
-        datetime object (timezone-aware or naive)
+        Datetime object (timezone-aware or naive).
 
     Returns
     -------
     datetime
-        UTC datetime object
+        UTC datetime object.
 
     Notes
     -----

@@ -13,20 +13,21 @@ The row order is canonical and append-only (Phase 9 invariant)::
     5=Quintile, 6=Binovile, 7=Square, 8=Tredecile, 9=Trine,
     10=Biquintile, 11=Quincunx, 12=Quadrinovile, 13=Opposition
 
-Public API
-----------
-- ``CLASSICAL``, ``TRADITIONAL``, ``EXTENDED`` : frozen length-14 ``np.bool_`` masks.
-- ``AspectSetSpec`` : type alias for the resolver input.
-- ``resolve_aspect_set`` : single-call resolver that returns a length-14 mask.
+Notes
+-----
+Public API: ``CLASSICAL``, ``TRADITIONAL``, ``EXTENDED`` are frozen
+length-14 ``np.bool_`` masks. ``AspectSetSpec`` is the type alias for
+the resolver input. ``resolve_aspect_set`` is the single-call resolver
+that returns a length-14 mask.
 
-ASP-06 forward-looking rule
-----------------------------
-No current LRU cache (``ketu.calculations:body_properties``,
-``ketu.aspects.core:_cached_planet_position_batch``) materializes filtered aspect
-output, so cache keys today do NOT need to include the aspect-set hash. If a
-future cache memoizes a function whose return value depends on ``aspects=``,
-its key MUST include ``mask.tobytes()`` (or equivalent) to avoid stale results
-across different aspect sets. See Phase 9 RESEARCH.md, Pitfall 4.
+ASP-06 forward-looking rule: no current LRU cache
+(``ketu.calculations:body_properties``,
+``ketu.aspects.core:_cached_planet_position_batch``) materializes filtered
+aspect output, so cache keys today do NOT need to include the aspect-set
+hash. If a future cache memoizes a function whose return value depends on
+``aspects=``, its key MUST include ``mask.tobytes()`` (or equivalent) to
+avoid stale results across different aspect sets.
+See Phase 9 RESEARCH.md, Pitfall 4.
 """
 from __future__ import annotations
 

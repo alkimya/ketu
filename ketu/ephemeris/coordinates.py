@@ -13,7 +13,7 @@ def spherical_to_rectangular(
     lat: Union[float, np.ndarray],
     r: Union[float, np.ndarray]
 ) -> Tuple[Union[float, np.ndarray], Union[float, np.ndarray], Union[float, np.ndarray]]:
-    """Convert spherical coordinates to rectangular coordinates (vectorized)
+    """Convert spherical coordinates to rectangular coordinates (vectorized).
 
     Parameters
     ----------
@@ -48,7 +48,7 @@ def rectangular_to_spherical(
     y: Union[float, np.ndarray],
     z: Union[float, np.ndarray]
 ) -> Tuple[Union[float, np.ndarray], Union[float, np.ndarray], Union[float, np.ndarray]]:
-    """Convert rectangular coordinates to spherical coordinates (vectorized)
+    """Convert rectangular coordinates to spherical coordinates (vectorized).
 
     Parameters
     ----------
@@ -94,7 +94,7 @@ def ecliptic_to_equatorial(
     z: Union[float, np.ndarray],
     obliquity: Union[float, np.ndarray]
 ) -> Tuple[Union[float, np.ndarray], Union[float, np.ndarray], Union[float, np.ndarray]]:
-    """Convert ecliptic coordinates to equatorial coordinates (vectorized)
+    """Convert ecliptic coordinates to equatorial coordinates (vectorized).
 
     Parameters
     ----------
@@ -128,7 +128,7 @@ def ecliptic_to_equatorial(
 
 
 def equatorial_to_ecliptic(x: float, y: float, z: float, obliquity: float) -> Tuple[float, float, float]:
-    """Convert equatorial coordinates to ecliptic coordinates
+    """Convert equatorial coordinates to ecliptic coordinates.
 
     Parameters
     ----------
@@ -165,7 +165,7 @@ def heliocentric_to_geocentric(
     y_earth: Union[float, np.ndarray],
     z_earth: Union[float, np.ndarray]
 ) -> Tuple[Union[float, np.ndarray], Union[float, np.ndarray], Union[float, np.ndarray]]:
-    """Convert heliocentric coordinates to geocentric coordinates (vectorized)
+    """Convert heliocentric coordinates to geocentric coordinates (vectorized).
 
     Parameters
     ----------
@@ -197,7 +197,7 @@ def heliocentric_to_geocentric(
 def geocentric_to_topocentric(
     lon: float, lat: float, dist: float, observer_lat: float, observer_lon: float, lst: float, height: float = 0.0
 ) -> Tuple[float, float, float]:
-    """Convert geocentric coordinates to topocentric coordinates
+    """Convert geocentric coordinates to topocentric coordinates.
 
     Parameters
     ----------
@@ -281,7 +281,7 @@ def geocentric_to_topocentric(
 
 
 def mean_obliquity(jd: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
-    """Calculate mean obliquity of the ecliptic (vectorized)
+    """Calculate mean obliquity of the ecliptic (vectorized).
 
     Parameters
     ----------
@@ -314,7 +314,7 @@ def mean_obliquity(jd: Union[float, np.ndarray]) -> Union[float, np.ndarray]:
 
 
 def nutation(jd: float) -> Tuple[float, float]:
-    """Calculate nutation in longitude and obliquity
+    """Calculate nutation in longitude and obliquity.
 
     Parameters
     ----------
@@ -368,7 +368,7 @@ def nutation(jd: float) -> Tuple[float, float]:
 
 
 def true_obliquity(jd: float) -> float:
-    """Calculate true obliquity of the ecliptic
+    """Calculate true obliquity of the ecliptic.
 
     Parameters
     ----------
@@ -387,7 +387,7 @@ def true_obliquity(jd: float) -> float:
 
 
 def aberration_correction(lon: float, lat: float, jd: float) -> Tuple[float, float]:
-    """Apply stellar aberration correction
+    """Apply stellar aberration correction.
 
     Parameters
     ----------

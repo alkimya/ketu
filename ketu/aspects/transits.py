@@ -264,7 +264,7 @@ def find_transits_to_position(
     custom_orb: Optional[float] = None,
     detect_retrograde: bool = True,
 ) -> List[TransitWindow]:
-    """Find transits of a moving body to a fixed longitude
+    """Find transits of a moving body to a fixed longitude.
 
     This function finds when a transiting planet forms aspects with a fixed
     reference position (e.g., natal planet position).
@@ -432,7 +432,7 @@ def get_natal_positions(
     reference_date: Union[datetime, str, float],
     bodies_list: Optional[List[Union[str, int]]] = None,
 ) -> Dict[str, NatalPosition]:
-    """Get planetary positions at a reference date (e.g., natal chart)
+    """Get planetary positions at a reference date (e.g., natal chart).
 
     Parameters
     ----------
@@ -489,7 +489,7 @@ def compare_dates_transits(
     aspects_list: Optional[List[Union[str, int]]] = None,
     custom_orb: Optional[float] = None,
 ) -> List[TransitAspect]:
-    """Compare two dates and find all transiting aspects
+    """Compare two dates and find all transiting aspects.
 
     This function compares all planetary positions at two different dates
     and finds which transiting planets are forming aspects with natal positions.

@@ -236,7 +236,7 @@ def find_aspect_window(
     custom_orb: Optional[float] = None,
     detect_retrograde: bool = True,
 ) -> AspectWindow:
-    """Find aspect window with begin, exact, and end times
+    """Find aspect window with begin, exact, and end times.
 
     This is the main API function for finding aspect timing windows.
     It automatically handles retrograde motion and can detect up to 3
@@ -396,7 +396,7 @@ def find_aspects_timeline(
     custom_orb: Optional[float] = None,
     detect_retrograde: bool = True,
 ) -> List[AspectWindow]:
-    """Find timeline of multiple aspects between two bodies
+    """Find timeline of multiple aspects between two bodies.
 
     This function finds all specified aspects between two bodies within
     a date range, sorted chronologically by exact aspect time.

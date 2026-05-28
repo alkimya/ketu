@@ -132,8 +132,10 @@ class AspectTimeline:
     def to_dict_list(self) -> List[Dict[str, Any]]:
         """Convert events to list of dictionaries.
 
-        Returns:
-            List of event dictionaries with all fields
+        Returns
+        -------
+        list of dict
+            List of event dictionaries with all fields.
         """
         result = []
         for event in self.events:
@@ -165,8 +167,10 @@ class AspectTimeline:
     def to_numpy(self) -> np.ndarray:
         """Convert to NumPy structured array (dense format for ML).
 
-        Returns:
-            Structured array with all event data
+        Returns
+        -------
+        np.ndarray
+            Structured array with all event data.
         """
         if not self.events:
             # Return empty array with correct dtype
@@ -198,8 +202,10 @@ class AspectTimeline:
     def to_json(self) -> Dict[str, Any]:
         """Convert to JSON-serializable dictionary.
 
-        Returns:
-            Dictionary with metadata and events
+        Returns
+        -------
+        dict
+            Dictionary with metadata and events.
         """
         return {
             'metadata': {
@@ -344,7 +350,7 @@ def generate_aspect_timeline(
     timezone: Optional[Union[str, ZoneInfo]] = None,
     detect_retrograde: bool = True,
 ) -> AspectTimeline:
-    """Generate aspect timeline between two bodies for ML/research applications
+    """Generate aspect timeline between two bodies for ML/research applications.
 
     This function generates a complete timeline of planetary aspects between two bodies
     within a specified date range. The output is optimized for machine learning,
@@ -360,27 +366,27 @@ def generate_aspect_timeline(
     Parameters
     ----------
     body1 : str or int
-        First body (name like "Sun" or ID like 0)
+        First body (name like "Sun" or ID like 0).
     body2 : str or int
-        Second body (name like "Mars" or ID like 4)
+        Second body (name like "Mars" or ID like 4).
     start_date : datetime or str
-        Start of timeline (datetime or ISO string like "2024-01-01")
+        Start of timeline (datetime or ISO string like "2024-01-01").
     end_date : datetime or str
-        End of timeline (datetime or ISO string like "2024-12-31")
+        End of timeline (datetime or ISO string like "2024-12-31").
     aspects_list : list, optional
-        List of aspects to include (default: BIG_FIVE)
-        Can be names ("Conjunction"), IDs (0), or angles (0.0)
+        List of aspects to include (default: BIG_FIVE).
+        Can be names ("Conjunction"), IDs (0), or angles (0.0).
     timezone : str or ZoneInfo, optional
-        Timezone for display (default: UTC)
-        Can be string like "Europe/Paris" or ZoneInfo object
+        Timezone for display (default: UTC).
+        Can be string like "Europe/Paris" or ZoneInfo object.
     detect_retrograde : bool, optional
-        Enable retrograde detection (default: True)
-        When True, finds multiple exact moments during retrogrades
+        Enable retrograde detection (default: True).
+        When True, finds multiple exact moments during retrogrades.
 
     Returns
     -------
     AspectTimeline
-        AspectTimeline object with events and export methods
+        AspectTimeline object with events and export methods.
 
     Examples
     --------
