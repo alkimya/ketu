@@ -58,7 +58,7 @@ _TROPICAL_YEAR_D: float = 365.24219  # Tropical year (equinox-to-equinox; Ketu's
 _TROPICAL_MONTH_D: float = 27.321582  # Tropical month (Moon returns to equinox-of-date longitude)
 
 
-def _signed_residual_deg(lon: np.ndarray, ref: float) -> np.ndarray:
+def _signed_residual_deg(lon: float | np.ndarray, ref: float) -> np.ndarray:
     """Signed short-arc residual in degrees, on ``[-180, +180)``.
 
     Same wrap-around algebra as ``circular_midpoint``
