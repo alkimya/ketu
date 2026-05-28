@@ -4,7 +4,7 @@
 
 - ✅ **v1.0 Production Stability** — Phases 1-7 (shipped 2026-02-12, archived to `.planning/milestones/v1.0-ROADMAP.md`)
 - ✅ **v1.1 Flexibility & Houses** — Phases 8-12 (shipped 2026-05-08, archived to `.planning/milestones/v1.1-ROADMAP.md`)
-- 📋 **v1.2 Astrologie relationnelle et prédictive** — Phases 13-20 (planning frontier; non-breaking minor strict)
+- ✅ **v1.2 Astrologie relationnelle et prédictive** — Phases 13-20 (shipped 2026-05-28; `ketu==1.2.0` on PyPI)
 
 ## Phases
 
@@ -46,7 +46,7 @@ Full details archived to `.planning/milestones/v1.1-ROADMAP.md`.
 - [x] **Phase 17: Composite Chart (Midpoint)** — `calculate_composite(chart_a, chart_b)` with circular midpoint helper and composite-derived houses *(2026-05-24)*
 - [x] **Phase 18: Solar + Lunar Returns (Standard + Relocated)** — `solar_return(...)` + `lunar_return(...)` sharing a pure-NumPy `_solve_return` helper handling 360°→0° wrap; <1 arcsecond convergence on both *(2026-05-28)*
 - [x] **Phase 19: Arabic Parts Framework + 3 Parts** — `ketu/parts/` extensible registry, sect-aware `calculate_part`, Fortune + Spirit (sect-aware) + Marriage (fixed), `--list-parts` CLI (5 remaining Hermetic Lots deferred to v1.3) *(2026-05-28)*
-- [ ] **Phase 20: Release Preparation v1.2.0** — Workflow refresh (Node 24), `fr/CHANGELOG.md` decision, PyPI publish via OIDC
+- [x] **Phase 20: Release Preparation v1.2.0** — Workflow refresh (Node 24), `fr/CHANGELOG.md` decision, PyPI publish via OIDC *(2026-05-28)*
 
 ## Cross-Cutting Constraints (v1.2)
 
@@ -267,7 +267,7 @@ Plans:
 | 17. Composite Chart (Midpoint)         | v1.2      | 4/4            | ✓ Complete    | 2026-05-24 |
 | 18. Solar + Lunar Returns (Std + Reloc)| v1.2      | 5/5            | ✓ Complete    | 2026-05-28 |
 | 19. Arabic Parts Framework + 3 Parts   | v1.2      | 3/3            | ✓ Complete    | 2026-05-28 |
-| 20. Release Preparation v1.2.0         | v1.2      | 0/4            | Planned       | —          |
+| 20. Release Preparation v1.2.0         | v1.2      | 4/4            | ✓ Complete    | 2026-05-28 |
 
 ---
 
