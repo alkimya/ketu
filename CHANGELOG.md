@@ -7,7 +7,7 @@ All notable changes to Ketu are documented here.
 This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [1.2.0] - 2026-05-28
 
 ### Added
 
@@ -16,6 +16,14 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   into `tests.yml`. New `[project.optional-dependencies].dev` group
   installs both tools (`pip install -e .[dev]`); `make doc-gates`
   runs the full suite locally. (OPS-01, OPS-02)
+- **Three new house systems** — Whole Sign (`"whole_sign"`), Equal
+  (`"equal"`), and Regiomontanus (`"regiomontanus"`) registered in
+  `ketu.houses.SYSTEMS` via the `@register` decorator. Available
+  through `calculate_houses(..., system=...)`, the
+  `ketu houses --system` CLI, and `ketu --list-house-systems`.
+  `ketu --list-house-systems` now returns six entries:
+  `equal, koch, placidus, porphyry, regiomontanus, whole_sign`.
+  (HOU2-01..05 / Phase 15)
 - **`ketu.synastry` subpackage** — `calculate_synastry(chart_a,
   chart_b)` returns a `SYNASTRY_DTYPE`-formatted structured array
   (8 fields, record-style; cross-product enumeration of 15 bodies
@@ -96,19 +104,21 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   `ketu.composite` module docstring; no aspirational stub or TODO
   reference anywhere in the subpackage (ROADMAP Phase 17 success
   criterion #4).
-- `ketu.returns` subpackage — Solar and Lunar return chart derivation
-  with relocation support. Two public functions sharing a single
-  pure-NumPy bisection root-finder (ROADMAP Success Criterion #3
-  factorisation lock).
-- `ketu.returns.solar_return(natal_jd, natal_lat, natal_lon,
+- **`ketu.returns` subpackage** — Solar and Lunar return chart
+  derivation with relocation support. Two public functions sharing a
+  single pure-NumPy bisection root-finder (ROADMAP Success Criterion
+  #3 factorisation lock).
+- **`ketu.returns.solar_return(natal_jd, natal_lat, natal_lon,
   target_year, return_lat=None, return_lon=None, system="placidus")
-  -> CHART_DTYPE` — resolved solar return chart for a target year;
+  -> CHART_DTYPE`** — resolved solar return chart for a target year;
   arc-second convergence on the resolved Sun-return instant
   (RET-01, RET-03).
-- `ketu.returns.lunar_return(natal_jd, natal_lat, natal_lon,
+- **`ketu.returns.lunar_return(natal_jd, natal_lat, natal_lon,
   target_jd, return_lat=None, return_lon=None, system="placidus")
-  -> CHART_DTYPE` — FIRST lunar return moment >= ``target_jd``
+  -> CHART_DTYPE`** — FIRST lunar return moment >= `target_jd`
   (~27.32 d periodicity); arc-second convergence (LRET-01, LRET-03).
+  **API asymmetry note:** `solar_return` takes an integer
+  `target_year`; `lunar_return` takes a Julian Date `target_jd`.
 - Shared internal helper `ketu.returns._solve._solve_return`:
   pure-NumPy bisection on the signed-short-arc body-longitude
   residual `((body_lon(t) - natal_lon_ref + 540) % 360) - 180`
@@ -146,6 +156,25 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   (signature symmetry only; never used for the geocentric body
   longitude resolution) and `return_lat/lon` (return chart houses)
   is documented LOUDLY in both docstrings (RET-05 + LRET-05).
+- **`ketu.parts` subpackage** — extensible `PARTS` registry +
+  `PartSpec` type (analogue of `ketu.houses.SYSTEMS`). Three built-in
+  Arabic Parts: Fortune (sect-aware — `ASC + Moon − Sun` day /
+  `ASC + Sun − Moon` night), Spirit (sect-aware mirror — day/night
+  reversed vs Fortune), Marriage (sect-invariant —
+  `ASC + Descendant − Venus`, fixed formula). (PARTS-01..07 / Phase 19)
+- **`calculate_part(part_name, chart) -> float`** — sect-aware
+  dispatch via `is_day_chart`; applies the correct day or night
+  formula from the registered `PartSpec`. (PARTS-03)
+- **`calculate_all_parts(chart, parts=None) -> dict[str, float]`** —
+  returns all registered parts (or a named subset); deterministic
+  alphabetical key order for ML pipelines. (PARTS-04)
+- **`ketu --list-parts`** CLI introspection flag — lists all
+  registered parts with formula descriptions and sect-awareness
+  annotation. Sibling of `--list-house-systems` and `--list-orbs`;
+  appended last in the first-wins CLI ladder. (PARTS-08)
+- **`make parts-coverage`** Makefile target — ≥95% coverage gate
+  scoped to `ketu/parts/`; measured at 100%. `parts_coverage_gate`
+  pytest marker registered in `pyproject.toml`. (Phase 19)
 
 ### Changed
 
@@ -155,6 +184,19 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   les comparaisons par contenu restent identiques ; aucun consommateur
   Kala ou test ne dépend de la largeur exacte. Premier consommateur :
   Phase 15 (HOU2-03 Regiomontanus). (Phase 15 / HOU2-05)
+
+### Infrastructure
+
+- **GitHub Actions workflow refresh** — `actions/checkout@v5`,
+  `actions/setup-python@v6`, `actions/upload-artifact@v5` /
+  `actions/download-artifact@v5` upgraded to Node.js 24-based
+  actions; all Node 20 deprecation warnings eliminated from both
+  `tests.yml` and `publish.yml`. (OPS-03 / Phase 20)
+- **`numpydoc validate` gate now blocking** — the CI gate (previously
+  warnings-only) is fully blocking as of v1.2.0; `make doc-gates`
+  exits non-zero on any violation; 214 pre-existing GL01 violations
+  fixed across 44 files; GL07 section-order and GL02 closing-quote
+  violations also corrected. (OPS-02 / Phase 20)
 
 ## [1.1.0] - 2026-05-08
 
