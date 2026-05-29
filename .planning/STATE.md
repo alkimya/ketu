@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T18:00:00Z"
+last_updated: "2026-05-29T19:09:05Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
   completed_phases: 2
   total_plans: 11
-  completed_plans: 8
-  percent: 73
+  completed_plans: 9
+  percent: 82
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 22 of 26 (Ephemeris Refactor) — COMPLETE → Phase 23 (Spike Chiron) next
-Plan: 22-01, 22-02, 22-03 all COMPLETE — Phase 22 done, verifier PASSED 3/3
-Status: Phase 22 fully done (2026-05-29). REF-01 (22-01): BODY_STRATEGIES registry (13 bodies), Ketu batch bug fixed (170° error). REF-02 (22-02): orbital.py (859 LOC) decomposed into _elements/_kepler/_mechanics/_perturbations/_body_getters + 70-LOC byte-identical re-export hub. REF-03 (22-03): 12 conftest fixtures consolidated to root tests/conftest.py. 1351 tests green, 100% coverage, vectorization canary <1e-10.
-Last activity: 2026-05-29 — Phase 22 executed in one parallel wave (commits 8098ab1/24230c4/456e9d7, 8ab233b/29f58a6/f3e6039, 2d469b5/c1f7e0c)
+Phase: 23 of 26 (Spike Chiron) — IN PROGRESS
+Plan: 23-01 COMPLETE (SPK-01 measurements done) → 23-02 (go/no-go decision) next
+Status: 23-01 done (2026-05-29). SPK-01: Chebyshev-by-segment spike confirms seg=32j/deg=10 achieves max|Δλ|=0.000861° (11.6× under 0.01°); 1142 segs over 1950-2050; pure-NumPy chebval confirmed; 23-MEASUREMENTS.md written with real measured numbers.
+Last activity: 2026-05-29 — Phase 23 plan 01 executed (commits a80da5e/c99d1f4)
 
 Progress: [██████████] 73% — 2/6 phases completed, 8/11 plans
 
@@ -87,6 +87,10 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - [Phase 22-ephemeris-refactor]: Aberration for regular planets moved inside _make_planet_vec — preserves batch byte-stability exactly matching original lines 564-569
 - [Phase 22-ephemeris-refactor]: Ketu batch fix via _scalar_loop_vec(11) delegating to calc_planet_position — batch-Ketu now equals scalar-Ketu; old fallback list [Rahu,NorthNode,Lilith] had omitted Ketu causing 170° heliocentric error
 - [Phase 22-ephemeris-refactor]: Regression test tolerance 0.25° for scalar/batch agreement: pre-existing get_body_position vs get_body_position_vectorized diff for Jupiter/Saturn/Uranus (0.07-0.19°) is byte-stable; 0.25° catches Ketu-class bugs (170° error)
+- [Phase 23-01]: Primary config confirmed: seg=32j, degree=10 — max|Δλ|=0.000861° (11.6× under 0.01° target)
+- [Phase 23-01]: retflag=260 (Moshier fallback) documented — seas_18.se1 seul; diff vs SWIEPH max 0.000067° negligible
+- [Phase 23-01]: n_segs=1142 (not 1153): exact range 36525j via swe.julday; worst segment 2027-04-20 (not 2046 perihelion)
+- [Phase 23-01]: 3-quantity npz confirmed: 294.4 KB; lat max 0.000986 deg, dist max 1.84e-7 AU
 
 ### Pending Todos
 
@@ -98,6 +102,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — Phase 22 (Ephemeris Refactor) executed in one parallel wave; verifier PASSED 3/3.
-Stopped at: Phase 22 fully done. REF-01/02/03 delivered, 1351 tests green, 100% coverage. SUMMARYs + 22-VERIFICATION.md (status: passed) in .planning/phases/22-ephemeris-refactor/.
-Resume file: None — Phase 22 complete, next: Phase 23 (Spike Chiron) — `/gsd:plan-phase 23`.
+Last session: 2026-05-29 — Phase 23 plan 01 (SPK-01 spike) executed; Chebyshev fit confirmed, measurements captured.
+Stopped at: 23-01 complete. SPK-01 delivered: spike_chiron_chebyshev.py + 23-MEASUREMENTS.md. Next: 23-02 (go/no-go decision).
+Resume file: None — 23-01 complete, next: run `/gsd:execute-phase` for 23-02.
