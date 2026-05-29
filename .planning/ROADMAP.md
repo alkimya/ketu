@@ -98,13 +98,13 @@ Plans:
   1. `planets.py:calc_planet_position`'s per-body if-elif is extracted into a per-body strategy structure — registering a new body adds a strategy entry, not a branch — and existing ephemeris regression tests pass unchanged (byte-stable).
   2. `orbital.py:get_body_position` is split so the ~856 LOC `orbital.py` decomposes into focused units; the ephemeris regression suite is byte-identical (no value drift).
   3. The duplicated natal fixtures across the four subpackage `conftest.py` files (charts / synastry / composite / returns) are consolidated into a root `tests/conftest.py`; subpackage tests consume the shared fixtures and the full suite stays green.
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
 
-- [ ] 22-01: TBD (per-body strategy extraction for `calc_planet_position`, REF-01)
-- [ ] 22-02: TBD (split `orbital.py:get_body_position`, byte-stable, REF-02)
-- [ ] 22-03: TBD (consolidate natal fixtures into `tests/conftest.py`, REF-03)
+- [ ] 22-01-PLAN.md (Wave 1) — Per-body strategy registry feeding BOTH scalar `calc_planet_position` and batch `calc_planet_position_batch`; fixes pre-existing batch-Ketu bug; `get_planet_name`→SWE_IDS, `range(len(SWE_IDS))`; `@lru_cache` preserved (REF-01)
+- [ ] 22-02-PLAN.md (Wave 1) — Split `orbital.py` into `_elements`/`_kepler`/`_mechanics`/`_perturbations`/`_body_getters`; orbital.py stays byte-identical re-export hub (REF-02)
+- [ ] 22-03-PLAN.md (Wave 1) — Consolidate duplicated chart_*/natal_* fixtures into root `tests/conftest.py`; trim subpackage conftests (REF-03)
 
 #### Phase 23: Spike Chiron
 
