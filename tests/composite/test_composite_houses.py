@@ -147,15 +147,23 @@ class TestGrepRatchets:
         assert "calculate_houses(" not in source
 
     def test_no_compute_chart_call_smoke(self):
-        """Pitfall 2 ratchet — ``compute_chart(`` must not appear in api.py.
+        """Pitfall 2 ratchet — ``compute_chart(`` must not appear in api.py
+        as a runtime call (i.e. outside docstring/doctest examples).
 
         A Davison implementation would call :func:`compute_chart` with
         the mid-Julian-Date and geographic midpoint; pinning the
-        absence of this substring is the cheapest anti-conflation
-        guard.
+        absence of this substring in non-doctest lines is the cheapest
+        anti-conflation guard.
         """
-        source = _API_PATH.read_text()
-        assert "compute_chart(" not in source
+        # Filter out docstring example lines (starting with '>>>')
+        # to allow `compute_chart(` in Examples sections without triggering
+        # the ratchet.  Only runtime calls (non-doctest code lines) matter.
+        lines = _API_PATH.read_text().splitlines()
+        non_doctest = [
+            line for line in lines
+            if not line.lstrip().startswith(">>>")
+        ]
+        assert "compute_chart(" not in "\n".join(non_doctest)
 
     def test_no_calculate_aspects_vectorized_call_smoke(self):
         """Pitfall ratchet — the inline aspect loop must not delegate to the engine.
