@@ -74,6 +74,10 @@ python_functions = "test_*"
 # codebase to hit the threshold. The HOU-09 95% gate scoped to
 # ketu.houses lives in the Makefile target `make houses-coverage`.
 addopts = "-v --cov=ketu --cov-report=term-missing"
+# ELLIPSIS + NORMALIZE_WHITESPACE for --doctest-modules runs (make doctest / CI).
+# These flags apply to the separate doctest invocation only — do NOT add
+# --doctest-modules to addopts (that would break partial test runs).
+doctest_optionflags = ["ELLIPSIS", "NORMALIZE_WHITESPACE"]
 markers = [
     "slow: marks tests as slow (deselect with '-m \"not slow\"')",
     "charts_coverage_gate: CHART-05 95% coverage gate for ketu.charts (run via Makefile target `make charts-coverage`)",

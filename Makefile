@@ -8,7 +8,7 @@
 
 PYTHON ?= python
 
-.PHONY: test test-fast houses-coverage charts-coverage synastry-coverage composite-coverage returns-coverage parts-coverage doc-gates mypy clean
+.PHONY: test test-fast houses-coverage charts-coverage synastry-coverage composite-coverage returns-coverage parts-coverage doc-gates doctest mypy clean
 
 ## test: Run the full pytest suite with coverage report.
 test:
@@ -105,6 +105,18 @@ returns-coverage:
 parts-coverage:
 	$(PYTHON) -m pytest tests/parts/ -o addopts="" --cov --cov-report= --cov-fail-under=0
 	$(PYTHON) -m coverage report --include='ketu/parts/*' --fail-under=95 -m
+
+## doctest: Run --doctest-modules over the ketu/ source tree.
+##
+## Uses --no-cov to avoid the NumPy _NoValueType reload bug triggered when
+## coverage.py instruments the package during doctest collection (same root
+## cause as the `houses-coverage` two-step pattern above). This is a
+## SEPARATE invocation from `make test` — --doctest-modules is intentionally
+## NOT in addopts so that partial runs (e.g. pytest tests/test_ephemeris.py)
+## do not pick up doctest collection.
+doctest:
+	$(PYTHON) -m pytest --doctest-modules ketu/ --no-cov \
+	    --ignore=ketu/lunar_calendar.py --ignore=ketu/__main__.py
 
 ## doc-gates: Run the doc-gate suite locally (interrogate + numpydoc lint).
 ##

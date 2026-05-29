@@ -58,6 +58,12 @@ jobs:
         echo "Validating $(echo "$FILES" | wc -l) files..."
         python -m numpydoc lint $FILES
 
+    - name: Doctest gate (--doctest-modules)
+      if: matrix.python-version == '3.13'
+      run: |
+        python -m pytest --doctest-modules ketu/ --no-cov \
+            --ignore=ketu/lunar_calendar.py --ignore=ketu/__main__.py
+
     - name: Upload coverage reports to Codecov
       if: matrix.python-version == '3.13'
       uses: codecov/codecov-action@v5
