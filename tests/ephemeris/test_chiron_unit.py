@@ -129,7 +129,8 @@ def test_chiron_scalar_dlon_wrap_corrections() -> None:
     # Order: lon@jd, lat@jd, dist@jd, lon@jd+delta, lat@jd+delta, dist@jd+delta
 
     def _mock_eval(jd: float, coeffs: np.ndarray,
-                   seg_starts: np.ndarray, seg_len: float) -> float:
+                   seg_starts: np.ndarray, seg_len: float,
+                   jd_end: float) -> float:
         call_count[0] += 1
         idx = call_count[0]
         # 1st call: lon at jd — near 0°
@@ -152,7 +153,8 @@ def test_chiron_scalar_dlon_wrap_corrections() -> None:
     call_count[0] = 0
 
     def _mock_eval_prograde(jd: float, coeffs: np.ndarray,
-                             seg_starts: np.ndarray, seg_len: float) -> float:
+                             seg_starts: np.ndarray, seg_len: float,
+                             jd_end: float) -> float:
         call_count[0] += 1
         idx = call_count[0]
         if idx == 1:
@@ -233,7 +235,9 @@ def test_clamp_below_range() -> None:
     jd_early = float(seg_starts[0]) - 1000.0
 
     # Should not raise, should return a finite float
-    val = _eval_chiron_qty(jd_early, data["lon_coeffs"], seg_starts, seg_len)
+    val = _eval_chiron_qty(
+        jd_early, data["lon_coeffs"], seg_starts, seg_len, float(data["jd_end"])
+    )
     assert np.isfinite(val), f"Expected finite value, got {val}"
 
     # Also verify via _chiron_scalar (exercises full clamp path)
@@ -265,7 +269,9 @@ def test_clamp_above_range() -> None:
     jd_late = float(seg_starts[-1]) + seg_len + 1000.0
 
     # Should not raise, should return a finite float
-    val = _eval_chiron_qty(jd_late, data["lon_coeffs"], seg_starts, seg_len)
+    val = _eval_chiron_qty(
+        jd_late, data["lon_coeffs"], seg_starts, seg_len, float(data["jd_end"])
+    )
     assert np.isfinite(val), f"Expected finite value, got {val}"
 
     # Also verify via _chiron_scalar

@@ -57,6 +57,7 @@ def _eval_chiron_qty(
     coeffs: np.ndarray,
     seg_starts: np.ndarray,
     seg_len: float,
+    jd_end: float,
 ) -> float:
     """Evaluate a single Chebyshev quantity for Chiron at a given Julian Date.
 
@@ -69,7 +70,10 @@ def _eval_chiron_qty(
     seg_starts : np.ndarray
         Start JD of each segment, shape ``(n_segs,)``.
     seg_len : float
-        Length of each segment in days (32.0).
+        Nominal length of each segment in days (32.0).
+    jd_end : float
+        JD of the last valid date (2469807.5 for the 1950-2050 range).  Used
+        to compute the actual length of the last (possibly truncated) segment.
 
     Returns
     -------
@@ -84,6 +88,12 @@ def _eval_chiron_qty(
     The normalised ``t`` coordinate is also clipped to ``[-1, 1]`` to guard
     against floating-point edge effects at segment boundaries.
 
+    The last segment may be shorter than ``seg_len`` when the total range is
+    not an exact multiple of 32 days.  The generator fits the polynomial over
+    the actual (shorter) segment length, so the evaluator must use that same
+    length for ``t`` normalisation — otherwise the mapping of physical JD to
+    ``t ∈ [-1, 1]`` would be wrong and accuracy would degrade significantly.
+
     Examples
     --------
     >>> data = _load_chiron_data()
@@ -92,13 +102,16 @@ def _eval_chiron_qty(
     ...     data["lon_coeffs"],
     ...     data["seg_starts"],
     ...     float(data["seg_len"]),
+    ...     float(data["jd_end"]),
     ... )
     >>> 0.0 <= val % 360.0 < 360.0
     True
     """
     si = int((jd - seg_starts[0]) / seg_len)
     si = max(0, min(si, len(seg_starts) - 1))
-    t = float(np.clip(2.0 * (jd - seg_starts[si]) / seg_len - 1.0, -1.0, 1.0))
+    # Use the actual segment length (last segment may be truncated).
+    actual_len = min(seg_starts[si] + seg_len, jd_end) - seg_starts[si]
+    t = float(np.clip(2.0 * (jd - seg_starts[si]) / actual_len - 1.0, -1.0, 1.0))
     return float(np.polynomial.chebyshev.chebval(t, coeffs[si]))
 
 
@@ -147,15 +160,16 @@ def _chiron_scalar(jd: float) -> tuple[float, float, float, float, float, float]
     data = _load_chiron_data()
     seg_starts: np.ndarray = data["seg_starts"]
     seg_len = float(data["seg_len"])
+    jd_end = float(data["jd_end"])
     jd_delta = 0.01
 
-    lon = _eval_chiron_qty(jd, data["lon_coeffs"], seg_starts, seg_len) % 360.0
-    lat = _eval_chiron_qty(jd, data["lat_coeffs"], seg_starts, seg_len)
-    dist = _eval_chiron_qty(jd, data["dist_coeffs"], seg_starts, seg_len)
+    lon = _eval_chiron_qty(jd, data["lon_coeffs"], seg_starts, seg_len, jd_end) % 360.0
+    lat = _eval_chiron_qty(jd, data["lat_coeffs"], seg_starts, seg_len, jd_end)
+    dist = _eval_chiron_qty(jd, data["dist_coeffs"], seg_starts, seg_len, jd_end)
 
-    lon1 = _eval_chiron_qty(jd + jd_delta, data["lon_coeffs"], seg_starts, seg_len) % 360.0
-    lat1 = _eval_chiron_qty(jd + jd_delta, data["lat_coeffs"], seg_starts, seg_len)
-    dist1 = _eval_chiron_qty(jd + jd_delta, data["dist_coeffs"], seg_starts, seg_len)
+    lon1 = _eval_chiron_qty(jd + jd_delta, data["lon_coeffs"], seg_starts, seg_len, jd_end) % 360.0
+    lat1 = _eval_chiron_qty(jd + jd_delta, data["lat_coeffs"], seg_starts, seg_len, jd_end)
+    dist1 = _eval_chiron_qty(jd + jd_delta, data["dist_coeffs"], seg_starts, seg_len, jd_end)
 
     dlon = lon1 - lon
     if dlon > 180.0:
