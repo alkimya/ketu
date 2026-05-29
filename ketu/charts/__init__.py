@@ -27,11 +27,10 @@ ketu.returns.lunar_return : Compute the lunar return chart for a
 Notes
 -----
 ``ketu.charts`` is composition only — it does not introduce new
-astronomical math. The ``CHART_DTYPE`` body axis ``(13,)`` is FROZEN
-per decision D-08 (Kala positional contract); adding Chiron is a
-v1.3 BREAKING change. The ``polar_fallback`` parameter on
-:func:`compute_chart` is a pass-through to
-:func:`ketu.houses.calculate_houses` per decision D-11.
+astronomical math. The ``CHART_DTYPE`` body axis ``(14,)`` was expanded
+to 14 bodies (Chiron added as body 13) in v1.3 via breaking change D-08.
+The ``polar_fallback`` parameter on :func:`compute_chart` is a
+pass-through to :func:`ketu.houses.calculate_houses` per decision D-11.
 
 Examples
 --------
@@ -42,7 +41,7 @@ Examples
 >>> lon = np.array([2.35, -21.94])
 >>> chart = compute_chart(jd, lat, lon, polar_fallback="porphyry")
 >>> chart.shape, chart["body_lons"].shape, chart["aspect_matrix"].shape
-((2,), (2, 13), (2, 13, 13))
+((2,), (2, 14), (2, 14, 14))
 """
 from __future__ import annotations
 

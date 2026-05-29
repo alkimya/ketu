@@ -43,7 +43,7 @@ preserve ±1e-10° precision through careful numerical handling.
 
 0=Sun, 1=Moon, 2=Mercury, 3=Venus, 4=Mars, 5=Jupiter, 6=Saturn,
 7=Uranus, 8=Neptune, 9=Pluto, 10=Rahu (North Node), 11=Ketu (South Node),
-12=Lilith (Black Moon).
+12=Lilith (Black Moon), 13=Chiron (Centaur, v1.3 D-08).
 
 Examples
 --------

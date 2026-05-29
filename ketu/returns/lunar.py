@@ -225,7 +225,7 @@ def lunar_return(
     >>> float(chart["jd"]) >= jd_target - 1e-7  # first return >= target
     True
     >>> chart["body_lons"].shape
-    (13,)
+    (14,)
     """
     # Type guard: target_jd must be a float-like (not str).
     # int is accepted via float() promotion.

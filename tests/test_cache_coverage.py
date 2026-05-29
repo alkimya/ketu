@@ -1,6 +1,6 @@
 """Additional tests for EphemerisCache to cover uncovered lines.
 
-Targets lines: 134, 213, 235, 240, 254-257, 283-286, 312-315, 372, 404-405.
+Targets lines: 134, 158-159, 213, 235, 240, 254-257, 283-286, 312-315, 372, 404-405.
 """
 
 import calendar
@@ -477,3 +477,49 @@ class TestVectorizedEdgeCases:
         assert lons.shape == (3,)
         assert np.all(lons >= 0)
         assert np.all(lons < 360)
+
+
+class TestStaleCacheBodyCountMismatch:
+    """Test stale cache recompute path (lines 158-159).
+
+    Covers the case where a `.npy` file on disk was built with a different
+    body count (e.g. 13 bodies pre-Chiron vs. 14 post-Chiron).  The cache
+    must silently recompute and overwrite rather than returning wrong data.
+    """
+
+    def test_stale_cache_body_count_triggers_recompute(self, tmp_path):
+        """Stale .npy file with wrong body count is recomputed transparently.
+
+        Notes
+        -----
+        Creates a fake ``2025-01-ephemeris.npy`` with shape ``(31, 13, 6)``
+        (pre-Chiron body count).  ensure_month must detect the mismatch
+        (``shape[1] != BODY_COUNT``), recompute, overwrite the file, and
+        load the fresh ``(31, 14, 6)`` data into memory.
+        """
+        cache_dir = tmp_path / "cache"
+        cache_dir.mkdir()
+
+        # Write a stale .npy file with the old 13-body shape
+        stale_data = np.zeros((31, 13, 6), dtype=np.float32)
+        stale_path = cache_dir / "2025-01-ephemeris.npy"
+        np.save(stale_path, stale_data)
+        assert stale_path.exists()
+
+        cache = EphemerisCache(cache_dir=cache_dir)
+
+        # ensure_month must detect shape[1]==13 != BODY_COUNT==14 and recompute
+        cache.ensure_month(2025, 1)
+
+        # Memory cache now has fresh 14-body data
+        data = cache._memory_cache[(2025, 1)]
+        assert data.shape[1] == BODY_COUNT, (
+            f"Expected body count {BODY_COUNT} after stale-cache recompute, "
+            f"got {data.shape[1]}"
+        )
+
+        # Disk file was overwritten with fresh data
+        fresh_data = np.load(stale_path)
+        assert fresh_data.shape[1] == BODY_COUNT, (
+            f"Disk file still has stale body count {fresh_data.shape[1]}"
+        )

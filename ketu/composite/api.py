@@ -206,7 +206,7 @@ def calculate_composite(
     >>> chart_b = compute_chart(2451900.0, 40.71, -74.01)
     >>> comp = calculate_composite(chart_a, chart_b)
     >>> comp["body_lons"].shape
-    (13,)
+    (14,)
     >>> comp["cusps"].shape
     (12,)
     """

@@ -112,11 +112,11 @@ def _build_aspect_matrix(
     aspects: AspectSetSpec,
 ) -> tuple[np.ndarray, np.ndarray]:
     """
-    Build the dense ``(13, 13)`` aspect matrix and orb matrix over leading shape ``S``.
+    Build the dense ``(14, 14)`` aspect matrix and orb matrix over leading shape ``S``.
 
     Loops over ``S`` in Python (per D-16); each ``S``-element call to
     :func:`ketu.aspects.calculator.calculate_aspects_vectorized` is
-    natively vectorised over the 78 body-pair upper-triangle, so the
+    natively vectorised over the 91 body-pair upper-triangle, so the
     Python overhead is constant in ``S``. The diagonal stays at the
     sentinel state (a body has no aspect with itself, D-06).
 
@@ -136,14 +136,14 @@ def _build_aspect_matrix(
     Returns
     -------
     aspect_matrix : np.ndarray
-        Shape ``S + (13, 13)``, dtype ``int8``. Each cell holds the
+        Shape ``S + (14, 14)``, dtype ``int8``. Each cell holds the
         canonical aspect index ``i_asp`` in ``[0, 13]`` (per
         :data:`ketu.core.aspects` ordering) when an aspect is in orb,
         or ``-1`` for "no aspect" (D-06). Symmetric per D-17:
         ``matrix[..., i, j] == matrix[..., j, i]``. Diagonal stays at
         ``-1``.
     aspect_orbs : np.ndarray
-        Shape ``S + (13, 13)``, dtype ``float32``. Orb in degrees when
+        Shape ``S + (14, 14)``, dtype ``float32``. Orb in degrees when
         an aspect is in orb, ``NaN`` for "no orb" (D-06). Symmetric per
         D-17. Diagonal stays at ``NaN``.
 
@@ -205,7 +205,7 @@ def compute_chart(
 
     Returns a structured array of :data:`ketu.charts.CHART_DTYPE` carrying
     body positions, ASC/MC/ARMC/Vertex, the 12 house cusps, and a dense
-    13x13 aspect matrix. ``(jd, lat, lon)`` broadcast to a common leading
+    14x14 aspect matrix. ``(jd, lat, lon)`` broadcast to a common leading
     shape ``S``; the returned structured array has the same leading shape
     (success criterion 14.2).
 
@@ -263,7 +263,7 @@ def compute_chart(
         engine called internally; ``polar_fallback`` is a pass-through
         per D-11.
     ketu.aspects.calculate_aspects_vectorized : Aspect engine whose
-        records are projected into the dense ``(13, 13)``
+        records are projected into the dense ``(14, 14)``
         ``aspect_matrix`` / ``aspect_orbs`` block per D-05/D-17.
     ketu.charts.is_day_chart : Sect helper (sunrise-inclusive,
         polar-safe) used by Arabic Parts (Phase 19); standalone per
@@ -271,16 +271,16 @@ def compute_chart(
 
     Notes
     -----
-    The body axis (the ``(13,)`` dimension of ``body_lons``,
+    The body axis (the ``(14,)`` dimension of ``body_lons``,
     ``body_lats``, ``body_speeds`` and the leading axis of
-    ``aspect_matrix`` / ``aspect_orbs``) is FROZEN per D-08. Indices
-    follow :data:`ketu.core.bodies` order (Sun=0, ..., Lilith=12).
-    Adding bodies is a v1.3 BREAKING change.
+    ``aspect_matrix`` / ``aspect_orbs``) was expanded to 14 bodies in
+    v1.3 (D-08 breaking change). Indices follow :data:`ketu.core.bodies`
+    order (Sun=0, ..., Lilith=12, Chiron=13).
 
     The aspect matrix is built by a Python loop over the leading shape
     ``S`` (D-16). Each ``S``-element call to
     :func:`ketu.aspects.calculator.calculate_aspects_vectorized` is
-    itself vectorised over the 78 body-pair upper-triangle, so the
+    itself vectorised over the 91 body-pair upper-triangle, so the
     Python overhead is constant in ``S``. For ML batches in the
     hundreds (synastry, composite, solar return), this is comfortably
     below the bottleneck threshold; large-batch (>10k) callers should
@@ -317,9 +317,9 @@ def compute_chart(
     >>> import numpy as np
     >>> chart = compute_chart(2451545.0, 48.86, 2.35)
     >>> chart["body_lons"].shape
-    (13,)
+    (14,)
     >>> chart["aspect_matrix"].shape
-    (13, 13)
+    (14, 14)
 
     Vectorised over an array of (jd, lat, lon) triples:
 
@@ -328,7 +328,7 @@ def compute_chart(
     >>> lon = np.array([2.35, -21.94])
     >>> charts = compute_chart(jd, lat, lon, polar_fallback="porphyry")
     >>> charts.shape, charts["body_lons"].shape, charts["aspect_matrix"].shape
-    ((2,), (2, 13), (2, 13, 13))
+    ((2,), (2, 14), (2, 14, 14))
     """
     # 1. Broadcast (mirror calculate_houses houses/api.py:107-114).
     jd_a = np.asarray(jd, dtype=np.float64)
@@ -345,11 +345,11 @@ def compute_chart(
         system=system, polar_fallback=polar_fallback,
     )
 
-    # 3. Body positions vectorised on S (loop bound to 13 bodies, constant
+    # 3. Body positions vectorised on S (loop bound to 14 bodies, constant
     #    in S; see _vectorised_body_properties docstring).
     body_lons, body_lats, body_speeds = _vectorised_body_properties(jd_b)
 
-    # 4. Aspect matrix: dense (13, 13) projection of intra-chart aspects
+    # 4. Aspect matrix: dense (14, 14) projection of intra-chart aspects
     #    (D-05, D-06, D-17). Python loop over S is a conscious v1.2
     #    trade-off (D-16); revisited in v1.3 if synastry profiling
     #    motivates a pure-vectorised reimplementation.

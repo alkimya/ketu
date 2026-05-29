@@ -178,7 +178,7 @@ def solar_return(
     >>> chart.dtype.names[:3]
     ('jd', 'lat', 'lon')
     >>> chart["body_lons"].shape
-    (13,)
+    (14,)
     """
     if not isinstance(target_year, (int, np.integer)):
         raise ValueError(
