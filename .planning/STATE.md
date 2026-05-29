@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T17:20:00Z"
+last_updated: "2026-05-29T17:43:00Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
   completed_phases: 1
-  total_plans: 8
-  completed_plans: 5
-  percent: 62
+  total_plans: 11
+  completed_plans: 6
+  percent: 55
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 21 of 26 (Quality) — COMPLETE → Phase 22 (Ephemeris Refactor) next
-Plan: 21-04 COMPLETE (final plan of phase 21)
-Status: Phase 21 fully done (2026-05-29). QAL-10/11/12 all delivered: 100% coverage gate (fail_under=100, CI flipped), 9 arcsin div/0 guards, 52 doctests + gate. 1346 tests pass.
-Last activity: 2026-05-29 — 21-04 coverage gate flip executed (commits e7b7bbb/98892ef)
+Phase: 22 of 26 (Ephemeris Refactor) — IN PROGRESS
+Plan: 22-03 COMPLETE (conftest consolidation); 22-01 and 22-02 in parallel execution
+Status: Phase 22 in progress. 22-03 done: 12 shared fixtures consolidated into root tests/conftest.py (REF-03). 1346 tests pass.
+Last activity: 2026-05-29 — 22-03 conftest consolidation executed (commits 8ab233b/2d469b5)
 
-Progress: [█████·····] 62% — 1/6 phases completed, 5/8 plans
+Progress: [█████·····] 55% — 1/6 phases completed, 6/11 plans
 
 ## v1.3 Roadmap Structure
 
@@ -53,7 +53,7 @@ Progress: [█████·····] 62% — 1/6 phases completed, 5/8 plans
 - v1.1: 27 plans / 5 phases (~3h active)
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 
-v1.3: 5 plans / 1 phase completed (Phase 21 done, 2026-05-29).
+v1.3: 6 plans / 1 phase completed (Phase 21 done; Phase 22 in progress — 22-03 complete 2026-05-29).
 
 *Updated after each plan completion.*
 
@@ -63,6 +63,9 @@ v1.3: 5 plans / 1 phase completed (Phase 21 done, 2026-05-29).
 
 Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting current work:
 
+- (22-03) Root conftest.py auto-discovery: shared session-scoped fixtures live in tests/conftest.py; no pytest_plugins; subpackage conftests keep only subpackage-specific oracle helpers.
+- (22-03) chart_b_reykjavik keeps polar_fallback=porphyry (Pitfall 3 ratchet Phase 16).
+- (22-03) natal_* fixtures are dict[str,float] triples, NOT CHART_DTYPE — returns tests work on raw JD/lat/lon.
 - v1.3 stays `1.3.0` despite breaking the 13→14 body freeze — Ketu is source-of-truth; Kala adapts. Public API additive; internal positional contract breaks.
 - Chiron via embedded Chebyshev coeffs, NOT swisseph runtime — preserves pure-NumPy runtime + AGPL isolation.
 - Refactor ephemeris BEFORE adding Chiron — makes Chiron a clean strategy, not aggravated if-elif debt.
@@ -89,6 +92,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — plan 21-04 coverage gate flip executed.
-Stopped at: Completed 21-04-PLAN.md — Phase 21 fully done. QAL-10/11/12 complete. 1346 tests, 100% coverage. Commits e7b7bbb/98892ef. SUMMARY at .planning/phases/21-quality/21-04-SUMMARY.md.
-Resume file: None — next action start Phase 22 (Ephemeris Refactor): create 22-PLAN.md.
+Last session: 2026-05-29 — plan 22-03 conftest consolidation executed.
+Stopped at: Completed 22-03-PLAN.md — REF-03 done. 12 fixtures consolidated into root tests/conftest.py. 1346 tests pass. Commits 8ab233b/2d469b5. SUMMARY at .planning/phases/22-ephemeris-refactor/22-03-SUMMARY.md.
+Resume file: None — 22-01 and 22-02 running in parallel (orbital split + strategy pattern).
