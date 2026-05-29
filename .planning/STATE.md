@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T02:00:00Z"
+last_updated: "2026-05-29T16:43:00Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 8
-  completed_plans: 3
-  percent: 37
+  completed_plans: 4
+  percent: 50
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 ## Current Position
 
 Phase: 21 of 26 (Quality) — in progress
-Plan: 21-03 COMPLETE → 21-04 next
-Status: Plan 21-03 complete (2026-05-29). QAL-12 delivered: 52 doctests pass via --doctest-modules, +SKIP removed from public API, Notes added (accuracy vs Swiss, date range, edge cases), make doctest + CI 3.13 gate wired.
-Last activity: 2026-05-29 — 21-03 docstring quality plan executed (commits e8e5e28/f78845e/1864328)
+Plan: 21-02 COMPLETE → 21-04 next (21-03 was executed out of order, already done)
+Status: Plan 21-02 complete (2026-05-29). QAL-11 delivered: 8 arcsin div/0 guards in orbital.py + 1 in coordinates.py, TestOrbitalDivZeroGuard regression (3-part contract), 1337 tests pass.
+Last activity: 2026-05-29 — 21-02 div/0 guards executed (commits ecd6501/c03187d)
 
-Progress: [███·······] 37% — 0/6 phases completed, 3/8 plans
+Progress: [████······] 50% — 0/6 phases completed, 4/8 plans
 
 ## v1.3 Roadmap Structure
 
@@ -72,6 +72,9 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - (21-03) --doctest-modules NOT added to addopts — separate make doctest invocation preserves partial test runs; doctest_optionflags ELLIPSIS + NORMALIZE_WHITESPACE added to pyproject.toml.
 - (21-03) ketu/__init__.py doctest uses from ketu.core import aspects to avoid ketu.aspects module clobbering the array in cross-file --doctest-modules namespace.
 - (21-03) Duplicate Notes sections (previous agent introduced second block) must be merged; numpydoc raises ValueError when Notes appears twice.
+- (21-02) Floor not clamp: np.maximum(r, 1e-10) inline in arcsin argument only; original r returned unchanged so distance return values unaffected.
+- (21-02) Scalar max() vs np.maximum(): scalar paths (353, 503, 558) use Python max(); array/0-d paths (405, 436, 462, 755, 813) and coordinates.py:278 use np.maximum() safe for both.
+- (21-02) coordinates.py degenerate test: height=-6378140.0 zeroes rho_cos/rho_sin + mock spherical_to_rectangular→(0,0,0) forces horizon magnitude=0 without patching numpy.
 
 ### Pending Todos
 
@@ -83,6 +86,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — plan 21-03 docstring quality executed.
-Stopped at: Completed 21-03-PLAN.md — 52 doctests, commits e8e5e28/f78845e/1864328. SUMMARY at .planning/phases/21-quality/21-03-SUMMARY.md.
+Last session: 2026-05-29 — plan 21-02 div/0 guards + regression test executed.
+Stopped at: Completed 21-02-PLAN.md — QAL-11 done, commits ecd6501/c03187d. SUMMARY at .planning/phases/21-quality/21-02-SUMMARY.md.
 Resume file: None — next action execute plan 21-04 (coverage exclude_lines for unreachable defensive branches + --cov-fail-under flip).
