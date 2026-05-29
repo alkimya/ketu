@@ -231,7 +231,7 @@ def house_of(
     --------
     >>> import numpy as np
     >>> r = calculate_houses(2451545.0, 48.8566, 2.3522)
-    >>> int(house_of(45.0, r["cusps"]))   # 1..12
+    >>> int(house_of(62.8, r["cusps"]))   # 1..12
     2
     >>> # vectorised: 5 planets at once
     >>> planet_lons = np.array([0.0, 45.0, 90.0, 180.0, 270.0])

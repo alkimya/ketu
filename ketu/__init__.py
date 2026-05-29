@@ -48,9 +48,9 @@ preserve ±1e-10° precision through careful numerical handling.
 Examples
 --------
 >>> from ketu import bodies, aspects, signs
->>> print(bodies['name'][0].decode())  # First body
+>>> bodies['name'][0].decode()  # First body name
 'Sun'
->>> print(aspects['angle'][0])  # First aspect angle
+>>> float(aspects['angle'][0])  # First aspect angle
 0.0
 """
 

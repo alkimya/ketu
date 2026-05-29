@@ -44,7 +44,7 @@ def dd_to_dms(deg: float) -> np.ndarray:
     >>> dd_to_dms(45.5)
     array([45, 30,  0], dtype=int32)
     >>> dd_to_dms(123.456)
-    array([123,  27,  22], dtype=int32)
+    array([123,  27,  21], dtype=int32)
     """
     mins, secs = divmod(deg * 3600, 60)
     degs, mins = divmod(mins, 60)
@@ -81,11 +81,11 @@ def distance(pos1: Union[float, np.ndarray], pos2: Union[float, np.ndarray]) -> 
     Examples
     --------
     >>> from ketu.calculations import distance
-    >>> distance(10, 50)
+    >>> float(distance(10, 50))
     40.0
-    >>> distance(350, 10)  # Wraps correctly at 0/360 boundary
+    >>> float(distance(350, 10))  # Wraps correctly at 0/360 boundary
     20.0
-    >>> distance(np.array([0, 90, 180]), 45)
+    >>> distance(np.array([0., 90., 180.]), 45.)
     array([ 45.,  45., 135.])
     """
     angle = np.abs(pos2 - pos1)
@@ -135,7 +135,7 @@ def body_properties(jdate: float, body: int) -> np.ndarray:
     >>> props = body_properties(jd, 0)  # Sun
     >>> lon, lat, dist, lon_v, lat_v, dist_v = props
     >>> print(f"Sun longitude: {lon:.2f}°")
-    Sun longitude: 294.82°
+    Sun longitude: 295.59°
     """
     return _body_properties_uncached(jdate, body)
 
@@ -197,11 +197,11 @@ def body_id(b_name: str) -> int:
     Examples
     --------
     >>> from ketu.calculations import body_id
-    >>> body_id("Sun")
+    >>> int(body_id("Sun"))
     0
-    >>> body_id("Jupiter")
+    >>> int(body_id("Jupiter"))
     5
-    >>> body_id("Rahu")
+    >>> int(body_id("Rahu"))
     10
     """
     return bodies["id"][np.where(bodies["name"] == b_name.encode())][0]
@@ -235,7 +235,7 @@ def long(jdate: float, body: int) -> float:
     >>> jd = utc_to_julian(datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc))
     >>> sun_lon = long(jd, 0)
     >>> print(f"Sun: {sun_lon:.2f}°")
-    Sun: 294.82°
+    Sun: 295.59°
     """
     return body_properties(jdate, body)[0]
 
@@ -263,7 +263,7 @@ def lat(jdate: float, body: int) -> float:
     >>> jd = utc_to_julian(datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc))
     >>> moon_lat = lat(jd, 1)
     >>> print(f"Moon latitude: {moon_lat:.2f}°")
-    Moon latitude: -2.34°
+    Moon latitude: 3.56°
     """
     return body_properties(jdate, body)[1]
 
@@ -292,7 +292,7 @@ def dist_au(jdate: float, body: int) -> float:
     >>> jd = utc_to_julian(datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc))
     >>> sun_dist = dist_au(jd, 0)
     >>> print(f"Sun distance: {sun_dist:.6f} AU")
-    Sun distance: 0.983721 AU
+    Sun distance: 0.983667 AU
     """
     return body_properties(jdate, body)[2]
 
@@ -321,7 +321,7 @@ def long_velocity(jdate: float, body: int) -> float:
     >>> jd = utc_to_julian(datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc))
     >>> sun_vel = long_velocity(jd, 0)
     >>> print(f"Sun velocity: {sun_vel:.3f}°/day")
-    Sun velocity: 1.016°/day
+    Sun velocity: 1.019°/day
     """
     return body_properties(jdate, body)[3]
 
@@ -349,7 +349,7 @@ def lat_velocity(jdate: float, body: int) -> float:
     >>> jd = utc_to_julian(datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc))
     >>> moon_lat_vel = lat_velocity(jd, 1)
     >>> print(f"Moon lat velocity: {moon_lat_vel:.3f}°/day")
-    Moon lat velocity: 0.234°/day
+    Moon lat velocity: -0.804°/day
     """
     return body_properties(jdate, body)[4]
 
@@ -377,7 +377,7 @@ def dist_velocity_au(jdate: float, body: int) -> float:
     >>> jd = utc_to_julian(datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc))
     >>> sun_dist_vel = dist_velocity_au(jd, 0)
     >>> print(f"Sun dist velocity: {sun_dist_vel:.6f} AU/day")
-    Sun dist velocity: -0.000123 AU/day
+    Sun dist velocity: 0.000061 AU/day
     """
     return body_properties(jdate, body)[5]
 
@@ -405,7 +405,7 @@ def is_retrograde(jdate: float, body: int) -> bool:
     >>> jd = utc_to_julian(datetime(2025, 3, 15, 12, 0, tzinfo=timezone.utc))
     >>> mercury_retro = is_retrograde(jd, 2)  # Check Mercury
     >>> print(f"Mercury retrograde: {mercury_retro}")
-    Mercury retrograde: False
+    Mercury retrograde: True
     """
     return bool(long_velocity(jdate, body) < 0)
 
@@ -433,7 +433,7 @@ def is_ascending(jdate: float, body: int) -> bool:
     >>> jd = utc_to_julian(datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc))
     >>> moon_ascending = is_ascending(jd, 1)
     >>> print(f"Moon ascending: {moon_ascending}")
-    Moon ascending: True
+    Moon ascending: False
     """
     return bool(lat_velocity(jdate, body) > 0)
 
@@ -460,11 +460,11 @@ def body_sign(b_long: float) -> Tuple[int, int, int, int]:
     Examples
     --------
     >>> from ketu.calculations import body_sign
-    >>> body_sign(45.5)  # 15° Taurus 30' 0"
+    >>> tuple(int(x) for x in body_sign(45.5))  # 15° Taurus 30' 0"
     (1, 15, 30, 0)
-    >>> body_sign(120.0)  # 0° Leo 0' 0"
+    >>> tuple(int(x) for x in body_sign(120.0))  # 0° Leo 0' 0"
     (4, 0, 0, 0)
-    >>> body_sign(294.82)  # ~24° Capricorn 49' 12"
+    >>> tuple(int(x) for x in body_sign(294.82))  # ~24° Capricorn 49' 12"
     (9, 24, 49, 12)
     """
     dms = dd_to_dms(b_long)
@@ -497,9 +497,9 @@ def positions(jdate: float, l_bodies: np.ndarray = bodies) -> np.ndarray:
     >>> jd = utc_to_julian(datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc))
     >>> all_positions = positions(jd)
     >>> print(f"Sun: {all_positions[0]:.2f}°")
-    Sun: 294.82°
+    Sun: 295.59°
     >>> print(f"Moon: {all_positions[1]:.2f}°")
-    Moon: 123.45°
+    Moon: 134.46°
     """
     bodies_id = l_bodies["id"]
     return np.array([long(jdate, body) for body in bodies_id])
