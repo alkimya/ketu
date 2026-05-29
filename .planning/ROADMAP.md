@@ -83,10 +83,10 @@ Refactor lands BEFORE Chiron (clean per-body strategy, not aggravated if-elif de
 
 Plans:
 
-- [ ] 21-01-PLAN.md (Wave 1) — Coverage close-out: `_ecliptic.py` RA↔λ (known values + round-trip) + all non-guard gap tests (zero pragmas) [QAL-10]
-- [ ] 21-03-PLAN.md (Wave 1) — Docstring depth: fix broken doctests (live values) + replace `+SKIP` with runnable examples + accuracy/edge-case Notes + new `--doctest-modules` gate (Makefile + CI) [QAL-12]
-- [ ] 21-02-PLAN.md (Wave 2, depends 21-01) — Div/0 guard: floor the denominator (`np.maximum(…, 1e-10)`) at all 8 unguarded orbital.py arcsin sites + the equivalent coordinates.py:278 site + degenerate-`r→0` regression test (no warning/NaN, bounded) [QAL-11]
-- [ ] 21-04-PLAN.md (Wave 2, depends 21-01/02/03) — Gate flip: `fail_under` 70→100 + `TYPE_CHECKING` exclude_lines (display.py:28, no pragma) + CI `--cov-fail-under=100` [QAL-10]
+- [x] 21-01-PLAN.md (Wave 1) — Coverage close-out: `_ecliptic.py` RA↔λ (known values + round-trip) + all non-guard gap tests (zero pragmas) [QAL-10]
+- [x] 21-03-PLAN.md (Wave 1) — Docstring depth: fix broken doctests (live values) + replace `+SKIP` with runnable examples + accuracy/edge-case Notes + new `--doctest-modules` gate (Makefile + CI) [QAL-12]
+- [x] 21-02-PLAN.md (Wave 2, depends 21-01) — Div/0 guard: floor the denominator (`np.maximum(…, 1e-10)`) at all 8 unguarded orbital.py arcsin sites + the equivalent coordinates.py:278 site + degenerate-`r→0` regression test (no warning/NaN, bounded) [QAL-11]
+- [x] 21-04-PLAN.md (Wave 2, depends 21-01/02/03) — Gate flip: `fail_under` 70→100 + `TYPE_CHECKING` exclude_lines (display.py:28, no pragma) + CI `--cov-fail-under=100` [QAL-10]
 
 #### Phase 22: Ephemeris Refactor
 
@@ -198,7 +198,7 @@ Plans:
 | 18. Solar + Lunar Returns (Std + Reloc)| v1.2      | 5/5            | ✓ Complete    | 2026-05-28 |
 | 19. Arabic Parts Framework + 3 Parts   | v1.2      | 3/3            | ✓ Complete    | 2026-05-28 |
 | 20. Release Preparation v1.2.0         | v1.2      | 4/4            | ✓ Complete    | 2026-05-28 |
-| 21. Quality                            | v1.3      | 0/TBD          | Not started   | -          |
+| 21. Quality                            | v1.3      | 4/4            | ✓ Complete    | 2026-05-29 |
 | 22. Ephemeris Refactor                 | v1.3      | 0/TBD          | Not started   | -          |
 | 23. Spike Chiron                       | v1.3      | 0/TBD          | Not started   | -          |
 | 24. Chiron                             | v1.3      | 0/TBD          | Not started   | -          |
