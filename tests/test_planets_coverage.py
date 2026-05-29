@@ -26,6 +26,7 @@ from ketu.ephemeris.planets import (
     find_all_aspects,
     calculate_speed_ratio,
     BODY_INDICES,
+    BODY_STRATEGIES,
     SWE_IDS,
 )
 from ketu.calculations import utc_to_julian
@@ -444,3 +445,124 @@ class TestCalcPlanetPositionInvalidId:
         """Negative planet ID should raise ValueError."""
         with pytest.raises(ValueError, match="unknown planet ID"):
             calc_planet_position(J2000, -5)
+
+
+class TestBatchKetuFix:
+    """Regression tests for the pre-existing batch-Ketu bug (plan 22-01).
+
+    Root cause: the original batch fallback list ["Rahu", "NorthNode", "Lilith"]
+    omitted "Ketu" (body_id=11).  For body_id=11, the batch path fell through to
+    the heliocentric regular-planet else-branch and computed a WRONG heliocentric
+    position (~280.367° at J2000 instead of the correct geocentric ~305.118°).
+
+    The strategy registry introduced in plan 22-01 routes Ketu through
+    _scalar_loop_vec(11), which delegates to calc_planet_position — the same
+    correct scalar path — making scalar and batch identical.
+    """
+
+    # Three well-separated Julian Dates for coverage
+    TEST_JDS = [2451545.0, 2455197.5, 2460000.0]
+
+    def setup_method(self):
+        calc_planet_position.cache_clear()
+
+    def teardown_method(self):
+        calc_planet_position.cache_clear()
+
+    def test_batch_ketu_matches_scalar(self):
+        """Batch Ketu must equal scalar Ketu for every test JD (within 1e-9)."""
+        for jd in self.TEST_JDS:
+            scalar_result = calc_planet_position(float(jd), 11)
+            batch_result = calc_planet_position_batch(np.array([jd]), 11)[0]
+
+            # lon/lat/dist columns must agree within floating-point noise
+            diff = np.max(np.abs(scalar_result[:3] - batch_result[:3]))
+            assert diff < 1e-9, (
+                f"JD {jd}: batch-Ketu disagrees with scalar-Ketu by {diff:.2e}"
+            )
+
+    def test_batch_ketu_not_heliocentric(self):
+        """Batch Ketu at J2000 must be ~305°, NOT the old wrong ~280° heliocentric value.
+
+        The old buggy batch value at JD=2451545.0 was approximately 280.367°
+        (heliocentric Jupiter-family fallback).  The corrected value equals the
+        scalar geocentric South Node longitude (~305°).
+        """
+        jd = 2451545.0
+        batch_lon = calc_planet_position_batch(np.array([jd]), 11)[0, 0]
+        scalar_lon = calc_planet_position(float(jd), 11)[0]
+
+        # Must equal the scalar value, not the old heliocentric value
+        assert abs(batch_lon - scalar_lon) < 1e-9, (
+            f"batch-Ketu lon {batch_lon:.4f} != scalar-Ketu lon {scalar_lon:.4f}"
+        )
+        # Old buggy value was ~280.4 deg — new value must be far from that
+        old_wrong_value = 280.367
+        assert abs(batch_lon - old_wrong_value) > 10.0, (
+            f"batch-Ketu lon {batch_lon:.4f} looks like the old heliocentric bug value"
+        )
+
+
+class TestScalarBatchAgreementAllBodies:
+    """Assert scalar and batch agree for all registered bodies.
+
+    This test pins the BODY_STRATEGIES table's .scalar / .vectorized twins
+    against drift.  Phase 24 (Chiron) will rely on it when adding body_id=13:
+    a half-added Chiron that forgets to update the vectorized slot will fail here.
+
+    Note: bodies 5 (Jupiter), 6 (Saturn), and 7 (Uranus) use the vectorized
+    get_body_position_vectorized which has a pre-existing slight numerical
+    divergence from the scalar get_body_position for those three bodies.  The
+    tolerance is therefore 0.25° for all bodies — tight enough to catch the old
+    Ketu bug (170° error) but loose enough not to flag the known scalar/vectorized
+    implementation difference.  See 22-01-RESEARCH.md for the root cause.
+    """
+
+    TEST_JDS = np.array([2451545.0, 2455197.5, 2460000.0])
+
+    def setup_method(self):
+        calc_planet_position.cache_clear()
+
+    def teardown_method(self):
+        calc_planet_position.cache_clear()
+
+    def test_scalar_batch_agreement_all_bodies(self):
+        """Max abs diff on lon/lat/dist between scalar sweep and batch < 0.25° for all bodies."""
+        for body_id in range(13):
+            scalar_sweep = np.array(
+                [calc_planet_position(float(jd), body_id) for jd in self.TEST_JDS]
+            )
+            batch_sweep = calc_planet_position_batch(self.TEST_JDS, body_id)
+
+            diff = np.max(np.abs(scalar_sweep[:, :3] - batch_sweep[:, :3]))
+            assert diff < 0.25, (
+                f"body_id={body_id}: scalar/batch disagree by {diff:.4f}° "
+                f"(exceeds 0.25° threshold)"
+            )
+
+
+class TestBodyStrategiesRegistry:
+    """Structural tests for BODY_STRATEGIES registry completeness.
+
+    Ensures the registry stays in sync with SWE_IDS so that any new body
+    added to SWE_IDS without a corresponding BODY_STRATEGIES entry fails loudly.
+    Phase 24 will add Chiron (body_id=13): both SWE_IDS and BODY_STRATEGIES
+    must be updated together.
+    """
+
+    def test_body_strategies_covers_all_swe_ids(self):
+        """Every SWE_IDS name must have a corresponding BODY_STRATEGIES entry."""
+        swe_names = set(SWE_IDS.values())
+        strategy_names = set(BODY_STRATEGIES.keys())
+
+        missing = swe_names - strategy_names
+        extra = strategy_names - swe_names
+
+        assert not missing, f"SWE_IDS bodies missing from BODY_STRATEGIES: {missing}"
+        assert not extra, f"BODY_STRATEGIES entries not in SWE_IDS: {extra}"
+
+    def test_all_strategies_have_callable_scalar_and_vectorized(self):
+        """Every _BodyCalc entry must have callable .scalar and .vectorized slots."""
+        for name, calc in BODY_STRATEGIES.items():
+            assert callable(calc.scalar), f"{name}: .scalar is not callable"
+            assert callable(calc.vectorized), f"{name}: .vectorized is not callable"
