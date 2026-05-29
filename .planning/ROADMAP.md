@@ -116,12 +116,12 @@ Plans:
   1. A Chebyshev-by-segment fit for Chiron is run on real measurements — segment size (~32 d candidate), polynomial degree, and coefficient array size are documented with the achieved longitude accuracy vs Swiss Ephemeris.
   2. The spike records whether achievable accuracy is < 0.01° longitude vs Swiss Ephemeris over the supported date range, OR documents the real boundary and the tuning needed to reach it — a written go/no-go decision for the Chiron phase.
   3. The spike artifact (measurements + decision) is captured in the phase directory; its deliverable is data + a decision, NOT production runtime code.
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 
-- [ ] 23-01: TBD (Chebyshev-by-segment fit + accuracy measurement vs Swiss, SPK-01)
-- [ ] 23-02: TBD (go/no-go decision record + tuning notes, SPK-02)
+- [ ] 23-01-PLAN.md — Chebyshev-by-segment fit + accuracy measurement vs Swiss (spike script + 23-MEASUREMENTS.md, SPK-01)
+- [ ] 23-02-PLAN.md — go/no-go decision record consuming the measurements (23-DECISION.md, SPK-02)
 
 #### Phase 24: Chiron
 
