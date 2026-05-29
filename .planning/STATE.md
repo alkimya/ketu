@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T17:43:00Z"
+last_updated: "2026-05-29T17:45:07Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
   completed_phases: 1
   total_plans: 11
-  completed_plans: 6
-  percent: 55
+  completed_plans: 7
+  percent: 64
 ---
 
 # Project State
@@ -25,9 +25,9 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 ## Current Position
 
 Phase: 22 of 26 (Ephemeris Refactor) — IN PROGRESS
-Plan: 22-03 COMPLETE (conftest consolidation); 22-01 and 22-02 in parallel execution
-Status: Phase 22 in progress. 22-03 done: 12 shared fixtures consolidated into root tests/conftest.py (REF-03). 1346 tests pass.
-Last activity: 2026-05-29 — 22-03 conftest consolidation executed (commits 8ab233b/2d469b5)
+Plan: 22-02 COMPLETE (orbital.py split); 22-01 in parallel execution
+Status: Phase 22 in progress. 22-03 done (REF-03); 22-02 done (REF-02): orbital.py decomposed into 5 focused sub-modules, 70-LOC re-export hub, 1346 tests green, 100% coverage. 22-01 (strategy pattern) running concurrently.
+Last activity: 2026-05-29 — 22-02 orbital split executed (commits 8ab233b/29f58a6)
 
 Progress: [█████·····] 55% — 1/6 phases completed, 6/11 plans
 
@@ -53,7 +53,7 @@ Progress: [█████·····] 55% — 1/6 phases completed, 6/11 plans
 - v1.1: 27 plans / 5 phases (~3h active)
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 
-v1.3: 6 plans / 1 phase completed (Phase 21 done; Phase 22 in progress — 22-03 complete 2026-05-29).
+v1.3: 7 plans / 1 phase completed (Phase 21 done; Phase 22 in progress — 22-02 + 22-03 complete 2026-05-29).
 
 *Updated after each plan completion.*
 
@@ -63,6 +63,9 @@ v1.3: 6 plans / 1 phase completed (Phase 21 done; Phase 22 in progress — 22-03
 
 Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting current work:
 
+- (22-02) ORBITAL_ELEMENTS + five _LILITH_* constants extracted to _elements.py (not orbital.py hub) — eliminates all circular-import risk; orbital.py re-exports from _elements.py.
+- (22-02) apply_perturbations if-elif moved verbatim to _perturbations.py; strategy-ification deferred to Phase 24 (Chiron perturbations likely Chebyshev-based via Phase 23 spike).
+- (22-02) orbital.py retained as 70-LOC re-export hub with __all__ matching prior public surface byte-identically; ketu/ephemeris/__init__.py untouched.
 - (22-03) Root conftest.py auto-discovery: shared session-scoped fixtures live in tests/conftest.py; no pytest_plugins; subpackage conftests keep only subpackage-specific oracle helpers.
 - (22-03) chart_b_reykjavik keeps polar_fallback=porphyry (Pitfall 3 ratchet Phase 16).
 - (22-03) natal_* fixtures are dict[str,float] triples, NOT CHART_DTYPE — returns tests work on raw JD/lat/lon.
@@ -92,6 +95,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — plan 22-03 conftest consolidation executed.
-Stopped at: Completed 22-03-PLAN.md — REF-03 done. 12 fixtures consolidated into root tests/conftest.py. 1346 tests pass. Commits 8ab233b/2d469b5. SUMMARY at .planning/phases/22-ephemeris-refactor/22-03-SUMMARY.md.
-Resume file: None — 22-01 and 22-02 running in parallel (orbital split + strategy pattern).
+Last session: 2026-05-29 — plan 22-02 orbital split executed.
+Stopped at: Completed 22-02-PLAN.md — REF-02 done. orbital.py decomposed into 5 focused sub-modules (70-LOC hub). 1346 tests green, 100% coverage. Commits 8ab233b/29f58a6. SUMMARY at .planning/phases/22-ephemeris-refactor/22-02-SUMMARY.md.
+Resume file: None — 22-01 (strategy pattern) running in parallel.
