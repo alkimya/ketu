@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T22:30:00Z"
+last_updated: "2026-05-29T22:36:00Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 14
-  completed_plans: 14
+  total_plans: 15
+  completed_plans: 15
   percent: 99
 ---
 
@@ -24,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 24 of 26 (Chiron) — COMPLETE
-Plan: 24-05 COMPLETE (CHIR-05 integration smoke tests + quality gates green) → Phase 24 DONE
-Status: Phase 24 complete (2026-05-29). All 5 CHIR requirements satisfied. 1373 tests, 100% coverage, 56 doctests, mypy strict clean.
-Last activity: 2026-05-29 — Phase 24 plan 05 executed (commits 30f8a80, b47dab1)
+Phase: 25 of 26 (Documentation) — IN PROGRESS
+Plan: 25-01 COMPLETE (DOC-10: 12 frozen pages updated to v1.3 surface, conf.py 1.3.0, api.md rewritten) → Plans 25-02, 25-03 remaining
+Status: Phase 25 plan 01 complete (2026-05-29). 12 doc pages at v1.3 surface, English build clean (1 pre-existing warning).
+Last activity: 2026-05-29 — Phase 25 plan 01 executed (commits b094875, 3581306, e5f372a)
 
 Progress: [██████████████] 99% — 4/6 phases completed, 14/14 plans
 
@@ -98,6 +98,10 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
   - [Phase 24-04]: _eval_chiron_qty bug fix — last segment (13 days, not 32) used constant seg_len for t-normalisation causing 0.905° error at 2050-01-01; fixed via actual_len=min(seg_start+seg_len,jd_end)-seg_start; CHIR-03 satisfied: 7 pinned refs 1950-2050 max delta 0.005695° (1.75× under 0.01°); 1372 tests, 100% coverage
 - [Phase 24]: Cache stale-file recompute transparent: users with old ~/.ketu/ephemeris_cache/*.npy get silent upgrade on first access post-Chiron
 - [Phase 24]: CHIR-05 satisfied: 4 integration smoke tests (chart/aspect/cycle/positions) green; no special-casing; all v1.3 quality gates hold at 14 bodies (1373 tests, 100% coverage, 56 doctests, mypy strict)
+- [Phase 25-01]: api.md hand-written (no autodoc) — each subpackage section authored manually with correct import paths; 11 sections, 39 from-ketu. imports
+- [Phase 25-01]: conf.py bumped to 1.3.0; ketu/__init__.py and pyproject.toml left at 1.2.0 — Phase 26 owns package version bump
+- [Phase 25-01]: myst.xref_missing warnings for 5 not-yet-created pages (25-02 scope) treated as non-failures — per plan spec; toc.not_readable = same category as toctree warnings
+- [Phase 25-01]: UPGRADING.md/CHANGELOG.md broken cross-refs in migration.md replaced with in-docs changelog.md link — eliminates fr build xref warnings
 
 ### Pending Todos
 
@@ -109,6 +113,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — Phase 24 plan 05 executed; CHIR-05 integration smoke tests + quality gates green (commits 30f8a80, b47dab1).
-Stopped at: Phase 24 complete — all CHIR-01..05 satisfied; 1373 tests, 100% coverage, 56 doctests, mypy strict.
-Resume file: None — Phase 24 done; next: Phase 25 (Documentation) or Phase 26 (Release 1.3.0).
+Last session: 2026-05-29 — Phase 25 plan 01 executed; 12 frozen doc pages updated to v1.3 surface, api.md rewritten, English build clean (commits b094875, 3581306, e5f372a).
+Stopped at: Phase 25 plan 01 complete — DOC-10 satisfied; next: 25-02 (new pages: houses.md, relational_charts.md, predictive_charts.md, arabic_parts.md, chiron.md).
+Resume file: None — 25-01 done; continue with 25-02.
