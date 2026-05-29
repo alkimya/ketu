@@ -1067,5 +1067,80 @@ class TestCacheAvailableFalse:
             assert restored.CACHE_AVAILABLE is True
 
 
+# =============================================================================
+# Task (21-02) — Degenerate r->0 regression for QAL-11 div/0 guards
+# =============================================================================
+
+
+class TestOrbitalDivZeroGuard:
+    """Regression tests for the QAL-11 arcsin(z/r) div/0 guards.
+
+    Verify the full 3-part contract when r→0:
+      1. No RuntimeWarning is raised.
+      2. No NaN in the returned latitude.
+      3. Latitude is bounded in [-90, 90].
+    """
+
+    def test_vectorized_path_r_zero_no_warning_no_nan_bounded(self):
+        """Site 755 (get_body_position_vectorized): r→0 via a=0 monkeypatch."""
+        from ketu.ephemeris.orbital import ORBITAL_ELEMENTS, get_body_position_vectorized
+
+        body_id = 2  # Mercury (body with well-defined elliptical elements)
+        orig_a = float(ORBITAL_ELEMENTS[body_id]["a"])
+        try:
+            ORBITAL_ELEMENTS[body_id]["a"] = 0.0  # forces r = sqrt(0+0) = 0
+            jd_array = np.array([2451545.0, 2451546.0, 2451547.0])
+            with warnings.catch_warnings():
+                warnings.filterwarnings("error")
+                _x, _y, _z, _lon, lat, _r = get_body_position_vectorized(body_id, jd_array)
+            # Contract clause 2: no NaN
+            assert not np.any(np.isnan(lat)), f"lat contains NaN: {lat}"
+            # Contract clause 3: bounded latitude
+            assert np.all(lat >= -90.0) and np.all(lat <= 90.0), (
+                f"lat out of [-90, 90]: {lat}"
+            )
+        finally:
+            ORBITAL_ELEMENTS[body_id]["a"] = orig_a  # always restore
+
+    def test_scalar_path_r_zero_no_warning_no_nan_bounded(self):
+        """Site 353 (compute_position): r→0 via elem a=0 dict injection."""
+        from ketu.ephemeris.orbital import compute_position
+
+        elem = {"N": 0.0, "i": 5.0, "w": 0.0, "a": 0.0, "e": 0.0, "M": 45.0}
+        with warnings.catch_warnings():
+            warnings.filterwarnings("error")
+            _x, _y, _z, _lon, lat, _r = compute_position(elem)
+        assert not np.isnan(lat), f"scalar lat is NaN: {lat}"
+        assert -90.0 <= lat <= 90.0, f"scalar lat out of [-90, 90]: {lat}"
+
+    def test_coordinates_topocentric_near_zero_magnitude_no_warning_no_nan(self):
+        """Site 278 (geocentric_to_topocentric): near-zero horizon magnitude.
+
+        Forces magnitude ≈ 0 by patching spherical_to_rectangular → (0,0,0)
+        and using height=-R_earth so rho_cos = rho_sin = 0 → dx=dy=dz=0
+        → x_topo=y_topo=z_topo=0 → magnitude=0 → guard fires.
+        """
+        from unittest.mock import patch
+        from ketu.ephemeris.coordinates import geocentric_to_topocentric
+
+        with patch(
+            "ketu.ephemeris.coordinates.spherical_to_rectangular",
+            return_value=(0.0, 0.0, 0.0),
+        ):
+            with warnings.catch_warnings():
+                warnings.filterwarnings("error")
+                _az, alt, _dist = geocentric_to_topocentric(
+                    lon=0.0,
+                    lat=0.0,
+                    dist=0.0,
+                    observer_lat=45.0,
+                    observer_lon=0.0,
+                    lst=0.0,
+                    height=-6378140.0,  # zeroes rho_cos/rho_sin → dx=dy=dz=0
+                )
+        assert not np.isnan(alt), f"alt is NaN: {alt}"
+        assert -90.0 <= alt <= 90.0, f"alt out of [-90, 90]: {alt}"
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
