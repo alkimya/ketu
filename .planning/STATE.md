@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T22:42:12Z"
+last_updated: "2026-05-29T22:49:22Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
-  completed_phases: 4
+  completed_phases: 5
   total_plans: 17
-  completed_plans: 16
-  percent: 99
+  completed_plans: 17
+  percent: 100
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 25 of 26 (Documentation) — IN PROGRESS
-Plan: 25-02 COMPLETE (DOC-11: 5 new pages — houses, relational_charts, predictive_charts, arabic_parts, chiron) → Plan 25-03 remaining
-Status: Phase 25 plan 02 complete (2026-05-29). 5 new Sphinx pages authored with correct submodule imports; English build clean (1 pre-existing warning, 0 orphan warnings).
-Last activity: 2026-05-29 — Phase 25 plan 02 executed (commits bcc4550, 4a4a694)
+Phase: 25 of 26 (Documentation) — COMPLETE → Phase 26 (Release 1.3.0) remaining
+Plan: 25-03 COMPLETE (DOC-12: gettext pipeline regenerated; fr build clean at 1 warning)
+Status: Phase 25 complete (2026-05-29). All 3 plans done: DOC-10 (existing pages), DOC-11 (5 new pages), DOC-12 (fr pipeline). En+fr builds at 1 warning each. 17/17 plans shipped.
+Last activity: 2026-05-29 — Phase 25 plan 03 executed (commits f52fecf, a9ff166)
 
 Progress: [██████████████] 99% — 4/6 phases completed, 16/17 plans
 
@@ -104,6 +104,10 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - [Phase 25-01]: UPGRADING.md/CHANGELOG.md broken cross-refs in migration.md replaced with in-docs changelog.md link — eliminates fr build xref warnings
 - [Phase 25-02]: Task 3 produces no git commit — docs/build/ is gitignored; build verification is the artefact, not HTML files
 - [Phase 25-02]: houses.md includes register() and arabic_parts.md includes PartSpec/get_part beyond minimum spec — public API completeness
+- [Phase 25-03]: All 122 fuzzy entries resolved via English fallback (empty msgstr); no stale French text ships — DOC-12 decision
+- [Phase 25-03]: New pages' .po catalogs left with English-fallback; substantive French translation deferred to future volunteer/phase
+- [Phase 25-03]: Markdown heading markers (#/##/###) in msgstr of performance.po and installation.po were pre-existing bug causing 18 new myst.header warnings; stripped (Rule 1 auto-fix); fr build = 1 warning (equal to en baseline)
+- [Phase 25-03]: DOC-12 SATISFIED: gettext pipeline regenerated, 17 .mo compiled, en+fr builds at 1 warning each; Phase 25 COMPLETE
 
 ### Pending Todos
 
@@ -115,6 +119,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — Phase 25 plan 02 executed; 5 new Sphinx pages authored (houses, chiron, relational_charts, predictive_charts, arabic_parts), English build clean at 1 warning (commits bcc4550, 4a4a694).
-Stopped at: Phase 25 plan 02 complete — DOC-11 satisfied; next: 25-03 (gettext pipeline, fr build verification).
-Resume file: None — 25-02 done; continue with 25-03.
+Last session: 2026-05-29 — Phase 25 plan 03 executed; gettext pipeline regenerated, 5 new .po catalogs created, 122 fuzzy entries resolved, 17 .mo compiled, en+fr builds at 1 warning each (commits f52fecf, a9ff166).
+Stopped at: Phase 25 COMPLETE — DOC-10+11+12 all satisfied; next: Phase 26 (Release 1.3.0).
+Resume file: None — Phase 25 done.
