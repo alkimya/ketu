@@ -1,0 +1,156 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Loc Cosnier
+# This file is distributed under the same license as the Ketu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+
+#: ../../source/chiron.md:1
+msgid "Chiron — the 14th Body"
+msgstr ""
+
+#: ../../source/chiron.md:3
+msgid ""
+"Ketu v1.3 adds **Chiron** as the 14th celestial body. Chiron is a small "
+"solar system body (a centaur) orbiting between Saturn and Uranus, "
+"carrying astrological significance as the \"Wounded Healer\". It is "
+"accessible through all standard Ketu calculation functions using "
+"`body_id=13`."
+msgstr ""
+
+#: ../../source/chiron.md:5
+msgid "Implementation Details"
+msgstr ""
+
+#: ../../source/chiron.md
+msgid "Property"
+msgstr ""
+
+#: ../../source/chiron.md
+msgid "Value"
+msgstr ""
+
+#: ../../source/chiron.md
+msgid "`body_id`"
+msgstr ""
+
+#: ../../source/chiron.md
+msgid "13"
+msgstr ""
+
+#: ../../source/chiron.md
+msgid "Valid date range"
+msgstr ""
+
+#: ../../source/chiron.md
+msgid "1950-01-01 to 2050-12-31 (Julian Days ~2433282 to ~2469807)"
+msgstr ""
+
+#: ../../source/chiron.md
+msgid "Position accuracy"
+msgstr ""
+
+#: ../../source/chiron.md
+msgid "max error 0.005695° (sub-arcminute, ~20 arcseconds)"
+msgstr ""
+
+#: ../../source/chiron.md
+msgid "Evaluation method"
+msgstr ""
+
+#: ../../source/chiron.md
+msgid "Pure-NumPy Chebyshev polynomial evaluation"
+msgstr ""
+
+#: ../../source/chiron.md
+msgid "Runtime dependency"
+msgstr ""
+
+#: ../../source/chiron.md
+msgid "None — coefficients embedded in `ketu/data/chiron_coeffs.npz`"
+msgstr ""
+
+#: ../../source/chiron.md:15
+msgid ""
+"The Chebyshev coefficients were generated offline using Swiss Ephemeris "
+"(build-only, AGPL-isolated). At runtime, Ketu uses pure NumPy — no "
+"`pyswisseph` dependency required."
+msgstr ""
+
+#: ../../source/chiron.md:17
+msgid "Accessing Chiron via Calculation Functions"
+msgstr ""
+
+#: ../../source/chiron.md:19
+msgid "Chiron uses the same API as any other body — just pass `body_id=13`."
+msgstr ""
+
+#: ../../source/chiron.md:33
+msgid "You can also compute Chiron's properties alongside other bodies:"
+msgstr ""
+
+#: ../../source/chiron.md:43
+msgid "Chiron in a Natal Chart"
+msgstr ""
+
+#: ../../source/chiron.md:45
+msgid ""
+"`compute_chart` returns a structured array with a `body_lons` field of "
+"shape `[14]`. Index 13 is Chiron."
+msgstr ""
+
+#: ../../source/chiron.md:60
+msgid ""
+"All relational chart functions (synastry, composite, returns) inherit "
+"Chiron automatically — it appears at index 13 in every `body_lons`, "
+"`body_lats`, `body_speeds`, `aspect_matrix`, and `aspect_orbs` field."
+msgstr ""
+
+#: ../../source/chiron.md:62
+msgid "Date Range and Error Behaviour"
+msgstr ""
+
+#: ../../source/chiron.md:64
+msgid "Requesting Chiron outside 1950-2050 raises a `ValueError`:"
+msgstr ""
+
+#: ../../source/chiron.md:73
+msgid ""
+"For dates inside the range, the positional error is guaranteed to be at "
+"most 0.005695° (about 20 arcseconds), well below the 0.01° target set "
+"during the Chebyshev spike (Phase 23)."
+msgstr ""
+
+#: ../../source/chiron.md:75
+msgid "Breaking Change in v1.3 (D-08)"
+msgstr ""
+
+#: ../../source/chiron.md:77
+msgid ""
+"Prior to v1.3, `CHART_DTYPE` had a `body_lons[13]` field (indices 0–12). "
+"Adding Chiron expanded this to `body_lons[14]` (indices 0–13). Any code "
+"that hardcoded the body count (13) or accessed body arrays by fixed "
+"numeric index beyond 12 must be updated."
+msgstr ""
+
+#: ../../source/chiron.md:79
+msgid ""
+"See [Migration Guide](migration.md) for the full upgrade path from v1.2 "
+"to v1.3."
+msgstr ""
+
+#: ../../source/chiron.md:81
+msgid "Next Steps"
+msgstr ""
+
+#: ../../source/chiron.md:83
+msgid "[API reference](api.md) — full `ketu.calculations` signature list"
+msgstr ""
+
+#: ../../source/chiron.md:84
+msgid ""
+"[Migration Guide](migration.md) — upgrading from v1.2, D-08 body-axis "
+"changes"
+msgstr ""
+

@@ -1,0 +1,192 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Loc Cosnier
+# This file is distributed under the same license as the Ketu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+
+#: ../../source/predictive_charts.md:1
+msgid "Predictive Charts: Solar and Lunar Returns"
+msgstr ""
+
+#: ../../source/predictive_charts.md:3
+msgid ""
+"Return charts mark the moment when a planet returns to the same ecliptic "
+"longitude it occupied at birth. Ketu provides two return functions — "
+"`solar_return` for the Sun's annual return, and `lunar_return` for the "
+"Moon's monthly return."
+msgstr ""
+
+#: ../../source/predictive_charts.md:5
+msgid ""
+"Both functions return a full `CHART_DTYPE` structured array (same as "
+"`compute_chart`), with the complete natal house system, body positions, "
+"and aspect matrix computed for the exact moment of return."
+msgstr ""
+
+#: ../../source/predictive_charts.md:7
+msgid "Important API Asymmetry"
+msgstr ""
+
+#: ../../source/predictive_charts.md
+msgid "Function"
+msgstr ""
+
+#: ../../source/predictive_charts.md
+msgid "Target parameter"
+msgstr ""
+
+#: ../../source/predictive_charts.md
+msgid "Type"
+msgstr ""
+
+#: ../../source/predictive_charts.md
+msgid "Meaning"
+msgstr ""
+
+#: ../../source/predictive_charts.md
+msgid "`solar_return`"
+msgstr ""
+
+#: ../../source/predictive_charts.md
+msgid "`target_year`"
+msgstr ""
+
+#: ../../source/predictive_charts.md
+msgid "`int`"
+msgstr ""
+
+#: ../../source/predictive_charts.md
+msgid "Calendar year in which to find the return"
+msgstr ""
+
+#: ../../source/predictive_charts.md
+msgid "`lunar_return`"
+msgstr ""
+
+#: ../../source/predictive_charts.md
+msgid "`target_jd`"
+msgstr ""
+
+#: ../../source/predictive_charts.md
+msgid "`float`"
+msgstr ""
+
+#: ../../source/predictive_charts.md
+msgid "Julian Day to start searching **from**"
+msgstr ""
+
+#: ../../source/predictive_charts.md:14
+msgid ""
+"This distinction matters: `solar_return(natal_jd, ..., target_year=2026)`"
+" finds the return that falls in the year 2026 (there is exactly one). "
+"`lunar_return(natal_jd, ..., target_jd=jd_now)` finds the next lunar "
+"return at or after `target_jd` (there are ~13 per year)."
+msgstr ""
+
+#: ../../source/predictive_charts.md:16
+msgid "solar_return"
+msgstr ""
+
+#: ../../source/predictive_charts.md:30 ../../source/predictive_charts.md:68
+msgid "**Parameters**"
+msgstr ""
+
+#: ../../source/predictive_charts.md:32 ../../source/predictive_charts.md:70
+msgid "`natal_jd` — Julian Day of the natal chart"
+msgstr ""
+
+#: ../../source/predictive_charts.md:33
+msgid ""
+"`natal_lat`, `natal_lon` — natal location (used as default return "
+"location)"
+msgstr ""
+
+#: ../../source/predictive_charts.md:34
+msgid "`target_year` — calendar year (int) in which to find the solar return"
+msgstr ""
+
+#: ../../source/predictive_charts.md:35
+msgid ""
+"`return_lat`, `return_lon` — relocation coordinates (see below); default "
+"`None` = natal location"
+msgstr ""
+
+#: ../../source/predictive_charts.md:36
+msgid "`system` — house system for the return chart (default `\"placidus\"`)"
+msgstr ""
+
+#: ../../source/predictive_charts.md:38
+msgid "**Example — solar return for 2026, natal location**"
+msgstr ""
+
+#: ../../source/predictive_charts.md:54
+msgid "lunar_return"
+msgstr ""
+
+#: ../../source/predictive_charts.md:71
+msgid "`natal_lat`, `natal_lon` — natal location"
+msgstr ""
+
+#: ../../source/predictive_charts.md:72
+msgid ""
+"`target_jd` — Julian Day to start the search from (float); the function "
+"returns the first lunar return at or after this JD"
+msgstr ""
+
+#: ../../source/predictive_charts.md:73
+msgid ""
+"`return_lat`, `return_lon` — relocation coordinates; default `None` = "
+"natal location"
+msgstr ""
+
+#: ../../source/predictive_charts.md:74
+msgid "`system` — house system for the return chart"
+msgstr ""
+
+#: ../../source/predictive_charts.md:76
+msgid "**Example — next lunar return from J2000**"
+msgstr ""
+
+#: ../../source/predictive_charts.md:93
+msgid "Relocation"
+msgstr ""
+
+#: ../../source/predictive_charts.md:95
+msgid ""
+"Both functions accept optional `return_lat` / `return_lon` parameters. "
+"When provided, the house cusps and angles in the return chart are "
+"calculated for the relocation coordinates instead of the natal location. "
+"This is used in relocated return chart analysis."
+msgstr ""
+
+#: ../../source/predictive_charts.md:116
+msgid ""
+"When `return_lat=None` and `return_lon=None` (the defaults), the natal "
+"coordinates are used for both the return moment search and the house "
+"calculation."
+msgstr ""
+
+#: ../../source/predictive_charts.md:118
+msgid "UTC Contract"
+msgstr ""
+
+#: ../../source/predictive_charts.md:120
+msgid ""
+"All Julian Day values (`natal_jd`, `target_jd`) must be in UTC. The "
+"functions do not perform any timezone conversion internally."
+msgstr ""
+
+#: ../../source/predictive_charts.md:130
+msgid "Next Steps"
+msgstr ""
+
+#: ../../source/predictive_charts.md:132
+msgid "[Relational charts](relational_charts.md) — synastry and composite charts"
+msgstr ""
+
+#: ../../source/predictive_charts.md:133
+msgid "[API reference](api.md) — full signatures for `ketu.returns`"
+msgstr ""
+

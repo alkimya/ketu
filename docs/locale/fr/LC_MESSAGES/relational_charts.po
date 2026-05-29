@@ -1,0 +1,392 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Loc Cosnier
+# This file is distributed under the same license as the Ketu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+
+#: ../../source/relational_charts.md:1
+msgid "Relational Charts: Synastry and Composite"
+msgstr ""
+
+#: ../../source/relational_charts.md:3
+msgid ""
+"Relational charts analyse two people's charts together rather than in "
+"isolation. Ketu provides three modules for this: `ketu.charts` builds the"
+" individual charts, `ketu.synastry` compares them aspect by aspect, and "
+"`ketu.composite` derives a midpoint chart that represents the "
+"relationship itself."
+msgstr ""
+
+#: ../../source/relational_charts.md:5
+msgid "Building Charts with compute_chart"
+msgstr ""
+
+#: ../../source/relational_charts.md:7
+msgid ""
+"`compute_chart` is the central function for natal chart calculation. It "
+"calculates all 14 body positions, twelve house cusps, the four angles, "
+"and the full aspect matrix in a single call, returning a `CHART_DTYPE` "
+"structured array."
+msgstr ""
+
+#: ../../source/relational_charts.md:13 ../../source/relational_charts.md:78
+msgid "**Parameters**"
+msgstr ""
+
+#: ../../source/relational_charts.md:15
+msgid "`jd` — Julian Day (float, UTC)"
+msgstr ""
+
+#: ../../source/relational_charts.md:16
+msgid "`lat` / `lon` — geographic latitude and longitude in degrees"
+msgstr ""
+
+#: ../../source/relational_charts.md:17
+msgid "`system` — house system (default `\"placidus\"`)"
+msgstr ""
+
+#: ../../source/relational_charts.md:18
+msgid "`aspects` — aspect set spec (`None` uses the default classical set)"
+msgstr ""
+
+#: ../../source/relational_charts.md:19
+msgid ""
+"`polar_fallback` — high-latitude fallback behaviour (see [House "
+"Systems](houses.md))"
+msgstr ""
+
+#: ../../source/relational_charts.md:21
+msgid "**Example — two charts**"
+msgstr ""
+
+#: ../../source/relational_charts.md:36
+msgid "CHART_DTYPE Fields"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Field"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Shape"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Description"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`jd`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "scalar"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Julian Day"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`lat`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Geographic latitude"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`lon`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Geographic longitude"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`system`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "House system name"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`body_lons`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "[14]"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Ecliptic longitudes for bodies 0–13"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`body_lats`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Ecliptic latitudes for bodies 0–13"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`body_speeds`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Daily motion in degrees for bodies 0–13"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`cusps`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "[12]"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "House cusp longitudes"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`asc`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Ascendant longitude"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`mc`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Midheaven longitude"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`armc`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "ARMC (sidereal time angle)"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`vertex`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Vertex longitude"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`aspect_matrix`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "[14, 14]"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Aspect type between each body pair (0 = none)"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`aspect_orbs`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Orb in degrees for each active aspect"
+msgstr ""
+
+#: ../../source/relational_charts.md:55
+msgid "Body index 13 is Chiron (see [Chiron](chiron.md))."
+msgstr ""
+
+#: ../../source/relational_charts.md:57
+msgid "Sect Helper"
+msgstr ""
+
+#: ../../source/relational_charts.md:66
+msgid "This is used internally by Arabic Parts to select sect-aware formulas."
+msgstr ""
+
+#: ../../source/relational_charts.md:68
+msgid "Synastry"
+msgstr ""
+
+#: ../../source/relational_charts.md:70
+msgid ""
+"Synastry overlays two charts and finds aspects formed between the planets"
+" of one person and the planets of the other."
+msgstr ""
+
+#: ../../source/relational_charts.md:80
+msgid ""
+"`chart_a`, `chart_b` — `CHART_DTYPE` structured arrays from "
+"`compute_chart`"
+msgstr ""
+
+#: ../../source/relational_charts.md:81
+msgid ""
+"`aspects` — aspect set: `\"classical\"` (default), `\"traditional\"`, "
+"`\"extended\"`, or a list/mask"
+msgstr ""
+
+#: ../../source/relational_charts.md:82
+msgid ""
+"`orbs` — orb set: `\"synastry\"` applies the standard synastry orb "
+"reduction factor"
+msgstr ""
+
+#: ../../source/relational_charts.md:83
+msgid ""
+"`mode` — `\"filtered\"` returns only active aspects; `\"all\"` returns "
+"every body pair"
+msgstr ""
+
+#: ../../source/relational_charts.md:85
+msgid "**Example**"
+msgstr ""
+
+#: ../../source/relational_charts.md:109
+msgid "SYNASTRY_DTYPE Fields"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Type"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`body_a`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "int"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Body index from chart A (0–15; 14=ASC, 15=MC)"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`body_b`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Body index from chart B (0–15)"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`lon_a`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "float64"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Ecliptic longitude of body A"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`lon_b`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Ecliptic longitude of body B"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`aspect_type`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Aspect type code"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`orb`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Orb in degrees"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`applying`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "bool"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "True if the aspect is applying"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "`orb_limit`"
+msgstr ""
+
+#: ../../source/relational_charts.md
+msgid "Maximum allowed orb for this aspect"
+msgstr ""
+
+#: ../../source/relational_charts.md:122
+msgid ""
+"Synastry includes ASC and MC from both charts, giving up to 16 points per"
+" chart."
+msgstr ""
+
+#: ../../source/relational_charts.md:124
+msgid "Composite Charts"
+msgstr ""
+
+#: ../../source/relational_charts.md:126
+msgid ""
+"A composite chart is constructed from the midpoints of each pair of "
+"planets, houses, and angles between two natal charts. It represents the "
+"energy of the relationship rather than either individual."
+msgstr ""
+
+#: ../../source/relational_charts.md:134
+msgid ""
+"Returns a single `CHART_DTYPE` structured array. The house system is re-"
+"calculated from the composite Ascendant and Midheaven."
+msgstr ""
+
+#: ../../source/relational_charts.md:152
+msgid "circular_midpoint"
+msgstr ""
+
+#: ../../source/relational_charts.md:154
+msgid ""
+"`circular_midpoint` computes the shortest-arc midpoint between two "
+"ecliptic longitudes, handling the 0°/360° wraparound correctly."
+msgstr ""
+
+#: ../../source/relational_charts.md:168
+msgid "Next Steps"
+msgstr ""
+
+#: ../../source/relational_charts.md:170
+msgid "[Predictive charts](predictive_charts.md) — solar and lunar return charts"
+msgstr ""
+
+#: ../../source/relational_charts.md:171
+msgid "[Arabic Parts](arabic_parts.md) — Fortune, Spirit, and custom lots"
+msgstr ""
+
+#: ../../source/relational_charts.md:172
+msgid ""
+"[API reference](api.md) — full signatures for `ketu.charts`, "
+"`ketu.synastry`, `ketu.composite`"
+msgstr ""
+

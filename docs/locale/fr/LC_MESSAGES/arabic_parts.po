@@ -1,0 +1,200 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Loc Cosnier
+# This file is distributed under the same license as the Ketu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+
+#: ../../source/arabic_parts.md:1
+msgid "Arabic Parts (Hermetic Lots)"
+msgstr ""
+
+#: ../../source/arabic_parts.md:3
+msgid ""
+"Arabic Parts — also called **Hermetic Lots** in classical astrology — are"
+" sensitive points derived from the longitudes of chart positions rather "
+"than from direct planetary observation. They were extensively used in "
+"Hellenistic and Medieval astrology and remain central to traditional "
+"practice."
+msgstr ""
+
+#: ../../source/arabic_parts.md:5
+msgid "Ketu provides a sect-aware registry of parts via the `ketu.parts` module."
+msgstr ""
+
+#: ../../source/arabic_parts.md:7
+msgid "Built-in Parts"
+msgstr ""
+
+#: ../../source/arabic_parts.md:9
+msgid "Three parts are registered by default:"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "Name"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "Key"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "Sect-aware"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "Formula (day)"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "Formula (night)"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "Part of Fortune"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "`\"fortune\"`"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "Yes"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "ASC + Moon - Sun"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "ASC + Sun - Moon"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "Part of Spirit"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "`\"spirit\"`"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "Part of Marriage"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "`\"marriage\"`"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "No"
+msgstr ""
+
+#: ../../source/arabic_parts.md
+msgid "ASC + Venus - Saturn"
+msgstr ""
+
+#: ../../source/arabic_parts.md:17
+msgid ""
+"**Fortune and Spirit invert their formulas by sect:** in a day chart the "
+"standard formula applies; in a night chart the formula is reversed (Sun "
+"and Moon swap roles). Marriage is the same formula regardless of sect."
+msgstr ""
+
+#: ../../source/arabic_parts.md:19
+msgid "Sect Detection"
+msgstr ""
+
+#: ../../source/arabic_parts.md:21
+msgid ""
+"`ketu.parts` uses `is_day_chart` from `ketu.charts` internally. The chart"
+" passed to `calculate_part` carries its own `jd`, `lat`, and `lon` — Ketu"
+" determines sect automatically from those values."
+msgstr ""
+
+#: ../../source/arabic_parts.md:23
+msgid "calculate_part"
+msgstr ""
+
+#: ../../source/arabic_parts.md:29
+msgid "Computes a single part and returns its ecliptic longitude (0–360°)."
+msgstr ""
+
+#: ../../source/arabic_parts.md:50
+msgid "calculate_all_parts"
+msgstr ""
+
+#: ../../source/arabic_parts.md:56
+msgid ""
+"Computes all registered parts at once. The result is a plain Python dict "
+"mapping part name to longitude (float, degrees 0–360)."
+msgstr ""
+
+#: ../../source/arabic_parts.md:58
+msgid "`parts=None` computes every registered part."
+msgstr ""
+
+#: ../../source/arabic_parts.md:59
+msgid "Pass a list of keys to restrict the calculation."
+msgstr ""
+
+#: ../../source/arabic_parts.md:79
+msgid "Formula Signature"
+msgstr ""
+
+#: ../../source/arabic_parts.md:81
+msgid ""
+"Every part formula (both day and night variants) must accept exactly four"
+" positional arguments:"
+msgstr ""
+
+#: ../../source/arabic_parts.md:87
+msgid ""
+"Even if a formula does not use all four arguments, they are always passed"
+" in this order. Results are automatically normalised to [0°, 360°) by the"
+" registry."
+msgstr ""
+
+#: ../../source/arabic_parts.md:89
+msgid "Registering Custom Parts"
+msgstr ""
+
+#: ../../source/arabic_parts.md:91
+msgid "Use `register` to add a new part to the global registry:"
+msgstr ""
+
+#: ../../source/arabic_parts.md:112
+msgid ""
+"After registration, the new part is included in "
+"`calculate_all_parts(chart)` automatically."
+msgstr ""
+
+#: ../../source/arabic_parts.md:114
+msgid "PartSpec and get_part"
+msgstr ""
+
+#: ../../source/arabic_parts.md:116
+msgid "You can inspect any registered part:"
+msgstr ""
+
+#: ../../source/arabic_parts.md:126
+msgid ""
+"`PartSpec` is a named-tuple-like object with fields: `name`, "
+"`day_formula`, `night_formula`, `description`."
+msgstr ""
+
+#: ../../source/arabic_parts.md:128
+msgid "Next Steps"
+msgstr ""
+
+#: ../../source/arabic_parts.md:130
+msgid ""
+"[Relational charts](relational_charts.md) — synastry and composite charts"
+" that can benefit from part analysis"
+msgstr ""
+
+#: ../../source/arabic_parts.md:131
+msgid "[API reference](api.md) — full `ketu.parts` signature list"
+msgstr ""
+

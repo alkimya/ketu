@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 23:04+0100\n"
+"POT-Creation-Date: 2026-05-30 00:44+0200\n"
 "PO-Revision-Date: 2026-02-12 22:00+0100\n"
 "Last-Translator: Claude <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -48,7 +48,7 @@ msgstr "La méthode la plus simple pour installer Ketu :"
 
 #: ../../source/installation.md:18
 msgid "Installation from Source"
-msgstr "## Installation depuis les sources"
+msgstr "Installation depuis les sources"
 
 #: ../../source/installation.md:20
 msgid "Clone the Repository"
@@ -67,30 +67,46 @@ msgstr ""
 "les changements."
 
 #: ../../source/installation.md:35
-msgid "Installation in a Virtual Environment (Recommended)"
-msgstr "## Installation dans un environnement virtuel (recommandé)"
+msgid "Development Installation with Extras"
+msgstr ""
 
 #: ../../source/installation.md:37
+msgid ""
+"For contributors, install the `[dev]` extra to get all testing and "
+"documentation tools:"
+msgstr ""
+
+#: ../../source/installation.md:43
+msgid ""
+"This installs pytest, coverage, mypy, sphinx, and other development "
+"dependencies."
+msgstr ""
+
+#: ../../source/installation.md:45
+msgid "Installation in a Virtual Environment (Recommended)"
+msgstr "Installation dans un environnement virtuel (recommandé)"
+
+#: ../../source/installation.md:47
 msgid "With venv"
 msgstr "Avec venv"
 
-#: ../../source/installation.md:47
+#: ../../source/installation.md:57
 msgid "Installation Verification"
 msgstr "Vérification de l'installation"
 
-#: ../../source/installation.md:49
+#: ../../source/installation.md:59
 msgid "Command Line"
 msgstr "En ligne de commande"
 
-#: ../../source/installation.md:56
+#: ../../source/installation.md:66
 msgid "In Python"
 msgstr "En Python"
 
-#: ../../source/installation.md:64
+#: ../../source/installation.md:74
 msgid "Dependencies"
-msgstr "## Dépendances"
+msgstr "Dépendances"
 
-#: ../../source/installation.md:66
+#: ../../source/installation.md:76
 msgid "Ketu uses the following libraries:"
 msgstr "Ketu utilise les bibliothèques suivantes :"
 
@@ -118,15 +134,22 @@ msgstr "≥1.20.0"
 msgid "Numerical computations and arrays"
 msgstr "Calculs numériques et tableaux"
 
-#: ../../source/installation.md:72
+#: ../../source/installation.md:82
+msgid ""
+"Ketu is a pure NumPy library at runtime. `pyswisseph` is used only for "
+"generating Chiron ephemeris coefficients (a build-time tool, not a "
+"runtime dependency)."
+msgstr ""
+
+#: ../../source/installation.md:84
 msgid "Uninstallation"
 msgstr "Désinstallation"
 
-#: ../../source/installation.md:78
+#: ../../source/installation.md:90
 msgid "Next Steps"
 msgstr "Prochaines étapes"
 
-#: ../../source/installation.md:80
+#: ../../source/installation.md:92
 msgid ""
 "Once installed, see the [Quick Start Guide](quickstart.md) to begin using"
 " Ketu."

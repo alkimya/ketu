@@ -1,0 +1,324 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) 2026, Loc Cosnier
+# This file is distributed under the same license as the Ketu package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2026.
+#
+msgid ""
+msgstr ""
+
+#: ../../source/houses.md:1
+msgid "House Systems"
+msgstr ""
+
+#: ../../source/houses.md:3
+msgid ""
+"House systems divide the celestial sphere into twelve segments, called "
+"**houses**, starting from the Ascendant (the eastern horizon at the "
+"moment of birth). Each system uses a different mathematical projection to"
+" do this division, which is why the same chart can look markedly "
+"different depending on which system you choose. Ketu ships six systems "
+"and lets you register additional ones."
+msgstr ""
+
+#: ../../source/houses.md:5
+msgid "Supported Systems"
+msgstr ""
+
+#: ../../source/houses.md:7
+msgid "The six built-in systems are exposed in the `SYSTEMS` dict:"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Key"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Name"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Description"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`placidus`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Placidus"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Time-based; most common in modern western practice"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`koch`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Koch"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Birthplace system; similar to Placidus at mid-latitudes"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`porphyry`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Porphyry"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Divides quadrants into thirds; works at high latitudes"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`whole_sign`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Whole Sign"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Each house = one full sign; oldest recorded system"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`equal`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Equal"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Houses of 30° each, starting from the Ascendant"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`regiomontanus`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Regiomontanus"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Space-based; common in horary astrology"
+msgstr ""
+
+#: ../../source/houses.md:25
+msgid "calculate_houses"
+msgstr ""
+
+#: ../../source/houses.md:31
+msgid ""
+"Computes the twelve house cusps and the angles (Ascendant, Midheaven, "
+"ARMC, Vertex) for a given moment and location. Returns a NumPy structured"
+" array of `HOUSES_DTYPE`."
+msgstr ""
+
+#: ../../source/houses.md:33
+msgid "**Parameters**"
+msgstr ""
+
+#: ../../source/houses.md:35
+msgid "`jd` — Julian Day (float, UTC)"
+msgstr ""
+
+#: ../../source/houses.md:36
+msgid "`lat` — geographic latitude in degrees (+N / -S)"
+msgstr ""
+
+#: ../../source/houses.md:37
+msgid "`lon` — geographic longitude in degrees (+E / -W)"
+msgstr ""
+
+#: ../../source/houses.md:38
+msgid "`system` — one of the six keys above (default `\"placidus\"`)"
+msgstr ""
+
+#: ../../source/houses.md:39
+msgid ""
+"`polar_fallback` — behaviour above the Arctic/Antarctic circles (see "
+"below)"
+msgstr ""
+
+#: ../../source/houses.md:41
+msgid "**Example — Paris chart at J2000**"
+msgstr ""
+
+#: ../../source/houses.md:57
+msgid "**Switching systems**"
+msgstr ""
+
+#: ../../source/houses.md:65
+msgid "house_of"
+msgstr ""
+
+#: ../../source/houses.md:71
+msgid ""
+"Places one or more planet longitudes into a house number (1–12), "
+"vectorised over an array of longitudes."
+msgstr ""
+
+#: ../../source/houses.md:91
+msgid "HOUSES_DTYPE"
+msgstr ""
+
+#: ../../source/houses.md:93
+msgid ""
+"The structured array returned by `calculate_houses` has the following "
+"fields:"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Field"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Type"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`jd`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "float64"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Julian Day of the calculation"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`lat`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Geographic latitude"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`lon`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Geographic longitude"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`system`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "U20"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "House system name"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`cusps`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "float64[12]"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Twelve house cusp longitudes (degrees)"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`asc`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Ascendant longitude (degrees)"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`mc`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Midheaven longitude (degrees)"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`armc`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "ARMC (sidereal time angle)"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "`vertex`"
+msgstr ""
+
+#: ../../source/houses.md
+msgid "Vertex longitude (degrees)"
+msgstr ""
+
+#: ../../source/houses.md:107
+msgid "High-Latitude Handling"
+msgstr ""
+
+#: ../../source/houses.md:109
+msgid ""
+"Projection-based systems (Placidus, Koch) break down at extreme latitudes"
+" (roughly above 66° N or below 66° S) because the ecliptic can fail to "
+"intersect the prime vertical."
+msgstr ""
+
+#: ../../source/houses.md:111
+msgid ""
+"**`polar_fallback=\"raise\"` (default)** — raises `HighLatitudeError` "
+"when the calculation is geometrically impossible."
+msgstr ""
+
+#: ../../source/houses.md:113
+msgid ""
+"**Alternative fallback** — pass the name of another system to use as a "
+"fallback:"
+msgstr ""
+
+#: ../../source/houses.md:126
+msgid ""
+"Whole Sign and Equal never raise `HighLatitudeError` — they work "
+"everywhere."
+msgstr ""
+
+#: ../../source/houses.md:128
+msgid "Registering Custom Systems"
+msgstr ""
+
+#: ../../source/houses.md:139
+msgid ""
+"After registration, `\"my_system\"` is available as a `system=` argument "
+"to `calculate_houses`."
+msgstr ""
+
+#: ../../source/houses.md:141
+msgid "Next Steps"
+msgstr ""
+
+#: ../../source/houses.md:143
+msgid ""
+"[Relational charts](relational_charts.md) — synastry and composite charts"
+" using house cusps"
+msgstr ""
+
+#: ../../source/houses.md:144
+msgid "[API reference](api.md) — full `ketu.houses` signature list"
+msgstr ""
+

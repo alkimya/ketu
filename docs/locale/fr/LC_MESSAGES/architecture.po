@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 21:33+0100\n"
+"POT-Creation-Date: 2026-05-30 00:44+0200\n"
 "PO-Revision-Date: 2026-02-12 22:00+0100\n"
 "Last-Translator: Claude <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -23,465 +23,527 @@ msgid "Architecture"
 msgstr "Architecture"
 
 #: ../../source/architecture.md:3
-msgid "This page describes the internal architecture of Ketu v0.3.0."
-msgstr "Cette page décrit l'architecture interne de Ketu v0.3.0."
+msgid "This page describes the internal architecture of Ketu v1.3."
+msgstr ""
 
 #: ../../source/architecture.md:5
 msgid "Module Structure"
 msgstr "Structure des modules"
 
-#: ../../source/architecture.md:26
+#: ../../source/architecture.md:68
+msgid "Runtime Dependencies"
+msgstr ""
+
+#: ../../source/architecture.md:70
+msgid ""
+"Ketu is a **pure NumPy library at runtime**. The only runtime dependency "
+"is NumPy."
+msgstr ""
+
+#: ../../source/architecture.md:72
+msgid ""
+"`pyswisseph` is used **only** in the offline build tool "
+"(`tools/gen_chiron_coeffs.py`) to generate the Chiron Chebyshev "
+"coefficients. It is never imported at runtime, which maintains AGPL "
+"isolation."
+msgstr ""
+
+#: ../../source/architecture.md:74
 msgid "Core Components"
 msgstr "Composants principaux"
 
-#: ../../source/architecture.md:28
-msgid "Data Structures (core.py)"
-msgstr "Structures de données (core.py)"
+#: ../../source/architecture.md:76
+msgid "Data Structures (`core.py`)"
+msgstr ""
 
-#: ../../source/architecture.md:30
-msgid "Defines the fundamental data structures:"
-msgstr "Définit les structures de données fondamentales :"
+#: ../../source/architecture.md:78
+msgid "Defines fundamental structured arrays:"
+msgstr ""
 
-#: ../../source/architecture.md:32
-msgid "**bodies**: Dictionary with planet names, IDs, symbols, orbs, speeds"
-msgstr "**bodies** : Dictionnaire avec noms de planètes, IDs, symboles, orbes, vitesses"
+#: ../../source/architecture.md:80
+msgid ""
+"**`bodies`**: 14-element structured array (`name`, `id`, `orb`, `speed`)."
+" Index 13 = Chiron (New in v1.3)."
+msgstr ""
 
-#: ../../source/architecture.md:33
-msgid "**aspects**: Dictionary with aspect names, angles, coefficients, symbols"
-msgstr "**aspects** : Dictionnaire avec noms d'aspects, angles, coefficients, symboles"
+#: ../../source/architecture.md:81
+msgid ""
+"**`aspects`**: 14-element array (`name`, `value`, `coef`) for all "
+"supported aspect angles."
+msgstr ""
 
-#: ../../source/architecture.md:34
-msgid "**signs**: List of zodiac sign names"
-msgstr "**signs** : Liste des noms de signes du zodiaque"
+#: ../../source/architecture.md:82
+msgid "**`signs`**: list of 12 zodiac sign names."
+msgstr ""
 
-#: ../../source/architecture.md:36
-msgid "These are implemented as NumPy structured arrays for efficient access."
-msgstr "Implémentées comme des tableaux structurés NumPy pour un accès efficace."
+#: ../../source/architecture.md:84
+msgid "Calculations (`calculations.py`)"
+msgstr ""
 
-#: ../../source/architecture.md:38
-msgid "Calculations (calculations.py)"
-msgstr "Calculs (calculations.py)"
+#: ../../source/architecture.md:86
+msgid "High-level API wrapping ephemeris functions with LRU caching:"
+msgstr ""
 
-#: ../../source/architecture.md:40
-msgid "High-level API wrapping ephemeris functions:"
-msgstr "API de haut niveau enveloppant les fonctions d'éphémérides :"
+#: ../../source/architecture.md:88
+msgid "`positions()` — all planetary longitudes"
+msgstr ""
 
-#: ../../source/architecture.md:42
-msgid "`positions()` - Get all planetary positions"
-msgstr "`positions()` - Obtenir toutes les positions planétaires"
+#: ../../source/architecture.md:89
+msgid "`long/lat/dist_au()` — single-body position components"
+msgstr ""
 
-#: ../../source/architecture.md:43
-msgid "`calculate_aspects()` - Detect all aspects"
-msgstr "`calculate_aspects()` - Détecter tous les aspects"
+#: ../../source/architecture.md:90
+msgid "`body_sign()` — zodiac sign + degree breakdown"
+msgstr ""
 
-#: ../../source/architecture.md:44
-msgid "`find_aspect_timing()` - Find exact aspect moments"
-msgstr "`find_aspect_timing()` - Trouver les moments d'aspects exacts"
+#: ../../source/architecture.md:91
+msgid "`is_retrograde()` — retrograde detection"
+msgstr ""
 
-#: ../../source/architecture.md:45
-msgid "`is_retrograde()` - Check retrograde motion"
-msgstr "`is_retrograde()` - Vérifier le mouvement rétrograde"
+#: ../../source/architecture.md:92
+msgid "`body_name()` — body ID to string"
+msgstr ""
 
-#: ../../source/architecture.md:47
-msgid "Display (display.py)"
-msgstr "Affichage (display.py)"
+#: ../../source/architecture.md:94
+msgid "Aspects (`ketu/aspects/`)"
+msgstr ""
 
-#: ../../source/architecture.md:49
-msgid "User-facing display functions:"
-msgstr "Fonctions d'affichage pour l'utilisateur :"
+#: ../../source/architecture.md:96
+msgid "Configurable aspect detection (New in v1.1):"
+msgstr ""
 
-#: ../../source/architecture.md:51
-msgid "`print_positions()` - Formatted position table"
-msgstr "`print_positions()` - Tableau de positions formaté"
+#: ../../source/architecture.md:98
+msgid "`CLASSICAL / TRADITIONAL / EXTENDED` — boolean masks for preset sets"
+msgstr ""
 
-#: ../../source/architecture.md:52
-msgid "`print_aspects()` - Formatted aspect table"
-msgstr "`print_aspects()` - Tableau d'aspects formaté"
+#: ../../source/architecture.md:99
+msgid ""
+"`calculate_aspects(jdate, l_bodies, aspects=None)` — accepts any "
+"`AspectSetSpec`"
+msgstr ""
 
-#: ../../source/architecture.md:53
-msgid "`main()` - Interactive CLI entry point"
-msgstr "`main()` - Point d'entrée CLI interactif"
+#: ../../source/architecture.md:100
+msgid "`get_aspect(jdate, body1, body2)` — single pair"
+msgstr ""
 
-#: ../../source/architecture.md:55
+#: ../../source/architecture.md:101
+msgid "`get_orb(body1, body2, asp)` — orb for pair + aspect"
+msgstr ""
+
+#: ../../source/architecture.md:103
+msgid "House Systems (`ketu/houses/`)"
+msgstr ""
+
+#: ../../source/architecture.md:105
+msgid "Six house systems (New in v1.1/v1.2):"
+msgstr ""
+
+#: ../../source/architecture.md:107
+msgid "Placidus, Koch, Porphyry, Whole Sign, Equal, Regiomontanus"
+msgstr ""
+
+#: ../../source/architecture.md:108
+msgid "`calculate_houses(jd, lat, lon, system, polar_fallback)` → `HOUSES_DTYPE`"
+msgstr ""
+
+#: ../../source/architecture.md:109
+msgid "`house_of(planet_lon, cusps)` — vectorised house assignment"
+msgstr ""
+
+#: ../../source/architecture.md:110
+msgid "`register` — extend with custom systems"
+msgstr ""
+
+#: ../../source/architecture.md:111
+msgid "`HighLatitudeError` — raised when Placidus/Koch fail near poles"
+msgstr ""
+
+#: ../../source/architecture.md:113
+msgid "Charts (`ketu/charts/`)"
+msgstr ""
+
+#: ../../source/architecture.md:115
+msgid "Full natal chart (New in v1.2):"
+msgstr ""
+
+#: ../../source/architecture.md:117
+msgid ""
+"`compute_chart(jd, lat, lon, system, aspects, polar_fallback)` → "
+"`CHART_DTYPE`"
+msgstr ""
+
+#: ../../source/architecture.md:118
+msgid "`is_day_chart(jd, lat, lon)` — sect helper (Sun above horizon)"
+msgstr ""
+
+#: ../../source/architecture.md:119
+msgid ""
+"`CHART_DTYPE` — unified structured array: 14 body positions, 12 cusps, "
+"angles, 14×14 aspect matrix"
+msgstr ""
+
+#: ../../source/architecture.md:121
+msgid "Relational Charts (`ketu/synastry/`, `ketu/composite/`)"
+msgstr ""
+
+#: ../../source/architecture.md:123
+msgid "Inter-chart analysis (New in v1.2):"
+msgstr ""
+
+#: ../../source/architecture.md:125
+msgid ""
+"`calculate_synastry(chart_a, chart_b, aspects, orbs, mode)` → "
+"`SYNASTRY_DTYPE`"
+msgstr ""
+
+#: ../../source/architecture.md:126
+msgid "`calculate_composite(chart_a, chart_b, system)` → `CHART_DTYPE`"
+msgstr ""
+
+#: ../../source/architecture.md:127
+msgid "`circular_midpoint(lon_a, lon_b)` — shortest-arc midpoint utility"
+msgstr ""
+
+#: ../../source/architecture.md:129
+msgid "Predictive Charts (`ketu/returns/`)"
+msgstr ""
+
+#: ../../source/architecture.md:131
+msgid "Solar and lunar returns (New in v1.2):"
+msgstr ""
+
+#: ../../source/architecture.md:133
+msgid ""
+"`solar_return(natal_jd, …, target_year)` — exact Sun return to natal "
+"position"
+msgstr ""
+
+#: ../../source/architecture.md:134
+msgid ""
+"`lunar_return(natal_jd, …, target_jd)` — next Moon return after target "
+"date"
+msgstr ""
+
+#: ../../source/architecture.md:135
+msgid "Both return `CHART_DTYPE` for the return chart"
+msgstr ""
+
+#: ../../source/architecture.md:136
+msgid "Support relocation via `return_lat/return_lon` parameters"
+msgstr ""
+
+#: ../../source/architecture.md:138
+msgid "Arabic Parts (`ketu/parts/`)"
+msgstr ""
+
+#: ../../source/architecture.md:140
+msgid "Hermetic Lots (New in v1.2):"
+msgstr ""
+
+#: ../../source/architecture.md:142
+msgid "`PARTS` registry: `fortune`, `spirit`, `marriage`"
+msgstr ""
+
+#: ../../source/architecture.md:143
+msgid "`calculate_part(part_name, chart)` — sect-aware for Fortune/Spirit"
+msgstr ""
+
+#: ../../source/architecture.md:144
+msgid "`calculate_all_parts(chart, parts=None)` → `dict[str, float]`"
+msgstr ""
+
+#: ../../source/architecture.md:145
+msgid "Custom parts via `register(name, day_formula, night_formula, description)`"
+msgstr ""
+
+#: ../../source/architecture.md:147
 msgid "Ephemeris Package"
 msgstr "Package Ephemeris"
 
-#: ../../source/architecture.md:57
-msgid "Time Conversions (ephemeris/time.py)"
-msgstr "Conversions de temps (ephemeris/time.py)"
-
-#: ../../source/architecture.md:59
-msgid "Handles all time-related calculations:"
-msgstr "Gère tous les calculs liés au temps :"
-
-#: ../../source/architecture.md:61
-msgid "**UTC ↔ Julian Day** conversions"
-msgstr "Conversions **UTC ↔ Jour Julien**"
-
-#: ../../source/architecture.md:62
-msgid "**Equation of time** calculations"
-msgstr "Calculs de l'**équation du temps**"
-
-#: ../../source/architecture.md:63
-msgid "**Sidereal time** calculations"
-msgstr "Calculs du **temps sidéral**"
-
-#: ../../source/architecture.md:64
-msgid "**Delta T** corrections for historical dates"
-msgstr "Corrections **Delta T** pour les dates historiques"
-
-#: ../../source/architecture.md:66
-msgid "Uses purely mathematical formulas - no external dependencies."
-msgstr "Utilise des formules purement mathématiques - pas de dépendances externes."
-
-#: ../../source/architecture.md:68
-msgid "Orbital Mechanics (ephemeris/orbital.py)"
-msgstr "Mécanique orbitale (ephemeris/orbital.py)"
-
-#: ../../source/architecture.md:70
-msgid "Core astronomical calculations:"
-msgstr "Calculs astronomiques principaux :"
-
-#: ../../source/architecture.md:72
-msgid "**Kepler solver** - Solves Kepler's equation using Newton-Raphson"
-msgstr "**Solveur de Kepler** - Résout l'équation de Kepler par Newton-Raphson"
-
-#: ../../source/architecture.md:73
-msgid "**Orbital elements** - Planetary orbital parameters"
-msgstr "**Éléments orbitaux** - Paramètres orbitaux planétaires"
-
-#: ../../source/architecture.md:74
-msgid "**Perturbations** - Major planetary perturbations"
-msgstr "**Perturbations** - Perturbations planétaires majeures"
-
-#: ../../source/architecture.md:75
-msgid "**Position from elements** - Convert orbital elements to position"
-msgstr "**Position depuis éléments** - Convertir éléments orbitaux en position"
-
-#: ../../source/architecture.md:77
-msgid "Coordinate Transformations (ephemeris/coordinates.py)"
-msgstr "Transformations de coordonnées (ephemeris/coordinates.py)"
-
-#: ../../source/architecture.md:79
-msgid "Coordinate system conversions:"
-msgstr "Conversions de systèmes de coordonnées :"
-
-#: ../../source/architecture.md:81
-msgid "**Ecliptic ↔ Equatorial** coordinates"
-msgstr "Coordonnées **Écliptiques ↔ Équatoriales**"
-
-#: ../../source/architecture.md:82
-msgid "**Heliocentric ↔ Geocentric** positions"
-msgstr "Positions **Héliocentriques ↔ Géocentriques**"
-
-#: ../../source/architecture.md:83
-msgid "**Rectangular ↔ Spherical** coordinates"
-msgstr "Coordonnées **Rectangulaires ↔ Sphériques**"
-
-#: ../../source/architecture.md:84
-msgid "**Nutation** corrections"
-msgstr "Corrections de **nutation**"
-
-#: ../../source/architecture.md:85
-msgid "**Aberration** corrections"
-msgstr "Corrections d'**aberration**"
-
-#: ../../source/architecture.md:87
-msgid "Planetary Calculations (ephemeris/planets.py)"
-msgstr "Calculs planétaires (ephemeris/planets.py)"
-
-#: ../../source/architecture.md:89
-msgid "High-level planetary position functions:"
-msgstr "Fonctions de position planétaire de haut niveau :"
-
-#: ../../source/architecture.md:91
-msgid "`calc_planet_position()` - Single date calculation"
-msgstr "`calc_planet_position()` - Calcul pour une date unique"
-
-#: ../../source/architecture.md:92
-msgid "`calc_planet_position_batch()` - Vectorized batch calculation"
-msgstr "`calc_planet_position_batch()` - Calcul batch vectorisé"
-
-#: ../../source/architecture.md:93
-msgid "`find_exact_aspect()` - Binary search for exact aspects"
-msgstr "`find_exact_aspect()` - Recherche binaire pour aspects exacts"
-
-#: ../../source/architecture.md:94
-msgid "`body_properties()` - Get full position + velocity"
-msgstr "`body_properties()` - Obtenir position complète + vélocité"
-
-#: ../../source/architecture.md:96
-msgid "Advanced Features"
-msgstr "Fonctionnalités avancées"
-
-#: ../../source/architecture.md:98
-msgid "Aspect Windows (aspect_windows.py)"
-msgstr "Fenêtres d'aspects (aspect_windows.py)"
-
-#: ../../source/architecture.md:100
-msgid "Temporal tracking of aspects:"
-msgstr "Suivi temporel des aspects :"
-
-#: ../../source/architecture.md:102
-msgid "**AspectMoment** - Instant when aspect is exact"
-msgstr "**AspectMoment** - Instant où l'aspect est exact"
-
-#: ../../source/architecture.md:103
-msgid "**AspectWindow** - Duration from begin to end of aspect"
-msgstr "**AspectWindow** - Durée du début à la fin de l'aspect"
-
-#: ../../source/architecture.md:104
-msgid "`find_aspect_window()` - Find all windows in date range"
-msgstr "`find_aspect_window()` - Trouver toutes les fenêtres dans une période"
-
-#: ../../source/architecture.md:105
-msgid "`find_aspects_timeline()` - Complete aspect timeline"
-msgstr "`find_aspects_timeline()` - Chronologie complète des aspects"
-
-#: ../../source/architecture.md:107
-msgid "Uses binary search and gradient descent for precision."
-msgstr "Utilise recherche binaire et descente de gradient pour la précision."
-
-#: ../../source/architecture.md:109
-msgid "Transits (transits.py)"
-msgstr "Transits (transits.py)"
-
-#: ../../source/architecture.md:111
-msgid "Natal position and transit calculations:"
-msgstr "Calculs de positions natales et de transits :"
-
-#: ../../source/architecture.md:113
-msgid "**NatalPosition** - Stores natal planet position"
-msgstr "**NatalPosition** - Stocke la position natale de planète"
-
-#: ../../source/architecture.md:114
-msgid "**TransitAspect** - Describes transit-to-natal aspect"
-msgstr "**TransitAspect** - Décrit l'aspect transit vers natal"
-
-#: ../../source/architecture.md:115
-msgid "`get_natal_positions()` - Extract natal positions"
-msgstr "`get_natal_positions()` - Extraire les positions natales"
-
-#: ../../source/architecture.md:116
-msgid "`find_transits_to_position()` - Find transits to a point"
-msgstr "`find_transits_to_position()` - Trouver les transits vers un point"
-
-#: ../../source/architecture.md:117
-msgid "`compare_dates_transits()` - Full transit comparison"
-msgstr "`compare_dates_transits()` - Comparaison complète de transits"
-
-#: ../../source/architecture.md:119
-msgid "Ephemeris Cache (cache/)"
-msgstr "Cache d'éphémérides (cache/)"
-
-#: ../../source/architecture.md:121
-msgid "High-performance position lookups:"
-msgstr "Recherches de positions haute performance :"
-
-#: ../../source/architecture.md:123
-msgid "**EphemerisCache** - Monthly pre-computed positions for O(1) lookups"
-msgstr "**EphemerisCache** - Positions pré-calculées mensuellement pour recherches O(1)"
-
-#: ../../source/architecture.md:124
-msgid "`ensure_month()` - Pre-compute and cache a month of positions"
-msgstr "`ensure_month()` - Pré-calculer et mettre en cache un mois de positions"
-
-#: ../../source/architecture.md:125
-msgid "`get_position()` - Fast position lookup with interpolation"
-msgstr "`get_position()` - Recherche rapide de position avec interpolation"
-
-#: ../../source/architecture.md:126
-msgid "`get_all_positions()` - Batch position retrieval for all bodies"
-msgstr "`get_all_positions()` - Récupération batch de positions pour tous les corps"
-
-#: ../../source/architecture.md:127
-msgid ""
-"**Performance**: 1000x faster than computation (0.006ms vs 10ms per "
-"lookup)"
+#: ../../source/architecture.md:149
+msgid "Time Conversions (`ephemeris/time.py`)"
 msgstr ""
-"**Performance** : 1000x plus rapide que le calcul (0.006ms vs 10ms par recherche)"
 
-#: ../../source/architecture.md:129
+#: ../../source/architecture.md:151
+msgid "UTC ↔ Julian Day conversions"
+msgstr ""
+
+#: ../../source/architecture.md:152
+msgid "Equation of time calculations"
+msgstr ""
+
+#: ../../source/architecture.md:153
+msgid "Sidereal time calculations"
+msgstr ""
+
+#: ../../source/architecture.md:154
+msgid "Delta T corrections for historical dates"
+msgstr ""
+
+#: ../../source/architecture.md:156
+msgid "Uses purely mathematical formulas — no external dependencies."
+msgstr ""
+
+#: ../../source/architecture.md:158
+msgid "Orbital Mechanics (`ephemeris/orbital.py`)"
+msgstr ""
+
+#: ../../source/architecture.md:160
+msgid "Re-export hub delegating to:"
+msgstr ""
+
+#: ../../source/architecture.md:162
+msgid ""
+"`_elements.py`: `ORBITAL_ELEMENTS` + Lilith constants (extracted in v1.2 "
+"to eliminate circular import risk)"
+msgstr ""
+
+#: ../../source/architecture.md:163
+msgid "`_perturbations.py`: `apply_perturbations` strategy"
+msgstr ""
+
+#: ../../source/architecture.md:165
+msgid "Core functions:"
+msgstr ""
+
+#: ../../source/architecture.md:167
+msgid "Kepler solver (Newton-Raphson)"
+msgstr ""
+
+#: ../../source/architecture.md:168
+msgid "Position from orbital elements"
+msgstr ""
+
+#: ../../source/architecture.md:169
+msgid "Major planetary perturbations"
+msgstr ""
+
+#: ../../source/architecture.md:171
+msgid "Coordinate Transformations (`ephemeris/coordinates.py`)"
+msgstr ""
+
+#: ../../source/architecture.md:173
+msgid "Ecliptic ↔ Equatorial coordinates"
+msgstr ""
+
+#: ../../source/architecture.md:174
+msgid "Heliocentric ↔ Geocentric positions"
+msgstr ""
+
+#: ../../source/architecture.md:175
+msgid "Rectangular ↔ Spherical coordinates"
+msgstr ""
+
+#: ../../source/architecture.md:176
+msgid "Nutation + aberration corrections (applied inside body-vec functions)"
+msgstr ""
+
+#: ../../source/architecture.md:178
+msgid "Planetary Calculations (`ephemeris/planets.py`)"
+msgstr ""
+
+#: ../../source/architecture.md:180
+msgid "Strategy-based dispatch (refactored in v1.2):"
+msgstr ""
+
+#: ../../source/architecture.md:182
+msgid ""
+"`BODY_STRATEGIES` — dict mapping body_id → computation function; Chiron "
+"strategy added at index 13 (v1.3)"
+msgstr ""
+
+#: ../../source/architecture.md:183
+msgid "`calc_planet_position(jday, body)` — dispatches via strategy dict"
+msgstr ""
+
+#: ../../source/architecture.md:184
+msgid ""
+"`get_body_position / get_body_position_vectorized` — scalar and batch "
+"entry points"
+msgstr ""
+
+#: ../../source/architecture.md:185
+msgid ""
+"`body_properties(jd, body)` — full 6-component vector (lon, lat, dist, "
+"velocities), LRU-cached"
+msgstr ""
+
+#: ../../source/architecture.md:187
+msgid "Chiron Evaluator (`ephemeris/chiron.py`)"
+msgstr ""
+
+#: ../../source/architecture.md:189
+msgid "New in v1.3. Private helpers — not part of the public API:"
+msgstr ""
+
+#: ../../source/architecture.md:191
+msgid ""
+"`_load_chiron_data()` — loads `ketu/data/chiron_coeffs.npz` via "
+"`importlib.resources`"
+msgstr ""
+
+#: ../../source/architecture.md:192
+msgid "`_chiron_scalar(jd)` — evaluates Chebyshev polynomial for a single JD"
+msgstr ""
+
+#: ../../source/architecture.md:193
+msgid "`_chiron_vec(jd_array)` — vectorised batch evaluation"
+msgstr ""
+
+#: ../../source/architecture.md:195
+msgid ""
+"Coefficients: 1142 segments, 32-day width, degree 10, three quantities "
+"(lon, lat, dist). Max error: 0.005695° over 1950–2050."
+msgstr ""
+
+#: ../../source/architecture.md:197
 msgid "Design Principles"
 msgstr "Principes de conception"
 
-#: ../../source/architecture.md:131
+#: ../../source/architecture.md:199
 msgid "Separation of Concerns"
 msgstr "Séparation des préoccupations"
 
-#: ../../source/architecture.md:133
-msgid "**ephemeris/**: Pure astronomical calculations"
-msgstr "**ephemeris/** : Calculs astronomiques purs"
+#: ../../source/architecture.md:201
+msgid ""
+"`ephemeris/`: pure astronomical calculations (no astrological "
+"interpretation)"
+msgstr ""
 
-#: ../../source/architecture.md:134
-msgid "**calculations.py**: Astrological interpretations"
-msgstr "**calculations.py** : Interprétations astrologiques"
+#: ../../source/architecture.md:202
+msgid "`calculations.py`: astrological interpretation layer"
+msgstr ""
 
-#: ../../source/architecture.md:135
-msgid "**display.py**: User interface"
-msgstr "**display.py** : Interface utilisateur"
+#: ../../source/architecture.md:203
+msgid "`display.py`: user interface only"
+msgstr ""
 
-#: ../../source/architecture.md:136
-msgid "**Advanced modules**: Optional features"
-msgstr "**Modules avancés** : Fonctionnalités optionnelles"
+#: ../../source/architecture.md:204
+msgid "Subpackages: each feature area is self-contained"
+msgstr ""
 
-#: ../../source/architecture.md:138
+#: ../../source/architecture.md:206
 msgid "Vectorization First"
 msgstr "Vectorisation en premier"
 
-#: ../../source/architecture.md:140
+#: ../../source/architecture.md:208
 msgid ""
 "All core functions support both scalar and array inputs via NumPy "
 "broadcasting."
 msgstr ""
-"Toutes les fonctions principales supportent entrées scalaires et tableaux "
-"via broadcasting NumPy."
+"Toutes les fonctions principales supportent entrées scalaires et tableaux"
+" via broadcasting NumPy."
 
-#: ../../source/architecture.md:142
+#: ../../source/architecture.md:210
 msgid "No Global State"
 msgstr "Pas d'état global"
 
-#: ../../source/architecture.md:144
-msgid "All functions are pure - same inputs always produce same outputs."
-msgstr ""
-"Toutes les fonctions sont pures - mêmes entrées produisent toujours mêmes"
-" sorties."
-
-#: ../../source/architecture.md:146
-msgid "Pure NumPy Implementation"
-msgstr "Implémentation NumPy pure"
-
-#: ../../source/architecture.md:148
+#: ../../source/architecture.md:212
 msgid ""
-"Ketu has only one dependency (NumPy) for maximum portability and "
-"performance. All calculations use vectorized NumPy operations where "
-"possible."
+"All functions are pure — same inputs always produce same outputs. LRU "
+"cache is the only shared state (clearable via "
+"`body_properties.cache_clear()`)."
 msgstr ""
-"Ketu n'a qu'une seule dépendance (NumPy) pour une portabilité et performance "
-"maximales. Tous les calculs utilisent des opérations NumPy vectorisées lorsque possible."
 
-#: ../../source/architecture.md:150
-msgid "Backward Compatibility"
-msgstr "Compatibilité ascendante"
+#: ../../source/architecture.md:214
+msgid "Pure NumPy Runtime"
+msgstr ""
 
-#: ../../source/architecture.md:152
+#: ../../source/architecture.md:216
 msgid ""
-"The public API maintains compatibility with previous versions where "
-"possible."
+"Only NumPy is imported at runtime. pyswisseph is a test/build-only "
+"dependency (AGPL isolation)."
 msgstr ""
-"L'API publique maintient la compatibilité avec les versions précédentes lorsque possible."
 
-#: ../../source/architecture.md:154
+#: ../../source/architecture.md:218
+msgid "100% Test Coverage"
+msgstr ""
+
+#: ../../source/architecture.md:220
+msgid ""
+"All branches are covered by the test suite (1373+ tests). The "
+"`fail_under=100` gate is enforced in CI via pytest-cov."
+msgstr ""
+
+#: ../../source/architecture.md:222
 msgid "Data Flow"
 msgstr "Flux de données"
 
-#: ../../source/architecture.md:156
+#: ../../source/architecture.md:224
 msgid "Position Calculation Flow"
 msgstr "Flux de calcul de position"
 
-#: ../../source/architecture.md:172
-msgid "Aspect Calculation Flow"
-msgstr "Flux de calcul d'aspects"
+#: ../../source/architecture.md:243
+msgid "Chart Calculation Flow"
+msgstr ""
 
-#: ../../source/architecture.md:190
+#: ../../source/architecture.md:258
 msgid "Testing Strategy"
 msgstr "Stratégie de test"
 
-#: ../../source/architecture.md:192
+#: ../../source/architecture.md:260
 msgid "Unit Tests"
 msgstr "Tests unitaires"
 
-#: ../../source/architecture.md:194
+#: ../../source/architecture.md:262
 msgid "Individual functions in `ephemeris/`"
 msgstr "Fonctions individuelles dans `ephemeris/`"
 
-#: ../../source/architecture.md:195
+#: ../../source/architecture.md:263
 msgid "Isolated calculations"
 msgstr "Calculs isolés"
 
-#: ../../source/architecture.md:196
+#: ../../source/architecture.md:264
 msgid "Edge cases and boundary conditions"
 msgstr "Cas limites et conditions aux limites"
 
-#: ../../source/architecture.md:198
+#: ../../source/architecture.md:266
 msgid "Integration Tests"
 msgstr "Tests d'intégration"
 
-#: ../../source/architecture.md:200
-msgid "Full position calculations"
-msgstr "Calculs de positions complets"
+#: ../../source/architecture.md:268
+msgid "Full chart computation"
+msgstr ""
 
-#: ../../source/architecture.md:201
+#: ../../source/architecture.md:269
 msgid "Aspect detection"
 msgstr "Détection d'aspects"
 
-#: ../../source/architecture.md:202
+#: ../../source/architecture.md:270
 msgid "Time conversions"
 msgstr "Conversions de temps"
 
-#: ../../source/architecture.md:204
-msgid "Validation Tests"
-msgstr "Tests de validation"
-
-#: ../../source/architecture.md:206
-msgid "Compare against known ephemeris data"
-msgstr "Comparer avec des données d'éphémérides connues"
-
-#: ../../source/architecture.md:207
-msgid "Cross-check with historical observations"
-msgstr "Vérifier avec des observations historiques"
-
-#: ../../source/architecture.md:208
-msgid "Verify retrograde periods"
-msgstr "Vérifier les périodes rétrogrades"
-
-#: ../../source/architecture.md:210
-msgid "Benchmark Tests"
-msgstr "Tests de performance"
-
-#: ../../source/architecture.md:212
-msgid "Performance regression detection"
-msgstr "Détection de régressions de performance"
-
-#: ../../source/architecture.md:213
-msgid "Memory usage monitoring"
-msgstr "Surveillance de l'utilisation mémoire"
-
-#: ../../source/architecture.md:214
-msgid "Optimization validation"
-msgstr "Validation des optimisations"
-
-#: ../../source/architecture.md:216
-msgid "Extension Points"
-msgstr "Points d'extension"
-
-#: ../../source/architecture.md:218
-msgid "To add new features:"
-msgstr "Pour ajouter de nouvelles fonctionnalités :"
-
-#: ../../source/architecture.md:220
-msgid "**New celestial bodies**: Add to `core.bodies`"
-msgstr "**Nouveaux corps célestes** : Ajouter à `core.bodies`"
-
-#: ../../source/architecture.md:221
-msgid "**New aspects**: Add to `core.aspects`"
-msgstr "**Nouveaux aspects** : Ajouter à `core.aspects`"
-
-#: ../../source/architecture.md:222
-msgid "**New calculations**: Extend `calculations.py`"
-msgstr "**Nouveaux calculs** : Étendre `calculations.py`"
-
-#: ../../source/architecture.md:223
-msgid "**New ephemeris functions**: Add to `ephemeris/`"
-msgstr "**Nouvelles fonctions d'éphémérides** : Ajouter à `ephemeris/`"
-
-#: ../../source/architecture.md:224
-msgid ""
-"**Visualization/export**: Implement in application layer using Ketu's "
-"calculation results"
+#: ../../source/architecture.md:271
+msgid "Chiron accuracy pins (7 reference longitudes 1950–2050)"
 msgstr ""
-"**Visualisation/export** : Implémenter dans la couche application en utilisant "
-"les résultats de calcul de Ketu"
+
+#: ../../source/architecture.md:273
+msgid "Quality Gates (CI)"
+msgstr ""
+
+#: ../../source/architecture.md:275
+msgid "**pytest**: 1373+ tests, all must pass"
+msgstr ""
+
+#: ../../source/architecture.md:276
+msgid ""
+"**Coverage**: 100% (`fail_under=100`, zero pragma, `exclude_lines` for "
+"proven dead branches)"
+msgstr ""
+
+#: ../../source/architecture.md:277
+msgid "**mypy strict**: zero errors across all subpackages"
+msgstr ""
+
+#: ../../source/architecture.md:278
+msgid "**numpydoc**: all public docstrings validated"
+msgstr ""
+
+#: ../../source/architecture.md:279
+msgid ""
+"**doctests**: 56+ inline examples verified via `pytest --doctest-modules "
+"ketu/`"
+msgstr ""
 
 #~ msgid "Chart Visualization (chart.py)"
 #~ msgstr "### Calculs (calculations.py)"
@@ -539,4 +601,235 @@ msgstr ""
 #~ msgstr ""
 #~ "Utilise des formules purement mathématiques"
 #~ " - pas de dépendances externes."
+
+#~ msgid "**bodies**: Dictionary with planet names, IDs, symbols, orbs, speeds"
+#~ msgstr ""
+#~ "**bodies** : Dictionnaire avec noms de"
+#~ " planètes, IDs, symboles, orbes, vitesses"
+
+#~ msgid ""
+#~ "**aspects**: Dictionary with aspect names, "
+#~ "angles, coefficients, symbols"
+#~ msgstr ""
+#~ "**aspects** : Dictionnaire avec noms "
+#~ "d'aspects, angles, coefficients, symboles"
+
+#~ msgid "These are implemented as NumPy structured arrays for efficient access."
+#~ msgstr ""
+#~ "Implémentées comme des tableaux structurés "
+#~ "NumPy pour un accès efficace."
+
+#~ msgid "`calculate_aspects()` - Detect all aspects"
+#~ msgstr "`calculate_aspects()` - Détecter tous les aspects"
+
+#~ msgid "`find_aspect_timing()` - Find exact aspect moments"
+#~ msgstr "`find_aspect_timing()` - Trouver les moments d'aspects exacts"
+
+#~ msgid "Display (display.py)"
+#~ msgstr "Affichage (display.py)"
+
+#~ msgid "User-facing display functions:"
+#~ msgstr "Fonctions d'affichage pour l'utilisateur :"
+
+#~ msgid "`print_positions()` - Formatted position table"
+#~ msgstr "`print_positions()` - Tableau de positions formaté"
+
+#~ msgid "`print_aspects()` - Formatted aspect table"
+#~ msgstr "`print_aspects()` - Tableau d'aspects formaté"
+
+#~ msgid "`main()` - Interactive CLI entry point"
+#~ msgstr "`main()` - Point d'entrée CLI interactif"
+
+#~ msgid "Handles all time-related calculations:"
+#~ msgstr "Gère tous les calculs liés au temps :"
+
+#~ msgid "Core astronomical calculations:"
+#~ msgstr "Calculs astronomiques principaux :"
+
+#~ msgid "**Kepler solver** - Solves Kepler's equation using Newton-Raphson"
+#~ msgstr "**Solveur de Kepler** - Résout l'équation de Kepler par Newton-Raphson"
+
+#~ msgid "**Orbital elements** - Planetary orbital parameters"
+#~ msgstr "**Éléments orbitaux** - Paramètres orbitaux planétaires"
+
+#~ msgid "Coordinate system conversions:"
+#~ msgstr "Conversions de systèmes de coordonnées :"
+
+#~ msgid "**Nutation** corrections"
+#~ msgstr "Corrections de **nutation**"
+
+#~ msgid "**Aberration** corrections"
+#~ msgstr "Corrections d'**aberration**"
+
+#~ msgid "High-level planetary position functions:"
+#~ msgstr "Fonctions de position planétaire de haut niveau :"
+
+#~ msgid "`calc_planet_position()` - Single date calculation"
+#~ msgstr "`calc_planet_position()` - Calcul pour une date unique"
+
+#~ msgid "`find_exact_aspect()` - Binary search for exact aspects"
+#~ msgstr "`find_exact_aspect()` - Recherche binaire pour aspects exacts"
+
+#~ msgid "`body_properties()` - Get full position + velocity"
+#~ msgstr "`body_properties()` - Obtenir position complète + vélocité"
+
+#~ msgid "Advanced Features"
+#~ msgstr "Fonctionnalités avancées"
+
+#~ msgid "Aspect Windows (aspect_windows.py)"
+#~ msgstr "Fenêtres d'aspects (aspect_windows.py)"
+
+#~ msgid "Temporal tracking of aspects:"
+#~ msgstr "Suivi temporel des aspects :"
+
+#~ msgid "**AspectMoment** - Instant when aspect is exact"
+#~ msgstr "**AspectMoment** - Instant où l'aspect est exact"
+
+#~ msgid "**AspectWindow** - Duration from begin to end of aspect"
+#~ msgstr "**AspectWindow** - Durée du début à la fin de l'aspect"
+
+#~ msgid "`find_aspect_window()` - Find all windows in date range"
+#~ msgstr "`find_aspect_window()` - Trouver toutes les fenêtres dans une période"
+
+#~ msgid "`find_aspects_timeline()` - Complete aspect timeline"
+#~ msgstr "`find_aspects_timeline()` - Chronologie complète des aspects"
+
+#~ msgid "Uses binary search and gradient descent for precision."
+#~ msgstr "Utilise recherche binaire et descente de gradient pour la précision."
+
+#~ msgid "Transits (transits.py)"
+#~ msgstr "Transits (transits.py)"
+
+#~ msgid "Natal position and transit calculations:"
+#~ msgstr "Calculs de positions natales et de transits :"
+
+#~ msgid "**NatalPosition** - Stores natal planet position"
+#~ msgstr "**NatalPosition** - Stocke la position natale de planète"
+
+#~ msgid "**TransitAspect** - Describes transit-to-natal aspect"
+#~ msgstr "**TransitAspect** - Décrit l'aspect transit vers natal"
+
+#~ msgid "`get_natal_positions()` - Extract natal positions"
+#~ msgstr "`get_natal_positions()` - Extraire les positions natales"
+
+#~ msgid "`find_transits_to_position()` - Find transits to a point"
+#~ msgstr "`find_transits_to_position()` - Trouver les transits vers un point"
+
+#~ msgid "`compare_dates_transits()` - Full transit comparison"
+#~ msgstr "`compare_dates_transits()` - Comparaison complète de transits"
+
+#~ msgid "Ephemeris Cache (cache/)"
+#~ msgstr "Cache d'éphémérides (cache/)"
+
+#~ msgid "High-performance position lookups:"
+#~ msgstr "Recherches de positions haute performance :"
+
+#~ msgid "**EphemerisCache** - Monthly pre-computed positions for O(1) lookups"
+#~ msgstr ""
+#~ "**EphemerisCache** - Positions pré-calculées "
+#~ "mensuellement pour recherches O(1)"
+
+#~ msgid "`ensure_month()` - Pre-compute and cache a month of positions"
+#~ msgstr "`ensure_month()` - Pré-calculer et mettre en cache un mois de positions"
+
+#~ msgid "`get_position()` - Fast position lookup with interpolation"
+#~ msgstr "`get_position()` - Recherche rapide de position avec interpolation"
+
+#~ msgid "`get_all_positions()` - Batch position retrieval for all bodies"
+#~ msgstr ""
+#~ "`get_all_positions()` - Récupération batch de"
+#~ " positions pour tous les corps"
+
+#~ msgid ""
+#~ "**Performance**: 1000x faster than computation"
+#~ " (0.006ms vs 10ms per lookup)"
+#~ msgstr ""
+#~ "**Performance** : 1000x plus rapide que"
+#~ " le calcul (0.006ms vs 10ms par "
+#~ "recherche)"
+
+#~ msgid "**Advanced modules**: Optional features"
+#~ msgstr "**Modules avancés** : Fonctionnalités optionnelles"
+
+#~ msgid "All functions are pure - same inputs always produce same outputs."
+#~ msgstr ""
+#~ "Toutes les fonctions sont pures - "
+#~ "mêmes entrées produisent toujours mêmes "
+#~ "sorties."
+
+#~ msgid ""
+#~ "Ketu has only one dependency (NumPy) "
+#~ "for maximum portability and performance. "
+#~ "All calculations use vectorized NumPy "
+#~ "operations where possible."
+#~ msgstr ""
+#~ "Ketu n'a qu'une seule dépendance (NumPy)"
+#~ " pour une portabilité et performance "
+#~ "maximales. Tous les calculs utilisent "
+#~ "des opérations NumPy vectorisées lorsque "
+#~ "possible."
+
+#~ msgid "Backward Compatibility"
+#~ msgstr "Compatibilité ascendante"
+
+#~ msgid ""
+#~ "The public API maintains compatibility "
+#~ "with previous versions where possible."
+#~ msgstr ""
+#~ "L'API publique maintient la compatibilité "
+#~ "avec les versions précédentes lorsque "
+#~ "possible."
+
+#~ msgid "Full position calculations"
+#~ msgstr "Calculs de positions complets"
+
+#~ msgid "Validation Tests"
+#~ msgstr "Tests de validation"
+
+#~ msgid "Compare against known ephemeris data"
+#~ msgstr "Comparer avec des données d'éphémérides connues"
+
+#~ msgid "Cross-check with historical observations"
+#~ msgstr "Vérifier avec des observations historiques"
+
+#~ msgid "Verify retrograde periods"
+#~ msgstr "Vérifier les périodes rétrogrades"
+
+#~ msgid "Benchmark Tests"
+#~ msgstr "Tests de performance"
+
+#~ msgid "Performance regression detection"
+#~ msgstr "Détection de régressions de performance"
+
+#~ msgid "Memory usage monitoring"
+#~ msgstr "Surveillance de l'utilisation mémoire"
+
+#~ msgid "Optimization validation"
+#~ msgstr "Validation des optimisations"
+
+#~ msgid "Extension Points"
+#~ msgstr "Points d'extension"
+
+#~ msgid "To add new features:"
+#~ msgstr "Pour ajouter de nouvelles fonctionnalités :"
+
+#~ msgid "**New celestial bodies**: Add to `core.bodies`"
+#~ msgstr "**Nouveaux corps célestes** : Ajouter à `core.bodies`"
+
+#~ msgid "**New aspects**: Add to `core.aspects`"
+#~ msgstr "**Nouveaux aspects** : Ajouter à `core.aspects`"
+
+#~ msgid "**New calculations**: Extend `calculations.py`"
+#~ msgstr "**Nouveaux calculs** : Étendre `calculations.py`"
+
+#~ msgid "**New ephemeris functions**: Add to `ephemeris/`"
+#~ msgstr "**Nouvelles fonctions d'éphémérides** : Ajouter à `ephemeris/`"
+
+#~ msgid ""
+#~ "**Visualization/export**: Implement in application"
+#~ " layer using Ketu's calculation results"
+#~ msgstr ""
+#~ "**Visualisation/export** : Implémenter dans la"
+#~ " couche application en utilisant les "
+#~ "résultats de calcul de Ketu"
 

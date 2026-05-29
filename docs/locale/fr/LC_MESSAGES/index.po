@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 23:04+0100\n"
+"POT-Creation-Date: 2026-05-30 00:44+0200\n"
 "PO-Revision-Date: 2026-02-12 00:00+0000\n"
 "Last-Translator: Claude Code <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -18,15 +18,15 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Generated-By: Babel 2.18.0\n"
 
-#: ../../source/index.md:19
+#: ../../source/index.md:24
 msgid "API"
 msgstr "API"
 
-#: ../../source/index.md:19
+#: ../../source/index.md:24
 msgid "User Guide"
 msgstr "Guide utilisateur"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Developer Guide"
 msgstr "Guide développeur"
 
@@ -64,14 +64,14 @@ msgstr "Ketu vous permet de :"
 #: ../../source/index.md:11
 msgid ""
 "Calculate precise positions of celestial bodies (Sun, Moon, planets, "
-"Nodes, Lilith)"
+"Nodes, Lilith, Chiron)"
 msgstr ""
-"Calculer les positions précises des corps célestes (Soleil, Lune, "
-"planètes, Nœuds, Lilith)"
 
 #: ../../source/index.md:12
-msgid "Determine aspects between planets"
-msgstr "Déterminer les aspects entre planètes"
+msgid ""
+"Determine aspects between planets with configurable aspect sets "
+"(Classical, Traditional, Extended)"
+msgstr ""
 
 #: ../../source/index.md:13
 msgid "Convert between different time systems (UTC, Julian)"
@@ -82,372 +82,409 @@ msgid "Identify retrogradations and zodiac signs"
 msgstr "Identifier les rétrogradations et les signes du zodiaque"
 
 #: ../../source/index.md:15
+msgid ""
+"Calculate astrological house systems (Placidus, Koch, Porphyry, Whole "
+"Sign, Equal, Regiomontanus)"
+msgstr ""
+
+#: ../../source/index.md:16
+msgid "Compute full natal charts as structured NumPy arrays (CHART_DTYPE)"
+msgstr ""
+
+#: ../../source/index.md:17
+msgid "Analyse synastry and composite (midpoint) charts between two individuals"
+msgstr ""
+
+#: ../../source/index.md:18
+msgid "Calculate solar and lunar returns for predictive astrology"
+msgstr ""
+
+#: ../../source/index.md:19
+msgid "Compute Arabic Parts / Hermetic Lots (Fortune, Spirit, Marriage)"
+msgstr ""
+
+#: ../../source/index.md:20
 msgid "Generate time series of aspects"
 msgstr "Générer des séries temporelles d'aspects"
 
-#: ../../source/index.md:17
+#: ../../source/index.md:22
 msgid "Navigation"
 msgstr "Navigation"
 
-#: ../../source/index.md:40
+#: ../../source/index.md:50
 msgid "Main Features"
 msgstr "Fonctionnalités principales"
 
-#: ../../source/index.md:42
+#: ../../source/index.md:52
 msgid "Supported Celestial Bodies"
 msgstr "Corps célestes supportés"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Body"
 msgstr "Corps"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Symbol"
 msgstr "Symbole"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Orb"
 msgstr "Orbe"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Average Speed"
 msgstr "Vitesse moyenne"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Sun"
 msgstr "Soleil"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "☉"
 msgstr "☉"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "12°"
 msgstr "12°"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "0.986°/day"
 msgstr "0.986°/jour"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Moon"
 msgstr "Lune"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "☽"
 msgstr "☽"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "13.176°/day"
 msgstr "13.176°/jour"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Mercury"
 msgstr "Mercure"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "☿"
 msgstr "☿"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "8°"
 msgstr "8°"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "1.383°/day"
 msgstr "1.383°/jour"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Venus"
 msgstr "Vénus"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "♀"
 msgstr "♀"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "10°"
 msgstr "10°"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "1.2°/day"
 msgstr "1.2°/jour"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Mars"
 msgstr "Mars"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "♂"
 msgstr "♂"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "0.524°/day"
 msgstr "0.524°/jour"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Jupiter"
 msgstr "Jupiter"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "♃"
 msgstr "♃"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "0.083°/day"
 msgstr "0.083°/jour"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Saturn"
 msgstr "Saturne"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "♄"
 msgstr "♄"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "0.034°/day"
 msgstr "0.034°/jour"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Uranus"
 msgstr "Uranus"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "♅"
 msgstr "♅"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "6°"
 msgstr "6°"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "0.012°/day"
 msgstr "0.012°/jour"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Neptune"
 msgstr "Neptune"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "♆"
 msgstr "♆"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "0.007°/day"
 msgstr "0.007°/jour"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Pluto"
 msgstr "Pluton"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "♇"
 msgstr "♇"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "4°"
 msgstr "4°"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "0.004°/day"
 msgstr "0.004°/jour"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Rahu (Mean Node)"
 msgstr "Rahu (Nœud moyen)"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "☊"
 msgstr "☊"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "0º"
 msgstr "0º"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "-0.013°/day"
 msgstr "-0.013°/jour"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Lilith (Black Moon)"
 msgstr "Lilith (Lune noire)"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "⚸"
 msgstr "⚸"
 
-#: ../../source/index.md:30
-msgid "-0.113°/day"
-msgstr "-0.113°/jour"
+#: ../../source/index.md:40
+msgid "0.113°/day"
+msgstr ""
 
-#: ../../source/index.md:59
+#: ../../source/index.md:40
+msgid "Chiron"
+msgstr ""
+
+#: ../../source/index.md:40
+msgid "⚷"
+msgstr ""
+
+#: ../../source/index.md:40
+msgid "~0.018°/day"
+msgstr ""
+
+#: ../../source/index.md:70
 msgid "Major Aspects"
 msgstr "Aspects majeurs"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Aspect"
 msgstr "Aspect"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Angle"
 msgstr "Angle"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Harmonic"
 msgstr "Harmonique"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Conjunction"
 msgstr "Conjonction"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "0°"
 msgstr "0°"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "☌"
 msgstr "☌"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "1"
 msgstr "1"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Semi-sextile"
 msgstr "Semi-sextile"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "30°"
 msgstr "30°"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "⚺"
 msgstr "⚺"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "1/6"
 msgstr "1/6"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Sextile"
 msgstr "Sextile"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "60°"
 msgstr "60°"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "⚹"
 msgstr "⚹"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "1/3"
 msgstr "1/3"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Square"
 msgstr "Carré"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "90°"
 msgstr "90°"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "□"
 msgstr "□"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "1/2"
 msgstr "1/2"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Trine"
 msgstr "Trigone"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "120°"
 msgstr "120°"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "△"
 msgstr "△"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "2/3"
 msgstr "2/3"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Quincunx"
 msgstr "Quinconce"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "150°"
 msgstr "150°"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "⚻"
 msgstr "⚻"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "5/6"
 msgstr "5/6"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "Opposition"
 msgstr "Opposition"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "180°"
 msgstr "180°"
 
-#: ../../source/index.md:30
+#: ../../source/index.md:40
 msgid "☍"
 msgstr "☍"
 
-#: ../../source/index.md:71
+#: ../../source/index.md:82
 msgid "Quick Example"
 msgstr "Exemple rapide"
 
-#: ../../source/index.md:88
+#: ../../source/index.md:100
 msgid "Indices and Tables"
 msgstr "Indices et tables"
 
-#: ../../source/index.md:90
+#: ../../source/index.md:102
 #, python-brace-format
 msgid "{ref}`genindex`"
 msgstr "{ref}`genindex`"
 
-#: ../../source/index.md:92
+#: ../../source/index.md:104
 #, python-brace-format
 msgid "{ref}`search`"
 msgstr "{ref}`search`"
 
-#: ../../source/index.md:94
+#: ../../source/index.md:106
 msgid "License"
 msgstr "Licence"
 
-#: ../../source/index.md:96
+#: ../../source/index.md:108
 msgid "MIT License - Copyright (c) 2021-2026 Loc Cosnier"
 msgstr "Licence MIT - Copyright (c) 2021-2026 Loc Cosnier"
 
-#: ../../source/index.md:98
+#: ../../source/index.md:110
 msgid "Contact"
 msgstr "Contact"
 
-#: ../../source/index.md:100
+#: ../../source/index.md:112
 msgid "Author: Loc Cosnier"
 msgstr "Auteur : Loc Cosnier"
 
-#: ../../source/index.md:101
+#: ../../source/index.md:113
 msgid "Email: <loc.cosnier@pm.me>"
 msgstr "Email : <loc.cosnier@pm.me>"
 
-#: ../../source/index.md:102
+#: ../../source/index.md:114
 msgid "GitHub: alkimya/ketu"
 msgstr "GitHub : alkimya/ketu"
 
-#: ../../source/index.md:103
+#: ../../source/index.md:115
 msgid "PyPI: pypi.org/project/ketu"
 msgstr "PyPI : pypi.org/project/ketu"
+
+#~ msgid "Determine aspects between planets"
+#~ msgstr "Déterminer les aspects entre planètes"
 

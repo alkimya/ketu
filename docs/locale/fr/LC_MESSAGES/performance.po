@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../source/performance.md:1
 msgid "Performance Guide"
-msgstr "# Guide de Performance"
+msgstr "Guide de Performance"
 
 #: ../../source/performance.md:3
 msgid ""
@@ -33,7 +33,7 @@ msgstr ""
 
 #: ../../source/performance.md:5
 msgid "Benchmarks"
-msgstr "## Benchmarks"
+msgstr "Benchmarks"
 
 #: ../../source/performance.md:7
 msgid "Time Series Calculations"
@@ -91,11 +91,11 @@ msgstr ""
 
 #: ../../source/performance.md:29
 msgid "Vectorized Functions"
-msgstr "## Fonctions Vectorisées"
+msgstr "Fonctions Vectorisées"
 
 #: ../../source/performance.md:31
 msgid "Batch Position Calculations"
-msgstr "### Calculs de Positions par Batch"
+msgstr "Calculs de Positions par Batch"
 
 #: ../../source/performance.md:52
 msgid "Vectorized Aspect Detection"
@@ -117,7 +117,7 @@ msgstr ""
 
 #: ../../source/performance.md:77
 msgid "NumPy Broadcasting"
-msgstr "### Broadcasting NumPy"
+msgstr "Broadcasting NumPy"
 
 #: ../../source/performance.md:79
 msgid ""
@@ -179,11 +179,11 @@ msgstr ""
 
 #: ../../source/performance.md:113
 msgid "Best Practices"
-msgstr "## Bonnes Pratiques"
+msgstr "Bonnes Pratiques"
 
 #: ../../source/performance.md:115
 msgid "Use Batch Functions"
-msgstr "### Utiliser les Fonctions Batch"
+msgstr "Utiliser les Fonctions Batch"
 
 #: ../../source/performance.md:117
 msgid "For time series analysis:"

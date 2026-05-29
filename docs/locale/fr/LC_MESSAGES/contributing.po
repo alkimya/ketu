@@ -7,16 +7,16 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-12-02 22:42+0100\n"
+"POT-Creation-Date: 2026-05-30 00:44+0200\n"
 "PO-Revision-Date: 2026-02-12 22:00+0100\n"
 "Last-Translator: Claude <noreply@anthropic.com>\n"
-"Language-Team: fr <LL@li.org>\n"
 "Language: fr\n"
+"Language-Team: fr <LL@li.org>\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=utf-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n > 1);\n"
-"Generated-By: Babel 2.17.0\n"
+"Generated-By: Babel 2.18.0\n"
 
 #: ../../source/contributing.md:1
 msgid "Contributing to Ketu"
@@ -39,200 +39,336 @@ msgid "2. Set Up a Development Environment"
 msgstr "2. Créer un environnement de développement"
 
 #: ../../source/contributing.md:25
+msgid ""
+"The `[dev]` extra installs pytest, pytest-cov, mypy, sphinx, myst-parser,"
+" interrogate, and other development tools."
+msgstr ""
+
+#: ../../source/contributing.md:27
 msgid "3. Create a Branch"
 msgstr "3. Créer une branche"
 
-#: ../../source/contributing.md:31
+#: ../../source/contributing.md:33
 msgid "4. Develop and Test"
 msgstr "4. Développer et tester"
 
-#: ../../source/contributing.md:44
+#: ../../source/contributing.md:55
 msgid "5. Commit with a Clear Message"
 msgstr "5. Commiter avec un message clair"
 
-#: ../../source/contributing.md:51
+#: ../../source/contributing.md:62
 msgid "Commit message prefixes:"
 msgstr "Préfixes de message de commit :"
 
-#: ../../source/contributing.md:53
+#: ../../source/contributing.md:64
 msgid "`feat:` New feature"
 msgstr "`feat:` Nouvelle fonctionnalité"
 
-#: ../../source/contributing.md:54
+#: ../../source/contributing.md:65
 msgid "`fix:` Bug fix"
 msgstr "`fix:` Correction de bug"
 
-#: ../../source/contributing.md:55
+#: ../../source/contributing.md:66
 msgid "`docs:` Documentation"
 msgstr "`docs:` Documentation"
 
-#: ../../source/contributing.md:56
+#: ../../source/contributing.md:67
 msgid "`style:` Formatting or code style"
 msgstr "`style:` Formatage ou style de code"
 
-#: ../../source/contributing.md:57
+#: ../../source/contributing.md:68
 msgid "`refactor:` Refactoring"
 msgstr "`refactor:` Refactorisation"
 
-#: ../../source/contributing.md:58
+#: ../../source/contributing.md:69
 msgid "`test:` Adding tests"
 msgstr "`test:` Ajout de tests"
 
-#: ../../source/contributing.md:59
+#: ../../source/contributing.md:70
 msgid "`chore:` Maintenance tasks"
 msgstr "`chore:` Tâches de maintenance"
 
-#: ../../source/contributing.md:61
+#: ../../source/contributing.md:72
 msgid "6. Push and Open a Pull Request"
 msgstr "6. Pusher et créer une Pull Request"
 
-#: ../../source/contributing.md:67
+#: ../../source/contributing.md:78
 msgid "Then open a PR on GitHub."
 msgstr "Puis créer une PR sur GitHub."
 
-#: ../../source/contributing.md:69
+#: ../../source/contributing.md:80
 msgid "Development Guidelines"
 msgstr "Directives de développement"
 
-#: ../../source/contributing.md:71
+#: ../../source/contributing.md:82
 msgid "Code Style"
 msgstr "Style de code"
 
-#: ../../source/contributing.md:73
+#: ../../source/contributing.md:84
 msgid "Follow PEP 8 for Python code"
 msgstr "Suivre PEP 8 pour le code Python"
 
-#: ../../source/contributing.md:74
-msgid "Google-style docstrings"
-msgstr "Docstrings de style Google"
+#: ../../source/contributing.md:85
+msgid "NumPy-style docstrings (required for numpydoc gate)"
+msgstr ""
 
-#: ../../source/contributing.md:75
-msgid "Type hints where they help readability"
-msgstr "Annotations de type où elles aident à la lisibilité"
+#: ../../source/contributing.md:86
+msgid "Type hints everywhere (mypy strict)"
+msgstr ""
 
-#: ../../source/contributing.md:76
+#: ../../source/contributing.md:87
 msgid "Maximum 88 characters per line (Black default)"
 msgstr "Maximum 88 caractères par ligne (défaut de Black)"
 
-#: ../../source/contributing.md:78
+#: ../../source/contributing.md ../../source/contributing.md:89
 msgid "Tests"
 msgstr "Tests"
 
-#: ../../source/contributing.md:80
-msgid "Minimum coverage target: 80%"
-msgstr "Objectif de couverture minimum : 80%"
+#: ../../source/contributing.md:91
+msgid "**Coverage target: 100%** (enforced via `fail_under=100` in CI)"
+msgstr ""
 
-#: ../../source/contributing.md:81
+#: ../../source/contributing.md:92
+msgid ""
+"No `# pragma: no cover` annotations — unreachable branches are handled "
+"via `exclude_lines` in `pyproject.toml`"
+msgstr ""
+
+#: ../../source/contributing.md:93
 msgid "Use pytest for unit tests"
 msgstr "Utiliser pytest pour les tests unitaires"
 
-#: ../../source/contributing.md:82
-msgid "Mock Swiss Ephemeris calls when needed"
-msgstr "Mocker les appels Swiss Ephemeris lorsque nécessaire"
+#: ../../source/contributing.md:94
+msgid "Add doctests (`>>>`) for all public functions"
+msgstr ""
 
-#: ../../source/contributing.md:84
+#: ../../source/contributing.md:96
 msgid "Documentation"
 msgstr "Documentation"
 
-#: ../../source/contributing.md:86
-msgid "Document every new public function"
-msgstr "Documenter chaque nouvelle fonction publique"
+#: ../../source/contributing.md:98
+msgid "Document every new public function with NumPy-style docstrings"
+msgstr ""
 
-#: ../../source/contributing.md:87
-msgid "Include examples in docstrings"
-msgstr "Inclure des exemples dans les docstrings"
+#: ../../source/contributing.md:99
+msgid ""
+"Include `Examples` section with `>>>` prompts in docstrings (collected by"
+" `make doctest`)"
+msgstr ""
 
-#: ../../source/contributing.md:88
-msgid "Update the Sphinx docs when relevant"
-msgstr "Mettre à jour la documentation Sphinx lorsque pertinent"
+#: ../../source/contributing.md:100
+msgid "Update the Sphinx docs in `docs/source/` when adding features"
+msgstr ""
 
-#: ../../source/contributing.md:90
-msgid "Areas to Contribute"
-msgstr "Domaines de contribution"
+#: ../../source/contributing.md:101
+msgid ""
+"Use `from ketu.submodule import function` style — not `import ketu; "
+"ketu.function()`"
+msgstr ""
 
-#: ../../source/contributing.md:92
-msgid "Current Priorities"
-msgstr "Priorités actuelles"
+#: ../../source/contributing.md:103
+msgid "pyswisseph Policy"
+msgstr ""
 
-#: ../../source/contributing.md:94
-msgid "**Pure NumPy migration**: Replace pyswisseph"
-msgstr "**Migration vers NumPy pur** : Remplacer pyswisseph"
+#: ../../source/contributing.md:105
+msgid ""
+"`pyswisseph` is **test/validation only** — it is never imported at "
+"runtime. Runtime code must be pure NumPy. This maintains AGPL isolation. "
+"If a new calculation requires Swiss Ephemeris data, generate offline "
+"coefficients (as was done for Chiron in v1.3) and embed them as `.npz` "
+"files."
+msgstr ""
 
-#: ../../source/contributing.md:95
-msgid "**Exact aspect timing**: Find the precise moments aspects are exact"
-msgstr "**Timing d'aspects exact** : Trouver les moments précis où les aspects sont exacts"
-
-#: ../../source/contributing.md:97
+#: ../../source/contributing.md:107
 msgid "Project Architecture"
 msgstr "Architecture du projet"
 
-#: ../../source/contributing.md:113
+#: ../../source/contributing.md:137
+msgid "Quality Gates (CI)"
+msgstr ""
+
+#: ../../source/contributing.md:139
+msgid "All of the following must pass before merging:"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "Gate"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "Command"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "Target"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "`pytest tests/`"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "All pass"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "Coverage"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "`pytest --cov=ketu --cov-fail-under=100`"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "100%"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "Type check"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "`mypy ketu/`"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "0 errors (strict)"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "Docstring coverage"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "`interrogate ketu/ --fail-under 95`"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "≥95%"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "Numpydoc lint"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "`python -m numpydoc --validate ketu/`"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "0 violations"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "Doctests"
+msgstr ""
+
+#: ../../source/contributing.md
+msgid "`pytest --doctest-modules ketu/ --no-cov`"
+msgstr ""
+
+#: ../../source/contributing.md:150
 msgid "Review Process"
 msgstr "Processus de revue"
 
-#: ../../source/contributing.md:115
+#: ../../source/contributing.md:152
 msgid "Tests: the full suite must pass"
 msgstr "Tests : la suite complète doit passer"
 
-#: ../../source/contributing.md:116
-msgid "Coverage: do not decrease coverage"
-msgstr "Couverture : ne pas diminuer la couverture"
+#: ../../source/contributing.md:153
+msgid "Coverage: must stay at 100% (no decrease allowed)"
+msgstr ""
 
-#: ../../source/contributing.md:117
+#: ../../source/contributing.md:154
 msgid "Documentation: keep it current and clear"
 msgstr "Documentation : la garder à jour et claire"
 
-#: ../../source/contributing.md:118
+#: ../../source/contributing.md:155
 msgid "Style: respect the agreed conventions"
 msgstr "Style : respecter les conventions convenues"
 
-#: ../../source/contributing.md:119
+#: ../../source/contributing.md:156
 msgid "Performance: avoid regressions"
 msgstr "Performance : éviter les régressions"
 
-#: ../../source/contributing.md:121
+#: ../../source/contributing.md:158
 msgid "Resources"
 msgstr "Ressources"
 
-#: ../../source/contributing.md:123
+#: ../../source/contributing.md:160
 msgid "Technical Documentation"
 msgstr "Documentation technique"
 
-#: ../../source/contributing.md:125
-msgid "[Swiss Ephemeris](https://www.astro.com/swisseph/)"
-msgstr "[Swiss Ephemeris](https://www.astro.com/swisseph/)"
+#: ../../source/contributing.md:162
+msgid ""
+"[Swiss Ephemeris](https://www.astro.com/swisseph/) (validation only — not"
+" a runtime dependency)"
+msgstr ""
 
-#: ../../source/contributing.md:127
+#: ../../source/contributing.md:163
+msgid "[NumPy documentation](https://numpy.org/doc/stable/)"
+msgstr ""
+
+#: ../../source/contributing.md:165
 msgid "Issues"
 msgstr "Issues"
 
-#: ../../source/contributing.md:129
+#: ../../source/contributing.md:167
 msgid "[GitHub Discussions](https://github.com/alkimya/ketu/discussions)"
 msgstr "[Discussions GitHub](https://github.com/alkimya/ketu/discussions)"
 
-#: ../../source/contributing.md:130
+#: ../../source/contributing.md:168
 msgid "[Issues](https://github.com/alkimya/ketu/issues)"
 msgstr "[Issues](https://github.com/alkimya/ketu/issues)"
 
-#: ../../source/contributing.md:131
+#: ../../source/contributing.md:169
 msgid "Email: [loc.cosnier@pm.me](mailto:loc.cosnier@pm.me)"
 msgstr "Email : [loc.cosnier@pm.me](mailto:loc.cosnier@pm.me)"
 
-#: ../../source/contributing.md:133
+#: ../../source/contributing.md:171
 msgid "Documentation ReadTheDocs"
 msgstr "Documentation ReadTheDocs"
 
-#: ../../source/contributing.md:135
+#: ../../source/contributing.md:173
 msgid "[Project documentation (Read the Docs)](https://ketu.readthedocs.io/)"
 msgstr "[Documentation du projet (Read the Docs)](https://ketu.readthedocs.io/)"
 
-#: ../../source/contributing.md:137
+#: ../../source/contributing.md:175
 msgid "License"
 msgstr "Licence"
 
-#: ../../source/contributing.md:139
+#: ../../source/contributing.md:177
 msgid ""
 "By contributing, you agree that your work will be released under the MIT "
 "License."
 msgstr ""
-"En contribuant, vous acceptez que votre travail soit publié sous licence MIT."
+"En contribuant, vous acceptez que votre travail soit publié sous licence "
+"MIT."
+
+#~ msgid "Google-style docstrings"
+#~ msgstr "Docstrings de style Google"
+
+#~ msgid "Minimum coverage target: 80%"
+#~ msgstr "Objectif de couverture minimum : 80%"
+
+#~ msgid "Mock Swiss Ephemeris calls when needed"
+#~ msgstr "Mocker les appels Swiss Ephemeris lorsque nécessaire"
+
+#~ msgid "Include examples in docstrings"
+#~ msgstr "Inclure des exemples dans les docstrings"
+
+#~ msgid "Areas to Contribute"
+#~ msgstr "Domaines de contribution"
+
+#~ msgid "Current Priorities"
+#~ msgstr "Priorités actuelles"
+
+#~ msgid "**Pure NumPy migration**: Replace pyswisseph"
+#~ msgstr "**Migration vers NumPy pur** : Remplacer pyswisseph"
+
+#~ msgid "**Exact aspect timing**: Find the precise moments aspects are exact"
+#~ msgstr ""
+#~ "**Timing d'aspects exact** : Trouver les"
+#~ " moments précis où les aspects sont"
+#~ " exacts"
+

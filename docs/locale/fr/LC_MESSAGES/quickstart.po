@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-02-12 21:33+0100\n"
+"POT-Creation-Date: 2026-05-30 00:44+0200\n"
 "PO-Revision-Date: 2026-02-12 22:00+0100\n"
 "Last-Translator: Claude <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -54,69 +54,85 @@ msgstr "Entrez un fuseau horaire : `Europe/Paris`"
 msgid "Programming Mode"
 msgstr "Mode programmation"
 
-#: ../../source/quickstart.md:37
+#: ../../source/quickstart.md:38
 msgid "Basic Calculations"
 msgstr "Calculs de base"
 
-#: ../../source/quickstart.md:39
+#: ../../source/quickstart.md:40
 msgid "Planetary Positions"
 msgstr "Positions planétaires"
 
-#: ../../source/quickstart.md:59
+#: ../../source/quickstart.md:61
 msgid "Determine Zodiac Sign"
 msgstr "Déterminer le signe zodiacal"
 
-#: ../../source/quickstart.md:74
+#: ../../source/quickstart.md:79
 msgid "Check Retrogradation"
 msgstr "Vérifier la rétrogradation"
 
-#: ../../source/quickstart.md:84
+#: ../../source/quickstart.md:91
 msgid "Aspect Calculation"
 msgstr "Calcul d'aspects"
 
-#: ../../source/quickstart.md:86
+#: ../../source/quickstart.md:93
 msgid "Aspects Between Two Planets"
 msgstr "Aspects entre deux planètes"
 
-#: ../../source/quickstart.md:100
+#: ../../source/quickstart.md:110
 msgid "All Current Aspects"
 msgstr "Tous les aspects actuels"
 
-#: ../../source/quickstart.md:116
+#: ../../source/quickstart.md:130
 msgid "Complete Example: Natal Positions"
 msgstr "Exemple complet : Positions natales"
 
-#: ../../source/quickstart.md:172
+#: ../../source/quickstart.md:189
+msgid "Building a Full Natal Chart"
+msgstr ""
+
+#: ../../source/quickstart.md:191
+msgid ""
+"New in v1.2: `compute_chart` returns a single structured array containing"
+" positions, house cusps, and aspect matrix."
+msgstr ""
+
+#: ../../source/quickstart.md:214
 msgid "Tips and Tricks"
 msgstr "Trucs et astuces"
 
-#: ../../source/quickstart.md:174
+#: ../../source/quickstart.md:216
 msgid "Using the Cache"
 msgstr "Utiliser le cache"
 
-#: ../../source/quickstart.md:176
+#: ../../source/quickstart.md:218
 msgid "Position calculations use `@lru_cache` to optimize performance:"
 msgstr ""
 "Les calculs de positions utilisent `@lru_cache` pour optimiser les "
 "performances :"
 
-#: ../../source/quickstart.md:188
+#: ../../source/quickstart.md:232
 msgid "Working with NumPy"
 msgstr "Travailler avec NumPy"
 
-#: ../../source/quickstart.md:202
+#: ../../source/quickstart.md:247
 msgid "Next Steps"
 msgstr "Prochaines étapes"
 
-#: ../../source/quickstart.md:204
+#: ../../source/quickstart.md:249
 msgid "Explore [Advanced Examples](examples.md) for complex use cases"
-msgstr "Explorez les [Exemples avancés](examples.md) pour des cas d'usage complexes"
+msgstr ""
+"Explorez les [Exemples avancés](examples.md) pour des cas d'usage "
+"complexes"
 
-#: ../../source/quickstart.md:205
+#: ../../source/quickstart.md:250
 msgid "See the [API Reference](api.md) for all details"
 msgstr "Consultez la [Référence API](api.md) pour tous les détails"
 
-#: ../../source/quickstart.md:206
+#: ../../source/quickstart.md:251
 msgid "Learn about [Astrological Concepts](concepts.md) used in Ketu"
 msgstr "Découvrez les [Concepts astrologiques](concepts.md) utilisés dans Ketu"
+
+#: ../../source/quickstart.md:252
+msgid "Discover [House Systems](houses.md) for complete chart calculation"
+msgstr ""
 
