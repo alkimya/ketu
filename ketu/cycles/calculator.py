@@ -167,10 +167,12 @@ def generate_cycle_series(
     --------
     >>> from datetime import datetime, timedelta
     >>> from ketu.cycles import generate_cycle_series
-    >>>
     >>> timestamps = [datetime(2025, 1, 1) + timedelta(days=i) for i in range(365)]
     >>> cycles = generate_cycle_series("Sun", "Mars", timestamps)
-    >>> print(cycles['angular_separation'][:5])
+    >>> cycles.shape
+    (365,)
+    >>> cycles.dtype.names[:3]
+    ('julian_day', 'body1_id', 'body2_id')
     """
     # Convert body names to IDs
     body1_id = _get_body_id(body1)

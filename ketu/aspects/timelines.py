@@ -400,25 +400,18 @@ def generate_aspect_timeline(
 
     Examples
     --------
-    >>> # Mars-Sun aspects in 2024
+    >>> # Mars-Sun aspects in 2024 — assert on count and array shape
     >>> timeline = generate_aspect_timeline(
     ...     body1="Sun",
     ...     body2="Mars",
     ...     start_date="2024-01-01",
     ...     end_date="2024-12-31"
     ... )
-    >>> print(f"Found {len(timeline)} aspect events")
-    >>> arr = timeline.to_numpy()  # Export to NumPy
-    >>>
-    >>> # Venus-Neptune with custom aspects
-    >>> timeline = generate_aspect_timeline(
-    ...     body1="Venus",
-    ...     body2="Neptune",
-    ...     start_date="2025-01-01",
-    ...     end_date="2025-06-30",
-    ...     aspects_list=["Conjunction", "Square", "Opposition"],
-    ...     timezone="America/New_York"
-    ... )
+    >>> len(timeline) > 0
+    True
+    >>> arr = timeline.to_numpy()
+    >>> arr.dtype.names[:3]
+    ('julian_day', 'body1_id', 'body2_id')
     """
     # Default aspects: CLASSICAL preset (Phase 9 ASP-04)
     if aspects_list is None:

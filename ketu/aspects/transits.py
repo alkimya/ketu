@@ -9,14 +9,16 @@ A transit is different from an aspect:
 - Transit: One moving body forming an angle with a fixed position
 
 Example:
-    >>> # When does Mars transit my natal Sun?
+    >>> from ketu.aspects.transits import find_transits_to_position
     >>> transits = find_transits_to_position(
     ...     transiting_body="Mars",
-    ...     reference_longitude=120.0,  # Natal Sun at 0° Leo
-    ...     aspects=["Conjunction", "Trine", "Opposition"],
+    ...     reference_longitude=120.0,
+    ...     aspects_list=["Conjunction", "Trine", "Opposition"],
     ...     start_date="2024-01-01",
     ...     end_date="2024-12-31"
     ... )
+    >>> isinstance(transits, list)
+    True
 """
 
 from collections import namedtuple
@@ -459,7 +461,10 @@ def get_natal_positions(
     Examples
     --------
     >>> natal = get_natal_positions("1990-05-15 14:30")
-    >>> print(f"Natal Sun: {natal['Sun'].longitude}°")
+    >>> "Sun" in natal
+    True
+    >>> bool(0.0 <= natal["Sun"].longitude < 360.0)
+    True
     """
     # Convert date
     if isinstance(reference_date, str):
@@ -529,8 +534,8 @@ def compare_dates_transits(
     ...     natal_date="1990-05-15 14:30",
     ...     transit_date="2024-11-21"
     ... )
-    >>> for t in transits:
-    ...     print(f"{t.transiting_body} {t.aspect} natal {t.natal_body}")
+    >>> isinstance(transits, list)
+    True
     """
     # Get natal positions
     natal_positions = get_natal_positions(natal_date)

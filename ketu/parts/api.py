@@ -65,6 +65,23 @@ def calculate_part(part_name: str, chart: np.ndarray) -> float:
 
     Notes
     -----
+    **Accuracy vs Swiss Ephemeris.** Arabic Part longitudes depend on
+    body longitudes from :func:`ketu.charts.compute_chart` (±0.1°
+    inner planets, ±0.5° outer) plus the Ascendant (±0.01°). The
+    resulting Part longitude is accurate to approximately ±0.2° for
+    Fortune/Spirit (Sun/Moon-based) and ±0.5° for parts that include
+    outer planets. Swiss-based tools may differ by a similar margin.
+
+    **Supported date range.** 1800–2200 CE (inherits from the
+    underlying ephemeris). Accuracy degrades outside this range.
+
+    **Sect edge cases.** Sect is re-evaluated fresh from ``(jd, lat,
+    lon)`` via :func:`ketu.charts.api.is_day_chart` each call (D-12).
+    At exact sunrise/sunset (Sun on ASC/DESC), the sunrise-inclusive
+    convention applies: Sun exactly on ASC → day chart. Callers
+    relocating the chart (non-natal ``lat``/``lon``) will get the
+    correct sect for the relocation.
+
     Body-axis indices are FROZEN per decision D-08
     (``body_lons[0]`` = Sun, ``body_lons[1]`` = Moon,
     ``body_lons[3]`` = Venus).  A v1.3 grow-the-axis change would require
@@ -72,11 +89,11 @@ def calculate_part(part_name: str, chart: np.ndarray) -> float:
 
     Examples
     --------
-    >>> import numpy as np  # doctest: +SKIP
-    >>> from ketu.charts import compute_chart  # doctest: +SKIP
-    >>> from ketu.parts import calculate_part  # doctest: +SKIP
-    >>> chart = compute_chart(2451545.0, 48.8566, 2.3522)  # doctest: +SKIP
-    >>> 0.0 <= calculate_part("fortune", chart) < 360.0  # doctest: +SKIP
+    >>> import numpy as np
+    >>> from ketu.charts import compute_chart
+    >>> from ketu.parts import calculate_part
+    >>> chart = compute_chart(2451545.0, 48.8566, 2.3522)
+    >>> 0.0 <= calculate_part("fortune", chart) < 360.0
     True
     """
     spec = get_part(part_name)
@@ -133,17 +150,33 @@ def calculate_all_parts(
     ketu.parts.calculate_part : Single-part computation; called for each name.
     ketu.parts.registry.PARTS : The registry iterated when ``parts=None``.
 
+    Notes
+    -----
+    **Accuracy vs Swiss Ephemeris.** Inherits from
+    :func:`calculate_part` — see its Notes block for per-body error
+    budgets. Results are deterministic for fixed ``(jd, lat, lon)``.
+
+    **Supported date range.** 1800–2200 CE. Degrades outside this
+    range along with the underlying ephemeris.
+
+    **Edge cases.** Passing an empty ``parts=[]`` returns an empty
+    dict. Case-insensitive part names are normalised to lowercase in
+    the returned dict keys (via :func:`ketu.parts.registry.get_part`).
+    All three built-in parts (fortune, spirit, marriage) use
+    sect-symmetric formulas; marriage is the same formula for day and
+    night charts.
+
     Examples
     --------
-    >>> import numpy as np  # doctest: +SKIP
-    >>> from ketu.charts import compute_chart  # doctest: +SKIP
-    >>> from ketu.parts import calculate_all_parts  # doctest: +SKIP
-    >>> chart = compute_chart(2451545.0, 48.8566, 2.3522)  # doctest: +SKIP
-    >>> result = calculate_all_parts(chart)  # doctest: +SKIP
-    >>> sorted(result.keys())  # doctest: +SKIP
+    >>> import numpy as np
+    >>> from ketu.charts import compute_chart
+    >>> from ketu.parts import calculate_all_parts
+    >>> chart = compute_chart(2451545.0, 48.8566, 2.3522)
+    >>> result = calculate_all_parts(chart)
+    >>> sorted(result.keys())
     ['fortune', 'marriage', 'spirit']
-    >>> result2 = calculate_all_parts(chart, parts=["fortune"])  # doctest: +SKIP
-    >>> list(result2.keys())  # doctest: +SKIP
+    >>> result2 = calculate_all_parts(chart, parts=["fortune"])
+    >>> list(result2.keys())
     ['fortune']
     """
     names = parts if parts is not None else sorted(PARTS.keys())

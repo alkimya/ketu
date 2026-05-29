@@ -22,15 +22,11 @@ Convention:
 
 Example:
     >>> from ketu.complex import ZodiacPoint, CycleRatio
-    >>>
-    >>> # Create points from degrees
     >>> moon = ZodiacPoint.from_degrees(120)  # Moon at 120°
     >>> sun = ZodiacPoint.from_degrees(90)    # Sun at 90°
-    >>>
-    >>> # Compute cycle ratio
     >>> cycle = moon / sun  # or CycleRatio(moon, sun)
-    >>> print(cycle.aspect_degrees)  # 30.0 (sextile approaching)
-    >>> print(cycle.nearest_aspect)  # 'sextile'
+    >>> round(cycle.aspect_degrees, 1)  # 30.0° separation
+    30.0
 """
 
 from __future__ import annotations

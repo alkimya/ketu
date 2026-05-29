@@ -273,17 +273,19 @@ def find_aspect_window(
 
     Examples
     --------
-    Full Moon (Sun-Moon opposition):
+    Full Moon (Sun-Moon opposition) — assert on result type and structure:
 
     >>> result = find_aspect_window("Sun", "Moon", "Opposition", "2025-11-15")
-    >>> print(result.moments[0].exact)
+    >>> len(result.moments) >= 1
+    True
 
     Mars-Jupiter square with retrograde:
 
     >>> result = find_aspect_window("Mars", "Jupiter", "Square",
     ...                              "2025-08-15", search_days=180,
     ...                              detect_retrograde=True)
-    >>> print(f"Found {len(result.moments)} exact moments")
+    >>> len(result.moments) >= 1
+    True
     """
     # Convert inputs
     body1_id = _get_body_id(body1)
@@ -433,7 +435,7 @@ def find_aspects_timeline(
 
     Examples
     --------
-    All Sun-Moon aspects in 2025:
+    All Sun-Moon aspects in 2025 — assert on count and structure:
 
     >>> timeline = find_aspects_timeline(
     ...     "Sun", "Moon",
@@ -441,8 +443,10 @@ def find_aspects_timeline(
     ...     start_date="2025-01-01",
     ...     end_date="2025-12-31"
     ... )
-    >>> for window in timeline:
-    ...     print(f"{window.aspect}: {window.moments[0].exact}")
+    >>> len(timeline) > 0
+    True
+    >>> timeline[0].aspect in ("Conjunction", "Sextile", "Square", "Trine", "Opposition")
+    True
     """
     # Default to CLASSICAL preset (5 majors) per Phase 9 ASP-04
     if aspects_list is None:

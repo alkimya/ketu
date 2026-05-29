@@ -196,14 +196,36 @@ def lunar_return(
     Moon's aberration is negligible (it's geocentric and close); the
     resolved instant agrees with Astro.com to sub-arcsec.
 
+    **Accuracy vs Swiss Ephemeris.** The resolved Moon return instant
+    agrees with Astro.com to sub-arcsec (Moon aberration is geocentric
+    and negligible). The returned chart's Moon longitude should match
+    the natal Moon longitude within 1 arcsecond (LRET-03 tolerance).
+    House cusps at the return location agree with Swiss to ±0.01°.
+
+    **Supported date range.** 1800–2200 CE. The mean-motion seed
+    estimation uses sidereal/tropical mean motion (13.176 deg/d),
+    accurate enough across this range. The bisection converges to
+    1 arcsecond in all cases.
+
+    **Edge cases.** Passing ``target_jd`` exactly at a return moment
+    (within the 1-arcsecond tolerance) returns ``target_jd`` itself
+    (inclusive boundary — LRET-01). Subsequent returns are NOT returned
+    by this call; call again with ``target_jd = prev_jd + 27.32`` to
+    step forward. Polar ``return_lat`` is handled via internal
+    ``polar_fallback='porphyry'``; no ``HighLatitudeError`` is raised.
+    Passing ``target_jd`` as a year integer (e.g. 2010) is silently
+    accepted but produces a chart near 4677 BC — use a proper JD.
+
     Examples
     --------
     >>> # First lunar return on or after 2010-01-01T00:00 UT for a 2000 natal:
     >>> jd_natal = 2451545.0
     >>> jd_target = 2455197.5  # 2010-01-01T00:00 UT
-    >>> chart = lunar_return(jd_natal, 48.85, 2.35, jd_target)  # doctest: +SKIP
-    >>> float(chart["jd"]) >= jd_target - 1e-7  # first return >= target  # doctest: +SKIP
+    >>> chart = lunar_return(jd_natal, 48.85, 2.35, jd_target)
+    >>> float(chart["jd"]) >= jd_target - 1e-7  # first return >= target
     True
+    >>> chart["body_lons"].shape
+    (13,)
     """
     # Type guard: target_jd must be a float-like (not str).
     # int is accepted via float() promotion.

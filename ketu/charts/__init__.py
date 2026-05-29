@@ -40,8 +40,8 @@ Examples
 >>> jd = np.array([2451545.0, 2470204.0])
 >>> lat = np.array([48.86, 64.15])
 >>> lon = np.array([2.35, -21.94])
->>> chart = compute_chart(jd, lat, lon, polar_fallback="porphyry")  # doctest: +SKIP
->>> chart.shape, chart["body_lons"].shape, chart["aspect_matrix"].shape  # doctest: +SKIP
+>>> chart = compute_chart(jd, lat, lon, polar_fallback="porphyry")
+>>> chart.shape, chart["body_lons"].shape, chart["aspect_matrix"].shape
 ((2,), (2, 13), (2, 13, 13))
 """
 from __future__ import annotations

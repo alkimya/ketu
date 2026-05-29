@@ -59,8 +59,10 @@ class EphemerisCache:
     --------
     >>> cache = EphemerisCache()
     >>> cache.ensure_range(2025, 1, 2025, 12)
+    >>> from datetime import datetime
     >>> pos = cache.get_position(datetime(2025, 6, 15, 14, 30), body_id=0)
-    >>> print(f"Sun longitude: {pos[0]:.2f}°")
+    >>> bool(0.0 <= pos[0] < 360.0)  # Sun longitude in valid range
+    True
     """
 
     def __init__(self, cache_dir: Optional[Union[str, Path]] = None):

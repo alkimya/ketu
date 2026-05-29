@@ -138,13 +138,12 @@ def refine_exact_moment(
 
     Examples
     --------
-    For aspect between two bodies:
+    For aspect between two bodies (convergence example):
 
-    >>> def callback(jd):
-    ...     pos1 = long(jd, body1_id)
-    ...     pos2 = long(jd, body2_id)
-    ...     return distance(pos1, pos2) - aspect_angle
-    >>> exact_jd = refine_exact_moment(callback, initial_jd)
+    >>> # Callback returns 0.0 → immediately within tolerance → returns initial_jd
+    >>> exact_jd = refine_exact_moment(lambda jd: 0.0, 2451545.0)
+    >>> round(exact_jd, 1)
+    2451545.0
     """
     error_initial = distance_callback(jd_initial)
 
@@ -214,14 +213,11 @@ def find_orb_boundaries(
 
     Examples
     --------
-    For aspect with specific orb:
+    Always-within-orb callback → boundaries extend to search_days limits:
 
-    >>> def callback(jd):
-    ...     pos1 = long(jd, body1_id)
-    ...     pos2 = long(jd, body2_id)
-    ...     dist = distance(pos1, pos2)
-    ...     return abs(dist - aspect_angle) <= orb
-    >>> jd_begin, jd_end = find_orb_boundaries(callback, exact_jd)
+    >>> jd_begin, jd_end = find_orb_boundaries(lambda jd: True, 2451545.0, search_days=1.0)
+    >>> jd_begin is not None
+    True
     """
     # Binary search for beginning
     jd_begin = None

@@ -155,13 +155,14 @@ def get_part(name: str) -> PartSpec:
 
     Examples
     --------
-    >>> spec = get_part("fortune")  # doctest: +SKIP
+    >>> from ketu.parts.registry import get_part
+    >>> spec = get_part("fortune")
     >>> spec.name
     'fortune'
-    >>> get_part("nope")  # doctest: +SKIP
+    >>> get_part("nope")  # doctest: +ELLIPSIS
     Traceback (most recent call last):
         ...
-    ValueError: unknown part 'nope'; available: ['fortune', 'marriage', 'spirit']
+    ValueError: unknown part 'nope'; available: [...]
     """
     key = name.lower()
     if key not in PARTS:

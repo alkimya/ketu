@@ -47,10 +47,10 @@ preserve ±1e-10° precision through careful numerical handling.
 
 Examples
 --------
->>> from ketu import bodies, aspects, signs
+>>> from ketu.core import bodies, aspects as aspects_data, signs
 >>> bodies['name'][0].decode()  # First body name
 'Sun'
->>> float(aspects['angle'][0])  # First aspect angle
+>>> float(aspects_data['angle'][0])  # First aspect angle
 0.0
 """
 

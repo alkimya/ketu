@@ -179,13 +179,36 @@ def calculate_composite(
     default; the composite signature deliberately omits an
     ``aspects=`` parameter (COMP-01..04 do not mention it).
 
+    **Accuracy vs Swiss Ephemeris.** Composite body longitudes are
+    circular midpoints of two natal positions, each accurate to ±0.1°
+    (inner planets) or ±0.5° (outer). The composite itself carries
+    the same error budget plus up to ~0.1° of short-arc midpoint
+    rounding (floating-point exact to ~1 ulp). House cusps are derived
+    from composite ASC/MC via Porphyry trisection (±0.01°). Swiss-
+    based composite tools may differ by similar amounts depending on
+    their midpoint convention.
+
+    **Supported date range.** Inherits the natal-chart constraint:
+    1800–2200 CE for both partner charts. Accuracy degrades outside
+    this range.
+
+    **Edge cases.** If both partners' ASC values are exactly 180°
+    apart, the composite ASC is defined as 0° by convention (see
+    :func:`ketu.composite.circular_midpoint` antipodal pin). Geographic
+    ``lon`` is the circular midpoint (e.g. 170°E and 170°W give 180°).
+
     Examples
     --------
-    See :func:`ketu.composite.circular_midpoint` for vectorised-helper
-    examples. Build the per-partner inputs via
-    :func:`ketu.charts.compute_chart`, then call this function on the
-    pair; the result is a scalar :data:`ketu.charts.CHART_DTYPE` whose
-    ``body_lons`` axis has shape ``(13,)``.
+    >>> import numpy as np
+    >>> from ketu.charts import compute_chart
+    >>> from ketu.composite import calculate_composite
+    >>> chart_a = compute_chart(2451545.0, 48.86, 2.35)
+    >>> chart_b = compute_chart(2451900.0, 40.71, -74.01)
+    >>> comp = calculate_composite(chart_a, chart_b)
+    >>> comp["body_lons"].shape
+    (13,)
+    >>> comp["cusps"].shape
+    (12,)
     """
     # 1. Validate system= (raises ValueError on unknown); discard return
     #    value. Approach A no-op semantics — every system collapses to

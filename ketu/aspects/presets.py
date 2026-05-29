@@ -153,9 +153,9 @@ def resolve_aspect_set(
     True
     >>> np.array_equal(resolve_aspect_set("classical"), CLASSICAL)
     True
-    >>> resolve_aspect_set([0, 4, 7, 9, 13]).sum()
+    >>> int(resolve_aspect_set([0, 4, 7, 9, 13]).sum())
     5
-    >>> resolve_aspect_set(["Conjunction", "Trine"]).sum()
+    >>> int(resolve_aspect_set(["Conjunction", "Trine"]).sum())
     2
     """
     if spec is None:

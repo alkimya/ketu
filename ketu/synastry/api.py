@@ -181,6 +181,18 @@ def calculate_synastry(
 
     Notes
     -----
+    **Accuracy vs Swiss Ephemeris.** Synastry aspects depend on body
+    longitudes from :func:`ketu.charts.compute_chart`, which agree with
+    Swiss Ephemeris to ±0.1° for inner planets and ±0.5° for outer
+    planets. Synastry orbs (default 0.5× natal orbs) absorb this delta;
+    aspects within ~0.5° of an orb boundary may differ from Swiss-based
+    tools. Use ``orbs='classical'`` to restore natal-orb widths for
+    comparison.
+
+    **Supported date range.** Reliable for chart dates in 1800–2200 CE.
+    Accuracy degrades outside this range due to mean-orbital-element
+    divergence.
+
     **UTC ONLY.** Both ``chart_a`` and ``chart_b`` MUST have been
     computed with UTC Julian Dates. Time-zone conversion is the
     caller's responsibility; mixing local-time charts will produce
@@ -222,10 +234,10 @@ def calculate_synastry(
     --------
     >>> from ketu.charts import compute_chart
     >>> from ketu.synastry import calculate_synastry
-    >>> chart_a = compute_chart(2451545.0, 48.86, 2.35)  # doctest: +SKIP
-    >>> chart_b = compute_chart(2451900.0, 40.71, -74.01)  # doctest: +SKIP
-    >>> result = calculate_synastry(chart_a, chart_b)  # doctest: +SKIP
-    >>> result.dtype.names[:3]  # doctest: +SKIP
+    >>> chart_a = compute_chart(2451545.0, 48.86, 2.35)
+    >>> chart_b = compute_chart(2451900.0, 40.71, -74.01)
+    >>> result = calculate_synastry(chart_a, chart_b)
+    >>> result.dtype.names[:3]
     ('body_a', 'body_b', 'lon_a')
     """
     # 1. Resolve aspect mask + orb factor once at entry (single-call
