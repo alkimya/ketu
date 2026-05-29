@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T20:47:00Z"
+last_updated: "2026-05-29T22:30:00Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
-  completed_phases: 3
-  total_plans: 13
-  completed_plans: 13
-  percent: 97
+  completed_phases: 4
+  total_plans: 14
+  completed_plans: 14
+  percent: 99
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 24 of 26 (Chiron) — in progress
-Plan: 24-04 COMPLETE (CHIR-03 accuracy regression + evaluator bug fix) → 24-05 already committed in parallel wave
-Status: Phase 24 plan 04 done (2026-05-29). CHIR-03 satisfied: 7 pinned refs 1950-2050, max delta 0.005695° (tolerance 0.01°); Rule 1 fix for last-segment t-normalisation in _eval_chiron_qty; 1372 tests, 100% coverage.
-Last activity: 2026-05-29 — Phase 24 plan 04 executed (commit 0159c0f)
+Phase: 24 of 26 (Chiron) — COMPLETE
+Plan: 24-05 COMPLETE (CHIR-05 integration smoke tests + quality gates green) → Phase 24 DONE
+Status: Phase 24 complete (2026-05-29). All 5 CHIR requirements satisfied. 1373 tests, 100% coverage, 56 doctests, mypy strict clean.
+Last activity: 2026-05-29 — Phase 24 plan 05 executed (commits 30f8a80, b47dab1)
 
-Progress: [██████████████] 97% — 3/6 phases completed, 13/13 plans
+Progress: [██████████████] 99% — 4/6 phases completed, 14/14 plans
 
 ## v1.3 Roadmap Structure
 
@@ -53,7 +53,7 @@ Progress: [██████████████] 97% — 3/6 phases comple
 - v1.1: 27 plans / 5 phases (~3h active)
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 
-v1.3: 12 plans / 3 phases completed + Phase 24 in progress (Phase 21 done, Phase 22 done, Phase 23 done, Phase 24 plans 01-03 done 2026-05-29 — gen+.npz+evaluator+D-08 breaking change delivered).
+v1.3: 14 plans / 4 phases completed (Phase 21 done, Phase 22 done, Phase 23 done, Phase 24 DONE 2026-05-29 — all CHIR-01..05 satisfied; 1373 tests, 100% coverage, 56 doctests, mypy strict clean).
 
 *Updated after each plan completion.*
 
@@ -96,6 +96,8 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
   - [Phase 24-02]: aberration applied inside `_chiron_vec` (matches `_make_planet_vec` convention) — batch and scalar paths agree; `dlon < -180` branch tested via `patch.object` mock (no natural 1950-2050 JD triggers it at Chiron speed); `inspect.getsource` + import-line filter for AGPL ratchet test (avoids docstring false positives)
   - [Phase 24-03]: D-08 breaking change executed — bodies axis 13→14; Chiron at id=13 in BODY_INDICES/SWE_IDS/BODY_STRATEGIES/avg_speeds/core.bodies; CHART_DTYPE (14,)/(14,14); SYNASTRY_BODY_COUNT 15→16 (ASC=14, MC=15); ketu.data packaged; 1361 tests, 100% coverage
   - [Phase 24-04]: _eval_chiron_qty bug fix — last segment (13 days, not 32) used constant seg_len for t-normalisation causing 0.905° error at 2050-01-01; fixed via actual_len=min(seg_start+seg_len,jd_end)-seg_start; CHIR-03 satisfied: 7 pinned refs 1950-2050 max delta 0.005695° (1.75× under 0.01°); 1372 tests, 100% coverage
+- [Phase 24]: Cache stale-file recompute transparent: users with old ~/.ketu/ephemeris_cache/*.npy get silent upgrade on first access post-Chiron
+- [Phase 24]: CHIR-05 satisfied: 4 integration smoke tests (chart/aspect/cycle/positions) green; no special-casing; all v1.3 quality gates hold at 14 bodies (1373 tests, 100% coverage, 56 doctests, mypy strict)
 
 ### Pending Todos
 
@@ -107,6 +109,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — Phase 24 plan 04 executed; CHIR-03 regression test + evaluator bug fix (commit 0159c0f).
-Stopped at: 24-04 complete. CHIR-03 satisfied; 1372 tests, 100% coverage. Phase 24 now complete (24-05 already committed in parallel wave).
-Resume file: None — Phase 24 complete, next: Phase 25 (Documentation) or Phase 26 (Release).
+Last session: 2026-05-29 — Phase 24 plan 05 executed; CHIR-05 integration smoke tests + quality gates green (commits 30f8a80, b47dab1).
+Stopped at: Phase 24 complete — all CHIR-01..05 satisfied; 1373 tests, 100% coverage, 56 doctests, mypy strict.
+Resume file: None — Phase 24 done; next: Phase 25 (Documentation) or Phase 26 (Release 1.3.0).
