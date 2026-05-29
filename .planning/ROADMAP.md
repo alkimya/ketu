@@ -79,13 +79,14 @@ Refactor lands BEFORE Chiron (clean per-body strategy, not aggravated if-elif de
   1. `pytest --cov` reports 100% project coverage — `ketu/houses/_ecliptic.py` (the ~64% outlier: RA↔λ lines 43-47 + 69-73) and all other gaps closed; the 100% project gate holds in CI.
   2. The `arcsin(z / r)` division at `orbital.py:755` is guarded (`r` floored, e.g. `np.maximum(r, 1e-10)`); a regression test pins the degenerate `r→0` case and asserts no `RuntimeWarning` and no `NaN`.
   3. Public-API docstrings gain qualitative depth — runnable doctest-style examples plus accuracy/edge-case Notes — with `numpydoc validate` + `interrogate ≥95%` still clean.
-**Plans**: TBD
+**Plans**: 4 plans
 
 Plans:
 
-- [ ] 21-01: TBD (coverage close-out — `_ecliptic.py` + remaining gaps to 100%)
-- [ ] 21-02: TBD (`orbital.py:755` div/0 guard + degenerate-`r` regression test)
-- [ ] 21-03: TBD (docstring example/Notes depth across public API)
+- [ ] 21-01-PLAN.md — Coverage close-out: `_ecliptic.py` RA↔λ (known values + round-trip) + all non-guard gap tests (zero pragmas) [QAL-10]
+- [ ] 21-02-PLAN.md — Div/0 guard: floor `r` (`np.maximum(r, 1e-10)`) at all 7 unguarded orbital.py sites + degenerate-`r→0` regression test (no warning/NaN, bounded) [QAL-11]
+- [ ] 21-03-PLAN.md — Docstring depth: fix broken doctests (live values) + replace `+SKIP` with runnable examples + accuracy/edge-case Notes + new `--doctest-modules` gate (Makefile + CI) [QAL-12]
+- [ ] 21-04-PLAN.md — Gate flip (Wave 2): `fail_under` 70→100 + `TYPE_CHECKING` exclude_lines (display.py:28, no pragma) + CI `--cov-fail-under=100` [QAL-10]
 
 #### Phase 22: Ephemeris Refactor
 
