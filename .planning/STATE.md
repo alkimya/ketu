@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
-status: roadmap-created
-last_updated: "2026-05-29T01:00:00Z"
+status: in-progress
+last_updated: "2026-05-29T02:00:00Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 8
+  completed_plans: 1
+  percent: 12
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 21 of 26 (Quality) — not started
-Plan: — (no plans yet; `/gsd:plan-phase 21` to begin)
-Status: Roadmap created 2026-05-29. All 18 v1.3 requirements mapped to phases 21-26 (100% coverage, no orphans). Ready to plan Phase 21.
-Last activity: 2026-05-29 — v1.3 roadmap written (6 phases appended to ROADMAP.md, REQUIREMENTS traceability filled)
+Phase: 21 of 26 (Quality) — in progress
+Plan: 21-01 COMPLETE → 21-02 next
+Status: Plan 21-01 complete (2026-05-29). Coverage lifted 97.90% → 99%; _ecliptic.py and houses/api.py at 100%; 4 unreachable defensive branches documented for 21-04 exclude_lines.
+Last activity: 2026-05-29 — 21-01 coverage gap tests delivered (62 tests, commit 94bc3d9)
 
-Progress: [··········] 0% — 0/6 phases, 0 plans
+Progress: [█·········] 12% — 0/6 phases completed, 1/8 plans
 
 ## v1.3 Roadmap Structure
 
@@ -66,6 +66,9 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - v1.3 stays `1.3.0` despite breaking the 13→14 body freeze — Ketu is source-of-truth; Kala adapts. Public API additive; internal positional contract breaks.
 - Chiron via embedded Chebyshev coeffs, NOT swisseph runtime — preserves pure-NumPy runtime + AGPL isolation.
 - Refactor ephemeris BEFORE adding Chiron — makes Chiron a clean strategy, not aggravated if-elif debt.
+- (21-01) 4 unreachable defensive branches (orbital.py:227, time.py:369, planets.py:362+448) proven dead code after Python modulo — deferred to 21-04 exclude_lines alongside display.py:28.
+- (21-01) body_name aliases "true Node"/"mean Apogee" covered via patch.object since get_planet_name now returns "Ketu"/"Lilith" directly.
+- (21-01) test_no_compute_chart_call_smoke ratchet updated to exclude doctest lines (>>>) — allows Examples section to reference compute_chart without triggering the anti-Davison guard.
 
 ### Pending Todos
 
@@ -77,6 +80,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — v1.3 roadmap created.
-Stopped at: ROADMAP.md (Phases 21-26 appended), REQUIREMENTS.md traceability filled (18/18 mapped), STATE.md refreshed.
-Resume file: None — next action `/gsd:plan-phase 21`.
+Last session: 2026-05-29 — plan 21-01 coverage gaps tests executed.
+Stopped at: Completed 21-01-PLAN.md — 62 tests, commit 94bc3d9. SUMMARY at .planning/phases/21-quality/21-01-SUMMARY.md.
+Resume file: None — next action execute plan 21-02 (orbital.py div/0 guards).
