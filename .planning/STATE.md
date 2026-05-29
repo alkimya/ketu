@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T16:43:00Z"
+last_updated: "2026-05-29T17:20:00Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 8
-  completed_plans: 4
-  percent: 50
+  completed_plans: 5
+  percent: 62
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 21 of 26 (Quality) — in progress
-Plan: 21-02 COMPLETE → 21-04 next (21-03 was executed out of order, already done)
-Status: Plan 21-02 complete (2026-05-29). QAL-11 delivered: 8 arcsin div/0 guards in orbital.py + 1 in coordinates.py, TestOrbitalDivZeroGuard regression (3-part contract), 1337 tests pass.
-Last activity: 2026-05-29 — 21-02 div/0 guards executed (commits ecd6501/c03187d)
+Phase: 21 of 26 (Quality) — COMPLETE → Phase 22 (Ephemeris Refactor) next
+Plan: 21-04 COMPLETE (final plan of phase 21)
+Status: Phase 21 fully done (2026-05-29). QAL-10/11/12 all delivered: 100% coverage gate (fail_under=100, CI flipped), 9 arcsin div/0 guards, 52 doctests + gate. 1346 tests pass.
+Last activity: 2026-05-29 — 21-04 coverage gate flip executed (commits e7b7bbb/98892ef)
 
-Progress: [████······] 50% — 0/6 phases completed, 4/8 plans
+Progress: [█████·····] 62% — 1/6 phases completed, 5/8 plans
 
 ## v1.3 Roadmap Structure
 
@@ -53,7 +53,7 @@ Progress: [████······] 50% — 0/6 phases completed, 4/8 plans
 - v1.1: 27 plans / 5 phases (~3h active)
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 
-v1.3: no plans executed yet.
+v1.3: 5 plans / 1 phase completed (Phase 21 done, 2026-05-29).
 
 *Updated after each plan completion.*
 
@@ -75,10 +75,13 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - (21-02) Floor not clamp: np.maximum(r, 1e-10) inline in arcsin argument only; original r returned unchanged so distance return values unaffected.
 - (21-02) Scalar max() vs np.maximum(): scalar paths (353, 503, 558) use Python max(); array/0-d paths (405, 436, 462, 755, 813) and coordinates.py:278 use np.maximum() safe for both.
 - (21-02) coordinates.py degenerate test: height=-6378140.0 zeroes rho_cos/rho_sin + mock spherical_to_rectangular→(0,0,0) forces horizon magnitude=0 without patching numpy.
+- (21-04) 5 exclude_lines for dead branches (not pragmas): TYPE_CHECKING (display.py), if angle < 0 / if gst < 0 (post-modulo, orbital.py + time.py), if avg_speed == 0 (planets.py dict-constant), return (jd_left+jd_right)/2 (planets.py bisection-never-exhausts).
+- (21-04) 9 gap tests added (Rule 3) for aspects/calculator.py (get_aspect swap, vectorized/batch empty paths, find_aspect_timing full coverage, find_aspects_between_dates body filters) and calculations.py:382 (dist_velocity_au) — lines not in RESEARCH inventory but blocking 100% gate.
+- (21-04) In-orb JD selection for find_aspect_timing loop-body coverage: JD=2451550.0 where Sun-Moon separation ≈2.95° exercises backward/forward loop bodies (lines 429/442).
 
 ### Pending Todos
 
-- `2026-05-28-fix-runtimewarning-divide-by-zero-in-orbital-heliocentric-latitude` (area: general) — cosmetic `arcsin(z/r)` RuntimeWarning in heliocentric latitude; now folded into Phase 21 QAL-11 (note: PROJECT.md cites `orbital.py:755`; todo cites :733 — reconcile exact line during Phase 21).
+- `2026-05-28-fix-runtimewarning-divide-by-zero-in-orbital-heliocentric-latitude` — RESOLVED in 21-02. All 9 arcsin(z/r) sites guarded with np.maximum(r, 1e-10).
 
 ### Blockers/Concerns
 
@@ -86,6 +89,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — plan 21-02 div/0 guards + regression test executed.
-Stopped at: Completed 21-02-PLAN.md — QAL-11 done, commits ecd6501/c03187d. SUMMARY at .planning/phases/21-quality/21-02-SUMMARY.md.
-Resume file: None — next action execute plan 21-04 (coverage exclude_lines for unreachable defensive branches + --cov-fail-under flip).
+Last session: 2026-05-29 — plan 21-04 coverage gate flip executed.
+Stopped at: Completed 21-04-PLAN.md — Phase 21 fully done. QAL-10/11/12 complete. 1346 tests, 100% coverage. Commits e7b7bbb/98892ef. SUMMARY at .planning/phases/21-quality/21-04-SUMMARY.md.
+Resume file: None — next action start Phase 22 (Ephemeris Refactor): create 22-PLAN.md.
