@@ -6,11 +6,11 @@
 
 ## Collaboration
 
-**[Claude](https://claude.ai)** by Anthropic — The pure NumPy rewrite, from orbital mechanics to aspect detection, was developed in collaboration with Claude. Architecture, algorithms, tests, and documentation were produced through extensive pair programming sessions.
+**[Claude](https://claude.ai)** by Anthropic — The pure NumPy rewrite, from orbital mechanics to aspect detection, was developed in collaboration with Claude. Architecture, algorithms, tests, and documentation were produced through extensive pair programming sessions. This collaboration continued through v1.1 (configurable aspects, house systems), v1.2 (charts, synastry, composite, returns, Arabic Parts), and v1.3 (Chiron Chebyshev engine).
 
 ## Workflow
 
-**[GSD (Get Shit Done)](https://github.com/gsd-build/get-shit-done)** — The project management workflow that structured the development of Ketu v1.0.0 into phases with research, planning, execution, and verification steps.
+**[GSD (Get Shit Done)](https://github.com/gsd-build/get-shit-done)** — The project management workflow that structured the development of Ketu into phases with research, planning, execution, and verification steps. Used throughout v1.0 through v1.3.
 
 ## Other Influences
 

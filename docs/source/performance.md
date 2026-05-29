@@ -32,7 +32,8 @@ For computing individual planet positions:
 
 ```python
 import numpy as np
-from ketu import utc_to_julian
+from ketu.ephemeris.time import utc_to_julian
+from ketu.ephemeris.planets import calc_planet_position_batch
 from datetime import datetime, timedelta
 
 # Calculate Sun positions for a year
@@ -40,7 +41,6 @@ dates = [datetime(2025, 1, 1) + timedelta(days=i) for i in range(365)]
 jd_array = np.array([utc_to_julian(d) for d in dates])
 
 # Use vectorized batch calculation
-from ketu.ephemeris.planets import calc_planet_position_batch
 positions = calc_planet_position_batch(jd_array, planet_id=0)  # Sun
 
 # Extract components
@@ -52,10 +52,18 @@ distances = positions[:, 2]
 ### Vectorized Aspect Detection
 
 ```python
-import ketu
+from ketu.aspects import calculate_aspects
+from ketu.ephemeris.time import utc_to_julian
+from datetime import datetime, timedelta
+import numpy as np
 
-# Calculate all aspects for multiple dates efficiently
-aspects_batch = ketu.calculate_aspects_batch(jd_array)
+# Build a Julian Day array
+dates = [datetime(2025, 1, 1) + timedelta(days=i) for i in range(30)]
+jd_array = np.array([utc_to_julian(d) for d in dates])
+
+# Calculate aspects for each date
+for jd in jd_array:
+    aspects = calculate_aspects(jd)
 ```
 
 ## Optimization Techniques
@@ -81,6 +89,7 @@ All distance and angle calculations use NumPy broadcasting for efficient array o
 ```python
 def distance(pos1, pos2):
     # Works with both scalars and arrays
+    import numpy as np
     angle = np.abs(pos2 - pos1)
     return np.where(angle <= 180, angle, 360 - angle)
 ```
@@ -100,6 +109,8 @@ The Kepler equation solver uses Newton-Raphson iteration with adaptive tolerance
 Aspect results use structured NumPy arrays for efficient storage:
 
 ```python
+import numpy as np
+
 # Compact storage with named fields
 dtype = [('body1', 'i4'), ('body2', 'i4'),
          ('i_asp', 'i4'), ('orb', 'f8')]
@@ -117,11 +128,13 @@ Most calculations use in-place NumPy operations to minimize memory allocation.
 For time series analysis:
 
 ```python
+from ketu.ephemeris.planets import calc_planet_position_batch
+
 # Good: Use batch functions
 positions = calc_planet_position_batch(jd_array, planet_id)
 
 # Avoid: Individual calls in a loop
-positions = [calc_planet_position(jd, planet_id) for jd in jd_array]
+# positions = [calc_planet_position(jd, planet_id) for jd in jd_array]
 ```
 
 ### Pre-allocate Arrays
@@ -130,6 +143,7 @@ For large-scale calculations:
 
 ```python
 import numpy as np
+from ketu.ephemeris.planets import calc_planet_position_batch
 
 # Pre-allocate result array
 results = np.zeros((len(dates), 6))
@@ -141,11 +155,15 @@ results = calc_planet_position_batch(jd_array, planet_id)
 ### Cache Julian Day Conversions
 
 ```python
+import numpy as np
+from ketu.ephemeris.time import utc_to_julian
+from ketu.ephemeris.planets import calc_planet_position_batch
+
 # Convert dates once
 jd_array = np.array([utc_to_julian(d) for d in dates])
 
 # Reuse for multiple calculations
-sun_pos = calc_planet_position_batch(jd_array, 0)
+sun_pos  = calc_planet_position_batch(jd_array, 0)
 moon_pos = calc_planet_position_batch(jd_array, 1)
 ```
 
@@ -164,16 +182,16 @@ To identify bottlenecks:
 ```python
 import cProfile
 import pstats
+from ketu.calculations import positions
 
 profiler = cProfile.Profile()
 profiler.enable()
 
 # Your ketu code here
-positions = ketu.positions(jday)
+lons = positions(jday)
 
 profiler.disable()
 stats = pstats.Stats(profiler)
 stats.sort_stats('cumulative')
 stats.print_stats(10)
 ```
-
