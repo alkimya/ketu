@@ -138,11 +138,11 @@ Plans:
 
 Plans:
 
-- [ ] 24-01-PLAN.md — offline pyswisseph build-only generator → committed `ketu/data/chiron_coeffs.npz` (CHIR-01)
-- [ ] 24-02-PLAN.md — pure-NumPy Chebyshev evaluator `ketu/ephemeris/chiron.py` + unit tests (CHIR-01)
-- [ ] 24-03-PLAN.md — wire 6 insertion points + 13→14 dtype/count ratchet + packaging + test audit (CHIR-02/CHIR-04/CHIR-05)
-- [ ] 24-04-PLAN.md — pinned-reference accuracy regression across 1950-2050 (CHIR-03)
-- [ ] 24-05-PLAN.md — chart/aspect/cycle integration smoke + quality-gate verification (CHIR-05)
+- [x] 24-01-PLAN.md — offline pyswisseph build-only generator → committed `ketu/data/chiron_coeffs.npz` (CHIR-01)
+- [x] 24-02-PLAN.md — pure-NumPy Chebyshev evaluator `ketu/ephemeris/chiron.py` + unit tests (CHIR-01)
+- [x] 24-03-PLAN.md — wire 6 insertion points + 13→14 dtype/count ratchet + packaging + test audit (CHIR-02/CHIR-04/CHIR-05)
+- [x] 24-04-PLAN.md — pinned-reference accuracy regression across 1950-2050 (CHIR-03)
+- [x] 24-05-PLAN.md — chart/aspect/cycle integration smoke + quality-gate verification (CHIR-05)
 
 #### Phase 25: Documentation
 
@@ -202,7 +202,7 @@ Plans:
 | 21. Quality                            | v1.3      | 4/4            | ✓ Complete    | 2026-05-29 |
 | 22. Ephemeris Refactor                 | v1.3      | 3/3            | ✓ Complete    | 2026-05-29 |
 | 23. Spike Chiron                       | v1.3      | 2/2            | ✓ Complete    | 2026-05-29 |
-| 24. Chiron                             | v1.3      | 0/TBD          | Not started   | -          |
+| 24. Chiron                             | v1.3      | 5/5            | ✓ Complete    | 2026-05-29 |
 | 25. Documentation                      | v1.3      | 0/TBD          | Not started   | -          |
 | 26. Release 1.3.0                      | v1.3      | 0/TBD          | Not started   | -          |
 
@@ -211,7 +211,8 @@ Plans:
 *v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`*
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
 *v1.2 phase details archived to `.planning/milestones/v1.2-ROADMAP.md`*
-*Roadmap last updated: 2026-05-29 — Phase 23 (Spike Chiron) COMPLETE: SPK-01/02 delivered. Chebyshev-by-segment fit measured against live pyswisseph — primary config (seg=32j, deg=10) achieves max|Δλ|=0.000861° (11.6× under the 0.01° target) over all 1142 segments 1950-2050; worst segment 2027-04-20. .npz lon+lat+dist footprint 294.4 KB; pure-NumPy chebval evaluator confirmed. GO verdict recorded in 23-DECISION.md with locked Phase 24 params (seg=32j/deg=10/3 quantities). Spike-only: nothing under ketu/, tests/, pyproject.toml touched; suite + 100% coverage gate untouched. Verifier PASSED 3/3. Next: `/gsd:plan-phase 24` (Chiron).*
+*Roadmap last updated: 2026-05-29 — Phase 24 (Chiron) COMPLETE: CHIR-01..05 delivered. Chiron is the 14th body (body_id=13). Offline pyswisseph-build-only generator `tools/gen_chiron_coeffs.py` → committed `ketu/data/chiron_coeffs.npz` (289.7 KB, 1142 segments); pure-NumPy evaluator `ketu/ephemeris/chiron.py` (zero swisseph under ketu/). Wired at all 6 insertion points via single BODY_STRATEGIES entry (no special-casing). D-08 breaking change executed: bodies axis 13→14, `test_body_count_frozen_at_thirteen`→`_fourteen` (tests/charts/test_dtype.py:218), CHART_DTYPE (14,)/(14,14), synastry/cache/transits rippled, ketu.data packaged in wheel/sdist. Accuracy regression pins 7 refs 1950-2050, worst Δλ=0.005695° (1.75× under 0.01°). Two Rule-1 bugs fixed mid-flight (last-segment t-normalisation; stale-cache IndexError). Verifier PASSED 4/4, 1373 tests + 100% coverage + mypy strict + 56 doctests. Kala must adapt to the 13→14 positional contract (Phase 26 UPGRADING). Next: `/gsd:plan-phase 25` (Documentation).*
+*Roadmap previous update: 2026-05-29 — Phase 23 (Spike Chiron) COMPLETE: SPK-01/02 delivered. Chebyshev-by-segment fit measured against live pyswisseph — primary config (seg=32j, deg=10) achieves max|Δλ|=0.000861° (11.6× under the 0.01° target) over all 1142 segments 1950-2050; worst segment 2027-04-20. .npz lon+lat+dist footprint 294.4 KB; pure-NumPy chebval evaluator confirmed. GO verdict recorded in 23-DECISION.md with locked Phase 24 params (seg=32j/deg=10/3 quantities). Spike-only: nothing under ketu/, tests/, pyproject.toml touched; suite + 100% coverage gate untouched. Verifier PASSED 3/3. Next: `/gsd:plan-phase 24` (Chiron).*
 *Roadmap previous update: 2026-05-29 — Phase 22 (Ephemeris Refactor) COMPLETE: REF-01/02/03 delivered. planets.py per-body if-elif → BODY_STRATEGIES registry (batch-Ketu bug fixed), orbital.py (859 LOC) split into 5 focused modules + byte-identical re-export hub, 12 conftest fixtures consolidated to root tests/conftest.py. Verifier PASSED 3/3, 1351 tests + 100% coverage. Engine hardened for clean Chiron strategy-add.*
 *Roadmap previous update: 2026-05-29 — v1.3 (Chiron & Engine Hardening) roadmapped: 6 phases (21-26), all 18 v1.3 requirements mapped (QAL/REF/SPK/CHIR/DOC/REL), 100% coverage. Axis order BINDING: Quality → Refactor → Spike → Chiron → Docs → Release. D-08 breaks the 13→14 body freeze in Phase 24; version stays 1.3.0 (public API additive, internal Ketu↔Kala positional contract changes).*
 
