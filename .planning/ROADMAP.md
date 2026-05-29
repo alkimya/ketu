@@ -134,14 +134,15 @@ Plans:
   2. Chiron is wired at all six mapped insertion points — `core.py` bodies array, `orbital.py` ORBITAL_ELEMENTS, `planets.py` BODY_INDICES + SWE_IDS + the `calc_planet_position` strategy + `get_planet_name` + `calculate_all_positions` — with no special-casing beyond the per-body strategy.
   3. `calc_planet_position(jd, 13)` returns Chiron longitude (and the position vector) within the spike-validated accuracy bound vs Swiss Ephemeris across multiple dates spanning 1950-2050 (Chiron's ~50.7-year period); a regression test pins the reference values.
   4. The bodies axis moves 13→14: `test_body_count_frozen_at_thirteen` (`tests/test_ketu.py:110`) is updated to 14 and the synastry/transits/charts body-count assertions are updated; the full suite is green at 14 bodies and Chiron appears in `compute_chart`, aspect detection, and `calculate_all_positions`.
-**Plans**: TBD
+**Plans**: 5 plans
 
 Plans:
 
-- [ ] 24-01: TBD (offline pyswisseph build-only coeff generator → `.npz`, CHIR-01)
-- [ ] 24-02: TBD (pure-NumPy Chebyshev eval + per-body strategy registration, CHIR-02/CHIR-03)
-- [ ] 24-03: TBD (six insertion points wired + Chiron in chart/aspect/cycle, CHIR-02/CHIR-05)
-- [ ] 24-04: TBD (13→14 ratchet + body-count assertions updated, accuracy regression pins, CHIR-04)
+- [ ] 24-01-PLAN.md — offline pyswisseph build-only generator → committed `ketu/data/chiron_coeffs.npz` (CHIR-01)
+- [ ] 24-02-PLAN.md — pure-NumPy Chebyshev evaluator `ketu/ephemeris/chiron.py` + unit tests (CHIR-01)
+- [ ] 24-03-PLAN.md — wire 6 insertion points + 13→14 dtype/count ratchet + packaging + test audit (CHIR-02/CHIR-04/CHIR-05)
+- [ ] 24-04-PLAN.md — pinned-reference accuracy regression across 1950-2050 (CHIR-03)
+- [ ] 24-05-PLAN.md — chart/aspect/cycle integration smoke + quality-gate verification (CHIR-05)
 
 #### Phase 25: Documentation
 
