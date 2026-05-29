@@ -149,9 +149,15 @@ class EphemerisCache:
         if cache_key in self._memory_cache and not force_recompute:
             return
 
-        # Check if on disk
+        # Check if on disk — validate body count (stale files built pre-Chiron
+        # have shape (days, 13, 6); recompute transparently if mismatched).
         if cache_path.exists() and not force_recompute:
-            self._memory_cache[cache_key] = np.load(cache_path)
+            data = np.load(cache_path)
+            if data.shape[1] != BODY_COUNT:
+                # Stale cache: body-count mismatch — recompute and overwrite.
+                data = self._compute_month(year, month)
+                np.save(cache_path, data)
+            self._memory_cache[cache_key] = data
             self._loaded_months.add(cache_key)
             return
 
