@@ -3,7 +3,7 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T19:13:16Z"
+last_updated: "2026-05-29T22:05:00Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 23 of 26 (Spike Chiron) — COMPLETE
-Plan: 23-02 COMPLETE (SPK-02 go/no-go decision written) → Phase 24 (Chiron) next
-Status: Phase 23 fully done (2026-05-29). SPK-01+SPK-02 delivered: spike_chiron_chebyshev.py + 23-MEASUREMENTS.md + 23-DECISION.md. GO verdict: max|Δλ|=0.000861° (11.6× under 0.01°); seg=32j/deg=10/3-quantities locked for Phase 24.
-Last activity: 2026-05-29 — Phase 23 plan 02 executed (commit 69b899e)
+Phase: 24 of 26 (Chiron) — in progress
+Plan: 24-01 COMPLETE (generator + .npz artifact committed) → 24-02 next
+Status: Phase 24 plan 01 done (2026-05-29). tools/gen_chiron_coeffs.py + ketu/data/__init__.py + ketu/data/chiron_coeffs.npz committed. Validation: max|Δλ|=0.000861° (11.6× under 0.01°). 7 reference longitudes captured for 24-04.
+Last activity: 2026-05-29 — Phase 24 plan 01 executed (commits dc7636d, 0f220a4)
 
-Progress: [████████████] 82% — 3/6 phases completed, 10/11 plans
+Progress: [████████████] 85% — 3/6 phases completed, 11/12 plans
 
 ## v1.3 Roadmap Structure
 
@@ -53,7 +53,7 @@ Progress: [████████████] 82% — 3/6 phases completed, 1
 - v1.1: 27 plans / 5 phases (~3h active)
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 
-v1.3: 10 plans / 3 phases completed (Phase 21 done, Phase 22 done, Phase 23 done 2026-05-29 — SPK-01/SPK-02 delivered).
+v1.3: 11 plans / 3 phases completed + Phase 24 in progress (Phase 21 done, Phase 22 done, Phase 23 done, Phase 24 plan 01 done 2026-05-29 — gen+.npz delivered).
 
 *Updated after each plan completion.*
 
@@ -92,6 +92,7 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - [Phase 23-01]: n_segs=1142 (not 1153): exact range 36525j via swe.julday; worst segment 2027-04-20 (not 2046 perihelion)
 - [Phase 23-01]: 3-quantity npz confirmed: 294.4 KB; lat max 0.000986 deg, dist max 1.84e-7 AU
 - [Phase 23-02]: GO verdict recorded — 23-DECISION.md written; Phase 24 params locked (seg=32j, deg=10, 3 quantities); .npz layout + seas_18.se1 requirement + insertion points documented; 1351-test suite + 100% coverage gate untouched
+  - [Phase 24-01]: Generator tools/gen_chiron_coeffs.py (659 LOC) + ketu/data/chiron_coeffs.npz committed; validation gate passed max|Δλ|=0.000861° (11.6× under 0.01°); 7 reference longitudes pinned for 24-04; retflag=260 (Moshier) confirmed acceptable; swisseph never at module level (AGPL isolation)
 
 ### Pending Todos
 
@@ -103,6 +104,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — Phase 23 plan 02 (SPK-02 decision) executed; GO verdict + Phase 24 params locked.
-Stopped at: 23-02 complete. Phase 23 fully done. SPK-01+SPK-02 delivered. Next: Phase 24 (Chiron).
-Resume file: None — Phase 23 complete, next: run `/gsd:execute-phase` for Phase 24.
+Last session: 2026-05-29 — Phase 24 plan 01 executed; generator + ketu/data/chiron_coeffs.npz committed.
+Stopped at: 24-01 complete. tools/gen_chiron_coeffs.py + ketu/data/chiron_coeffs.npz delivered. 7 ref lons pinned for 24-04. Next: Phase 24 plan 02 (ketu/ephemeris/chiron.py evaluator).
+Resume file: None — 24-01 complete, next: run `/gsd:execute-phase` for Phase 24 plan 02.
