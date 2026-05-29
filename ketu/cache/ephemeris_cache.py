@@ -26,14 +26,14 @@ from ketu.ephemeris.planets import calc_planet_position_batch, BODY_INDICES
 
 
 # Constants
-BODY_COUNT = 13  # Sun through Lilith
+BODY_COUNT = 14  # Sun through Chiron
 POSITION_FIELDS = 6  # lon, lat, dist, lon_speed, lat_speed, dist_speed
 
 # Body IDs for reference
 BODY_IDS = {
     "Sun": 0, "Moon": 1, "Mercury": 2, "Venus": 3, "Mars": 4,
     "Jupiter": 5, "Saturn": 6, "Uranus": 7, "Neptune": 8, "Pluto": 9,
-    "Rahu": 10, "Ketu": 11, "Lilith": 12,
+    "Rahu": 10, "Ketu": 11, "Lilith": 12, "Chiron": 13,
 }
 
 

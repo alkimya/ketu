@@ -60,11 +60,12 @@ import numpy as np
 
 #: Number of bodies in the synastry body axis.
 #:
-#: 13 canonical (per :data:`ketu.charts.core.CHART_DTYPE`, body order pinned by
-#: D-08 — Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune,
-#: Pluto, Rahu, Ketu, Lilith) + ASC + MC = 15. Frozen for v1.2; v1.3 may add
-#: Vertex if Phase 17/18 demand it.
-SYNASTRY_BODY_COUNT: int = 15
+#: 14 canonical (per :data:`ketu.charts.core.CHART_DTYPE`, body order per
+#: D-08 ratchet v1.3 — Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn,
+#: Uranus, Neptune, Pluto, Rahu, Ketu, Lilith, Chiron) + ASC + MC = 16.
+#: Extended to 16 by the v1.3 D-08 ratchet (Chiron added as body 13;
+#: ASC shifts to index 14, MC to index 15).
+SYNASTRY_BODY_COUNT: int = 16
 
 #: Structured dtype for ONE synastry aspect record.
 #:

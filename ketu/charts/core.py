@@ -52,20 +52,20 @@ import numpy as np
 #:     - ``lat`` (f8): Geographic latitude, degrees.
 #:     - ``lon`` (f8): Geographic longitude (east-positive), degrees.
 #:     - ``system`` (U10): House system requested (e.g. "placidus").
-#:     - ``body_lons`` (f8, (13,)): Ecliptic longitudes per body, degrees [0, 360).
-#:     - ``body_lats`` (f8, (13,)): Ecliptic latitudes per body, degrees.
-#:     - ``body_speeds`` (f8, (13,)): Longitude speeds per body, deg/day.
+#:     - ``body_lons`` (f8, (14,)): Ecliptic longitudes per body, degrees [0, 360).
+#:     - ``body_lats`` (f8, (14,)): Ecliptic latitudes per body, degrees.
+#:     - ``body_speeds`` (f8, (14,)): Longitude speeds per body, deg/day.
 #:           Negative => retrograde.
 #:     - ``cusps`` (f8, (12,)): 12 house cusps, degrees [0, 360).
 #:     - ``asc`` (f8): Ascendant, degrees [0, 360).
 #:     - ``mc`` (f8): Medium Coeli, degrees [0, 360).
 #:     - ``armc`` (f8): Right Ascension of MC, degrees [0, 360).
 #:     - ``vertex`` (f8): Vertex, degrees [0, 360).
-#:     - ``aspect_matrix`` (i1, (13, 13)): canonical aspect index in
+#:     - ``aspect_matrix`` (i1, (14, 14)): canonical aspect index in
 #:           ``[0, 13]``; ``-1`` means "no aspect"; symmetric
 #:           (``matrix[i, j] == matrix[j, i]``); diagonal == ``-1``
 #:           (a body has no aspect with itself).
-#:     - ``aspect_orbs`` (f4, (13, 13)): **signed** orb in degrees;
+#:     - ``aspect_orbs`` (f4, (14, 14)): **signed** orb in degrees;
 #:           ``aspect_angle - distance`` (positive when ``distance <
 #:           aspect_angle``, negative when ``distance > aspect_angle``);
 #:           ``NaN`` means "no orb" (matches ``aspect_matrix == -1``);
@@ -77,25 +77,26 @@ import numpy as np
 #:     ``mask = chart["aspect_matrix"] >= 0``  # or
 #:     ``~np.isnan(chart["aspect_orbs"])``
 #:
-#: Body axis order (the (13,) axis) follows :data:`ketu.core.bodies`:
+#: Body axis order (the (14,) axis) follows :data:`ketu.core.bodies`:
 #:     0=Sun, 1=Moon, 2=Mercury, 3=Venus, 4=Mars, 5=Jupiter, 6=Saturn,
-#:     7=Uranus, 8=Neptune, 9=Pluto, 10=Rahu, 11=Ketu, 12=Lilith.
+#:     7=Uranus, 8=Neptune, 9=Pluto, 10=Rahu, 11=Ketu, 12=Lilith,
+#:     13=Chiron.
 #:
-#: This axis is FROZEN by D-08 (Kala positional contract). Adding bodies
-#: (e.g. Chiron) is a v1.3 BREAKING change.
+#: Axis extended to 14 by the v1.3 D-08 ratchet (Chiron added). This is
+#: a breaking change for downstream consumers (Kala) indexing by position.
 CHART_DTYPE: np.dtype = np.dtype([
     ("jd",            "f8"),
     ("lat",           "f8"),
     ("lon",           "f8"),
     ("system",        "U10"),
-    ("body_lons",     "f8", (13,)),
-    ("body_lats",     "f8", (13,)),
-    ("body_speeds",   "f8", (13,)),
+    ("body_lons",     "f8", (14,)),
+    ("body_lats",     "f8", (14,)),
+    ("body_speeds",   "f8", (14,)),
     ("cusps",         "f8", (12,)),
     ("asc",           "f8"),
     ("mc",            "f8"),
     ("armc",          "f8"),
     ("vertex",        "f8"),
-    ("aspect_matrix", "i1", (13, 13)),
-    ("aspect_orbs",   "f4", (13, 13)),
+    ("aspect_matrix", "i1", (14, 14)),
+    ("aspect_orbs",   "f4", (14, 14)),
 ])

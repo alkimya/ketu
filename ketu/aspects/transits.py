@@ -37,7 +37,7 @@ from ketu.calculations import (
     positions,
 )
 from ketu.aspects.calculator import get_orb
-from ketu.ephemeris.planets import calc_planet_position_batch
+from ketu.ephemeris.planets import calc_planet_position_batch, SWE_IDS
 
 # Import shared algorithms from refactored core module
 from ketu.aspects.core import (
@@ -477,7 +477,7 @@ def get_natal_positions(
 
     # Default to all bodies
     if bodies_list is None:
-        bodies_list = list(range(13))  # 0-12
+        bodies_list = list(range(len(SWE_IDS)))  # auto-tracks body count
 
     natal_positions = {}
 

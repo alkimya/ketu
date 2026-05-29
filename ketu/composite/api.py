@@ -77,7 +77,7 @@ from ketu.houses.registry import get_system
 
 from .core import circular_midpoint
 
-_BODY_COUNT = 13  # D-08 frozen body axis (Sun..Lilith)
+_BODY_COUNT = 14  # D-08 body axis (Sun..Chiron), v1.3 ratchet lifted to 14
 
 
 def calculate_composite(
