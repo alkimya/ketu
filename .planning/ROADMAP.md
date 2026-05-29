@@ -102,9 +102,9 @@ Plans:
 
 Plans:
 
-- [ ] 22-01-PLAN.md (Wave 1) — Per-body strategy registry feeding BOTH scalar `calc_planet_position` and batch `calc_planet_position_batch`; fixes pre-existing batch-Ketu bug; `get_planet_name`→SWE_IDS, `range(len(SWE_IDS))`; `@lru_cache` preserved (REF-01)
-- [ ] 22-02-PLAN.md (Wave 1) — Split `orbital.py` into `_elements`/`_kepler`/`_mechanics`/`_perturbations`/`_body_getters`; orbital.py stays byte-identical re-export hub (REF-02)
-- [ ] 22-03-PLAN.md (Wave 1) — Consolidate duplicated chart_*/natal_* fixtures into root `tests/conftest.py`; trim subpackage conftests (REF-03)
+- [x] 22-01-PLAN.md (Wave 1) — Per-body strategy registry feeding BOTH scalar `calc_planet_position` and batch `calc_planet_position_batch`; fixes pre-existing batch-Ketu bug; `get_planet_name`→SWE_IDS, `range(len(SWE_IDS))`; `@lru_cache` preserved (REF-01)
+- [x] 22-02-PLAN.md (Wave 1) — Split `orbital.py` into `_elements`/`_kepler`/`_mechanics`/`_perturbations`/`_body_getters`; orbital.py stays byte-identical re-export hub (REF-02)
+- [x] 22-03-PLAN.md (Wave 1) — Consolidate duplicated chart_*/natal_* fixtures into root `tests/conftest.py`; trim subpackage conftests (REF-03)
 
 #### Phase 23: Spike Chiron
 
@@ -199,7 +199,7 @@ Plans:
 | 19. Arabic Parts Framework + 3 Parts   | v1.2      | 3/3            | ✓ Complete    | 2026-05-28 |
 | 20. Release Preparation v1.2.0         | v1.2      | 4/4            | ✓ Complete    | 2026-05-28 |
 | 21. Quality                            | v1.3      | 4/4            | ✓ Complete    | 2026-05-29 |
-| 22. Ephemeris Refactor                 | v1.3      | 0/TBD          | Not started   | -          |
+| 22. Ephemeris Refactor                 | v1.3      | 3/3            | ✓ Complete    | 2026-05-29 |
 | 23. Spike Chiron                       | v1.3      | 0/TBD          | Not started   | -          |
 | 24. Chiron                             | v1.3      | 0/TBD          | Not started   | -          |
 | 25. Documentation                      | v1.3      | 0/TBD          | Not started   | -          |
@@ -210,6 +210,7 @@ Plans:
 *v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`*
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
 *v1.2 phase details archived to `.planning/milestones/v1.2-ROADMAP.md`*
-*Roadmap last updated: 2026-05-29 — v1.3 (Chiron & Engine Hardening) roadmapped: 6 phases (21-26), all 18 v1.3 requirements mapped (QAL/REF/SPK/CHIR/DOC/REL), 100% coverage. Axis order BINDING: Quality → Refactor → Spike → Chiron → Docs → Release. D-08 breaks the 13→14 body freeze in Phase 24; version stays 1.3.0 (public API additive, internal Ketu↔Kala positional contract changes). Next: `/gsd:plan-phase 21`.*
+*Roadmap last updated: 2026-05-29 — Phase 22 (Ephemeris Refactor) COMPLETE: REF-01/02/03 delivered. planets.py per-body if-elif → BODY_STRATEGIES registry (batch-Ketu bug fixed), orbital.py (859 LOC) split into 5 focused modules + byte-identical re-export hub, 12 conftest fixtures consolidated to root tests/conftest.py. Verifier PASSED 3/3, 1351 tests + 100% coverage. Engine hardened for clean Chiron strategy-add. Next: `/gsd:plan-phase 23` (Spike Chiron).*
+*Roadmap previous update: 2026-05-29 — v1.3 (Chiron & Engine Hardening) roadmapped: 6 phases (21-26), all 18 v1.3 requirements mapped (QAL/REF/SPK/CHIR/DOC/REL), 100% coverage. Axis order BINDING: Quality → Refactor → Spike → Chiron → Docs → Release. D-08 breaks the 13→14 body freeze in Phase 24; version stays 1.3.0 (public API additive, internal Ketu↔Kala positional contract changes).*
 
 *Roadmap previous update: 2026-05-29 — v1.2 milestone COMPLETE and archived (8 phases, 35 plans, all 37 requirements satisfied; `ketu==1.2.0` on PyPI).*

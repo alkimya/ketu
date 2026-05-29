@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T17:45:07Z"
+last_updated: "2026-05-29T18:00:00Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 11
-  completed_plans: 7
-  percent: 64
+  completed_plans: 8
+  percent: 73
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 22 of 26 (Ephemeris Refactor) — IN PROGRESS
-Plan: 22-01, 22-02, 22-03 all COMPLETE — Phase 22 done
-Status: Phase 22 fully done. REF-01 (22-01): BODY_STRATEGIES registry, Ketu batch bug fixed. REF-02 (22-02): orbital.py decomposed into 5 sub-modules. REF-03 (22-03): conftest consolidation. 1351 tests green, 100% coverage.
-Last activity: 2026-05-29 — 22-01 strategy pattern executed (commits 8098ab1/24230c4)
+Phase: 22 of 26 (Ephemeris Refactor) — COMPLETE → Phase 23 (Spike Chiron) next
+Plan: 22-01, 22-02, 22-03 all COMPLETE — Phase 22 done, verifier PASSED 3/3
+Status: Phase 22 fully done (2026-05-29). REF-01 (22-01): BODY_STRATEGIES registry (13 bodies), Ketu batch bug fixed (170° error). REF-02 (22-02): orbital.py (859 LOC) decomposed into _elements/_kepler/_mechanics/_perturbations/_body_getters + 70-LOC byte-identical re-export hub. REF-03 (22-03): 12 conftest fixtures consolidated to root tests/conftest.py. 1351 tests green, 100% coverage, vectorization canary <1e-10.
+Last activity: 2026-05-29 — Phase 22 executed in one parallel wave (commits 8098ab1/24230c4/456e9d7, 8ab233b/29f58a6/f3e6039, 2d469b5/c1f7e0c)
 
 Progress: [██████████] 73% — 2/6 phases completed, 8/11 plans
 
@@ -98,6 +98,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — plans 22-01/22-02/22-03 all completed in parallel.
-Stopped at: Completed 22-01-PLAN.md — REF-01 done. BODY_STRATEGIES registry, Ketu batch bug fixed. 1351 tests green, 100% coverage. Commits 8098ab1/24230c4. SUMMARY at .planning/phases/22-ephemeris-refactor/22-01-SUMMARY.md.
-Resume file: None — Phase 22 complete, next: Phase 23 (Spike Chiron).
+Last session: 2026-05-29 — Phase 22 (Ephemeris Refactor) executed in one parallel wave; verifier PASSED 3/3.
+Stopped at: Phase 22 fully done. REF-01/02/03 delivered, 1351 tests green, 100% coverage. SUMMARYs + 22-VERIFICATION.md (status: passed) in .planning/phases/22-ephemeris-refactor/.
+Resume file: None — Phase 22 complete, next: Phase 23 (Spike Chiron) — `/gsd:plan-phase 23`.
