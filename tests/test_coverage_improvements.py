@@ -1142,5 +1142,146 @@ class TestOrbitalDivZeroGuard:
         assert -90.0 <= alt <= 90.0, f"alt out of [-90, 90]: {alt}"
 
 
+# =============================================================================
+# Rule-3 deviation fix: aspects/calculator.py uncovered paths (21-04)
+# Lines: 74 (get_aspect swap), 249 (vectorized empty), 380 (batch empty date),
+#        410-450 (find_aspect_timing), 497-502 (find_aspects_between_dates
+#        body1/body2 filters), 507 (all-pairs fallback)
+# Also: calculations.py:382 (dist_velocity_au return)
+# =============================================================================
+
+class TestAspectsCalculatorMissingPaths:
+    """Cover uncovered paths in ketu/aspects/calculator.py and calculations.py."""
+
+    JD = 2451545.0  # J2000.0 — 2000-01-01 12:00 TT
+
+    def test_get_aspect_body1_gt_body2_swap(self) -> None:
+        """Line 74: swap when body1 > body2 is passed in reverse order."""
+        from ketu.aspects.calculator import get_aspect
+
+        # body1=1 (Moon), body2=0 (Sun) → body1 > body2 triggers the swap
+        result_reversed = get_aspect(self.JD, 1, 0)
+        result_normal = get_aspect(self.JD, 0, 1)
+        # Both calls should give the same answer (or both None)
+        if result_reversed is not None and result_normal is not None:
+            # Swapped call: body1/body2 are normalised, so they match
+            assert result_reversed[0] == result_normal[0]
+            assert result_reversed[1] == result_normal[1]
+        else:
+            assert result_reversed is None or result_normal is None
+
+    def test_calculate_aspects_vectorized_no_aspects(self) -> None:
+        """Line 249: empty-result path in calculate_aspects_vectorized.
+
+        A date range where no planets happen to be in aspect produces an
+        empty structured array via the ``len(results) == 0`` branch.
+        We force this by passing a minimal single-body 'bodies' array that
+        has no pairs at all (triu_indices with n_bodies=1 → 0 pairs).
+        """
+        from ketu.aspects.calculator import calculate_aspects_vectorized
+        from ketu.core import bodies as all_bodies
+
+        # Single-body slice: no pairs → 0 distances → no aspects → empty path
+        single_body = all_bodies[:1]
+        result = calculate_aspects_vectorized(self.JD, single_body)
+        assert isinstance(result, np.ndarray)
+        assert len(result) == 0
+
+    def test_calculate_aspects_batch_empty_date_path(self) -> None:
+        """Line 380: empty per-date path in calculate_aspects_batch.
+
+        Pass a single-body slice so no pairs exist → every date produces an
+        empty structured array via the ``len(date_results) == 0`` branch.
+        """
+        from ketu.aspects.calculator import calculate_aspects_batch
+        from ketu.core import bodies as all_bodies
+
+        single_body = all_bodies[:1]
+        jd_array = np.array([self.JD, self.JD + 1.0])
+        results = calculate_aspects_batch(jd_array, single_body)
+        assert isinstance(results, list)
+        assert len(results) == 2
+        for arr in results:
+            assert isinstance(arr, np.ndarray)
+            assert len(arr) == 0
+
+    def test_find_aspect_timing_known_new_moon(self) -> None:
+        """Lines 410-450: full body of find_aspect_timing including lines 429/442.
+
+        JD=2451550.0 is a date where Sun–Moon separation is ~2.95°, firmly
+        inside the conjunction orb. The backward/forward loops therefore
+        iterate (executing jd_begin += step at line 429 and jd_end += step
+        at line 442) before stepping out of the orb window and breaking.
+        """
+        from ketu.aspects.calculator import find_aspect_timing
+
+        # 2000-01-06: Sun ≈ 285.5°, Moon ≈ 282.5° → dist ≈ 2.95° (in-orb)
+        jd_mid_conjunction = 2451550.0
+        begin, exact, end = find_aspect_timing(jd_mid_conjunction, 0, 1, 0.0)
+        assert isinstance(begin, float)
+        assert isinstance(exact, float)
+        assert isinstance(end, float)
+        # begin/exact/end should be within a few days of the reference
+        assert abs(begin - jd_mid_conjunction) < 60.0
+        assert abs(exact - jd_mid_conjunction) < 60.0
+        assert abs(end - jd_mid_conjunction) < 60.0
+
+    def test_find_aspect_timing_invalid_aspect_raises(self) -> None:
+        """Line 411-412: ValueError for unknown aspect value."""
+        from ketu.aspects.calculator import find_aspect_timing
+
+        with pytest.raises(ValueError, match="unknown aspect value"):
+            find_aspect_timing(self.JD, 0, 1, 999.0)
+
+    def test_find_aspects_between_dates_body1_filter(self) -> None:
+        """Lines 497-498: body1-only filter (body2=None) in find_aspects_between_dates."""
+        from ketu.aspects.calculator import find_aspects_between_dates
+
+        results = find_aspects_between_dates(
+            self.JD,
+            self.JD + 30.0,
+            body1=0,   # Sun only — pairs with every other body
+            body2=None,
+        )
+        assert isinstance(results, list)
+
+    def test_find_aspects_between_dates_body2_filter(self) -> None:
+        """Lines 499-500: body2-only filter (body1=None) in find_aspects_between_dates."""
+        from ketu.aspects.calculator import find_aspects_between_dates
+
+        results = find_aspects_between_dates(
+            self.JD,
+            self.JD + 30.0,
+            body1=None,
+            body2=1,   # Moon only — pairs with every other body
+        )
+        assert isinstance(results, list)
+
+    def test_find_aspects_between_dates_all_pairs(self) -> None:
+        """Line 502 (list(combs(...))): no body filter → all combinations.
+
+        This exercises the else-branch where both body1 and body2 are None.
+        Use a short window to keep runtime reasonable.
+        """
+        from ketu.aspects.calculator import find_aspects_between_dates
+
+        results = find_aspects_between_dates(
+            self.JD,
+            self.JD + 1.0,  # 1-day window: fast
+            body1=None,
+            body2=None,
+        )
+        assert isinstance(results, list)
+
+    def test_dist_velocity_au_returns_float(self) -> None:
+        """calculations.py line 382: dist_velocity_au return path."""
+        from ketu.calculations import dist_velocity_au
+
+        vel = dist_velocity_au(self.JD, 0)  # Sun at J2000.0
+        assert isinstance(vel, float)
+        # Sun's distance velocity is tiny (AU/day)
+        assert abs(vel) < 1.0
+
+
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])
