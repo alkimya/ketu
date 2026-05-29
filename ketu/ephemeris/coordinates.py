@@ -275,7 +275,7 @@ def geocentric_to_topocentric(
 
     # Convert to azimuth and altitude
     az = np.rad2deg(np.arctan2(x_hor, y_hor))
-    alt = np.rad2deg(np.arcsin(z_hor / np.sqrt(x_hor**2 + y_hor**2 + z_hor**2)))
+    alt = np.rad2deg(np.arcsin(z_hor / np.maximum(np.sqrt(x_hor**2 + y_hor**2 + z_hor**2), 1e-10)))  # floor to avoid div/0 (QAL-11)
 
     # Normalize azimuth to 0-360
     if az < 0:

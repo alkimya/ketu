@@ -350,7 +350,8 @@ def compute_position(elem: dict) -> Tuple[float, float, float, float, float, flo
     # Spherical coordinates
     lon = np.rad2deg(np.arctan2(y, x))
     lon = normalize_angle(lon)
-    lat = np.rad2deg(np.arcsin(z / r))
+    r_safe = max(r, 1e-10)  # floor r to avoid div/0 (QAL-11)
+    lat = np.rad2deg(np.arcsin(z / r_safe))
 
     return x, y, z, lon, lat, r
 
@@ -402,7 +403,7 @@ def apply_perturbations(body_id: int, jd: float, x: float, y: float, z: float) -
         # Apply correction to longitude
         r = np.sqrt(x**2 + y**2 + z**2)
         lon = np.arctan2(y, x)
-        lat = np.arcsin(z / r)
+        lat = np.arcsin(z / np.maximum(r, 1e-10))  # floor r to avoid div/0 (QAL-11)
 
         lon += np.deg2rad(dL)
 
@@ -433,7 +434,7 @@ def apply_perturbations(body_id: int, jd: float, x: float, y: float, z: float) -
         # Apply corrections
         r = np.sqrt(x**2 + y**2 + z**2)
         lon = np.arctan2(y, x)
-        lat = np.arcsin(z / r)
+        lat = np.arcsin(z / np.maximum(r, 1e-10))  # floor r to avoid div/0 (QAL-11)
 
         lon += np.deg2rad(dL)
         lat += np.deg2rad(dB)
@@ -459,7 +460,7 @@ def apply_perturbations(body_id: int, jd: float, x: float, y: float, z: float) -
         # Apply correction
         r = np.sqrt(x**2 + y**2 + z**2)
         lon = np.arctan2(y, x)
-        lat = np.arcsin(z / r)
+        lat = np.arcsin(z / np.maximum(r, 1e-10))  # floor r to avoid div/0 (QAL-11)
 
         lon += np.deg2rad(dL)
 
@@ -500,7 +501,8 @@ def get_body_position(body_id: int, jd: float) -> Tuple[float, float, float, flo
         r = np.sqrt(x**2 + y**2 + z**2)
         lon = np.rad2deg(np.arctan2(y, x))
         lon = normalize_angle(lon)
-        lat = np.rad2deg(np.arcsin(z / r))
+        r_safe = max(r, 1e-10)  # floor r to avoid div/0 (QAL-11)
+        lat = np.rad2deg(np.arcsin(z / r_safe))
 
     return x, y, z, lon, lat, r
 
@@ -555,7 +557,8 @@ def get_moon_position(jd: float) -> Tuple[float, float, float]:
 
     # Convert to spherical coordinates
     lon = np.rad2deg(np.arctan2(yeclip, xeclip))
-    lat = np.rad2deg(np.arcsin(zeclip / r))
+    r_safe = max(r, 1e-10)  # floor r to avoid div/0 (QAL-11)
+    lat = np.rad2deg(np.arcsin(zeclip / r_safe))
 
     # Add perturbations
     # Longitude
@@ -752,7 +755,7 @@ def get_body_position_vectorized(body_id: int, jd_array: np.ndarray) -> Tuple[np
     # Spherical coordinates (vectorized)
     lon = np.rad2deg(np.arctan2(y, x))
     lon = lon % 360.0
-    lat = np.rad2deg(np.arcsin(z / r))
+    lat = np.rad2deg(np.arcsin(z / np.maximum(r, 1e-10)))  # floor r to avoid div/0 (QAL-11)
 
     return x, y, z, lon, lat, r
 
@@ -810,7 +813,7 @@ def get_moon_position_vectorized(jd_array: np.ndarray) -> Tuple[np.ndarray, np.n
 
     # Convert to spherical coordinates (vectorized)
     lon = np.rad2deg(np.arctan2(yeclip, xeclip))
-    lat = np.rad2deg(np.arcsin(zeclip / r))
+    lat = np.rad2deg(np.arcsin(zeclip / np.maximum(r, 1e-10)))  # floor r to avoid div/0 (QAL-11)
 
     # Add perturbations (vectorized)
     Ms = np.deg2rad((357.5172 + 0.9856002585 * d) % 360.0)
