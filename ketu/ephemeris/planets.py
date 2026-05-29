@@ -20,6 +20,7 @@ from .orbital import (
     get_body_position_vectorized,
     get_moon_position_vectorized,
 )
+from .chiron import _chiron_scalar, _chiron_vec
 from .coordinates import (
     heliocentric_to_geocentric,
     ecliptic_to_equatorial,
@@ -46,6 +47,7 @@ BODY_INDICES = {
     "Rahu": 10,
     "Ketu": 11,
     "Lilith": 12,
+    "Chiron": 13,
 }
 
 # Swiss Ephemeris compatible IDs
@@ -63,6 +65,7 @@ SWE_IDS = {
     10: "Rahu",      # Mean North Node
     11: "Ketu",      # Mean South Node (opposite of Rahu)
     12: "Lilith",    # Mean Apogee (Black Moon)
+    13: "Chiron",    # Centaur, embedded Chebyshev coeffs
 }
 
 
@@ -313,6 +316,7 @@ BODY_STRATEGIES: dict[str, _BodyCalc] = {
     "Rahu":    _BodyCalc(_rahu_scalar,  _scalar_loop_vec(10)),
     "Ketu":    _BodyCalc(_ketu_scalar,  _scalar_loop_vec(11)),
     "Lilith":  _BodyCalc(_lilith_scalar, _scalar_loop_vec(12)),
+    "Chiron":  _BodyCalc(_chiron_scalar, _chiron_vec),
     "Mercury": _BodyCalc(_make_planet_scalar(BODY_INDICES["Mercury"]), _make_planet_vec(BODY_INDICES["Mercury"])),
     "Venus":   _BodyCalc(_make_planet_scalar(BODY_INDICES["Venus"]),   _make_planet_vec(BODY_INDICES["Venus"])),
     "Mars":    _BodyCalc(_make_planet_scalar(BODY_INDICES["Mars"]),    _make_planet_vec(BODY_INDICES["Mars"])),
@@ -338,7 +342,7 @@ def calc_planet_position(jd: float, planet_id: int, flags: int = 0) -> np.ndarra
     jd : float
         Julian Date.
     planet_id : int
-        Planet ID (0-12).
+        Planet ID (0-13).
     flags : int, optional
         Calculation flags (for compatibility, not fully implemented).
 
@@ -349,7 +353,7 @@ def calc_planet_position(jd: float, planet_id: int, flags: int = 0) -> np.ndarra
     """
     planet_name = SWE_IDS.get(planet_id)
     if planet_name is None:
-        raise ValueError(f"unknown planet ID: {planet_id}. Valid range: 0-12")
+        raise ValueError(f"unknown planet ID: {planet_id}. Valid range: 0-13")
 
     lon, lat, dist, lon_speed, lat_speed, dist_speed = BODY_STRATEGIES[planet_name].scalar(jd)
 
@@ -590,6 +594,7 @@ def calculate_speed_ratio(jd: float, body_id: int) -> float:
         10: -0.052954,  # Mean Node
         11: -0.052954,  # True Node
         12: round(_LILITH_MEAN_RATE_DEG_PER_DAY, 6),  # Lilith (matches orbital.py rate)
+        13: 0.01946,  # Chiron mean motion ≈ 360 / (50.7yr * 365.25) °/day
     }
 
     avg_speed = avg_speeds.get(body_id, 1.0)
@@ -612,7 +617,7 @@ def calc_planet_position_batch(jd_array: np.ndarray, planet_id: int, flags: int 
     jd_array : np.ndarray
         Array of Julian Dates.
     planet_id : int
-        Planet ID (0-12).
+        Planet ID (0-13).
     flags : int, optional
         Calculation flags (for compatibility).
 
@@ -625,7 +630,7 @@ def calc_planet_position_batch(jd_array: np.ndarray, planet_id: int, flags: int 
     """
     planet_name = SWE_IDS.get(planet_id)
     if planet_name is None:
-        raise ValueError(f"unknown planet ID: {planet_id}. Valid range: 0-12")
+        raise ValueError(f"unknown planet ID: {planet_id}. Valid range: 0-13")
 
     n_dates = len(jd_array)
     results = np.zeros((n_dates, 6))

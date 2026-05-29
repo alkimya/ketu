@@ -12,17 +12,18 @@ and Al-Biruni (973-1050), adapted for modern precision calculations.
 **Data Structures**
 
 bodies : numpy.ndarray
-    Structured array of 13 astronomical bodies with fields:
+    Structured array of 14 astronomical bodies with fields:
 
     - name (str): Body name (e.g., 'Sun', 'Moon', 'Mars').
-    - id (int): Body identifier (0-12).
+    - id (int): Body identifier (0-13).
     - orb (float): Default orb in degrees for aspect calculations.
     - speed (float): Average daily motion in degrees/day.
 
     Body IDs:
     0=Sun, 1=Moon, 2=Mercury, 3=Venus, 4=Mars, 5=Jupiter, 6=Saturn,
     7=Uranus, 8=Neptune, 9=Pluto, 10=Rahu (Mean North Node),
-    11=Ketu (Mean South Node), 12=Lilith (Mean Apogee/Black Moon).
+    11=Ketu (Mean South Node), 12=Lilith (Mean Apogee/Black Moon),
+    13=Chiron (Centaur).
 
 aspects : numpy.ndarray
     Structured array of 14 major aspects with fields:
@@ -78,6 +79,7 @@ bodies = np.array(
         ("Rahu", 10, 0, -0.013),  # Mean North Node
         ("Ketu", 11, 0, -0.013),  # Mean South Node (opposite of Rahu)
         ("Lilith", 12, 0, 0.113),  # Mean Apogee (Black Moon)
+        ("Chiron", 13, 0, 0.019),  # Centaur, Chebyshev-based position
     ],
     dtype=[("name", "S12"), ("id", "i4"), ("orb", "f4"), ("speed", "f4")],
 )

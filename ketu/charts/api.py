@@ -17,11 +17,11 @@ lives only in :mod:`tests.charts.conftest` (test-only, AGPL boundary).
 
 Notes
 -----
-``compute_chart`` projects intra-chart aspects into a dense ``(13, 13)``
+``compute_chart`` projects intra-chart aspects into a dense ``(14, 14)``
 matrix via a Python loop over the leading shape ``S`` (D-16); each
 ``S``-element call to
 :func:`ketu.aspects.calculator.calculate_aspects_vectorized` is itself
-vectorised over the 78 body-pair upper-triangle, so the Python
+vectorised over the 91 body-pair upper-triangle, so the Python
 overhead is constant in ``S``. ``is_day_chart`` exposes the
 sunrise-inclusive sect helper required by Phase 19 (Arabic Parts) with
 internal Porphyry polar fallback (D-15). Signatures and docstrings are
@@ -45,12 +45,11 @@ from .core import CHART_DTYPE
 
 ArrayLike = Union[float, np.ndarray]
 
-#: Number of canonical bodies in the (13,) axis. Derived from
-#: :data:`ketu.core.bodies` so a v1.3 grow-the-axis change (e.g. adding
-#: Chiron) auto-propagates here. Pinned to ``13`` at runtime by
-#: ``test_body_count_frozen_at_thirteen`` per D-08 (Kala positional
-#: contract): if/when v1.3 lifts the freeze, the ratchet rouge forces an
-#: explicit human review of every CHART_DTYPE subarray shape.
+#: Number of canonical bodies in the (14,) axis. Derived from
+#: :data:`ketu.core.bodies` so a grow-the-axis change auto-propagates here.
+#: Lifted to 14 by the v1.3 D-08 ratchet (Chiron added as body 13).
+#: Pinned by ``test_body_count_frozen_at_fourteen`` (CHART_DTYPE subarray
+#: shapes updated to (14,) / (14, 14) atomically with this change).
 _BODY_COUNT: int = len(_CANONICAL_BODIES)
 
 
@@ -60,7 +59,7 @@ def _vectorised_body_properties(
     """
     Compute per-body lon/lat/speed for a broadcast jd array.
 
-    Loops over the 13 canonical bodies (NOT over the leading shape S).
+    Loops over the 14 canonical bodies (NOT over the leading shape S).
     Each iteration calls :func:`ketu.ephemeris.planets.calc_planet_position_batch`,
     which is natively vectorised on jd; the total Python loop count is
     therefore constant in S (Pitfall 1 from RESEARCH §5).
@@ -74,19 +73,19 @@ def _vectorised_body_properties(
     Returns
     -------
     body_lons : np.ndarray
-        Shape ``S + (13,)``, dtype ``float64``. Ecliptic longitudes per
+        Shape ``S + (14,)``, dtype ``float64``. Ecliptic longitudes per
         body, degrees in ``[0, 360)``.
     body_lats : np.ndarray
-        Shape ``S + (13,)``, dtype ``float64``. Ecliptic latitudes per
+        Shape ``S + (14,)``, dtype ``float64``. Ecliptic latitudes per
         body, degrees.
     body_speeds : np.ndarray
-        Shape ``S + (13,)``, dtype ``float64``. Longitude speeds per
+        Shape ``S + (14,)``, dtype ``float64``. Longitude speeds per
         body, ``deg/day`` (negative => retrograde).
 
     Notes
     -----
-    The 13-body axis order follows :data:`ketu.core.bodies`
-    (Sun=0, ..., Lilith=12) and is FROZEN per decision D-08.
+    The 14-body axis order follows :data:`ketu.core.bodies`
+    (Sun=0, ..., Lilith=12, Chiron=13). Lifted to 14 by v1.3 D-08 ratchet.
     """
     jd_flat = np.asarray(jd_b, dtype=np.float64).ravel()  # shape (M,)
     n = jd_flat.size
