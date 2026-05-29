@@ -3,7 +3,7 @@ Core types for the synastry subpackage.
 
 Defines :data:`SYNASTRY_DTYPE`, the structured-array layout for ONE inter-chart
 aspect record between two natal charts, and :data:`SYNASTRY_BODY_COUNT`, the
-frozen size of the synastry body axis (13 canonical bodies + ASC + MC = 15).
+size of the synastry body axis (14 canonical bodies + ASC + MC = 16).
 
 Notes
 -----
@@ -13,7 +13,7 @@ Why a structured array?
 
 The ``ketu/synastry`` subpackage publishes :data:`SYNASTRY_DTYPE` as a NumPy
 structured dtype rather than a Python ``@dataclass``, a flat
-``dict[str, np.ndarray]``, or a 2-D ``(15, 15)`` axis-style matrix. The
+``dict[str, np.ndarray]``, or a 2-D ``(16, 16)`` axis-style matrix. The
 reasoning mirrors the Phase 14 precedent locked in
 ``ketu/charts/core.py`` (D-01, D-08) and the v1.0 ``CYCLE_DTYPE``
 precedent:
@@ -30,11 +30,11 @@ precedent:
    lon_a, lon_b, aspect_type, orb, applying, orb_limit)``. Downstream
    consumers never need to look up the parent charts to filter or rank
    aspects.
-4. **Record-style, not axis-style (D-rec).** A ``(15, 15)`` matrix layout
-   was rejected: the dense mode (all 225 pairs) and the filtered mode
+4. **Record-style, not axis-style (D-rec).** A ``(16, 16)`` matrix layout
+   was rejected: the dense mode (all 256 pairs) and the filtered mode
    (orbed pairs only) must share ONE schema so that downstream code
    doesn't branch on shape. A record-style structured array gives both
-   modes the same dtype — dense fills the 225 rows with ``aspect_type
+   modes the same dtype — dense fills the 256 rows with ``aspect_type
    = -1`` and ``orb = NaN`` sentinels; filtered ships only the orbed
    rows. The 2-D axis style would force a different schema per mode.
 
@@ -70,9 +70,9 @@ SYNASTRY_BODY_COUNT: int = 16
 #: Structured dtype for ONE synastry aspect record.
 #:
 #: Fields (8 total, ordered as identity -> values -> metadata):
-#:     - ``body_a`` (i1): chart-A body index, [0..14].
-#:           0..12 = :data:`ketu.core.bodies` order; 13 = ASC, 14 = MC.
-#:     - ``body_b`` (i1): chart-B body index, [0..14]. Same axis as ``body_a``.
+#:     - ``body_a`` (i1): chart-A body index, [0..15].
+#:           0..13 = :data:`ketu.core.bodies` order; 14 = ASC, 15 = MC.
+#:     - ``body_b`` (i1): chart-B body index, [0..15]. Same axis as ``body_a``.
 #:     - ``lon_a`` (f8): chart-A body ecliptic longitude, degrees in [0, 360).
 #:     - ``lon_b`` (f8): chart-B body ecliptic longitude, degrees in [0, 360).
 #:     - ``aspect_type`` (i1): canonical aspect index [0..13] per
@@ -93,15 +93,16 @@ SYNASTRY_BODY_COUNT: int = 16
 #:     mask = recs["aspect_type"] >= 0  # or
 #:     mask = ~np.isnan(recs["orb"])
 #:
-#: Body axis order (the 15-body axis) follows :data:`ketu.core.bodies`
+#: Body axis order (the 16-body axis) follows :data:`ketu.core.bodies`
 #: extended with ASC and MC::
 #:
 #:     0=Sun, 1=Moon, 2=Mercury, 3=Venus, 4=Mars, 5=Jupiter, 6=Saturn,
 #:     7=Uranus, 8=Neptune, 9=Pluto, 10=Rahu, 11=Ketu, 12=Lilith,
-#:     13=ASC, 14=MC.
+#:     13=Chiron, 14=ASC, 15=MC.
 #:
-#: This axis is FROZEN by D-08 (Kala positional contract) extended with
-#: ASC + MC for v1.2. Adding bodies (e.g. Vertex) is a v1.3 BREAKING change.
+#: D-08 (v1.3) moved the canonical body axis 13->14 (Chiron added as body
+#: 13), widening this synastry axis 15->16. The prior 13-body freeze is
+#: intentionally broken (Kala adapts to Ketu).
 SYNASTRY_DTYPE: np.dtype = np.dtype([
     ("body_a",      "i1"),
     ("body_b",      "i1"),

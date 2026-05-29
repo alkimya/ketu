@@ -10,7 +10,7 @@ modules (:mod:`ketu.charts`, :mod:`ketu.aspects.presets`,
 
 Locked design decisions (carried forward from Plan 16-01 + CONTEXT.md):
 
-- **Cross-product enumeration over 15x15 = 225 ordered pairs (NOT
+- **Cross-product enumeration over 16x16 = 256 ordered pairs (NOT
   :func:`numpy.triu_indices`); self-pairs INCLUDED per locked decision**
   — Sun_A<->Sun_B, Moon_A<->Moon_B are canonical synastry aspects (ego
   compatibility, emotional compatibility) and the row ``(Sun_A, Mars_B)``
@@ -117,7 +117,7 @@ def calculate_synastry(
     Returns a structured array of :data:`ketu.synastry.SYNASTRY_DTYPE`
     rows. In ``mode="filtered"`` (default), only aspected pairs appear,
     canonically ordered by ``(body_a, body_b)`` index ascending. In
-    ``mode="dense"``, all 15 x 15 = 225 ordered pairs appear, with
+    ``mode="dense"``, all 16 x 16 = 256 ordered pairs appear, with
     ``aspect_type=-1`` and ``orb=NaN`` (and ``orb_limit=NaN``,
     ``applying=False``) for non-aspected pairs.
 
@@ -151,14 +151,14 @@ def calculate_synastry(
         comparison views.
     mode : {"dense", "filtered"}, optional
         Output shape. ``"filtered"`` (default) returns only aspected
-        rows; ``"dense"`` returns all 225 ordered pairs.
+        rows; ``"dense"`` returns all 256 ordered pairs.
 
     Returns
     -------
     np.ndarray
         Structured array of :data:`ketu.synastry.SYNASTRY_DTYPE` rows.
-        Filtered mode: shape ``(K,)`` with ``K <= 225``; dense mode:
-        shape ``(225,)``.
+        Filtered mode: shape ``(K,)`` with ``K <= 256``; dense mode:
+        shape ``(256,)``.
 
     Raises
     ------
@@ -198,22 +198,22 @@ def calculate_synastry(
     caller's responsibility; mixing local-time charts will produce
     incorrect aspects with no error signal.
 
-    **Self-pairs INCLUDED.** The dense output contains all 225 ordered
-    pairs ``(i, j)`` for ``i, j in [0, 15)``, including the 15 self-pairs
+    **Self-pairs INCLUDED.** The dense output contains all 256 ordered
+    pairs ``(i, j)`` for ``i, j in [0, 16)``, including the 16 self-pairs
     where ``body_a == body_b`` (e.g. Sun_A<->Sun_B). These are the
     headline synastry aspects.
 
-    **Body axis (15 bodies).** Indices 0..12 from :data:`ketu.core.bodies`
-    (Sun, Moon, ..., Lilith), plus 13 = ASC and 14 = MC. The
+    **Body axis (16 bodies).** Indices 0..13 from :data:`ketu.core.bodies`
+    (Sun, Moon, ..., Lilith, Chiron), plus 14 = ASC and 15 = MC. The
     :data:`ketu.charts.CHART_DTYPE` ``cusps`` field (1..12) is **NOT**
-    consulted (deferred to v1.3 if Phase 17 / 18 demand it).
+    consulted.
 
-    **Filtered row order.** Rows are sorted by ``(body_a * 15 + body_b)``
+    **Filtered row order.** Rows are sorted by ``(body_a * 16 + body_b)``
     ascending — canonical body-pair order, predictable for ML / oracle
     tests. Sort by ``|orb|`` post-hoc with
     ``result[np.argsort(np.abs(result["orb"]))]`` if needed.
 
-    **Dense mode shape.** Always ``(225,)``. Non-aspected pairs carry
+    **Dense mode shape.** Always ``(256,)``. Non-aspected pairs carry
     ``aspect_type=-1``, ``orb=NaN``, ``orb_limit=NaN``,
     ``applying=False``.
 
@@ -246,27 +246,27 @@ def calculate_synastry(
     factor = resolve_orb_set(orbs)                     # float scalar
     selected_indices = np.where(mask)[0]               # canonical aspect indices
 
-    # 2. Extend both charts from 13 -> 15 body axis (add ASC, MC).
-    lons_a, speeds_a = _extend_body_data(chart_a)      # (15,)
-    lons_b, speeds_b = _extend_body_data(chart_b)      # (15,)
+    # 2. Extend both charts from 14 -> 16 body axis (add ASC, MC).
+    lons_a, speeds_a = _extend_body_data(chart_a)      # (16,)
+    lons_b, speeds_b = _extend_body_data(chart_b)      # (16,)
 
     # 3. Cross-product enumeration over the full Cartesian product
-    #    (15 x 15 = 225 ordered pairs). NOT np.triu_indices — self-pairs
+    #    (16 x 16 = 256 ordered pairs). NOT np.triu_indices — self-pairs
     #    and ordered pair semantics both matter (CONTEXT.md locked
     #    decision, RESEARCH.md Pitfall 1).
     n = SYNASTRY_BODY_COUNT
     i_idx, j_idx = np.indices((n, n))
-    i_flat = i_idx.ravel()                             # shape (225,)
-    j_flat = j_idx.ravel()                             # shape (225,)
+    i_flat = i_idx.ravel()                             # shape (256,)
+    j_flat = j_idx.ravel()                             # shape (256,)
 
     pos_a = lons_a[i_flat]
     pos_b = lons_b[j_flat]
     speed_a = speeds_a[i_flat]
     speed_b = speeds_b[j_flat]
     # ``distance`` is broadcast-typed Union[float, ndarray]; inputs are
-    # shape (225,) so the result is always ``ndarray``. Cast explicitly
+    # shape (256,) so the result is always ``ndarray``. Cast explicitly
     # so the type checker can see the array branch.
-    dist = np.asarray(distance(pos_a, pos_b), dtype=np.float64)  # (225,)
+    dist = np.asarray(distance(pos_a, pos_b), dtype=np.float64)  # (256,)
 
     # 4. Initialise the dense baseline with sentinels (-1 / NaN / False).
     out = np.empty(n * n, dtype=SYNASTRY_DTYPE)
