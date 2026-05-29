@@ -25,11 +25,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 ## Current Position
 
 Phase: 22 of 26 (Ephemeris Refactor) — IN PROGRESS
-Plan: 22-02 COMPLETE (orbital.py split); 22-01 in parallel execution
-Status: Phase 22 in progress. 22-03 done (REF-03); 22-02 done (REF-02): orbital.py decomposed into 5 focused sub-modules, 70-LOC re-export hub, 1346 tests green, 100% coverage. 22-01 (strategy pattern) running concurrently.
-Last activity: 2026-05-29 — 22-02 orbital split executed (commits 8ab233b/29f58a6)
+Plan: 22-01, 22-02, 22-03 all COMPLETE — Phase 22 done
+Status: Phase 22 fully done. REF-01 (22-01): BODY_STRATEGIES registry, Ketu batch bug fixed. REF-02 (22-02): orbital.py decomposed into 5 sub-modules. REF-03 (22-03): conftest consolidation. 1351 tests green, 100% coverage.
+Last activity: 2026-05-29 — 22-01 strategy pattern executed (commits 8098ab1/24230c4)
 
-Progress: [█████·····] 55% — 1/6 phases completed, 6/11 plans
+Progress: [██████████] 73% — 2/6 phases completed, 8/11 plans
 
 ## v1.3 Roadmap Structure
 
@@ -53,7 +53,7 @@ Progress: [█████·····] 55% — 1/6 phases completed, 6/11 plans
 - v1.1: 27 plans / 5 phases (~3h active)
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 
-v1.3: 7 plans / 1 phase completed (Phase 21 done; Phase 22 in progress — 22-02 + 22-03 complete 2026-05-29).
+v1.3: 8 plans / 2 phases completed (Phase 21 done, Phase 22 done 2026-05-29 — REF-01/02/03 delivered).
 
 *Updated after each plan completion.*
 
@@ -84,6 +84,9 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - (21-04) 5 exclude_lines for dead branches (not pragmas): TYPE_CHECKING (display.py), if angle < 0 / if gst < 0 (post-modulo, orbital.py + time.py), if avg_speed == 0 (planets.py dict-constant), return (jd_left+jd_right)/2 (planets.py bisection-never-exhausts).
 - (21-04) 9 gap tests added (Rule 3) for aspects/calculator.py (get_aspect swap, vectorized/batch empty paths, find_aspect_timing full coverage, find_aspects_between_dates body filters) and calculations.py:382 (dist_velocity_au) — lines not in RESEARCH inventory but blocking 100% gate.
 - (21-04) In-orb JD selection for find_aspect_timing loop-body coverage: JD=2451550.0 where Sun-Moon separation ≈2.95° exercises backward/forward loop bodies (lines 429/442).
+- [Phase 22-ephemeris-refactor]: Aberration for regular planets moved inside _make_planet_vec — preserves batch byte-stability exactly matching original lines 564-569
+- [Phase 22-ephemeris-refactor]: Ketu batch fix via _scalar_loop_vec(11) delegating to calc_planet_position — batch-Ketu now equals scalar-Ketu; old fallback list [Rahu,NorthNode,Lilith] had omitted Ketu causing 170° heliocentric error
+- [Phase 22-ephemeris-refactor]: Regression test tolerance 0.25° for scalar/batch agreement: pre-existing get_body_position vs get_body_position_vectorized diff for Jupiter/Saturn/Uranus (0.07-0.19°) is byte-stable; 0.25° catches Ketu-class bugs (170° error)
 
 ### Pending Todos
 
@@ -95,6 +98,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — plan 22-02 orbital split executed.
-Stopped at: Completed 22-02-PLAN.md — REF-02 done. orbital.py decomposed into 5 focused sub-modules (70-LOC hub). 1346 tests green, 100% coverage. Commits 8ab233b/29f58a6. SUMMARY at .planning/phases/22-ephemeris-refactor/22-02-SUMMARY.md.
-Resume file: None — 22-01 (strategy pattern) running in parallel.
+Last session: 2026-05-29 — plans 22-01/22-02/22-03 all completed in parallel.
+Stopped at: Completed 22-01-PLAN.md — REF-01 done. BODY_STRATEGIES registry, Ketu batch bug fixed. 1351 tests green, 100% coverage. Commits 8098ab1/24230c4. SUMMARY at .planning/phases/22-ephemeris-refactor/22-01-SUMMARY.md.
+Resume file: None — Phase 22 complete, next: Phase 23 (Spike Chiron).
