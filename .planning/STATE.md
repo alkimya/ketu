@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T20:31:40Z"
+last_updated: "2026-05-29T20:47:00Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
   completed_phases: 3
-  total_plans: 12
-  completed_plans: 12
-  percent: 95
+  total_plans: 13
+  completed_plans: 13
+  percent: 97
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 ## Current Position
 
 Phase: 24 of 26 (Chiron) — in progress
-Plan: 24-03 COMPLETE (D-08 breaking change: bodies axis 13→14) → 24-04 next
-Status: Phase 24 plan 03 done (2026-05-29). Chiron wired at all 6 insertion points; CHART_DTYPE/composite/cache/synastry/transits updated; ketu.data packaged; 1361 tests, 100% coverage.
-Last activity: 2026-05-29 — Phase 24 plan 03 executed (commits 74db466, 24fdad3, 66f13c8)
+Plan: 24-04 COMPLETE (CHIR-03 accuracy regression + evaluator bug fix) → 24-05 already committed in parallel wave
+Status: Phase 24 plan 04 done (2026-05-29). CHIR-03 satisfied: 7 pinned refs 1950-2050, max delta 0.005695° (tolerance 0.01°); Rule 1 fix for last-segment t-normalisation in _eval_chiron_qty; 1372 tests, 100% coverage.
+Last activity: 2026-05-29 — Phase 24 plan 04 executed (commit 0159c0f)
 
-Progress: [█████████████] 95% — 3/6 phases completed, 12/13 plans
+Progress: [██████████████] 97% — 3/6 phases completed, 13/13 plans
 
 ## v1.3 Roadmap Structure
 
@@ -95,6 +95,7 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
   - [Phase 24-01]: Generator tools/gen_chiron_coeffs.py (659 LOC) + ketu/data/chiron_coeffs.npz committed; validation gate passed max|Δλ|=0.000861° (11.6× under 0.01°); 7 reference longitudes pinned for 24-04; retflag=260 (Moshier) confirmed acceptable; swisseph never at module level (AGPL isolation)
   - [Phase 24-02]: aberration applied inside `_chiron_vec` (matches `_make_planet_vec` convention) — batch and scalar paths agree; `dlon < -180` branch tested via `patch.object` mock (no natural 1950-2050 JD triggers it at Chiron speed); `inspect.getsource` + import-line filter for AGPL ratchet test (avoids docstring false positives)
   - [Phase 24-03]: D-08 breaking change executed — bodies axis 13→14; Chiron at id=13 in BODY_INDICES/SWE_IDS/BODY_STRATEGIES/avg_speeds/core.bodies; CHART_DTYPE (14,)/(14,14); SYNASTRY_BODY_COUNT 15→16 (ASC=14, MC=15); ketu.data packaged; 1361 tests, 100% coverage
+  - [Phase 24-04]: _eval_chiron_qty bug fix — last segment (13 days, not 32) used constant seg_len for t-normalisation causing 0.905° error at 2050-01-01; fixed via actual_len=min(seg_start+seg_len,jd_end)-seg_start; CHIR-03 satisfied: 7 pinned refs 1950-2050 max delta 0.005695° (1.75× under 0.01°); 1372 tests, 100% coverage
 
 ### Pending Todos
 
@@ -106,6 +107,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — Phase 24 plan 03 executed; D-08 breaking change (bodies axis 13→14) delivered atomically.
-Stopped at: 24-03 complete. Chiron body_id=13 wired everywhere; 1361 tests, 100% coverage. Next: Phase 24 plan 04 (accuracy regression test Chiron vs pyswisseph oracle).
-Resume file: None — 24-03 complete, next: run `/gsd:execute-phase` for Phase 24 plan 04.
+Last session: 2026-05-29 — Phase 24 plan 04 executed; CHIR-03 regression test + evaluator bug fix (commit 0159c0f).
+Stopped at: 24-04 complete. CHIR-03 satisfied; 1372 tests, 100% coverage. Phase 24 now complete (24-05 already committed in parallel wave).
+Resume file: None — Phase 24 complete, next: Phase 25 (Documentation) or Phase 26 (Release).
