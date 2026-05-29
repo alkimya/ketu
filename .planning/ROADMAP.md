@@ -154,13 +154,13 @@ Plans:
   1. The 12 frozen `docs/source/` pages (stuck at v1.0, 2026-02-12) are updated so every v1.1/v1.2/v1.3 feature is documented — configurable aspects, six house systems, `compute_chart`/`CHART_DTYPE`, synastry, midpoint composite, solar + lunar returns, Arabic Parts, and Chiron.
   2. New Sphinx pages exist for the major new feature areas (relational charts, predictive charts/returns, Arabic Parts, Chiron), each with runnable examples.
   3. The French translation is regenerated via the existing gettext infra (`docs/locale/`, `docs/Makefile`, `docs/migrate_translations.py`) — no manual duplication — and `docs/` builds clean for both en and fr.
-**Plans**: TBD
+**Plans**: 3 plans
 
 Plans:
 
-- [ ] 25-01: TBD (update 12 frozen `docs/source/` pages to full v1.3 surface, DOC-10)
-- [ ] 25-02: TBD (new pages: relational / predictive / parts / Chiron with examples, DOC-11)
-- [ ] 25-03: TBD (regenerate fr via gettext; clean en+fr build, DOC-12)
+- [ ] 25-01-PLAN.md — Update 12 frozen `docs/source/` pages to full v1.3 surface: fix broken imports, hand-write api.md subpackages, bump conf.py, wire toctree, changelog/migration (DOC-10)
+- [ ] 25-02-PLAN.md — Author 5 new pages (houses, relational_charts, predictive_charts, arabic_parts, chiron) with runnable examples (DOC-11)
+- [ ] 25-03-PLAN.md — Regenerate fr via gettext pipeline (extract→update→resolve fuzzy→compile); clean en+fr build (DOC-12)
 
 #### Phase 26: Release 1.3.0
 
