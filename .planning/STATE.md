@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T22:36:00Z"
+last_updated: "2026-05-29T22:42:12Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
   completed_phases: 4
-  total_plans: 15
-  completed_plans: 15
+  total_plans: 17
+  completed_plans: 16
   percent: 99
 ---
 
@@ -25,11 +25,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 ## Current Position
 
 Phase: 25 of 26 (Documentation) — IN PROGRESS
-Plan: 25-01 COMPLETE (DOC-10: 12 frozen pages updated to v1.3 surface, conf.py 1.3.0, api.md rewritten) → Plans 25-02, 25-03 remaining
-Status: Phase 25 plan 01 complete (2026-05-29). 12 doc pages at v1.3 surface, English build clean (1 pre-existing warning).
-Last activity: 2026-05-29 — Phase 25 plan 01 executed (commits b094875, 3581306, e5f372a)
+Plan: 25-02 COMPLETE (DOC-11: 5 new pages — houses, relational_charts, predictive_charts, arabic_parts, chiron) → Plan 25-03 remaining
+Status: Phase 25 plan 02 complete (2026-05-29). 5 new Sphinx pages authored with correct submodule imports; English build clean (1 pre-existing warning, 0 orphan warnings).
+Last activity: 2026-05-29 — Phase 25 plan 02 executed (commits bcc4550, 4a4a694)
 
-Progress: [██████████████] 99% — 4/6 phases completed, 14/14 plans
+Progress: [██████████████] 99% — 4/6 phases completed, 16/17 plans
 
 ## v1.3 Roadmap Structure
 
@@ -102,6 +102,8 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - [Phase 25-01]: conf.py bumped to 1.3.0; ketu/__init__.py and pyproject.toml left at 1.2.0 — Phase 26 owns package version bump
 - [Phase 25-01]: myst.xref_missing warnings for 5 not-yet-created pages (25-02 scope) treated as non-failures — per plan spec; toc.not_readable = same category as toctree warnings
 - [Phase 25-01]: UPGRADING.md/CHANGELOG.md broken cross-refs in migration.md replaced with in-docs changelog.md link — eliminates fr build xref warnings
+- [Phase 25-02]: Task 3 produces no git commit — docs/build/ is gitignored; build verification is the artefact, not HTML files
+- [Phase 25-02]: houses.md includes register() and arabic_parts.md includes PartSpec/get_part beyond minimum spec — public API completeness
 
 ### Pending Todos
 
@@ -113,6 +115,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — Phase 25 plan 01 executed; 12 frozen doc pages updated to v1.3 surface, api.md rewritten, English build clean (commits b094875, 3581306, e5f372a).
-Stopped at: Phase 25 plan 01 complete — DOC-10 satisfied; next: 25-02 (new pages: houses.md, relational_charts.md, predictive_charts.md, arabic_parts.md, chiron.md).
-Resume file: None — 25-01 done; continue with 25-02.
+Last session: 2026-05-29 — Phase 25 plan 02 executed; 5 new Sphinx pages authored (houses, chiron, relational_charts, predictive_charts, arabic_parts), English build clean at 1 warning (commits bcc4550, 4a4a694).
+Stopped at: Phase 25 plan 02 complete — DOC-11 satisfied; next: 25-03 (gettext pipeline, fr build verification).
+Resume file: None — 25-02 done; continue with 25-03.
