@@ -6,7 +6,7 @@ replacing the pyswisseph dependency with numpy-based calculations.
 """
 
 import numpy as np
-from typing import Dict, Optional
+from typing import Callable, Dict, NamedTuple, Optional
 from functools import lru_cache
 
 from .time import utc_to_julian, terrestrial_to_universal
@@ -66,6 +66,268 @@ SWE_IDS = {
 }
 
 
+# ---------------------------------------------------------------------------
+# Per-body strategy container
+# ---------------------------------------------------------------------------
+
+class _BodyCalc(NamedTuple):
+    """Per-body calculation strategy: scalar + vectorized paths."""
+
+    scalar: Callable[[float], tuple]
+    """Scalar function: (jd: float) -> (lon, lat, dist, lon_speed, lat_speed, dist_speed)
+    Returns the 6-tuple BEFORE aberration correction."""
+
+    vectorized: Callable[[np.ndarray], tuple]
+    """Vectorized function: (jd_array: np.ndarray) -> (lon, lat, dist, lon_speed, lat_speed, dist_speed)
+    Returns 6 np.ndarrays BEFORE aberration correction (except _make_planet_vec which applies
+    aberration internally for byte-stability with the old batch path)."""
+
+
+# ---------------------------------------------------------------------------
+# Scalar strategy functions (one per body kind)
+# ---------------------------------------------------------------------------
+
+def _sun_scalar(jd: float) -> tuple:
+    """Scalar geocentric Sun position (Earth-negation method)."""
+    x_earth, y_earth, z_earth, _, _, _ = get_body_position(BODY_INDICES["Sun"], jd)
+    x_sun, y_sun, z_sun = -x_earth, -y_earth, -z_earth
+    lon, lat, dist = rectangular_to_spherical(x_sun, y_sun, z_sun)
+
+    jd_delta = 0.01
+    x_earth2, y_earth2, z_earth2, _, _, _ = get_body_position(BODY_INDICES["Sun"], jd + jd_delta)
+    x_sun2, y_sun2, z_sun2 = -x_earth2, -y_earth2, -z_earth2
+    lon2, lat2, dist2 = rectangular_to_spherical(x_sun2, y_sun2, z_sun2)
+
+    lon_speed = (lon2 - lon) / jd_delta
+    lat_speed = (lat2 - lat) / jd_delta
+    dist_speed = (dist2 - dist) / jd_delta
+
+    return lon, lat, dist, lon_speed, lat_speed, dist_speed
+
+
+def _moon_scalar(jd: float) -> tuple:
+    """Scalar geocentric Moon position."""
+    lon, lat, dist = get_moon_position(jd)
+
+    jd_delta = 0.01
+    lon2, lat2, dist2 = get_moon_position(jd + jd_delta)
+
+    lon_diff = lon2 - lon
+    if lon_diff > 180:
+        lon_diff -= 360
+    elif lon_diff < -180:
+        lon_diff += 360
+    lon_speed = lon_diff / jd_delta
+    lat_speed = (lat2 - lat) / jd_delta
+    dist_speed = (dist2 - dist) / jd_delta
+
+    return lon, lat, dist, lon_speed, lat_speed, dist_speed
+
+
+def _rahu_scalar(jd: float) -> tuple:
+    """Scalar geocentric Rahu (Mean North Node) position."""
+    mean_node, _ = get_lunar_nodes(jd)
+    lon = mean_node
+    lat = 0.0
+    dist = 0.0
+    lon_speed = -0.0529538083
+    lat_speed = 0.0
+    dist_speed = 0.0
+    return lon, lat, dist, lon_speed, lat_speed, dist_speed
+
+
+def _ketu_scalar(jd: float) -> tuple:
+    """Scalar geocentric Ketu (Mean South Node) position."""
+    mean_node, _ = get_lunar_nodes(jd)
+    lon = (mean_node + 180.0) % 360.0
+    lat = 0.0
+    dist = 0.0
+    lon_speed = -0.0529538083
+    lat_speed = 0.0
+    dist_speed = 0.0
+    return lon, lat, dist, lon_speed, lat_speed, dist_speed
+
+
+def _lilith_scalar(jd: float) -> tuple:
+    """Scalar geocentric Lilith (Mean Apogee) position."""
+    lon = get_lilith_position(jd)
+    lat = 0.0
+    dist = 0.0
+    lon_speed = _LILITH_MEAN_RATE_DEG_PER_DAY
+    lat_speed = 0.0
+    dist_speed = 0.0
+    return lon, lat, dist, lon_speed, lat_speed, dist_speed
+
+
+def _make_planet_scalar(body_idx: int) -> Callable:
+    """Factory returning a scalar strategy for a regular (heliocentric) planet.
+
+    Uses closure over *body_idx* (factory parameter, not a loop variable) to
+    ensure each returned function captures its own distinct index.
+    """
+    def _scalar(jd: float, _bidx: int = body_idx) -> tuple:
+        x_earth, y_earth, z_earth, _, _, _ = get_body_position(BODY_INDICES["Sun"], jd)
+        x_planet, y_planet, z_planet, _, _, _ = get_body_position(_bidx, jd)
+        x_geo, y_geo, z_geo = heliocentric_to_geocentric(
+            x_planet, y_planet, z_planet, x_earth, y_earth, z_earth
+        )
+        lon, lat, dist = rectangular_to_spherical(x_geo, y_geo, z_geo)
+
+        jd_delta = 0.01
+        x_earth2, y_earth2, z_earth2, _, _, _ = get_body_position(BODY_INDICES["Sun"], jd + jd_delta)
+        x_planet2, y_planet2, z_planet2, _, _, _ = get_body_position(_bidx, jd + jd_delta)
+        x_geo2, y_geo2, z_geo2 = heliocentric_to_geocentric(
+            x_planet2, y_planet2, z_planet2, x_earth2, y_earth2, z_earth2
+        )
+        lon2, lat2, dist2 = rectangular_to_spherical(x_geo2, y_geo2, z_geo2)
+
+        lon_speed = (lon2 - lon) / jd_delta
+        lat_speed = (lat2 - lat) / jd_delta
+        dist_speed = (dist2 - dist) / jd_delta
+
+        return lon, lat, dist, lon_speed, lat_speed, dist_speed
+
+    return _scalar
+
+
+# ---------------------------------------------------------------------------
+# Vectorized strategy functions
+# ---------------------------------------------------------------------------
+
+def _sun_vec(jd_array: np.ndarray) -> tuple:
+    """Vectorized geocentric Sun position."""
+    x_earth, y_earth, z_earth, _, _, _ = get_body_position_vectorized(BODY_INDICES["Sun"], jd_array)
+    x_sun, y_sun, z_sun = -x_earth, -y_earth, -z_earth
+    lon, lat, dist = rectangular_to_spherical(x_sun, y_sun, z_sun)
+
+    jd_delta = 0.01
+    x_earth2, y_earth2, z_earth2, _, _, _ = get_body_position_vectorized(
+        BODY_INDICES["Sun"], jd_array + jd_delta
+    )
+    x_sun2, y_sun2, z_sun2 = -x_earth2, -y_earth2, -z_earth2
+    lon2, lat2, dist2 = rectangular_to_spherical(x_sun2, y_sun2, z_sun2)
+
+    lon_speed = (lon2 - lon) / jd_delta
+    lat_speed = (lat2 - lat) / jd_delta
+    dist_speed = (dist2 - dist) / jd_delta
+
+    return lon, lat, dist, lon_speed, lat_speed, dist_speed
+
+
+def _moon_vec(jd_array: np.ndarray) -> tuple:
+    """Vectorized geocentric Moon position."""
+    lon, lat, dist = get_moon_position_vectorized(jd_array)
+
+    jd_delta = 0.01
+    lon2, lat2, dist2 = get_moon_position_vectorized(jd_array + jd_delta)
+
+    lon_diff = lon2 - lon
+    lon_diff = np.where(lon_diff > 180, lon_diff - 360, lon_diff)
+    lon_diff = np.where(lon_diff < -180, lon_diff + 360, lon_diff)
+    lon_speed = lon_diff / jd_delta
+    lat_speed = (lat2 - lat) / jd_delta
+    dist_speed = (dist2 - dist) / jd_delta
+
+    return lon, lat, dist, lon_speed, lat_speed, dist_speed
+
+
+def _make_planet_vec(body_idx: int) -> Callable:
+    """Factory returning a vectorized strategy for a regular (heliocentric) planet.
+
+    Aberration is applied INSIDE this function (matching the original batch
+    else-branch at lines 564-569) so the batch router stays aberration-free
+    for these bodies, preserving byte-stability.
+    """
+    def _vec(jd_array: np.ndarray, _bidx: int = body_idx) -> tuple:
+        x_earth, y_earth, z_earth, _, _, _ = get_body_position_vectorized(
+            BODY_INDICES["Sun"], jd_array
+        )
+        x_planet, y_planet, z_planet, _, _, _ = get_body_position_vectorized(_bidx, jd_array)
+        x_geo, y_geo, z_geo = heliocentric_to_geocentric(
+            x_planet, y_planet, z_planet, x_earth, y_earth, z_earth
+        )
+        lon, lat, dist = rectangular_to_spherical(x_geo, y_geo, z_geo)
+
+        jd_delta = 0.01
+        x_earth2, y_earth2, z_earth2, _, _, _ = get_body_position_vectorized(
+            BODY_INDICES["Sun"], jd_array + jd_delta
+        )
+        x_planet2, y_planet2, z_planet2, _, _, _ = get_body_position_vectorized(
+            _bidx, jd_array + jd_delta
+        )
+        x_geo2, y_geo2, z_geo2 = heliocentric_to_geocentric(
+            x_planet2, y_planet2, z_planet2, x_earth2, y_earth2, z_earth2
+        )
+        lon2, lat2, dist2 = rectangular_to_spherical(x_geo2, y_geo2, z_geo2)
+
+        lon_speed = (lon2 - lon) / jd_delta
+        lat_speed = (lat2 - lat) / jd_delta
+        dist_speed = (dist2 - dist) / jd_delta
+
+        # Aberration is applied here for regular planets (matches old batch else-branch
+        # lines 564-569: only for planet_id >= 2 which is always true for these bodies).
+        n = len(jd_array)
+        for i in range(n):
+            dlon, dlat = aberration_correction(lon[i], lat[i], jd_array[i])
+            lon[i] += dlon  # type: ignore[index]
+            lat[i] += dlat  # type: ignore[index]
+
+        return lon, lat, dist, lon_speed, lat_speed, dist_speed
+
+    return _vec
+
+
+def _scalar_loop_vec(planet_id: int) -> Callable:
+    """Factory returning a vectorized function that loops over the scalar path.
+
+    Used for per-date bodies (Rahu, Ketu, Lilith) whose batch implementation
+    in the original code was already a scalar loop.  By routing through
+    calc_planet_position, aberration is already applied inside (planet_id >= 2
+    for Lilith; nodes/Ketu return the 6-tuple directly from their scalar fns
+    without aberration since planet_id < 2 is false but the router applies it).
+
+    This is also what FIXES the batch-Ketu bug: previously the fallback list
+    ["Rahu", "NorthNode", "Lilith"] omitted "Ketu", so Ketu fell through to the
+    heliocentric else-branch.  Now Ketu explicitly uses this scalar-loop path.
+    """
+    def _vec(jd_array: np.ndarray, _pid: int = planet_id) -> tuple:
+        n = len(jd_array)
+        out = np.zeros((n, 6))
+        for i, jd in enumerate(jd_array):
+            out[i] = calc_planet_position(float(jd), _pid)
+        return (
+            out[:, 0], out[:, 1], out[:, 2],
+            out[:, 3], out[:, 4], out[:, 5],
+        )
+
+    return _vec
+
+
+# ---------------------------------------------------------------------------
+# Per-body strategy registry
+# ---------------------------------------------------------------------------
+
+BODY_STRATEGIES: dict[str, _BodyCalc] = {
+    "Sun":     _BodyCalc(_sun_scalar,  _sun_vec),
+    "Moon":    _BodyCalc(_moon_scalar, _moon_vec),
+    "Rahu":    _BodyCalc(_rahu_scalar,  _scalar_loop_vec(10)),
+    "Ketu":    _BodyCalc(_ketu_scalar,  _scalar_loop_vec(11)),
+    "Lilith":  _BodyCalc(_lilith_scalar, _scalar_loop_vec(12)),
+    "Mercury": _BodyCalc(_make_planet_scalar(BODY_INDICES["Mercury"]), _make_planet_vec(BODY_INDICES["Mercury"])),
+    "Venus":   _BodyCalc(_make_planet_scalar(BODY_INDICES["Venus"]),   _make_planet_vec(BODY_INDICES["Venus"])),
+    "Mars":    _BodyCalc(_make_planet_scalar(BODY_INDICES["Mars"]),    _make_planet_vec(BODY_INDICES["Mars"])),
+    "Jupiter": _BodyCalc(_make_planet_scalar(BODY_INDICES["Jupiter"]), _make_planet_vec(BODY_INDICES["Jupiter"])),
+    "Saturn":  _BodyCalc(_make_planet_scalar(BODY_INDICES["Saturn"]),  _make_planet_vec(BODY_INDICES["Saturn"])),
+    "Uranus":  _BodyCalc(_make_planet_scalar(BODY_INDICES["Uranus"]),  _make_planet_vec(BODY_INDICES["Uranus"])),
+    "Neptune": _BodyCalc(_make_planet_scalar(BODY_INDICES["Neptune"]), _make_planet_vec(BODY_INDICES["Neptune"])),
+    "Pluto":   _BodyCalc(_make_planet_scalar(BODY_INDICES["Pluto"]),   _make_planet_vec(BODY_INDICES["Pluto"])),
+}
+
+
+# ---------------------------------------------------------------------------
+# Public API
+# ---------------------------------------------------------------------------
+
 @lru_cache(maxsize=128)
 def calc_planet_position(jd: float, planet_id: int, flags: int = 0) -> np.ndarray:
     """
@@ -89,104 +351,7 @@ def calc_planet_position(jd: float, planet_id: int, flags: int = 0) -> np.ndarra
     if planet_name is None:
         raise ValueError(f"unknown planet ID: {planet_id}. Valid range: 0-12")
 
-    # Special handling for different bodies
-    if planet_name == "Sun":
-        # Earth's heliocentric position gives us Sun's geocentric position
-        x_earth, y_earth, z_earth, _, _, _ = get_body_position(BODY_INDICES["Sun"], jd)
-        # Reverse for geocentric Sun
-        x_sun, y_sun, z_sun = -x_earth, -y_earth, -z_earth
-        lon, lat, dist = rectangular_to_spherical(x_sun, y_sun, z_sun)
-
-        # Calculate speeds (simplified)
-        jd_delta = 0.01  # Small time step
-        x_earth2, y_earth2, z_earth2, _, _, _ = get_body_position(BODY_INDICES["Sun"], jd + jd_delta)
-        x_sun2, y_sun2, z_sun2 = -x_earth2, -y_earth2, -z_earth2
-        lon2, lat2, dist2 = rectangular_to_spherical(x_sun2, y_sun2, z_sun2)
-
-        lon_speed = (lon2 - lon) / jd_delta
-        lat_speed = (lat2 - lat) / jd_delta
-        dist_speed = (dist2 - dist) / jd_delta
-
-    elif planet_name == "Moon":
-        lon, lat, dist = get_moon_position(jd)
-
-        # Calculate speeds
-        jd_delta = 0.01
-        lon2, lat2, dist2 = get_moon_position(jd + jd_delta)
-
-        # Handle longitude wrapping at 360/0 boundary
-        lon_diff = lon2 - lon
-        if lon_diff > 180:
-            lon_diff -= 360
-        elif lon_diff < -180:
-            lon_diff += 360
-        lon_speed = lon_diff / jd_delta
-        lat_speed = (lat2 - lat) / jd_delta
-        dist_speed = (dist2 - dist) / jd_delta
-
-    elif planet_name == "Rahu":
-        mean_node, _ = get_lunar_nodes(jd)
-        lon = mean_node
-        lat = 0.0
-        dist = 0.0  # Nodes don't have physical distance
-
-        # Node regression speed
-        lon_speed = -0.0529538083  # degrees per day
-        lat_speed = 0.0
-        dist_speed = 0.0
-
-    elif planet_name == "Ketu":
-        # Ketu is the South Node, exactly opposite to Rahu (North Node)
-        mean_node, _ = get_lunar_nodes(jd)
-        lon = (mean_node + 180.0) % 360.0  # Opposite of Rahu
-        lat = 0.0
-        dist = 0.0  # Nodes don't have physical distance
-
-        # Same regression speed as Rahu (but for opposite point)
-        lon_speed = -0.0529538083  # degrees per day
-        lat_speed = 0.0
-        dist_speed = 0.0
-
-    elif planet_name == "Lilith":
-        lon = get_lilith_position(jd)
-        lat = 0.0
-        dist = 0.0  # Mean apogee doesn't have physical distance
-
-        # Lilith progression speed -- secular mean motion only (sinusoidal
-        # perturbation contributes <1e-3 deg/day; out of scope for the
-        # speed-ratio heuristic). Single source of truth: orbital.py.
-        lon_speed = _LILITH_MEAN_RATE_DEG_PER_DAY  # matches docs/LILITH_DEFINITION.md
-        lat_speed = 0.0
-        dist_speed = 0.0
-
-    else:
-        # Regular planets
-        body_idx = BODY_INDICES[planet_name]
-
-        # Get Earth's position for geocentric calculation
-        x_earth, y_earth, z_earth, _, _, _ = get_body_position(BODY_INDICES["Sun"], jd)
-
-        # Get planet's heliocentric position
-        x_planet, y_planet, z_planet, _, _, _ = get_body_position(body_idx, jd)
-
-        # Convert to geocentric
-        x_geo, y_geo, z_geo = heliocentric_to_geocentric(x_planet, y_planet, z_planet, x_earth, y_earth, z_earth)
-
-        # Convert to spherical
-        lon, lat, dist = rectangular_to_spherical(x_geo, y_geo, z_geo)
-
-        # Calculate speeds
-        jd_delta = 0.01
-        x_earth2, y_earth2, z_earth2, _, _, _ = get_body_position(BODY_INDICES["Sun"], jd + jd_delta)
-        x_planet2, y_planet2, z_planet2, _, _, _ = get_body_position(body_idx, jd + jd_delta)
-        x_geo2, y_geo2, z_geo2 = heliocentric_to_geocentric(
-            x_planet2, y_planet2, z_planet2, x_earth2, y_earth2, z_earth2
-        )
-        lon2, lat2, dist2 = rectangular_to_spherical(x_geo2, y_geo2, z_geo2)
-
-        lon_speed = (lon2 - lon) / jd_delta
-        lat_speed = (lat2 - lat) / jd_delta
-        dist_speed = (dist2 - dist) / jd_delta
+    lon, lat, dist, lon_speed, lat_speed, dist_speed = BODY_STRATEGIES[planet_name].scalar(jd)
 
     # Apply aberration correction for light-time
     if planet_id >= 2:  # Not for Sun or Moon
@@ -211,22 +376,7 @@ def get_planet_name(planet_id: int) -> str:
     str
         Planet name string.
     """
-    names = {
-        0: "Sun",
-        1: "Moon",
-        2: "Mercury",
-        3: "Venus",
-        4: "Mars",
-        5: "Jupiter",
-        6: "Saturn",
-        7: "Uranus",
-        8: "Neptune",
-        9: "Pluto",
-        10: "Rahu",  # Mean North Node
-        11: "Ketu",  # Mean South Node
-        12: "Lilith",  # Lilith
-    }
-    return names.get(planet_id, f"Unknown({planet_id})")
+    return SWE_IDS.get(planet_id, f"Unknown({planet_id})")
 
 
 def calculate_all_positions(jd: float) -> Dict[str, np.ndarray]:
@@ -245,7 +395,7 @@ def calculate_all_positions(jd: float) -> Dict[str, np.ndarray]:
     """
     positions = {}
 
-    for planet_id in range(13):  # 0-12
+    for planet_id in range(len(SWE_IDS)):
         try:
             pos = calc_planet_position(jd, planet_id)
             name = SWE_IDS[planet_id]
@@ -480,99 +630,13 @@ def calc_planet_position_batch(jd_array: np.ndarray, planet_id: int, flags: int 
     n_dates = len(jd_array)
     results = np.zeros((n_dates, 6))
 
-    # Special handling for different bodies
-    if planet_name == "Sun":
-        # Earth's heliocentric position gives us Sun's geocentric position
-        x_earth, y_earth, z_earth, _, _, _ = get_body_position_vectorized(BODY_INDICES["Sun"], jd_array)
-        # Reverse for geocentric Sun
-        x_sun, y_sun, z_sun = -x_earth, -y_earth, -z_earth
-        lon, lat, dist = rectangular_to_spherical(x_sun, y_sun, z_sun)
+    lon, lat, dist, lon_speed, lat_speed, dist_speed = BODY_STRATEGIES[planet_name].vectorized(jd_array)
 
-        # Calculate speeds (vectorized with small time step)
-        jd_delta = 0.01
-        x_earth2, y_earth2, z_earth2, _, _, _ = get_body_position_vectorized(BODY_INDICES["Sun"], jd_array + jd_delta)
-        x_sun2, y_sun2, z_sun2 = -x_earth2, -y_earth2, -z_earth2
-        lon2, lat2, dist2 = rectangular_to_spherical(x_sun2, y_sun2, z_sun2)
-
-        lon_speed = (lon2 - lon) / jd_delta
-        lat_speed = (lat2 - lat) / jd_delta
-        dist_speed = (dist2 - dist) / jd_delta
-
-        results[:, 0] = lon
-        results[:, 1] = lat
-        results[:, 2] = dist
-        results[:, 3] = lon_speed
-        results[:, 4] = lat_speed
-        results[:, 5] = dist_speed
-
-    elif planet_name == "Moon":
-        lon, lat, dist = get_moon_position_vectorized(jd_array)
-
-        # Calculate speeds
-        jd_delta = 0.01
-        lon2, lat2, dist2 = get_moon_position_vectorized(jd_array + jd_delta)
-
-        # Handle longitude wrapping at 360/0 boundary (vectorized)
-        lon_diff = lon2 - lon
-        lon_diff = np.where(lon_diff > 180, lon_diff - 360, lon_diff)
-        lon_diff = np.where(lon_diff < -180, lon_diff + 360, lon_diff)
-        lon_speed = lon_diff / jd_delta
-        lat_speed = (lat2 - lat) / jd_delta
-        dist_speed = (dist2 - dist) / jd_delta
-
-        results[:, 0] = lon
-        results[:, 1] = lat
-        results[:, 2] = dist
-        results[:, 3] = lon_speed
-        results[:, 4] = lat_speed
-        results[:, 5] = dist_speed
-
-    elif planet_name in ["Rahu", "NorthNode", "Lilith"]:
-        # These require individual calculations (relatively fast anyway)
-        for i, jd in enumerate(jd_array):
-            results[i] = calc_planet_position(jd, planet_id, flags)
-
-    else:
-        # Regular planets (vectorized)
-        body_idx = BODY_INDICES[planet_name]
-
-        # Get Earth's position for geocentric calculation
-        x_earth, y_earth, z_earth, _, _, _ = get_body_position_vectorized(BODY_INDICES["Sun"], jd_array)
-
-        # Get planet's heliocentric position
-        x_planet, y_planet, z_planet, _, _, _ = get_body_position_vectorized(body_idx, jd_array)
-
-        # Convert to geocentric (broadcasts automatically)
-        x_geo, y_geo, z_geo = heliocentric_to_geocentric(x_planet, y_planet, z_planet, x_earth, y_earth, z_earth)
-
-        # Convert to spherical
-        lon, lat, dist = rectangular_to_spherical(x_geo, y_geo, z_geo)
-
-        # Calculate speeds
-        jd_delta = 0.01
-        x_earth2, y_earth2, z_earth2, _, _, _ = get_body_position_vectorized(BODY_INDICES["Sun"], jd_array + jd_delta)
-        x_planet2, y_planet2, z_planet2, _, _, _ = get_body_position_vectorized(body_idx, jd_array + jd_delta)
-        x_geo2, y_geo2, z_geo2 = heliocentric_to_geocentric(
-            x_planet2, y_planet2, z_planet2, x_earth2, y_earth2, z_earth2
-        )
-        lon2, lat2, dist2 = rectangular_to_spherical(x_geo2, y_geo2, z_geo2)
-
-        lon_speed = (lon2 - lon) / jd_delta
-        lat_speed = (lat2 - lat) / jd_delta
-        dist_speed = (dist2 - dist) / jd_delta
-
-        # Apply aberration correction for planets (not Sun or Moon)
-        if planet_id >= 2:
-            for i in range(n_dates):
-                dlon, dlat = aberration_correction(lon[i], lat[i], jd_array[i])
-                lon[i] += dlon  # type: ignore[index]
-                lat[i] += dlat  # type: ignore[index]
-
-        results[:, 0] = lon
-        results[:, 1] = lat
-        results[:, 2] = dist
-        results[:, 3] = lon_speed
-        results[:, 4] = lat_speed
-        results[:, 5] = dist_speed
+    results[:, 0] = lon
+    results[:, 1] = lat
+    results[:, 2] = dist
+    results[:, 3] = lon_speed
+    results[:, 4] = lat_speed
+    results[:, 5] = dist_speed
 
     return results
