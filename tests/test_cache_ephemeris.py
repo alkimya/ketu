@@ -46,7 +46,7 @@ class TestEphemerisCacheComputeMonth:
 
         # January 2025 has 31 days
         assert data.shape == (31, BODY_COUNT, POSITION_FIELDS)
-        assert data.shape == (31, 13, 6)
+        assert data.shape == (31, 14, 6)
 
     def test_compute_month_values_reasonable(self, tmp_path):
         """Computed positions are within physical bounds (0-360 lon)."""
@@ -91,7 +91,7 @@ class TestEphemerisCacheEnsureMonth:
         assert (2025, 1) in cache._memory_cache
 
         data = cache._memory_cache[(2025, 1)]
-        assert data.shape == (31, 13, 6)
+        assert data.shape == (31, 14, 6)
 
     def test_ensure_month_reuses_disk_cache(self, tmp_path):
         """Second call loads from disk, not recompute."""

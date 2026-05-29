@@ -29,13 +29,13 @@ from ketu.core import aspects as ASPECTS
 from ketu.synastry import calculate_synastry
 
 
-# Body name -> 0..14 index in the synastry axis (13 canonical bodies + ASC + MC).
-# Source: ketu.synastry.api._extend_body_data — indices 0..12 mirror
-# ketu.core.bodies; 13 = ASC, 14 = MC.
+# Body name -> 0..15 index in the synastry axis (14 canonical bodies + ASC + MC).
+# Source: ketu.synastry.api._extend_body_data — indices 0..13 mirror
+# ketu.core.bodies (incl. Chiron=13); 14 = ASC, 15 = MC.
 _BODY_NAME_TO_INDEX = {
     "Sun": 0, "Moon": 1, "Mercury": 2, "Venus": 3, "Mars": 4,
     "Jupiter": 5, "Saturn": 6, "Uranus": 7, "Neptune": 8, "Pluto": 9,
-    "Rahu": 10, "Ketu": 11, "Lilith": 12, "ASC": 13, "MC": 14,
+    "Rahu": 10, "Ketu": 11, "Lilith": 12, "Chiron": 13, "ASC": 14, "MC": 15,
 }
 
 # Aspect name -> 0..13 canonical index (ketu.core.aspects).

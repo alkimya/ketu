@@ -5,7 +5,7 @@ Implements the synastry orb-resolution surface for :mod:`ketu.synastry`:
 
 - :data:`SYNASTRY_FACTOR` — Astrodienst-cited multiplicative factor (``0.5``).
 - :data:`ASC_MC_NATAL_ORB_DEG` — Mid-tier natal-orb width (``8.0``) for ASC/MC.
-- :data:`_BODY_ORBS_15` — Frozen 15-entry orb table (13 canonical + ASC + MC).
+- :data:`_BODY_ORBS_16` — Frozen 16-entry orb table (14 canonical + ASC + MC).
 - :class:`OrbSetSpec` — Type alias for the resolver input (``None | str``).
 - :func:`synastry_orb_limit` — Scalar orb computation for one body-pair + aspect.
 - :data:`_PRESET_BY_NAME` — Internal preset registry (``synastry``, ``classical``).
@@ -56,34 +56,37 @@ SYNASTRY_FACTOR: float = 0.5
 ASC_MC_NATAL_ORB_DEG: float = 8.0
 
 
-def _build_body_orbs_15() -> np.ndarray:
+def _build_body_orbs_16() -> np.ndarray:
     """
-    Build the frozen 15-entry orb table (13 canonical + ASC + MC).
+    Build the frozen 16-entry orb table (14 canonical + ASC + MC).
 
     Returns
     -------
     np.ndarray
-        Shape ``(15,)``, dtype ``np.float32``, ``writeable=False``.
-        Entries 0..12 mirror :data:`ketu.core.bodies` ``["orb"]``;
-        entries 13..14 are :data:`ASC_MC_NATAL_ORB_DEG`.
+        Shape ``(16,)``, dtype ``np.float32``, ``writeable=False``.
+        Entries 0..13 mirror :data:`ketu.core.bodies` ``["orb"]``;
+        entries 14..15 are :data:`ASC_MC_NATAL_ORB_DEG`.
     """
     arr: np.ndarray = np.concatenate([
-        _BODIES["orb"].astype(np.float32),                       # 13 canonical
-        np.array([ASC_MC_NATAL_ORB_DEG] * 2, dtype=np.float32),  # ASC, MC
-    ])  # shape (15,)
+        _BODIES["orb"].astype(np.float32),                       # 14 canonical (incl. Chiron)
+        np.array([ASC_MC_NATAL_ORB_DEG] * 2, dtype=np.float32),  # ASC(14), MC(15)
+    ])  # shape (16,)
     arr.flags.writeable = False  # Frozen — accidental mutation raises ValueError
     return arr
 
 
-#: Extended body-orb table for synastry — frozen 15-entry ``np.float32`` array.
+#: Extended body-orb table for synastry — frozen 16-entry ``np.float32`` array.
 #:
-#: Indices 0..12 reuse :data:`ketu.core.bodies` natal orbs; indices 13..14
-#: hold :data:`ASC_MC_NATAL_ORB_DEG` for ASC and MC. Computed once at import
-#: time and pinned (``flags.writeable = False``) to ratchet against accidental
-#: mutation by downstream callers. The ``float32`` dtype matches
+#: Indices 0..13 reuse :data:`ketu.core.bodies` natal orbs (incl. Chiron at 13);
+#: indices 14..15 hold :data:`ASC_MC_NATAL_ORB_DEG` for ASC and MC. Computed once
+#: at import time and pinned (``flags.writeable = False``) to ratchet against
+#: accidental mutation by downstream callers. The ``float32`` dtype matches
 #: :data:`ketu.core.bodies` ``["orb"]`` to avoid silent f8 upcasts inside the
-#: per-pair vectorized code path that Plan 16-02 will introduce.
-_BODY_ORBS_15: np.ndarray = _build_body_orbs_15()
+#: per-pair vectorized code path.
+_BODY_ORBS_16: np.ndarray = _build_body_orbs_16()
+
+# Backward-compatible alias — removed in v1.3 cleanup; use _BODY_ORBS_16.
+_BODY_ORBS_15 = _BODY_ORBS_16
 
 
 #: Type alias for the :func:`resolve_orb_set` input parameter.
@@ -110,9 +113,9 @@ def synastry_orb_limit(
     Parameters
     ----------
     b1 : int
-        First body index in the 15-body synastry axis (0..14).
+        First body index in the 16-body synastry axis (0..15).
     b2 : int
-        Second body index in the 15-body synastry axis (0..14).
+        Second body index in the 16-body synastry axis (0..15).
     asp : int
         Canonical aspect index (0..13) per :data:`ketu.core.aspects`.
     factor : float, optional
@@ -143,7 +146,7 @@ def synastry_orb_limit(
     0.0
     """
     return float(
-        (_BODY_ORBS_15[b1] + _BODY_ORBS_15[b2]) / 2.0
+        (_BODY_ORBS_16[b1] + _BODY_ORBS_16[b2]) / 2.0
         * float(_ASPECTS["coef"][asp])
         * factor
     )

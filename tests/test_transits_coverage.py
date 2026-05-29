@@ -304,7 +304,7 @@ class TestGetNatalPositionsFloatInput:
         natal = get_natal_positions(reference_date=jd)
 
         assert isinstance(natal, dict)
-        assert len(natal) == 13
+        assert len(natal) == 14
         for name, pos in natal.items():
             assert isinstance(pos, NatalPosition)
             assert 0 <= pos.longitude < 360

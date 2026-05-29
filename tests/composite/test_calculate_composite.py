@@ -22,13 +22,13 @@ from ketu.charts import compute_chart, is_day_chart
 from ketu.composite import calculate_composite, circular_midpoint
 
 
-# Indices in the canonical 13-body axis (D-08 frozen order — see
+# Indices in the canonical 14-body axis (D-08 ratchet v1.3 — see
 # ketu/core.py bodies array).
-_BODY_INDICES = list(range(13))
+_BODY_INDICES = list(range(14))
 _BODY_NAMES = [
     "Sun", "Moon", "Mercury", "Venus", "Mars",
     "Jupiter", "Saturn", "Uranus", "Neptune", "Pluto",
-    "Rahu", "Ketu", "Lilith",
+    "Rahu", "Ketu", "Lilith", "Chiron",
 ]
 _ANGLE_FIELDS = ["asc", "mc", "armc", "vertex"]
 

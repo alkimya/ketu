@@ -174,8 +174,8 @@ class TestCalculateAllPositionsError:
         positions = calculate_all_positions(jd)
 
         assert isinstance(positions, dict)
-        # Should have all 13 bodies
-        assert len(positions) == 13
+        # Should have all 14 bodies
+        assert len(positions) == 14
 
         for name, pos in positions.items():
             assert isinstance(pos, np.ndarray)
@@ -370,9 +370,9 @@ class TestCalculateSpeedRatio:
         assert -3.0 < ratio < 3.0, f"Jupiter speed ratio {ratio} out of range"
 
     def test_all_bodies_speed_ratio(self):
-        """Verify calculate_speed_ratio works for all 13 body IDs."""
+        """Verify calculate_speed_ratio works for all 14 body IDs."""
         jd = _make_jd(2020, 3, 20)
-        for body_id in range(13):
+        for body_id in range(14):
             ratio = calculate_speed_ratio(jd, body_id)
             assert isinstance(ratio, (float, np.floating)), (
                 f"Body {body_id}: expected float, got {type(ratio)}"
@@ -528,7 +528,7 @@ class TestScalarBatchAgreementAllBodies:
 
     def test_scalar_batch_agreement_all_bodies(self):
         """Max abs diff on lon/lat/dist between scalar sweep and batch < 0.25° for all bodies."""
-        for body_id in range(13):
+        for body_id in range(14):
             scalar_sweep = np.array(
                 [calc_planet_position(float(jd), body_id) for jd in self.TEST_JDS]
             )

@@ -119,11 +119,12 @@ def test_dtype_orb_limit_dtype_float32() -> None:
 # Body-count + itemsize + anti-pattern ratchets
 # ---------------------------------------------------------------------------
 
-def test_synastry_body_count_frozen_at_fifteen() -> None:
-    """SYNASTRY_BODY_COUNT == 15 — ratchet against accidental Vertex addition pre-v1.3."""
-    assert SYNASTRY_BODY_COUNT == 15, (
+def test_synastry_body_count_frozen_at_sixteen() -> None:
+    """SYNASTRY_BODY_COUNT == 16 — v1.3 ratchet: 14 canonical + ASC + MC."""
+    assert SYNASTRY_BODY_COUNT == 16, (
         f"SYNASTRY_BODY_COUNT drifted: {SYNASTRY_BODY_COUNT}. "
-        "Adding bodies (Vertex etc.) is a v1.3 BREAKING change."
+        "14 canonical bodies (Sun..Chiron) + ASC(14) + MC(15) = 16. "
+        "Adding more bodies (Vertex etc.) is a future BREAKING change."
     )
 
 

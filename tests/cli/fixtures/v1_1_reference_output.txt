@@ -14,6 +14,7 @@ Pluto     : Sagittarius    11º26'56"
 Rahu      : Leo             5º 7'41", R
 Ketu      : Aquarius        5º 7' 3", R
 Lilith    : Sagittarius    23º27'41"
+Chiron    : Sagittarius    11º36'45"
 
 
 ------------- Bodies Aspects -------------
@@ -42,9 +43,11 @@ Jupiter - Uranus      : Quintile      1º31' 4"
 Jupiter - Ketu        : Binovile     -1º50' 8"
 Jupiter - Lilith      : Trine        -2º10'46"
 Saturn  - Pluto       : Quincunx      1º 1'13"
+Saturn  - Chiron      : Quincunx      1º11' 2"
 Neptune - Rahu        : Opposition    1º56'32"
 Neptune - Ketu        : Conjunction   1º55'54"
 Neptune - Lilith      : Novile        0º16'33"
+Pluto   - Chiron      : Conjunction   0º 9'48"
 
 ------------- Aspect Timing Example -------------
 Sun Trine Moon at 1999-12-18 10:24:22+00:00

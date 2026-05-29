@@ -106,7 +106,7 @@ class TestSynastryModeSelector:
         assert "filtered mode" in out
 
     def test_synastry_mode_dense_explicit(self, invoke_main, capsys):
-        """--mode dense produces 225 rows in JSON; STDERR cites the mode."""
+        """--mode dense produces 256 rows in JSON (16x16 axis); STDERR cites the mode."""
         rc = invoke_main([
             "synastry",
             "--date-a", J2000, "--lat-a", str(PARIS[0]), "--lon-a", str(PARIS[1]),
@@ -116,7 +116,7 @@ class TestSynastryModeSelector:
         assert rc == 0
         captured = capsys.readouterr()
         data = json.loads(captured.out)
-        assert len(data) == 225
+        assert len(data) == 256
         assert "Synastry mode: dense" in captured.err
 
     def test_synastry_mode_invalid_rejected(self, invoke_main, capsys):
@@ -171,8 +171,8 @@ class TestSynastryJsonOutput:
         for row in data:
             assert set(row.keys()) == expected_keys
 
-    def test_synastry_json_dense_count_225(self, invoke_main, capsys):
-        """--mode dense --json returns exactly 225 dicts."""
+    def test_synastry_json_dense_count_256(self, invoke_main, capsys):
+        """--mode dense --json returns exactly 256 dicts (16x16 axis)."""
         rc = invoke_main([
             "synastry",
             "--date-a", J2000, "--lat-a", str(EQUATOR[0]), "--lon-a", str(EQUATOR[1]),
@@ -181,7 +181,7 @@ class TestSynastryJsonOutput:
         ])
         assert rc == 0
         data = json.loads(capsys.readouterr().out)
-        assert len(data) == 225
+        assert len(data) == 256
 
     def test_synastry_json_filtered_no_negative_aspect_type(self, invoke_main, capsys):
         """Filtered JSON: all aspect_type >= 0 (no sentinel rows leak through)."""

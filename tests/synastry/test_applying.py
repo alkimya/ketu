@@ -44,10 +44,10 @@ def test_applying_for_perfect_aspect_is_false(
 def test_applying_self_synastry_diagonal_all_false(
     chart_a_paris: np.ndarray,
 ) -> None:
-    """All 15 self-pair conjunctions (chart vs itself) have ``applying == False``."""
+    """All 16 self-pair conjunctions (chart vs itself) have ``applying == False``."""
     self_syn = calculate_synastry(chart_a_paris, chart_a_paris, mode="dense")
     diag = self_syn[self_syn["body_a"] == self_syn["body_b"]]
-    assert len(diag) == 15
+    assert len(diag) == 16
     assert (~diag["applying"]).all()
 
 
@@ -61,7 +61,7 @@ def test_applying_sign_convention_signed_delta_times_relative_speed(
     Lons / speeds come straight from the CHART_DTYPE fixtures.
     """
     filtered = calculate_synastry(chart_a_paris, chart_b_nyc)
-    # Build extended (15,) speed arrays per chart (ASC, MC speeds = 0).
+    # Build extended (16,) speed arrays per chart (ASC, MC speeds = 0).
     speeds_a = np.concatenate([
         chart_a_paris["body_speeds"], np.array([0.0, 0.0]),
     ])
@@ -132,8 +132,8 @@ def test_applying_angle_to_angle_contacts_are_false(
     dense = calculate_synastry(chart_a_paris, chart_b_nyc, mode="dense")
     aspected = dense[dense["aspect_type"] >= 0]
     angle_to_angle = aspected[
-        ((aspected["body_a"] == 13) | (aspected["body_a"] == 14))
-        & ((aspected["body_b"] == 13) | (aspected["body_b"] == 14))
+        ((aspected["body_a"] == 14) | (aspected["body_a"] == 15))
+        & ((aspected["body_b"] == 14) | (aspected["body_b"] == 15))
     ]
     if angle_to_angle.size == 0:
         # No angle-to-angle aspects in this chart pair — still valid;
@@ -164,8 +164,8 @@ def test_applying_angle_to_planet_uses_planet_speed_sign(
         chart_b_nyc["body_speeds"], np.array([0.0, 0.0]),
     ])
     angle_rows = filtered[
-        ((filtered["body_a"] == 13) | (filtered["body_a"] == 14)
-         | (filtered["body_b"] == 13) | (filtered["body_b"] == 14))
+        ((filtered["body_a"] == 14) | (filtered["body_a"] == 15)
+         | (filtered["body_b"] == 14) | (filtered["body_b"] == 15))
     ]
     for row in angle_rows:
         sa = speeds_a_ext[int(row["body_a"])]

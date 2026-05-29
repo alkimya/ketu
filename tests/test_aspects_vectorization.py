@@ -67,11 +67,11 @@ def test_aspects_correctness():
         assert aspects.dtype.names == ('body1', 'body2', 'i_asp', 'orb'), \
             f"Date {i}: invalid dtype"
 
-        # Verify all body IDs are valid (0-12)
+        # Verify all body IDs are valid (0-13)
         if len(aspects) > 0:
-            assert np.all(aspects['body1'] >= 0) and np.all(aspects['body1'] <= 12), \
+            assert np.all(aspects['body1'] >= 0) and np.all(aspects['body1'] <= 13), \
                 f"Date {i}: invalid body1 IDs"
-            assert np.all(aspects['body2'] >= 0) and np.all(aspects['body2'] <= 12), \
+            assert np.all(aspects['body2'] >= 0) and np.all(aspects['body2'] <= 13), \
                 f"Date {i}: invalid body2 IDs"
             assert np.all(aspects['i_asp'] >= 0) and np.all(aspects['i_asp'] <= 13), \
                 f"Date {i}: invalid aspect IDs"

@@ -19,7 +19,7 @@ class TestErrorMessages:
     def test_unknown_planet_id(self):
         """Test calc_planet_position raises ValueError with standardized message for invalid ID."""
         jd = 2451545.0  # J2000.0
-        with pytest.raises(ValueError, match=r"unknown planet ID: 99.*Valid range: 0-12"):
+        with pytest.raises(ValueError, match=r"unknown planet ID: 99.*Valid range: 0-13"):
             calc_planet_position(jd, 99)
 
     def test_unknown_aspect_name(self):

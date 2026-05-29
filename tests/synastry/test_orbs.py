@@ -14,11 +14,14 @@ from ketu.core import bodies as _BODIES
 from ketu.synastry.orbs import (
     ASC_MC_NATAL_ORB_DEG,
     SYNASTRY_FACTOR,
-    _BODY_ORBS_15,
+    _BODY_ORBS_16,
     _PRESET_BY_NAME,
     resolve_orb_set,
     synastry_orb_limit,
 )
+
+# Alias for test readability (v1.3 ratchet: 14 canonical + ASC + MC = 16)
+_BODY_ORBS_15 = _BODY_ORBS_16
 
 
 # ---------------------------------------------------------------------------
@@ -36,31 +39,31 @@ def test_asc_mc_natal_orb_deg_value() -> None:
 
 
 # ---------------------------------------------------------------------------
-# _BODY_ORBS_15 internal table
+# _BODY_ORBS_16 internal table (v1.3: 14 canonical + ASC + MC = 16)
 # ---------------------------------------------------------------------------
 
 def test_body_orbs_15_shape_and_dtype() -> None:
-    """_BODY_ORBS_15 is shape (15,) and dtype float32 (matches bodies['orb'])."""
-    assert _BODY_ORBS_15.shape == (15,)
-    assert _BODY_ORBS_15.dtype == np.float32
+    """_BODY_ORBS_16 is shape (16,) and dtype float32 (14 canonical + ASC + MC)."""
+    assert _BODY_ORBS_16.shape == (16,)
+    assert _BODY_ORBS_16.dtype == np.float32
 
 
 def test_body_orbs_15_canonical_entries_match_bodies() -> None:
-    """Entries 0..12 mirror ketu.core.bodies['orb'] (single source of truth)."""
+    """Entries 0..13 mirror ketu.core.bodies['orb'] (14 canonical incl. Chiron)."""
     expected = _BODIES["orb"].astype(np.float32)
-    np.testing.assert_array_equal(_BODY_ORBS_15[:13], expected)
+    np.testing.assert_array_equal(_BODY_ORBS_16[:14], expected)
 
 
 def test_body_orbs_15_asc_mc_entries() -> None:
-    """Entries 13..14 hold ASC_MC_NATAL_ORB_DEG (= 8.0)."""
-    assert _BODY_ORBS_15[13] == np.float32(ASC_MC_NATAL_ORB_DEG)
-    assert _BODY_ORBS_15[14] == np.float32(ASC_MC_NATAL_ORB_DEG)
+    """Entries 14..15 hold ASC_MC_NATAL_ORB_DEG (= 8.0) for ASC and MC."""
+    assert _BODY_ORBS_16[14] == np.float32(ASC_MC_NATAL_ORB_DEG)
+    assert _BODY_ORBS_16[15] == np.float32(ASC_MC_NATAL_ORB_DEG)
 
 
 def test_body_orbs_15_frozen() -> None:
-    """Mutation guard: _BODY_ORBS_15.flags.writeable is False."""
-    assert _BODY_ORBS_15.flags.writeable is False, (
-        "_BODY_ORBS_15 must be frozen to ratchet against accidental mutation"
+    """Mutation guard: _BODY_ORBS_16.flags.writeable is False."""
+    assert _BODY_ORBS_16.flags.writeable is False, (
+        "_BODY_ORBS_16 must be frozen to ratchet against accidental mutation"
     )
 
 
@@ -105,8 +108,8 @@ def test_synastry_orb_limit_lilith_lilith_zero_orb() -> None:
 
 def test_synastry_orb_limit_asc_sun_conjunction() -> None:
     """ASC-Sun conjunction: (8+12)/2 * 1 * 0.5 == 5.0 (matches astro.com 4-5 deg practice)."""
-    # ASC is index 13 in the 15-body axis, Sun is index 0
-    result = synastry_orb_limit(13, 0, 0)
+    # ASC is index 14 in the 16-body axis (v1.3: Chiron at 13 shifts ASC to 14)
+    result = synastry_orb_limit(14, 0, 0)
     assert result == pytest.approx(5.0, abs=1e-5)
 
 

@@ -57,16 +57,16 @@ from ketu.calculations import distance
 from ketu.core import aspects as _ASPECTS
 
 from .core import SYNASTRY_BODY_COUNT, SYNASTRY_DTYPE
-from .orbs import OrbSetSpec, _BODY_ORBS_15, resolve_orb_set
+from .orbs import OrbSetSpec, _BODY_ORBS_16, resolve_orb_set
 
 
 def _extend_body_data(chart: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     """
-    Extend a CHART_DTYPE record's 13-body axis to the 15-body synastry axis.
+    Extend a CHART_DTYPE record's 14-body axis to the 16-body synastry axis.
 
-    Concatenates the 13 canonical body longitudes and speeds from
+    Concatenates the 14 canonical body longitudes and speeds from
     :data:`ketu.charts.CHART_DTYPE` with the scalar ``asc`` and ``mc``
-    longitudes (indices 13 and 14), and zero speeds for ASC / MC.
+    longitudes (indices 14 and 15), and zero speeds for ASC / MC.
 
     Parameters
     ----------
@@ -76,11 +76,11 @@ def _extend_body_data(chart: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
     Returns
     -------
     lons : np.ndarray
-        Shape ``(15,)``, dtype ``float64``. Longitudes of the 13 canonical
+        Shape ``(16,)``, dtype ``float64``. Longitudes of the 14 canonical
         bodies followed by ASC and MC.
     speeds : np.ndarray
-        Shape ``(15,)``, dtype ``float64``. Natal longitude speeds of the
-        13 canonical bodies followed by ``0.0`` and ``0.0`` for ASC / MC.
+        Shape ``(16,)``, dtype ``float64``. Natal longitude speeds of the
+        14 canonical bodies followed by ``0.0`` and ``0.0`` for ASC / MC.
 
     Notes
     -----
@@ -292,7 +292,7 @@ def calculate_synastry(
         # Cast to float32 at write-time (out["orb_limit"] is f4) to keep
         # the SYNASTRY_DTYPE precision contract — Pitfall 6 ratchet.
         orbs_pair = (
-            (_BODY_ORBS_15[i_flat] + _BODY_ORBS_15[j_flat]) / 2.0
+            (_BODY_ORBS_16[i_flat] + _BODY_ORBS_16[j_flat]) / 2.0
             * coef
             * factor
         )

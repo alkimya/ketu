@@ -24,12 +24,12 @@ def test_compute_chart_scalar_input_returns_zero_dim() -> None:
     """Scalar inputs yield a 0-d structured array with native subarray shapes."""
     chart = compute_chart(2451545.0, 48.86, 2.35)
     assert chart.shape == ()
-    assert chart["body_lons"].shape == (13,)
-    assert chart["body_lats"].shape == (13,)
-    assert chart["body_speeds"].shape == (13,)
+    assert chart["body_lons"].shape == (14,)
+    assert chart["body_lats"].shape == (14,)
+    assert chart["body_speeds"].shape == (14,)
     assert chart["cusps"].shape == (12,)
-    assert chart["aspect_matrix"].shape == (13, 13)
-    assert chart["aspect_orbs"].shape == (13, 13)
+    assert chart["aspect_matrix"].shape == (14, 14)
+    assert chart["aspect_orbs"].shape == (14, 14)
 
 
 def test_compute_chart_1d_input_preserves_leading_shape() -> None:
@@ -37,12 +37,12 @@ def test_compute_chart_1d_input_preserves_leading_shape() -> None:
     jd_arr = np.array([2451545.0, 2470204.0])
     chart = compute_chart(jd_arr, 48.86, 2.35)
     assert chart.shape == (2,)
-    assert chart["body_lons"].shape == (2, 13)
-    assert chart["body_lats"].shape == (2, 13)
-    assert chart["body_speeds"].shape == (2, 13)
+    assert chart["body_lons"].shape == (2, 14)
+    assert chart["body_lats"].shape == (2, 14)
+    assert chart["body_speeds"].shape == (2, 14)
     assert chart["cusps"].shape == (2, 12)
-    assert chart["aspect_matrix"].shape == (2, 13, 13)
-    assert chart["aspect_orbs"].shape == (2, 13, 13)
+    assert chart["aspect_matrix"].shape == (2, 14, 14)
+    assert chart["aspect_orbs"].shape == (2, 14, 14)
 
 
 def test_compute_chart_2d_input_preserves_leading_shape() -> None:
@@ -54,9 +54,9 @@ def test_compute_chart_2d_input_preserves_leading_shape() -> None:
     ])
     chart = compute_chart(jd_arr, 48.86, 2.35)
     assert chart.shape == (3, 2)
-    assert chart["body_lons"].shape == (3, 2, 13)
+    assert chart["body_lons"].shape == (3, 2, 14)
     assert chart["cusps"].shape == (3, 2, 12)
-    assert chart["aspect_matrix"].shape == (3, 2, 13, 13)
+    assert chart["aspect_matrix"].shape == (3, 2, 14, 14)
 
 
 def test_compute_chart_broadcast_jd_lat_lon_mixed() -> None:
@@ -129,4 +129,4 @@ def test_compute_chart_zero_python_loop_in_hot_path_proxy() -> None:
     jd_arr = np.linspace(2451545.0, 2451545.0 + 365.0, 100)
     chart = compute_chart(jd_arr, 48.86, 2.35)
     assert chart.shape == (100,)
-    assert chart["body_lons"].shape == (100, 13)
+    assert chart["body_lons"].shape == (100, 14)

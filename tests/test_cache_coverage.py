@@ -268,7 +268,7 @@ class TestGetAllPositions:
         result = cache.get_all_positions(ts, interpolate=True)
 
         assert result.shape == (BODY_COUNT, POSITION_FIELDS)
-        assert result.shape == (13, 6)
+        assert result.shape == (14, 6)
 
         # All longitudes should be in valid range
         for body_id in range(BODY_COUNT):

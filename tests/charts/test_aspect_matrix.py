@@ -120,7 +120,7 @@ def test_aspect_matrix_diagonal_sentinels() -> None:
     chart = compute_chart(2451545.0, 48.86, 2.35)
     m = chart["aspect_matrix"]
     o = chart["aspect_orbs"]
-    for i in range(13):
+    for i in range(14):
         assert int(m[i, i]) == -1, (
             f"aspect_matrix[{i}, {i}] expected -1 (sentinel); got {int(m[i, i])}"
         )
@@ -170,7 +170,7 @@ def test_aspect_matrix_consistent_with_calculate_aspects_vectorized_standalone(
 
     # Reverse: every populated upper-triangle cell maps back to a record.
     record_pairs = {(int(r["body1"]), int(r["body2"])) for r in records}
-    for i, j in itertools.combinations(range(13), 2):
+    for i, j in itertools.combinations(range(14), 2):
         if int(m[i, j]) >= 0:
             assert (i, j) in record_pairs, (
                 f"{fixture['label']}: matrix[{i}, {j}] is populated "
@@ -250,12 +250,12 @@ def test_aspect_matrix_scalar_jd_via_ndindex_empty_tuple() -> None:
     )
 
     chart = compute_chart(2451545.0, 48.86, 2.35)
-    # Scalar inputs yield 0-d structured array; aspect_matrix is (13, 13),
-    # NOT (1, 13, 13) — that would mean we accidentally promoted to a
+    # Scalar inputs yield 0-d structured array; aspect_matrix is (14, 14),
+    # NOT (1, 14, 14) — that would mean we accidentally promoted to a
     # leading shape of size 1.
-    assert chart["aspect_matrix"].shape == (13, 13)
+    assert chart["aspect_matrix"].shape == (14, 14)
     assert chart["aspect_matrix"].dtype == np.int8
-    assert chart["aspect_orbs"].shape == (13, 13)
+    assert chart["aspect_orbs"].shape == (14, 14)
     assert chart["aspect_orbs"].dtype == np.float32
 
 
@@ -281,7 +281,7 @@ def test_aspect_matrix_vectorised_consistent_with_per_element_loop() -> None:
     # 2050-01-01.5; otherwise calculate_houses raises HighLatitudeError.
     chart_batch = compute_chart(jds, lats, lons, polar_fallback="porphyry")
     assert chart_batch.shape == (5,)
-    assert chart_batch["aspect_matrix"].shape == (5, 13, 13)
+    assert chart_batch["aspect_matrix"].shape == (5, 14, 14)
 
     for i in range(5):
         chart_scalar = compute_chart(
@@ -341,7 +341,7 @@ def test_aspect_matrix_hand_validated_chart_1900_NewYork() -> None:
     chart = compute_chart(2415020.5, 40.7128, -74.0060, aspects="classical")
     m = chart["aspect_matrix"]
     # Diagonal sanity:
-    for i in range(13):
+    for i in range(14):
         assert int(m[i, i]) == -1
     # Mercury-Rahu (body 2 / body 10) Conjunction sanity (orb ~0.04 deg):
     assert int(m[2, 10]) == _I_CONJUNCTION, (
@@ -365,7 +365,7 @@ def test_aspect_matrix_hand_validated_chart_Sagan_NYC_1934() -> None:
 
     m = chart["aspect_matrix"]
     populated_pairs = sum(
-        1 for i, j in itertools.combinations(range(13), 2) if int(m[i, j]) >= 0
+        1 for i, j in itertools.combinations(range(14), 2) if int(m[i, j]) >= 0
     )
 
     # Sagan chart is rich — at least 10 classical aspects expected

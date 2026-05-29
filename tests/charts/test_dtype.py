@@ -57,12 +57,12 @@ def test_dtype_has_expected_field_names() -> None:
 @pytest.mark.parametrize(
     ("name", "expected_shape"),
     [
-        ("body_lons",     (13,)),
-        ("body_lats",     (13,)),
-        ("body_speeds",   (13,)),
+        ("body_lons",     (14,)),
+        ("body_lats",     (14,)),
+        ("body_speeds",   (14,)),
         ("cusps",         (12,)),
-        ("aspect_matrix", (13, 13)),
-        ("aspect_orbs",   (13, 13)),
+        ("aspect_matrix", (14, 14)),
+        ("aspect_orbs",   (14, 14)),
     ],
 )
 def test_dtype_subarray_shapes(name: str, expected_shape: tuple) -> None:
@@ -117,12 +117,12 @@ def test_dtype_supports_vectorized_construction() -> None:
     """Outer shape (N,) yields the expected per-field broadcast shapes."""
     arr = np.zeros(5, dtype=CHART_DTYPE)
     assert arr.shape == (5,)
-    assert arr["body_lons"].shape == (5, 13)
-    assert arr["body_lats"].shape == (5, 13)
-    assert arr["body_speeds"].shape == (5, 13)
+    assert arr["body_lons"].shape == (5, 14)
+    assert arr["body_lats"].shape == (5, 14)
+    assert arr["body_speeds"].shape == (5, 14)
     assert arr["cusps"].shape == (5, 12)
-    assert arr["aspect_matrix"].shape == (5, 13, 13)
-    assert arr["aspect_orbs"].shape == (5, 13, 13)
+    assert arr["aspect_matrix"].shape == (5, 14, 14)
+    assert arr["aspect_orbs"].shape == (5, 14, 14)
     # Round-trip a scalar assignment for sanity.
     arr["asc"][2] = 123.456
     assert arr["asc"][2] == pytest.approx(123.456)
@@ -131,12 +131,12 @@ def test_dtype_supports_vectorized_construction() -> None:
 def test_dtype_scalar_zero_dim_construction() -> None:
     """0-d CHART_DTYPE element exposes its subarrays at native shape."""
     elem = np.zeros((), dtype=CHART_DTYPE)
-    assert elem["body_lons"].shape == (13,)
-    assert elem["body_lats"].shape == (13,)
-    assert elem["body_speeds"].shape == (13,)
+    assert elem["body_lons"].shape == (14,)
+    assert elem["body_lats"].shape == (14,)
+    assert elem["body_speeds"].shape == (14,)
     assert elem["cusps"].shape == (12,)
-    assert elem["aspect_matrix"].shape == (13, 13)
-    assert elem["aspect_orbs"].shape == (13, 13)
+    assert elem["aspect_matrix"].shape == (14, 14)
+    assert elem["aspect_orbs"].shape == (14, 14)
 
 
 def test_dtype_string_field_capacity() -> None:
@@ -159,7 +159,7 @@ def test_dtype_string_field_capacity() -> None:
 def test_dtype_aspect_matrix_accepts_negative_one_sentinel() -> None:
     """D-06 ratchet: aspect_matrix is i1 and round-trips ``-1`` (no aspect)."""
     arr = np.zeros(3, dtype=CHART_DTYPE)
-    sentinel = np.full((3, 13, 13), -1, dtype=np.int8)
+    sentinel = np.full((3, 14, 14), -1, dtype=np.int8)
     arr["aspect_matrix"] = sentinel
     assert (arr["aspect_matrix"] == -1).all(), (
         "aspect_matrix sentinel -1 round-trip failed"
@@ -172,7 +172,7 @@ def test_dtype_aspect_matrix_accepts_negative_one_sentinel() -> None:
 def test_dtype_aspect_orbs_accepts_nan_sentinel() -> None:
     """D-06 ratchet: aspect_orbs is f4 and round-trips ``NaN`` (no orb)."""
     arr = np.zeros(3, dtype=CHART_DTYPE)
-    sentinel = np.full((3, 13, 13), np.nan, dtype=np.float32)
+    sentinel = np.full((3, 14, 14), np.nan, dtype=np.float32)
     arr["aspect_orbs"] = sentinel
     assert np.isnan(arr["aspect_orbs"]).all(), (
         "aspect_orbs sentinel NaN round-trip failed"
@@ -215,22 +215,20 @@ def test_dtype_no_dataclass_chart_in_core() -> None:
     )
 
 
-def test_body_count_frozen_at_thirteen() -> None:
-    """D-08 ratchet: ``ketu.charts.api._BODY_COUNT`` is frozen at 13.
+def test_body_count_frozen_at_fourteen() -> None:
+    """D-08 ratchet: ``ketu.charts.api._BODY_COUNT`` is 14 (v1.3 Chiron ratchet).
 
-    Pinned by the Kala positional contract — adding bodies (e.g. Chiron in
-    v1.3) is a BREAKING change that must be reviewed deliberately. Even
-    though ``_BODY_COUNT = len(ketu.core.bodies)`` is now derived rather
-    than a magic literal (IN-03 fix), this ratchet makes the freeze
-    explicit: any future change to ``ketu.core.bodies`` will go red here
-    until the human reviewer confirms the v1.3 BREAKING migration is
-    intended and updates every CHART_DTYPE subarray shape to match.
+    Lifted from 13 to 14 by the v1.3 D-08 breaking change. Chiron (body 13)
+    was added; CHART_DTYPE subarrays updated to (14,) / (14, 14) atomically.
+    Any future addition to ``ketu.core.bodies`` will go red here until the
+    reviewer confirms the new BREAKING migration and updates every CHART_DTYPE
+    subarray shape to match.
     """
     from ketu.charts.api import _BODY_COUNT
-    assert _BODY_COUNT == 13, (
-        f"D-08 freeze broken: _BODY_COUNT drifted to {_BODY_COUNT}. "
-        "Adding bodies is a v1.3 BREAKING change; update CHART_DTYPE "
-        "subarray shapes (body_lons / body_lats / body_speeds / "
+    assert _BODY_COUNT == 14, (
+        f"D-08 ratchet: _BODY_COUNT drifted to {_BODY_COUNT} (expected 14). "
+        "Adding bodies beyond Chiron is a future BREAKING change; update "
+        "CHART_DTYPE subarray shapes (body_lons / body_lats / body_speeds / "
         "aspect_matrix / aspect_orbs) before lifting this ratchet."
     )
 

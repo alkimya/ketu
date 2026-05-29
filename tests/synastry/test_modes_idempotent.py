@@ -3,8 +3,8 @@
 Pins ``calculate_synastry(a, b, mode='dense')[mask] == calculate_synastry(a, b, mode='filtered')``
 modulo row order across multiple chart pairs (parametrised). Also pins
 the self-synastry diagonal-conjunction sanity (a chart synastry'd with
-itself shows all 15 self-pair conjunctions at exact orb), including the
-zero-orb-body edge case for Rahu / Ketu / Lilith.
+itself shows all 16 self-pair conjunctions at exact orb), including the
+zero-orb-body edge case for Rahu / Ketu / Lilith / Chiron.
 
 Fixtures live in :mod:`tests.synastry.conftest` (auto-discovered).
 """
@@ -107,9 +107,9 @@ def test_dense_filtered_no_hidden_state(
 def test_self_synastry_dense_diagonal_is_conjunction(
     chart_a_paris: np.ndarray,
 ) -> None:
-    """``calculate_synastry(a, a, mode='dense')`` shows all 15 self-pair conjunctions at exact orb.
+    """``calculate_synastry(a, a, mode='dense')`` shows all 16 self-pair conjunctions at exact orb.
 
-    Rahu / Ketu / Lilith have zero natal orbs (in
+    Rahu / Ketu / Lilith / Chiron have zero natal orbs (in
     :data:`ketu.core.bodies`), so the synastry orb tolerance for these
     self-pairs is ``0``. The conjunction is detected because the
     in-orb test uses ``dist <= orbs_pair`` (non-strict), and self-synastry
@@ -121,7 +121,7 @@ def test_self_synastry_dense_diagonal_is_conjunction(
         chart_a_paris, chart_a_paris, mode="dense",
     )
     diag = self_syn[self_syn["body_a"] == self_syn["body_b"]]
-    assert len(diag) == 15, "must have 15 self-pair rows (one per body in axis)"
+    assert len(diag) == 16, "must have 16 self-pair rows (one per body in axis)"
     # Every diagonal row is a conjunction (aspect_type == 0).
     assert (diag["aspect_type"] == 0).all(), (
         f"diagonal must be conjunctions, got {diag['aspect_type'].tolist()}"
@@ -136,17 +136,17 @@ def test_self_synastry_dense_diagonal_is_conjunction(
     CHART_PAIRS,
     ids=[case[0] for case in CHART_PAIRS],
 )
-def test_dense_count_always_225(
+def test_dense_count_always_256(
     label: str,
     fixture_a: str,
     fixture_b: str,
     request: pytest.FixtureRequest,
 ) -> None:
-    """``mode='dense'`` always returns exactly 225 rows for any chart pair."""
+    """``mode='dense'`` always returns exactly 256 rows for any chart pair."""
     a = request.getfixturevalue(fixture_a)
     b = request.getfixturevalue(fixture_b)
     dense = calculate_synastry(a, b, mode="dense")
-    assert len(dense) == 225
+    assert len(dense) == 256
 
 
 @pytest.mark.parametrize(
@@ -154,14 +154,14 @@ def test_dense_count_always_225(
     CHART_PAIRS,
     ids=[case[0] for case in CHART_PAIRS],
 )
-def test_filtered_count_le_225(
+def test_filtered_count_le_256(
     label: str,
     fixture_a: str,
     fixture_b: str,
     request: pytest.FixtureRequest,
 ) -> None:
-    """``mode='filtered'`` returns at most 225 rows for any chart pair."""
+    """``mode='filtered'`` returns at most 256 rows for any chart pair."""
     a = request.getfixturevalue(fixture_a)
     b = request.getfixturevalue(fixture_b)
     filtered = calculate_synastry(a, b, mode="filtered")
-    assert len(filtered) <= 225
+    assert len(filtered) <= 256

@@ -61,10 +61,10 @@ def test_compute_chart_returns_chart_dtype() -> None:
     chart = compute_chart(2451545.0, 48.86, 2.35)
     assert chart.dtype == CHART_DTYPE
     assert chart.shape == ()
-    assert chart["body_lons"].shape == (13,)
+    assert chart["body_lons"].shape == (14,)
     assert chart["cusps"].shape == (12,)
-    assert chart["aspect_matrix"].shape == (13, 13)
-    assert chart["aspect_orbs"].shape == (13, 13)
+    assert chart["aspect_matrix"].shape == (14, 14)
+    assert chart["aspect_orbs"].shape == (14, 14)
 
 
 def test_compute_chart_meta_fields_populated() -> None:
@@ -135,7 +135,7 @@ def test_compute_chart_body_lons_match_underlying_primitive() -> None:
     chart = compute_chart(jd, lat, lon)
 
     jd_arr = np.array([jd], dtype=np.float64)
-    for body_id in range(13):
+    for body_id in range(14):
         batch = calc_planet_position_batch(jd_arr, body_id)
         # batch shape (1, 6); columns [lon, lat, dist, lon_speed, lat_speed, dist_speed]
         assert abs(
@@ -181,7 +181,7 @@ def test_compute_chart_aspect_matrix_diagonal_is_sentinel() -> None:
     ``-1`` and the diagonal of ``aspect_orbs`` must stay at ``NaN``.
     """
     chart = compute_chart(2451545.0, 48.8566, 2.3522)
-    for i in range(13):
+    for i in range(14):
         assert int(chart["aspect_matrix"][i, i]) == -1, (
             f"aspect_matrix[{i}, {i}] expected -1 (sentinel); "
             f"got {int(chart['aspect_matrix'][i, i])}"

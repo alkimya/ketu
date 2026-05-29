@@ -107,7 +107,7 @@ class TestData:
 
     def test_bodies_structure(self):
         """Test bodies array structure and content"""
-        assert len(bodies) == 13
+        assert len(bodies) == 14
         assert bodies["id"][0] == 0  # Sun
         assert bodies["id"][1] == 1  # Moon
         assert bodies["name"][0] == b"Sun"

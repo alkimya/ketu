@@ -1,7 +1,8 @@
-"""Composite output dtype contract — no schema regression, frozen 13-body axis.
+"""Composite output dtype contract — no schema regression, 14-body axis.
 
-Pitfall 8 ratchet (the body axis is FROZEN at 13, Sun first, NOT
-alphabetical) is pinned by index-0 / index-1 spot checks against
+v1.3 ratchet: axis extended to 14 (Chiron added as body 13).
+Pitfall 8 ratchet (the body axis is NOT alphabetical — Sun first) is
+pinned by index-0 / index-1 spot checks against
 :func:`ketu.composite.circular_midpoint` applied to the natal
 ``body_lons`` at the same indices.
 """
@@ -26,12 +27,12 @@ class TestOutputDtype:
         result = calculate_composite(chart_a_paris, chart_b_nyc)
         assert result.shape == ()
 
-    def test_body_axis_shape_frozen_13(self, chart_a_paris, chart_b_nyc):
-        """All three body sub-arrays carry the frozen ``(13,)`` axis."""
+    def test_body_axis_shape_frozen_14(self, chart_a_paris, chart_b_nyc):
+        """All three body sub-arrays carry the v1.3 ``(14,)`` axis."""
         result = calculate_composite(chart_a_paris, chart_b_nyc)
-        assert result["body_lons"].shape == (13,)
-        assert result["body_lats"].shape == (13,)
-        assert result["body_speeds"].shape == (13,)
+        assert result["body_lons"].shape == (14,)
+        assert result["body_lats"].shape == (14,)
+        assert result["body_speeds"].shape == (14,)
 
     def test_cusps_shape_12(self, chart_a_paris, chart_b_nyc):
         """Cusps sub-array has shape ``(12,)``."""
@@ -39,10 +40,10 @@ class TestOutputDtype:
         assert result["cusps"].shape == (12,)
 
     def test_aspect_matrix_shape(self, chart_a_paris, chart_b_nyc):
-        """Aspect matrix and orbs both have shape ``(13, 13)``."""
+        """Aspect matrix and orbs both have shape ``(14, 14)``."""
         result = calculate_composite(chart_a_paris, chart_b_nyc)
-        assert result["aspect_matrix"].shape == (13, 13)
-        assert result["aspect_orbs"].shape == (13, 13)
+        assert result["aspect_matrix"].shape == (14, 14)
+        assert result["aspect_orbs"].shape == (14, 14)
 
 
 class TestBodyAxisOrderingPitfall8:

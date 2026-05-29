@@ -148,8 +148,8 @@ class TestNatalPositions(unittest.TestCase):
         """Test getting all natal positions."""
         natal = get_natal_positions("1990-05-15 14:30")
 
-        # Should have 13 bodies (Sun through Lilith)
-        self.assertEqual(len(natal), 13)
+        # Should have 14 bodies (Sun through Chiron)
+        self.assertEqual(len(natal), 14)
 
         # Check structure
         for body_name, pos in natal.items():
@@ -175,7 +175,7 @@ class TestNatalPositions(unittest.TestCase):
         dt = datetime(1990, 5, 15, 14, 30)
         natal = get_natal_positions(dt)
 
-        self.assertEqual(len(natal), 13)
+        self.assertEqual(len(natal), 14)
 
     def test_sun_position(self):
         """Test Sun position on known date."""

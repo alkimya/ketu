@@ -55,12 +55,12 @@ def test_calculate_synastry_filtered_default_mode(
 # B. Mode dispatch
 # ---------------------------------------------------------------------------
 
-def test_dense_mode_shape_is_225(
+def test_dense_mode_shape_is_256(
     chart_a_paris: np.ndarray, chart_b_nyc: np.ndarray,
 ) -> None:
-    """Dense mode always returns exactly 225 rows (15 x 15 ordered pairs)."""
+    """Dense mode always returns exactly 256 rows (16 x 16 ordered pairs)."""
     dense = calculate_synastry(chart_a_paris, chart_b_nyc, mode="dense")
-    assert dense.shape == (225,)
+    assert dense.shape == (256,)
 
 
 def test_filtered_mode_returns_only_aspected_rows(
@@ -134,11 +134,11 @@ def test_dense_distinguishes_ordered_pairs(
 def test_dense_includes_asc_mc_contacts(
     chart_a_paris: np.ndarray, chart_b_nyc: np.ndarray,
 ) -> None:
-    """Dense output covers ASC_A (body_a=13) and MC_A (body_a=14) rows; total = 225."""
+    """Dense output covers ASC_A (body_a=14) and MC_A (body_a=15) rows; total = 256."""
     dense = calculate_synastry(chart_a_paris, chart_b_nyc, mode="dense")
-    assert dense.shape == (225,)
-    assert (dense["body_a"] == 13).sum() == 15  # ASC_A x 15 chart-B bodies
-    assert (dense["body_a"] == 14).sum() == 15  # MC_A  x 15 chart-B bodies
+    assert dense.shape == (256,)
+    assert (dense["body_a"] == 14).sum() == 16  # ASC_A x 16 chart-B bodies
+    assert (dense["body_a"] == 15).sum() == 16  # MC_A  x 16 chart-B bodies
 
 
 # ---------------------------------------------------------------------------
@@ -219,22 +219,22 @@ def test_chart_lons_propagate_correctly(
     assert np.all(sun_rows["lon_a"] == expected_sun_lon)
 
 
-def test_chart_asc_propagates_to_body_13(
+def test_chart_asc_propagates_to_body_14(
     chart_a_paris: np.ndarray, chart_b_nyc: np.ndarray,
 ) -> None:
-    """``lon_a`` for rows where ``body_a == 13`` equals ``chart_a['asc']``."""
+    """``lon_a`` for rows where ``body_a == 14`` equals ``chart_a['asc']``."""
     dense = calculate_synastry(chart_a_paris, chart_b_nyc, mode="dense")
-    asc_rows = dense[dense["body_a"] == 13]
+    asc_rows = dense[dense["body_a"] == 14]
     expected_asc = float(chart_a_paris["asc"])
     assert np.all(asc_rows["lon_a"] == expected_asc)
 
 
-def test_chart_mc_propagates_to_body_14(
+def test_chart_mc_propagates_to_body_15(
     chart_a_paris: np.ndarray, chart_b_nyc: np.ndarray,
 ) -> None:
-    """``lon_a`` for rows where ``body_a == 14`` equals ``chart_a['mc']``."""
+    """``lon_a`` for rows where ``body_a == 15`` equals ``chart_a['mc']``."""
     dense = calculate_synastry(chart_a_paris, chart_b_nyc, mode="dense")
-    mc_rows = dense[dense["body_a"] == 14]
+    mc_rows = dense[dense["body_a"] == 15]
     expected_mc = float(chart_a_paris["mc"])
     assert np.all(mc_rows["lon_a"] == expected_mc)
 
@@ -380,6 +380,6 @@ def test_calculate_synastry_with_polar_chart(
     result = calculate_synastry(chart_a_paris, chart_b_reykjavik)
     assert result.size > 0
     dense = calculate_synastry(chart_a_paris, chart_b_reykjavik, mode="dense")
-    # ASC/MC longitudes (body_b in {13, 14}) must be finite.
-    polar_angle_rows = dense[(dense["body_b"] == 13) | (dense["body_b"] == 14)]
+    # ASC/MC longitudes (body_b in {14, 15}) must be finite.
+    polar_angle_rows = dense[(dense["body_b"] == 14) | (dense["body_b"] == 15)]
     assert np.isfinite(polar_angle_rows["lon_b"]).all()
