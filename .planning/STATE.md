@@ -9,8 +9,8 @@ progress:
   total_phases: 6
   completed_phases: 0
   total_plans: 8
-  completed_plans: 1
-  percent: 12
+  completed_plans: 3
+  percent: 37
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 ## Current Position
 
 Phase: 21 of 26 (Quality) — in progress
-Plan: 21-01 COMPLETE → 21-02 next
-Status: Plan 21-01 complete (2026-05-29). Coverage lifted 97.90% → 99%; _ecliptic.py and houses/api.py at 100%; 4 unreachable defensive branches documented for 21-04 exclude_lines.
-Last activity: 2026-05-29 — 21-01 coverage gap tests delivered (62 tests, commit 94bc3d9)
+Plan: 21-03 COMPLETE → 21-04 next
+Status: Plan 21-03 complete (2026-05-29). QAL-12 delivered: 52 doctests pass via --doctest-modules, +SKIP removed from public API, Notes added (accuracy vs Swiss, date range, edge cases), make doctest + CI 3.13 gate wired.
+Last activity: 2026-05-29 — 21-03 docstring quality plan executed (commits e8e5e28/f78845e/1864328)
 
-Progress: [█·········] 12% — 0/6 phases completed, 1/8 plans
+Progress: [███·······] 37% — 0/6 phases completed, 3/8 plans
 
 ## v1.3 Roadmap Structure
 
@@ -69,6 +69,9 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - (21-01) 4 unreachable defensive branches (orbital.py:227, time.py:369, planets.py:362+448) proven dead code after Python modulo — deferred to 21-04 exclude_lines alongside display.py:28.
 - (21-01) body_name aliases "true Node"/"mean Apogee" covered via patch.object since get_planet_name now returns "Ketu"/"Lilith" directly.
 - (21-01) test_no_compute_chart_call_smoke ratchet updated to exclude doctest lines (>>>) — allows Examples section to reference compute_chart without triggering the anti-Davison guard.
+- (21-03) --doctest-modules NOT added to addopts — separate make doctest invocation preserves partial test runs; doctest_optionflags ELLIPSIS + NORMALIZE_WHITESPACE added to pyproject.toml.
+- (21-03) ketu/__init__.py doctest uses from ketu.core import aspects to avoid ketu.aspects module clobbering the array in cross-file --doctest-modules namespace.
+- (21-03) Duplicate Notes sections (previous agent introduced second block) must be merged; numpydoc raises ValueError when Notes appears twice.
 
 ### Pending Todos
 
@@ -80,6 +83,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — plan 21-01 coverage gaps tests executed.
-Stopped at: Completed 21-01-PLAN.md — 62 tests, commit 94bc3d9. SUMMARY at .planning/phases/21-quality/21-01-SUMMARY.md.
-Resume file: None — next action execute plan 21-02 (orbital.py div/0 guards).
+Last session: 2026-05-29 — plan 21-03 docstring quality executed.
+Stopped at: Completed 21-03-PLAN.md — 52 doctests, commits e8e5e28/f78845e/1864328. SUMMARY at .planning/phases/21-quality/21-03-SUMMARY.md.
+Resume file: None — next action execute plan 21-04 (coverage exclude_lines for unreachable defensive branches + --cov-fail-under flip).
