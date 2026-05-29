@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T20:10:00Z"
+last_updated: "2026-05-29T20:31:40Z"
 last_activity: 2026-05-29
 progress:
   total_phases: 6
   completed_phases: 3
-  total_plans: 11
-  completed_plans: 11
-  percent: 93
+  total_plans: 12
+  completed_plans: 12
+  percent: 95
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 ## Current Position
 
 Phase: 24 of 26 (Chiron) — in progress
-Plan: 24-02 COMPLETE (ketu/ephemeris/chiron.py evaluator + unit tests) → 24-03 next
-Status: Phase 24 plan 02 done (2026-05-29). `ketu/ephemeris/chiron.py` (`_load_chiron_data`, `_eval_chiron_qty`, `_chiron_scalar`, `_chiron_vec`) + `tests/ephemeris/test_chiron_unit.py` committed. 1358 tests, 100% coverage, chiron.py 100% covered.
-Last activity: 2026-05-29 — Phase 24 plan 02 executed (commits 3e68b99, 7ce12c7)
+Plan: 24-03 COMPLETE (D-08 breaking change: bodies axis 13→14) → 24-04 next
+Status: Phase 24 plan 03 done (2026-05-29). Chiron wired at all 6 insertion points; CHART_DTYPE/composite/cache/synastry/transits updated; ketu.data packaged; 1361 tests, 100% coverage.
+Last activity: 2026-05-29 — Phase 24 plan 03 executed (commits 74db466, 24fdad3, 66f13c8)
 
-Progress: [████████████] 85% — 3/6 phases completed, 11/12 plans
+Progress: [█████████████] 95% — 3/6 phases completed, 12/13 plans
 
 ## v1.3 Roadmap Structure
 
@@ -53,7 +53,7 @@ Progress: [████████████] 85% — 3/6 phases completed, 1
 - v1.1: 27 plans / 5 phases (~3h active)
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 
-v1.3: 11 plans / 3 phases completed + Phase 24 in progress (Phase 21 done, Phase 22 done, Phase 23 done, Phase 24 plans 01-02 done 2026-05-29 — gen+.npz+evaluator delivered).
+v1.3: 12 plans / 3 phases completed + Phase 24 in progress (Phase 21 done, Phase 22 done, Phase 23 done, Phase 24 plans 01-03 done 2026-05-29 — gen+.npz+evaluator+D-08 breaking change delivered).
 
 *Updated after each plan completion.*
 
@@ -94,6 +94,7 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - [Phase 23-02]: GO verdict recorded — 23-DECISION.md written; Phase 24 params locked (seg=32j, deg=10, 3 quantities); .npz layout + seas_18.se1 requirement + insertion points documented; 1351-test suite + 100% coverage gate untouched
   - [Phase 24-01]: Generator tools/gen_chiron_coeffs.py (659 LOC) + ketu/data/chiron_coeffs.npz committed; validation gate passed max|Δλ|=0.000861° (11.6× under 0.01°); 7 reference longitudes pinned for 24-04; retflag=260 (Moshier) confirmed acceptable; swisseph never at module level (AGPL isolation)
   - [Phase 24-02]: aberration applied inside `_chiron_vec` (matches `_make_planet_vec` convention) — batch and scalar paths agree; `dlon < -180` branch tested via `patch.object` mock (no natural 1950-2050 JD triggers it at Chiron speed); `inspect.getsource` + import-line filter for AGPL ratchet test (avoids docstring false positives)
+  - [Phase 24-03]: D-08 breaking change executed — bodies axis 13→14; Chiron at id=13 in BODY_INDICES/SWE_IDS/BODY_STRATEGIES/avg_speeds/core.bodies; CHART_DTYPE (14,)/(14,14); SYNASTRY_BODY_COUNT 15→16 (ASC=14, MC=15); ketu.data packaged; 1361 tests, 100% coverage
 
 ### Pending Todos
 
@@ -105,6 +106,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — Phase 24 plan 02 executed; ketu/ephemeris/chiron.py evaluator + unit tests committed.
-Stopped at: 24-02 complete. `_chiron_scalar` + `_chiron_vec` strategy functions delivered. 1358 tests, 100% coverage. Next: Phase 24 plan 03 (wire Chiron into BODY_STRATEGIES + all insertion points).
-Resume file: None — 24-02 complete, next: run `/gsd:execute-phase` for Phase 24 plan 03.
+Last session: 2026-05-29 — Phase 24 plan 03 executed; D-08 breaking change (bodies axis 13→14) delivered atomically.
+Stopped at: 24-03 complete. Chiron body_id=13 wired everywhere; 1361 tests, 100% coverage. Next: Phase 24 plan 04 (accuracy regression test Chiron vs pyswisseph oracle).
+Resume file: None — 24-03 complete, next: run `/gsd:execute-phase` for Phase 24 plan 04.
