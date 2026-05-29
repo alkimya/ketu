@@ -41,7 +41,7 @@ jobs:
     - name: Check coverage threshold
       if: matrix.python-version == '3.13'
       run: |
-        pytest tests/ --cov=ketu --cov-fail-under=70 -q
+        pytest tests/ --cov=ketu --cov-fail-under=100 -q
 
     - name: Doc coverage gate (interrogate ≥95%)
       if: matrix.python-version == '3.13'
