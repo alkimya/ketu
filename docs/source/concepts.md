@@ -69,7 +69,12 @@ Ketu calculates the positions of 14 celestial bodies (body IDs 0–13):
 
 ### Harmonic Theory
 
-Aspects lean on the geometry of the zodiac circle: we often slice it into twelve 30° segments, but when comparing two planets we bring the angle back to the **half-circle** (180°) to keep the shortest distance. The **harmonics** are simply the integer fractions of those 180° by 30º, and they act as landmarks for the main kinds of planetary encounters.
+Aspects lean on the geometry of the zodiac circle. A **harmonic** divides a base angle into *n* equal parts, and the resulting fractions act as landmarks for the main kinds of planetary encounters. Ketu uses two base angles:
+
+- **Half-circle harmonics** divide 180° (the angle between conjunction and opposition, i.e. the shortest separation): harmonics **1, 2, 3, 6**. These yield the classical Ptolemaic aspects plus the semi-sextile and quincunx.
+- **Full-circle harmonics** divide the whole 360° zodiac: harmonics **5, 9, 10**. These yield the minor "harmonic" aspects (quintiles, noviles, deciles).
+
+This is why the **Division** column below switches between `180°/n` and `360°/n` depending on the harmonic.
 
 #### Harmonic 1 (180°/1 = 180°)
 
