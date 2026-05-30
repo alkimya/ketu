@@ -150,7 +150,7 @@ v1.2 turned Ketu into a full relational and predictive astrology framework — s
 
 **Carried-forward note:**
 
-- Venv shebangs were hardcoded to `/home/loc/workspace/solaris/ketu/venv/bin/python3` after the project relocated to `ketu/`; `python -m` pattern remains the workaround. (Not a v1.2 scope item.)
+- Venv shebangs were hardcoded to `/home/loc/workspace/solaris/ketu/venv/bin/python3` after the project relocated to `ketu/`. **RESOLVED 2026-05-30**: all 59 `venv/bin/*` shebangs rewritten to the current `/home/loc/workspace/ketu/venv/bin/python3` (+ cosmetic `pyvenv.cfg` path); wrappers (`sphinx-build`, `sphinx-intl`, `pytest`, `mypy`, `pip`) now run directly. The `python -m` invocation is no longer required (still works, but optional).
 
 **Ephemeris-theory note (from Phase 18):** Ketu's bespoke TRUE Sun theory diverges from Swiss Ephemeris Moshier by up to ~56 arcsec on multi-decade back-projections, and the truncated-Meeus Moon theory by up to ~0.61° in longitude. The returns oracle uses self-consistency at 0.0001° as the PRIMARY gate; the pyswisseph cross-check is test-only with per-body tolerances reflecting these measured deltas. This is a known accuracy boundary, not a bug.
 
