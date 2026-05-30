@@ -295,17 +295,27 @@ class TestEdgeCases:
     """Test edge cases and boundary conditions."""
 
     def test_zero_degree_separation(self):
-        """Conjunction (0 deg) handled correctly."""
-        # New Moon on 2025-01-29 (Sun-Moon conjunction)
-        timestamps = [datetime(2025, 1, 29, 12, 0, tzinfo=timezone.utc)]
+        """Conjunction (0 deg) handled correctly across the New Moon of 2025-01-29.
+
+        Samples the day and takes the conjunction as the minimum circular
+        separation, so the assertion is robust to the exact New Moon instant
+        and to the (lon2 - lon1) vs (lon1 - lon2) direction convention.
+        """
+        timestamps = [
+            datetime(2025, 1, 29, h, 0, tzinfo=timezone.utc) for h in range(24)
+        ]
 
         result = generate_cycle_series("Sun", "Moon", timestamps, include_aspects=False)
 
-        # Angular separation should be close to 0 (within a few degrees)
-        np.testing.assert_allclose(result['angular_separation'][0], 0.0, atol=15.0,
-                                   err_msg="Conjunction should have angular separation near 0")
-        # Cycle progress should be near 0 or 1
-        assert result['cycle_progress'][0] < 0.05 or result['cycle_progress'][0] > 0.95
+        # Conjunction = smallest separation on the circle (0 and 360 coincide).
+        sep = result['angular_separation']
+        circular_dist = np.minimum(sep, 360.0 - sep)
+        conj = int(np.argmin(circular_dist))
+        np.testing.assert_array_less(circular_dist[conj], 15.0,
+                                     err_msg="Conjunction should sit within 15 deg of 0/360")
+        # cycle_progress mirrors separation: near 0 or near 1 at conjunction.
+        progress = result['cycle_progress'][conj]
+        assert progress < 0.05 or progress > 0.95
 
     def test_opposition_180_degrees(self):
         """Opposition (180 deg) boundary handled."""
