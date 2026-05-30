@@ -3,8 +3,12 @@
 
 # You can set these variables from the command line.
 SPHINXOPTS    ?=
-SPHINXBUILD   ?= sphinx-build
-SPHINXINTL    ?= sphinx-intl
+# Point at the project venv binaries by default so `make` works without
+# `source venv/bin/activate` (make's recipe shell does not always inherit
+# the activated PATH). Override on the CLI if your venv lives elsewhere.
+VENVBIN       ?= ../venv/bin
+SPHINXBUILD   ?= $(VENVBIN)/sphinx-build
+SPHINXINTL    ?= $(VENVBIN)/sphinx-intl
 SOURCEDIR     = source
 BUILDDIR      = build
 LOCALEDIR     = locale
