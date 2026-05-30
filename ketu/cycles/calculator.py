@@ -219,9 +219,14 @@ def generate_cycle_series(
         if cache is None:
             cache = get_default_cache()
 
-        # Convert timestamps to datetime if needed
+        # Convert timestamps to datetime if needed. The cache's vectorized
+        # lookup reads .year/.month/... attributes, which numpy.datetime64
+        # does not expose — so a datetime64 ndarray must be converted to
+        # python datetime here (matching the jds path above), not passed raw.
         if hasattr(timestamps, 'to_pydatetime'):
             dts = list(timestamps.to_pydatetime())
+        elif isinstance(timestamps, np.ndarray) and timestamps.dtype.kind == 'M':
+            dts = list(timestamps.astype('datetime64[us]').astype(datetime))
         else:
             dts = list(timestamps)
 
