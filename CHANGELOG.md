@@ -7,6 +7,30 @@ All notable changes to Ketu are documented here.
 This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+
+### Changed
+
+- **BREAKING (internal data convention).** `CYCLE_DTYPE.angular_separation`
+  (and therefore `cycle_progress` and `cycle_phase`) from
+  `generate_cycle_series` / `generate_multi_cycle_series` now follows the
+  documented body1 -> body2 direction: `(body2_lon - body1_lon) % 360`. It
+  previously returned the reversed `(body1_lon - body2_lon) % 360`. For a
+  Sun->Moon pair the lunar phase angle is now the standard 0deg new moon /
+  90deg first quarter / 180deg full moon / 270deg last quarter, and
+  `cycle_phase` (+1 waxing / -1 waning) is no longer inverted. Conjunction
+  (0deg) and opposition (180deg) are unchanged. This aligns the cycle module
+  with `ketu.complex.CycleRatio`, which already used the correct convention.
+  Downstream consumers that read `angular_separation` / `cycle_progress` /
+  `cycle_phase` (e.g. Kala) must adjust: values are now `360 - old` away from
+  the conjunction except at 0deg/180deg.
+
+### Fixed
+
+- `generate_cycle_series` now accepts a `numpy.datetime64` ndarray on the
+  cache path (`use_cache=True`); it previously raised `AttributeError` because
+  the cache lookup read `.year`/`.month` attributes datetime64 does not expose.
+
 ## [1.2.0] - 2026-05-28
 
 ### Added

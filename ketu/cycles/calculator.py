@@ -74,7 +74,10 @@ class CycleState:
     body2_lon : float
         Longitude of body 2 (0-360°).
     angular_separation : float
-        Angular distance (0-360°, in direction of cycle).
+        Angular distance in the direction of the cycle, body1 -> body2,
+        i.e. ``(body2_lon - body1_lon) % 360`` in [0, 360). For a Sun->Moon
+        pair this is the standard lunar phase angle: 0deg new moon, 90deg
+        first quarter, 180deg full moon, 270deg last quarter.
     cycle_progress : float
         Normalized progress through cycle (0.0-1.0).
     cycle_phase : int
@@ -260,8 +263,13 @@ def generate_cycle_series(
     # z_ratio = z_slower / z_faster = e^(i(θ₂ - θ₁))
     z_ratios = cycle_ratio_vectorized(result['body1_lon'], result['body2_lon'])
     
-    # 2. Extract angular separation (0-360) and Cycle Progress
-    separation = complex_to_degrees(z_ratios)
+    # 2. Extract angular separation (0-360) and Cycle Progress.
+    #    Separation is measured IN THE DIRECTION OF THE CYCLE, body1 -> body2,
+    #    i.e. (lon2 - lon1) % 360. cycle_ratio_vectorized returns z1/z2 =
+    #    exp(i*(lon1 - lon2)), so complex_to_degrees of it gives (lon1 - lon2);
+    #    negate to obtain (lon2 - lon1). For Sun->Moon this yields the standard
+    #    lunar phase angle: 0 new moon, 90 first quarter, 180 full, 270 last.
+    separation = (-complex_to_degrees(z_ratios)) % 360.0
     result['angular_separation'] = separation
     result['cycle_progress'] = separation / 360.0
     
