@@ -98,7 +98,7 @@ DEFAULT_PAIRS = [
 ## Environnement
 
 ```bash
-cd /home/loc/workspace/solaris/ketu
+cd /home/loc/workspace/ketu
 source venv/bin/activate
 ```
 
