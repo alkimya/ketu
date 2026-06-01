@@ -134,3 +134,4 @@ Resume file: None — 26.1-02 ready to execute.
 26.1-03 COMPLETE (2026-06-01): houses.po (72 entries) + relational_charts.po (88 entries) + index.po (11 entries filled → 112 total) translated to French, 3 .mo recompiled. Commit 57cedbd.
 
 - [Phase 26.1-07]: api.po 185 entries translated (188 traduits/0 non traduits); function signatures identity-copied; api.mo recompiled; commit 2ba6c94
+- [Phase 26.1-04 COMPLETE 2026-06-01]: arabic_parts.po (42 entries) + changelog.po (32 new, 117 total) + contributing.po (36 new, 77 total) translated to French; 3 .mo compiled. Commits 8d27609 + 1a71af7 + 285c8dd.
