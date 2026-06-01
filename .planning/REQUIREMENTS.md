@@ -38,7 +38,7 @@ Requirements for the v1.3 milestone. Each maps to exactly one roadmap phase. Ord
 - [ ] **DOC-11**: New Sphinx pages exist for the major new feature areas (relational charts, predictive charts/returns, Arabic Parts, Chiron) with runnable examples
 - [ ] **DOC-12**: The French translation is regenerated via the existing gettext infra (`docs/locale/`, `docs/Makefile`, `docs/migrate_translations.py`) — no manual duplication; `docs/` builds clean en + fr
 
-- [ ] **DOC-13**: All 17 `docs/locale/fr/LC_MESSAGES/*.po` catalogs have 100% translated `msgstr` (zero empty/English-fallback entries) covering every page; translation is regenerated and compiled through the existing gettext infra (`docs/Makefile`); `.mo` catalogs committed; Sphinx builds clean for BOTH en and fr (no new warnings vs the Phase 25/26 baseline of 1 warning each — `display_version` theme warning only).
+- [x] **DOC-13**: All 17 `docs/locale/fr/LC_MESSAGES/*.po` catalogs have 100% translated `msgstr` (zero empty/English-fallback entries) covering every page; translation is regenerated and compiled through the existing gettext infra (`docs/Makefile`); `.mo` catalogs committed; Sphinx builds clean for BOTH en and fr (no new warnings vs the Phase 25/26 baseline of 1 warning each — `display_version` theme warning only).
 
 ### Release
 
@@ -92,7 +92,7 @@ Which phase covers which requirement. Phases continue from v1.2 (ended at Phase 
 | DOC-10 | Phase 25 (Documentation) | Pending |
 | DOC-11 | Phase 25 (Documentation) | Pending |
 | DOC-12 | Phase 25 (Documentation) | Pending |
-| DOC-13 | Phase 26.1 (French Doc Translation) | Pending |
+| DOC-13 | Phase 26.1 (French Doc Translation) | Done |
 | REL-10 | Phase 26 (Release 1.3.0) | Pending |
 | REL-11 | Phase 26 (Release 1.3.0) | Pending |
 
