@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-31T00:00:00Z"
-last_activity: 2026-05-31
+last_updated: "2026-06-01T14:29:00Z"
+last_activity: 2026-06-01
 progress:
   total_phases: 7
   completed_phases: 5
@@ -24,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 26 of 27 (Aspects Data-Driven + Dynamic Harmonics) — PLANNED (3 plans, 3 waves) → next: execute, then Phase 27 (Release 1.3.0)
-Plan: 26-01/02/03 PLANNED (research HIGH-confidence; plan-checker PASSED after 1 revision iteration)
-Status: Phase 26 planned (2026-06-01). 3 sequential plans: 26-01 (enrich core.aspects with harmonic i4 + symbol U4 columns, append-only byte-stable), 26-02 (aspects_for_harmonics frozen-mask API + harmonic-derived TRADITIONAL/EXTENDED + flip library default 5→7 + pin CLI to classical + re-point chart-layer D-07 ratchet to traditional), 26-03 (CHANGELOG [1.3.0]/UPGRADING + concepts.md/api.md + fr gettext). 4 user decisions locked this session: CLI pinned to classical (lib→7, CLI stays 5/byte-stable); Sextile=H3/Trine=H3/Semi-sextile=H6/Quincunx=H6; minors blank; keep `coef` (no rename). No version bump (Phase 27 owns REL-10).
-Last activity: 2026-06-01 — Phase 26 planned via /gsd:plan-phase (research + 3 plans + plan-checker PASSED; blocker fixed: chart-layer ratchet re-pointed to traditional)
+Phase: 26 of 27 (Aspects Data-Driven + Dynamic Harmonics) — IN PROGRESS (1/3 plans done)
+Plan: 26-01 COMPLETE → next: 26-02 (aspects_for_harmonics frozen-mask API)
+Status: 26-01 complete (2026-06-01). core.aspects enriched with harmonic (i4) + symbol (U4) columns; 5-field dtype (name, angle, coef, harmonic, symbol); frozen harmonic vector [1,6,10,9,3,5,9,2,10,3,5,6,9,1]; V1 byte fingerprint unchanged; 1378 tests / 100% coverage. Remaining: 26-02 (aspects_for_harmonics frozen-mask API + harmonic-derived TRADITIONAL/EXTENDED + flip library default 5→7 + pin CLI to classical + re-point chart-layer D-07 ratchet to traditional), 26-03 (CHANGELOG [1.3.0]/UPGRADING + concepts.md/api.md + fr gettext).
+Last activity: 2026-06-01 — 26-01 executed: core.aspects 3→5 fields (harmonic+symbol append-only)
 
 Progress: [██████████░░░░] 71% — 5/7 phases completed, 17/17 plans
 
@@ -109,6 +109,7 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - [Phase 25-03]: New pages' .po catalogs left with English-fallback; substantive French translation deferred to future volunteer/phase
 - [Phase 25-03]: Markdown heading markers (#/##/###) in msgstr of performance.po and installation.po were pre-existing bug causing 18 new myst.header warnings; stripped (Rule 1 auto-fix); fr build = 1 warning (equal to en baseline)
 - [Phase 25-03]: DOC-12 SATISFIED: gettext pipeline regenerated, 17 .mo compiled, en+fr builds at 1 warning each; Phase 25 COMPLETE
+- [Phase 26-01]: core.aspects 5-field dtype (name, angle, coef, harmonic, symbol); frozen harmonic vector [1,6,10,9,3,5,9,2,10,3,5,6,9,1]; half-circle convention (Sextile=H3, Trine=H3, Semi-sextile=H6, Quincunx=H6); V1 fingerprint c5bd177... unchanged; V13 fingerprint 3258530... pinned; 7 major glyphs U+260C/U+26BA/U+26B9/U+25A1/U+25B3/U+26BB/U+260D; 7 minors blank; 1378 tests / 100% coverage
 
 ### Pending Todos
 
@@ -120,6 +121,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-06-01 — Phase 26 planned (/gsd:plan-phase 26): 26-RESEARCH.md (HIGH confidence, code-grounded), 3 PLAN.md, plan-checker PASSED after 1 revision (commits c72a8ee, 528ff8a + research/state docs). Engine found ~90% data-driven already (all 21 consumers read core.aspects by field name); harmonic mapping resolved via concepts.md dual-base convention.
-Stopped at: Phase 26 PLANNED — next: /gsd:execute-phase 26 (3 sequential waves), then Phase 27 (Release 1.3.0).
-Resume file: None — Phase 26 ready to execute.
+Last session: 2026-06-01 — Phase 26 plan 01 executed: core.aspects enriched with harmonic (i4) + symbol (U4) columns; 5-field dtype; frozen harmonic vector; dual fingerprint test (V1 unchanged + V13 new); 1378 tests pass, 100% coverage, 56 doctests green. Commits b1090f7 (feat) + db2db5c (test).
+Stopped at: 26-01 COMPLETE — next: /gsd:execute-phase 26 plan 02 (aspects_for_harmonics frozen-mask API).
+Resume file: None — 26-02 ready to execute.
