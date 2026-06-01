@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../source/relational_charts.md:1
 msgid "Relational Charts: Synastry and Composite"
-msgstr ""
+msgstr "Thèmes relationnels : Synastrie et Thème composite"
 
 #: ../../source/relational_charts.md:3
 msgid ""
@@ -30,10 +30,15 @@ msgid ""
 "`ketu.composite` derives a midpoint chart that represents the "
 "relationship itself."
 msgstr ""
+"Les thèmes relationnels analysent les thèmes de deux personnes ensemble "
+"plutôt que séparément. Ketu fournit trois modules à cet effet : "
+"`ketu.charts` construit les thèmes individuels, `ketu.synastry` les "
+"compare aspect par aspect, et `ketu.composite` dérive un thème composite "
+"basé sur les points médians représentant la relation elle-même."
 
 #: ../../source/relational_charts.md:5
 msgid "Building Charts with compute_chart"
-msgstr ""
+msgstr "Construction de thèmes avec compute_chart"
 
 #: ../../source/relational_charts.md:7
 msgid ""
@@ -42,324 +47,342 @@ msgid ""
 "and the full aspect matrix in a single call, returning a `CHART_DTYPE` "
 "structured array."
 msgstr ""
+"`compute_chart` est la fonction centrale pour le calcul du thème natal. "
+"Elle calcule les 14 positions de corps célestes, les douze cuspides de "
+"maisons, les quatre angles, et la matrice d'aspects complète en un seul "
+"appel, retournant un tableau structuré `CHART_DTYPE`."
 
 #: ../../source/relational_charts.md:13 ../../source/relational_charts.md:78
 msgid "**Parameters**"
-msgstr ""
+msgstr "**Paramètres :**"
 
 #: ../../source/relational_charts.md:15
 msgid "`jd` — Julian Day (float, UTC)"
-msgstr ""
+msgstr "`jd` — Jour Julien (float, UTC)"
 
 #: ../../source/relational_charts.md:16
 msgid "`lat` / `lon` — geographic latitude and longitude in degrees"
-msgstr ""
+msgstr "`lat` / `lon` — latitude et longitude géographiques en degrés"
 
 #: ../../source/relational_charts.md:17
 msgid "`system` — house system (default `\"placidus\"`)"
-msgstr ""
+msgstr "`system` — système de maisons (défaut `\"placidus\"`)"
 
 #: ../../source/relational_charts.md:18
 msgid "`aspects` — aspect set spec (`None` uses the default classical set)"
-msgstr ""
+msgstr "`aspects` — spécification de l'ensemble d'aspects (`None` utilise l'ensemble classique par défaut)"
 
 #: ../../source/relational_charts.md:19
 msgid ""
 "`polar_fallback` — high-latitude fallback behaviour (see [House "
 "Systems](houses.md))"
 msgstr ""
+"`polar_fallback` — comportement de fallback aux hautes latitudes (voir "
+"[Systèmes de maisons](houses.md))"
 
 #: ../../source/relational_charts.md:21
 msgid "**Example — two charts**"
-msgstr ""
+msgstr "**Exemple — deux thèmes**"
 
 #: ../../source/relational_charts.md:36
 msgid "CHART_DTYPE Fields"
-msgstr ""
+msgstr "Champs de CHART_DTYPE"
 
 #: ../../source/relational_charts.md
 msgid "Field"
-msgstr ""
+msgstr "Champ"
 
 #: ../../source/relational_charts.md
 msgid "Shape"
-msgstr ""
+msgstr "Forme"
 
 #: ../../source/relational_charts.md
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: ../../source/relational_charts.md
 msgid "`jd`"
-msgstr ""
+msgstr "`jd`"
 
 #: ../../source/relational_charts.md
 msgid "scalar"
-msgstr ""
+msgstr "scalaire"
 
 #: ../../source/relational_charts.md
 msgid "Julian Day"
-msgstr ""
+msgstr "Jour Julien"
 
 #: ../../source/relational_charts.md
 msgid "`lat`"
-msgstr ""
+msgstr "`lat`"
 
 #: ../../source/relational_charts.md
 msgid "Geographic latitude"
-msgstr ""
+msgstr "Latitude géographique"
 
 #: ../../source/relational_charts.md
 msgid "`lon`"
-msgstr ""
+msgstr "`lon`"
 
 #: ../../source/relational_charts.md
 msgid "Geographic longitude"
-msgstr ""
+msgstr "Longitude géographique"
 
 #: ../../source/relational_charts.md
 msgid "`system`"
-msgstr ""
+msgstr "`system`"
 
 #: ../../source/relational_charts.md
 msgid "House system name"
-msgstr ""
+msgstr "Nom du système de maisons"
 
 #: ../../source/relational_charts.md
 msgid "`body_lons`"
-msgstr ""
+msgstr "`body_lons`"
 
 #: ../../source/relational_charts.md
 msgid "[14]"
-msgstr ""
+msgstr "[14]"
 
 #: ../../source/relational_charts.md
 msgid "Ecliptic longitudes for bodies 0–13"
-msgstr ""
+msgstr "Longitudes écliptiques pour les corps 0–13"
 
 #: ../../source/relational_charts.md
 msgid "`body_lats`"
-msgstr ""
+msgstr "`body_lats`"
 
 #: ../../source/relational_charts.md
 msgid "Ecliptic latitudes for bodies 0–13"
-msgstr ""
+msgstr "Latitudes écliptiques pour les corps 0–13"
 
 #: ../../source/relational_charts.md
 msgid "`body_speeds`"
-msgstr ""
+msgstr "`body_speeds`"
 
 #: ../../source/relational_charts.md
 msgid "Daily motion in degrees for bodies 0–13"
-msgstr ""
+msgstr "Mouvement journalier en degrés pour les corps 0–13"
 
 #: ../../source/relational_charts.md
 msgid "`cusps`"
-msgstr ""
+msgstr "`cusps`"
 
 #: ../../source/relational_charts.md
 msgid "[12]"
-msgstr ""
+msgstr "[12]"
 
 #: ../../source/relational_charts.md
 msgid "House cusp longitudes"
-msgstr ""
+msgstr "Longitudes des cuspides de maisons"
 
 #: ../../source/relational_charts.md
 msgid "`asc`"
-msgstr ""
+msgstr "`asc`"
 
 #: ../../source/relational_charts.md
 msgid "Ascendant longitude"
-msgstr ""
+msgstr "Longitude de l'Ascendant"
 
 #: ../../source/relational_charts.md
 msgid "`mc`"
-msgstr ""
+msgstr "`mc`"
 
 #: ../../source/relational_charts.md
 msgid "Midheaven longitude"
-msgstr ""
+msgstr "Longitude du Milieu du ciel"
 
 #: ../../source/relational_charts.md
 msgid "`armc`"
-msgstr ""
+msgstr "`armc`"
 
 #: ../../source/relational_charts.md
 msgid "ARMC (sidereal time angle)"
-msgstr ""
+msgstr "ARMC (angle du temps sidéral)"
 
 #: ../../source/relational_charts.md
 msgid "`vertex`"
-msgstr ""
+msgstr "`vertex`"
 
 #: ../../source/relational_charts.md
 msgid "Vertex longitude"
-msgstr ""
+msgstr "Longitude du Vertex"
 
 #: ../../source/relational_charts.md
 msgid "`aspect_matrix`"
-msgstr ""
+msgstr "`aspect_matrix`"
 
 #: ../../source/relational_charts.md
 msgid "[14, 14]"
-msgstr ""
+msgstr "[14, 14]"
 
 #: ../../source/relational_charts.md
 msgid "Aspect type between each body pair (0 = none)"
-msgstr ""
+msgstr "Type d'aspect entre chaque paire de corps (0 = aucun)"
 
 #: ../../source/relational_charts.md
 msgid "`aspect_orbs`"
-msgstr ""
+msgstr "`aspect_orbs`"
 
 #: ../../source/relational_charts.md
 msgid "Orb in degrees for each active aspect"
-msgstr ""
+msgstr "Orbe en degrés pour chaque aspect actif"
 
 #: ../../source/relational_charts.md:55
 msgid "Body index 13 is Chiron (see [Chiron](chiron.md))."
-msgstr ""
+msgstr "L'indice de corps 13 correspond à Chiron (voir [Chiron](chiron.md))."
 
 #: ../../source/relational_charts.md:57
 msgid "Sect Helper"
-msgstr ""
+msgstr "Assistant de sect"
 
 #: ../../source/relational_charts.md:66
 msgid "This is used internally by Arabic Parts to select sect-aware formulas."
-msgstr ""
+msgstr "Ceci est utilisé en interne par les Parties arabes pour sélectionner les formules tenant compte de la sect."
 
 #: ../../source/relational_charts.md:68
 msgid "Synastry"
-msgstr ""
+msgstr "Synastrie"
 
 #: ../../source/relational_charts.md:70
 msgid ""
 "Synastry overlays two charts and finds aspects formed between the planets"
 " of one person and the planets of the other."
 msgstr ""
+"La synastrie superpose deux thèmes et trouve les aspects formés entre les "
+"planètes d'une personne et les planètes de l'autre."
 
 #: ../../source/relational_charts.md:80
 msgid ""
 "`chart_a`, `chart_b` — `CHART_DTYPE` structured arrays from "
 "`compute_chart`"
 msgstr ""
+"`chart_a`, `chart_b` — tableaux structurés `CHART_DTYPE` issus de "
+"`compute_chart`"
 
 #: ../../source/relational_charts.md:81
 msgid ""
 "`aspects` — aspect set: `\"classical\"` (default), `\"traditional\"`, "
 "`\"extended\"`, or a list/mask"
 msgstr ""
+"`aspects` — ensemble d'aspects : `\"classical\"` (défaut), `\"traditional\"`, "
+"`\"extended\"`, ou une liste/masque"
 
 #: ../../source/relational_charts.md:82
 msgid ""
 "`orbs` — orb set: `\"synastry\"` applies the standard synastry orb "
 "reduction factor"
 msgstr ""
+"`orbs` — ensemble d'orbes : `\"synastry\"` applique le facteur de réduction "
+"d'orbe standard pour la synastrie"
 
 #: ../../source/relational_charts.md:83
 msgid ""
 "`mode` — `\"filtered\"` returns only active aspects; `\"all\"` returns "
 "every body pair"
 msgstr ""
+"`mode` — `\"filtered\"` retourne uniquement les aspects actifs ; `\"all\"` "
+"retourne chaque paire de corps"
 
 #: ../../source/relational_charts.md:85
 msgid "**Example**"
-msgstr ""
+msgstr "**Exemple**"
 
 #: ../../source/relational_charts.md:109
 msgid "SYNASTRY_DTYPE Fields"
-msgstr ""
+msgstr "Champs de SYNASTRY_DTYPE"
 
 #: ../../source/relational_charts.md
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: ../../source/relational_charts.md
 msgid "`body_a`"
-msgstr ""
+msgstr "`body_a`"
 
 #: ../../source/relational_charts.md
 msgid "int"
-msgstr ""
+msgstr "int"
 
 #: ../../source/relational_charts.md
 msgid "Body index from chart A (0–15; 14=ASC, 15=MC)"
-msgstr ""
+msgstr "Indice de corps du thème A (0–15 ; 14=ASC, 15=MC)"
 
 #: ../../source/relational_charts.md
 msgid "`body_b`"
-msgstr ""
+msgstr "`body_b`"
 
 #: ../../source/relational_charts.md
 msgid "Body index from chart B (0–15)"
-msgstr ""
+msgstr "Indice de corps du thème B (0–15)"
 
 #: ../../source/relational_charts.md
 msgid "`lon_a`"
-msgstr ""
+msgstr "`lon_a`"
 
 #: ../../source/relational_charts.md
 msgid "float64"
-msgstr ""
+msgstr "float64"
 
 #: ../../source/relational_charts.md
 msgid "Ecliptic longitude of body A"
-msgstr ""
+msgstr "Longitude écliptique du corps A"
 
 #: ../../source/relational_charts.md
 msgid "`lon_b`"
-msgstr ""
+msgstr "`lon_b`"
 
 #: ../../source/relational_charts.md
 msgid "Ecliptic longitude of body B"
-msgstr ""
+msgstr "Longitude écliptique du corps B"
 
 #: ../../source/relational_charts.md
 msgid "`aspect_type`"
-msgstr ""
+msgstr "`aspect_type`"
 
 #: ../../source/relational_charts.md
 msgid "Aspect type code"
-msgstr ""
+msgstr "Code de type d'aspect"
 
 #: ../../source/relational_charts.md
 msgid "`orb`"
-msgstr ""
+msgstr "`orb`"
 
 #: ../../source/relational_charts.md
 msgid "Orb in degrees"
-msgstr ""
+msgstr "Orbe en degrés"
 
 #: ../../source/relational_charts.md
 msgid "`applying`"
-msgstr ""
+msgstr "`applying`"
 
 #: ../../source/relational_charts.md
 msgid "bool"
-msgstr ""
+msgstr "bool"
 
 #: ../../source/relational_charts.md
 msgid "True if the aspect is applying"
-msgstr ""
+msgstr "Vrai si l'aspect est appliquant"
 
 #: ../../source/relational_charts.md
 msgid "`orb_limit`"
-msgstr ""
+msgstr "`orb_limit`"
 
 #: ../../source/relational_charts.md
 msgid "Maximum allowed orb for this aspect"
-msgstr ""
+msgstr "Orbe maximum autorisé pour cet aspect"
 
 #: ../../source/relational_charts.md:122
 msgid ""
 "Synastry includes ASC and MC from both charts, giving up to 16 points per"
 " chart."
 msgstr ""
+"La synastrie inclut l'ASC et le MC des deux thèmes, donnant jusqu'à "
+"16 points par thème."
 
 #: ../../source/relational_charts.md:124
 msgid "Composite Charts"
-msgstr ""
+msgstr "Thèmes composites"
 
 #: ../../source/relational_charts.md:126
 msgid ""
@@ -367,38 +390,46 @@ msgid ""
 "planets, houses, and angles between two natal charts. It represents the "
 "energy of the relationship rather than either individual."
 msgstr ""
+"Un thème composite est construit à partir des points médians de chaque paire "
+"de planètes, maisons et angles entre deux thèmes nataux. Il représente "
+"l'énergie de la relation plutôt que celle de l'un ou l'autre individu."
 
 #: ../../source/relational_charts.md:134
 msgid ""
 "Returns a single `CHART_DTYPE` structured array. The house system is re-"
 "calculated from the composite Ascendant and Midheaven."
 msgstr ""
+"Retourne un seul tableau structuré `CHART_DTYPE`. Le système de maisons est "
+"recalculé à partir de l'Ascendant et du Milieu du ciel composites."
 
 #: ../../source/relational_charts.md:152
 msgid "circular_midpoint"
-msgstr ""
+msgstr "circular_midpoint"
 
 #: ../../source/relational_charts.md:154
 msgid ""
 "`circular_midpoint` computes the shortest-arc midpoint between two "
 "ecliptic longitudes, handling the 0°/360° wraparound correctly."
 msgstr ""
+"`circular_midpoint` calcule le point médian sur l'arc le plus court entre "
+"deux longitudes écliptiques, en gérant correctement le bouclage 0°/360°."
 
 #: ../../source/relational_charts.md:168
 msgid "Next Steps"
-msgstr ""
+msgstr "Étapes suivantes"
 
 #: ../../source/relational_charts.md:170
 msgid "[Predictive charts](predictive_charts.md) — solar and lunar return charts"
-msgstr ""
+msgstr "[Thèmes prévisionnels](predictive_charts.md) — thèmes de retour solaire et lunaire"
 
 #: ../../source/relational_charts.md:171
 msgid "[Arabic Parts](arabic_parts.md) — Fortune, Spirit, and custom lots"
-msgstr ""
+msgstr "[Parties arabes](arabic_parts.md) — Fortune, Esprit et lots personnalisés"
 
 #: ../../source/relational_charts.md:172
 msgid ""
 "[API reference](api.md) — full signatures for `ketu.charts`, "
 "`ketu.synastry`, `ketu.composite`"
 msgstr ""
-
+"[Référence API](api.md) — signatures complètes pour `ketu.charts`, "
+"`ketu.synastry`, `ketu.composite`"

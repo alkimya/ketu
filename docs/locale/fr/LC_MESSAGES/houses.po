@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../source/houses.md:1
 msgid "House Systems"
-msgstr ""
+msgstr "Systèmes de maisons"
 
 #: ../../source/houses.md:3
 msgid ""
@@ -31,102 +31,108 @@ msgid ""
 "different depending on which system you choose. Ketu ships six systems "
 "and lets you register additional ones."
 msgstr ""
+"Les systèmes de maisons divisent la sphère céleste en douze segments, "
+"appelés **maisons**, à partir de l'Ascendant (l'horizon est au moment "
+"de la naissance). Chaque système utilise une projection mathématique "
+"différente pour effectuer cette division, c'est pourquoi le même thème "
+"peut sembler très différent selon le système choisi. Ketu intègre six "
+"systèmes et permet d'en enregistrer d'autres."
 
 #: ../../source/houses.md:5
 msgid "Supported Systems"
-msgstr ""
+msgstr "Systèmes pris en charge"
 
 #: ../../source/houses.md:7
 msgid "The six built-in systems are exposed in the `SYSTEMS` dict:"
-msgstr ""
+msgstr "Les six systèmes intégrés sont exposés dans le dictionnaire `SYSTEMS` :"
 
 #: ../../source/houses.md
 msgid "Key"
-msgstr ""
+msgstr "Clé"
 
 #: ../../source/houses.md
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: ../../source/houses.md
 msgid "Description"
-msgstr ""
+msgstr "Description"
 
 #: ../../source/houses.md
 msgid "`placidus`"
-msgstr ""
+msgstr "`placidus`"
 
 #: ../../source/houses.md
 msgid "Placidus"
-msgstr ""
+msgstr "Placidus"
 
 #: ../../source/houses.md
 msgid "Time-based; most common in modern western practice"
-msgstr ""
+msgstr "Basé sur le temps ; le plus courant en astrologie occidentale moderne"
 
 #: ../../source/houses.md
 msgid "`koch`"
-msgstr ""
+msgstr "`koch`"
 
 #: ../../source/houses.md
 msgid "Koch"
-msgstr ""
+msgstr "Koch"
 
 #: ../../source/houses.md
 msgid "Birthplace system; similar to Placidus at mid-latitudes"
-msgstr ""
+msgstr "Système du lieu de naissance ; similaire à Placidus aux latitudes moyennes"
 
 #: ../../source/houses.md
 msgid "`porphyry`"
-msgstr ""
+msgstr "`porphyry`"
 
 #: ../../source/houses.md
 msgid "Porphyry"
-msgstr ""
+msgstr "Porphyre"
 
 #: ../../source/houses.md
 msgid "Divides quadrants into thirds; works at high latitudes"
-msgstr ""
+msgstr "Divise les quadrants en tiers ; fonctionne aux hautes latitudes"
 
 #: ../../source/houses.md
 msgid "`whole_sign`"
-msgstr ""
+msgstr "`whole_sign`"
 
 #: ../../source/houses.md
 msgid "Whole Sign"
-msgstr ""
+msgstr "Signes entiers"
 
 #: ../../source/houses.md
 msgid "Each house = one full sign; oldest recorded system"
-msgstr ""
+msgstr "Chaque maison = un signe complet ; le système le plus ancien répertorié"
 
 #: ../../source/houses.md
 msgid "`equal`"
-msgstr ""
+msgstr "`equal`"
 
 #: ../../source/houses.md
 msgid "Equal"
-msgstr ""
+msgstr "Maisons égales"
 
 #: ../../source/houses.md
 msgid "Houses of 30° each, starting from the Ascendant"
-msgstr ""
+msgstr "Maisons de 30° chacune, à partir de l'Ascendant"
 
 #: ../../source/houses.md
 msgid "`regiomontanus`"
-msgstr ""
+msgstr "`regiomontanus`"
 
 #: ../../source/houses.md
 msgid "Regiomontanus"
-msgstr ""
+msgstr "Regiomontanus"
 
 #: ../../source/houses.md
 msgid "Space-based; common in horary astrology"
-msgstr ""
+msgstr "Basé sur l'espace ; courant en astrologie horaire"
 
 #: ../../source/houses.md:25
 msgid "calculate_houses"
-msgstr ""
+msgstr "calculate_houses"
 
 #: ../../source/houses.md:31
 msgid ""
@@ -134,156 +140,165 @@ msgid ""
 "ARMC, Vertex) for a given moment and location. Returns a NumPy structured"
 " array of `HOUSES_DTYPE`."
 msgstr ""
+"Calcule les douze cuspides de maisons et les angles (Ascendant, Milieu du ciel, "
+"ARMC, Vertex) pour un moment et un lieu donnés. Retourne un tableau "
+"structuré NumPy de type `HOUSES_DTYPE`."
 
 #: ../../source/houses.md:33
 msgid "**Parameters**"
-msgstr ""
+msgstr "**Paramètres :**"
 
 #: ../../source/houses.md:35
 msgid "`jd` — Julian Day (float, UTC)"
-msgstr ""
+msgstr "`jd` — Jour Julien (float, UTC)"
 
 #: ../../source/houses.md:36
 msgid "`lat` — geographic latitude in degrees (+N / -S)"
-msgstr ""
+msgstr "`lat` — latitude géographique en degrés (+N / -S)"
 
 #: ../../source/houses.md:37
 msgid "`lon` — geographic longitude in degrees (+E / -W)"
-msgstr ""
+msgstr "`lon` — longitude géographique en degrés (+E / -W)"
 
 #: ../../source/houses.md:38
 msgid "`system` — one of the six keys above (default `\"placidus\"`)"
-msgstr ""
+msgstr "`system` — l'une des six clés ci-dessus (défaut `\"placidus\"`)"
 
 #: ../../source/houses.md:39
 msgid ""
 "`polar_fallback` — behaviour above the Arctic/Antarctic circles (see "
 "below)"
 msgstr ""
+"`polar_fallback` — comportement au-delà des cercles arctique/antarctique "
+"(voir ci-dessous)"
 
 #: ../../source/houses.md:41
 msgid "**Example — Paris chart at J2000**"
-msgstr ""
+msgstr "**Exemple — Thème de Paris à J2000**"
 
 #: ../../source/houses.md:57
 msgid "**Switching systems**"
-msgstr ""
+msgstr "**Changer de système**"
 
 #: ../../source/houses.md:65
 msgid "house_of"
-msgstr ""
+msgstr "house_of"
 
 #: ../../source/houses.md:71
 msgid ""
 "Places one or more planet longitudes into a house number (1–12), "
 "vectorised over an array of longitudes."
 msgstr ""
+"Place une ou plusieurs longitudes planétaires dans un numéro de maison (1–12), "
+"vectorisé sur un tableau de longitudes."
 
 #: ../../source/houses.md:91
 msgid "HOUSES_DTYPE"
-msgstr ""
+msgstr "HOUSES_DTYPE"
 
 #: ../../source/houses.md:93
 msgid ""
 "The structured array returned by `calculate_houses` has the following "
 "fields:"
 msgstr ""
+"Le tableau structuré retourné par `calculate_houses` possède les champs "
+"suivants :"
 
 #: ../../source/houses.md
 msgid "Field"
-msgstr ""
+msgstr "Champ"
 
 #: ../../source/houses.md
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: ../../source/houses.md
 msgid "`jd`"
-msgstr ""
+msgstr "`jd`"
 
 #: ../../source/houses.md
 msgid "float64"
-msgstr ""
+msgstr "float64"
 
 #: ../../source/houses.md
 msgid "Julian Day of the calculation"
-msgstr ""
+msgstr "Jour Julien du calcul"
 
 #: ../../source/houses.md
 msgid "`lat`"
-msgstr ""
+msgstr "`lat`"
 
 #: ../../source/houses.md
 msgid "Geographic latitude"
-msgstr ""
+msgstr "Latitude géographique"
 
 #: ../../source/houses.md
 msgid "`lon`"
-msgstr ""
+msgstr "`lon`"
 
 #: ../../source/houses.md
 msgid "Geographic longitude"
-msgstr ""
+msgstr "Longitude géographique"
 
 #: ../../source/houses.md
 msgid "`system`"
-msgstr ""
+msgstr "`system`"
 
 #: ../../source/houses.md
 msgid "U20"
-msgstr ""
+msgstr "U20"
 
 #: ../../source/houses.md
 msgid "House system name"
-msgstr ""
+msgstr "Nom du système de maisons"
 
 #: ../../source/houses.md
 msgid "`cusps`"
-msgstr ""
+msgstr "`cusps`"
 
 #: ../../source/houses.md
 msgid "float64[12]"
-msgstr ""
+msgstr "float64[12]"
 
 #: ../../source/houses.md
 msgid "Twelve house cusp longitudes (degrees)"
-msgstr ""
+msgstr "Douze longitudes de cuspides de maisons (degrés)"
 
 #: ../../source/houses.md
 msgid "`asc`"
-msgstr ""
+msgstr "`asc`"
 
 #: ../../source/houses.md
 msgid "Ascendant longitude (degrees)"
-msgstr ""
+msgstr "Longitude de l'Ascendant (degrés)"
 
 #: ../../source/houses.md
 msgid "`mc`"
-msgstr ""
+msgstr "`mc`"
 
 #: ../../source/houses.md
 msgid "Midheaven longitude (degrees)"
-msgstr ""
+msgstr "Longitude du Milieu du ciel (degrés)"
 
 #: ../../source/houses.md
 msgid "`armc`"
-msgstr ""
+msgstr "`armc`"
 
 #: ../../source/houses.md
 msgid "ARMC (sidereal time angle)"
-msgstr ""
+msgstr "ARMC (angle du temps sidéral)"
 
 #: ../../source/houses.md
 msgid "`vertex`"
-msgstr ""
+msgstr "`vertex`"
 
 #: ../../source/houses.md
 msgid "Vertex longitude (degrees)"
-msgstr ""
+msgstr "Longitude du Vertex (degrés)"
 
 #: ../../source/houses.md:107
 msgid "High-Latitude Handling"
-msgstr ""
+msgstr "Gestion des hautes latitudes"
 
 #: ../../source/houses.md:109
 msgid ""
@@ -291,46 +306,58 @@ msgid ""
 " (roughly above 66° N or below 66° S) because the ecliptic can fail to "
 "intersect the prime vertical."
 msgstr ""
+"Les systèmes basés sur la projection (Placidus, Koch) deviennent invalides "
+"aux latitudes extrêmes (approximativement au-delà de 66° N ou en deçà de "
+"66° S) car l'écliptique peut ne pas intersecter le premier vertical."
 
 #: ../../source/houses.md:111
 msgid ""
 "**`polar_fallback=\"raise\"` (default)** — raises `HighLatitudeError` "
 "when the calculation is geometrically impossible."
 msgstr ""
+"**`polar_fallback=\"raise\"` (défaut)** — lève `HighLatitudeError` "
+"lorsque le calcul est géométriquement impossible."
 
 #: ../../source/houses.md:113
 msgid ""
 "**Alternative fallback** — pass the name of another system to use as a "
 "fallback:"
 msgstr ""
+"**Fallback alternatif** — passer le nom d'un autre système à utiliser "
+"comme fallback :"
 
 #: ../../source/houses.md:126
 msgid ""
 "Whole Sign and Equal never raise `HighLatitudeError` — they work "
 "everywhere."
 msgstr ""
+"Les Signes entiers et les Maisons égales ne lèvent jamais `HighLatitudeError` "
+"— ils fonctionnent partout."
 
 #: ../../source/houses.md:128
 msgid "Registering Custom Systems"
-msgstr ""
+msgstr "Enregistrement de systèmes personnalisés"
 
 #: ../../source/houses.md:139
 msgid ""
 "After registration, `\"my_system\"` is available as a `system=` argument "
 "to `calculate_houses`."
 msgstr ""
+"Après l'enregistrement, `\"my_system\"` est disponible comme argument "
+"`system=` de `calculate_houses`."
 
 #: ../../source/houses.md:141
 msgid "Next Steps"
-msgstr ""
+msgstr "Étapes suivantes"
 
 #: ../../source/houses.md:143
 msgid ""
 "[Relational charts](relational_charts.md) — synastry and composite charts"
 " using house cusps"
 msgstr ""
+"[Thèmes relationnels](relational_charts.md) — synastrie et thème composite "
+"utilisant les cuspides de maisons"
 
 #: ../../source/houses.md:144
 msgid "[API reference](api.md) — full `ketu.houses` signature list"
-msgstr ""
-
+msgstr "[Référence API](api.md) — liste complète des signatures `ketu.houses`"

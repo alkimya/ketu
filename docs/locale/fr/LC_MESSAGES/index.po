@@ -66,12 +66,16 @@ msgid ""
 "Calculate precise positions of celestial bodies (Sun, Moon, planets, "
 "Nodes, Lilith, Chiron)"
 msgstr ""
+"Calculer les positions précises des corps célestes (Soleil, Lune, planètes, "
+"Nœuds, Lilith, Chiron)"
 
 #: ../../source/index.md:12
 msgid ""
 "Determine aspects between planets with configurable aspect sets "
 "(Classical, Traditional, Extended)"
 msgstr ""
+"Déterminer les aspects entre planètes avec des ensembles d'aspects "
+"configurables (Classique, Traditionnel, Étendu)"
 
 #: ../../source/index.md:13
 msgid "Convert between different time systems (UTC, Julian)"
@@ -86,22 +90,24 @@ msgid ""
 "Calculate astrological house systems (Placidus, Koch, Porphyry, Whole "
 "Sign, Equal, Regiomontanus)"
 msgstr ""
+"Calculer les systèmes de maisons astrologiques (Placidus, Koch, Porphyre, "
+"Signes entiers, Maisons égales, Regiomontanus)"
 
 #: ../../source/index.md:16
 msgid "Compute full natal charts as structured NumPy arrays (CHART_DTYPE)"
-msgstr ""
+msgstr "Calculer des thèmes nataux complets sous forme de tableaux structurés NumPy (CHART_DTYPE)"
 
 #: ../../source/index.md:17
 msgid "Analyse synastry and composite (midpoint) charts between two individuals"
-msgstr ""
+msgstr "Analyser les thèmes de synastrie et composite (points médians) entre deux individus"
 
 #: ../../source/index.md:18
 msgid "Calculate solar and lunar returns for predictive astrology"
-msgstr ""
+msgstr "Calculer les retours solaires et lunaires pour l'astrologie prévisionnelle"
 
 #: ../../source/index.md:19
 msgid "Compute Arabic Parts / Hermetic Lots (Fortune, Spirit, Marriage)"
-msgstr ""
+msgstr "Calculer les Parties arabes / Lots hermétiques (Fortune, Esprit, Mariage)"
 
 #: ../../source/index.md:20
 msgid "Generate time series of aspects"
@@ -301,19 +307,19 @@ msgstr "⚸"
 
 #: ../../source/index.md:40
 msgid "0.113°/day"
-msgstr ""
+msgstr "0.113°/jour"
 
 #: ../../source/index.md:40
 msgid "Chiron"
-msgstr ""
+msgstr "Chiron"
 
 #: ../../source/index.md:40
 msgid "⚷"
-msgstr ""
+msgstr "⚷"
 
 #: ../../source/index.md:40
 msgid "~0.018°/day"
-msgstr ""
+msgstr "~0.018°/jour"
 
 #: ../../source/index.md:70
 msgid "Major Aspects"
