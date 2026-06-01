@@ -27,122 +27,141 @@ msgid ""
 "This guide helps you upgrade Ketu across major and minor versions. For "
 "the full list of changes, see the [Changelog](changelog.md)."
 msgstr ""
+"Ce guide vous aide à mettre à niveau Ketu entre les versions majeures et "
+"mineures. Pour la liste complète des changements, consultez le "
+"[Changelog](changelog.md)."
 
 #: ../../source/migration.md:7
 msgid "Upgrading from v1.2 to v1.3"
-msgstr ""
+msgstr "Mise à niveau de v1.2 vers v1.3"
 
 #: ../../source/migration.md:9
 msgid ""
 "Breaking Change: CHART_DTYPE body axis expanded from 13 to 14 bodies "
 "(D-08)"
 msgstr ""
+"Changement incompatible : l'axe des corps de CHART_DTYPE passe de 13 à "
+"14 corps (D-08)"
 
 #: ../../source/migration.md:11
 msgid ""
 "In v1.3, Chiron is added as body_id=13 (the 14th body). This change "
 "expands several array dimensions:"
 msgstr ""
+"Dans v1.3, Chiron est ajouté avec body_id=13 (le 14e corps). Ce "
+"changement étend plusieurs dimensions de tableaux :"
 
 #: ../../source/migration.md:13
 msgid "**Before (v1.2):**"
-msgstr ""
+msgstr "**Avant (v1.2) :**"
 
 #: ../../source/migration.md:14
 msgid "`chart[\"body_lons\"]` — shape `(13,)`"
-msgstr ""
+msgstr "`chart[\"body_lons\"]` — forme `(13,)`"
 
 #: ../../source/migration.md:15
 msgid "`chart[\"body_lats\"]` — shape `(13,)`"
-msgstr ""
+msgstr "`chart[\"body_lats\"]` — forme `(13,)`"
 
 #: ../../source/migration.md:16
 msgid "`chart[\"body_speeds\"]` — shape `(13,)`"
-msgstr ""
+msgstr "`chart[\"body_speeds\"]` — forme `(13,)`"
 
 #: ../../source/migration.md:17
 msgid "`chart[\"aspect_matrix\"]` — shape `(13, 13)`"
-msgstr ""
+msgstr "`chart[\"aspect_matrix\"]` — forme `(13, 13)`"
 
 #: ../../source/migration.md:18
 msgid "`chart[\"aspect_orbs\"]` — shape `(13, 13)`"
-msgstr ""
+msgstr "`chart[\"aspect_orbs\"]` — forme `(13, 13)`"
 
 #: ../../source/migration.md:19
 msgid "`SYNASTRY_BODY_COUNT = 15` (13 bodies + ASC + MC)"
-msgstr ""
+msgstr "`SYNASTRY_BODY_COUNT = 15` (13 corps + ASC + MC)"
 
 #: ../../source/migration.md:21
 msgid "**After (v1.3):**"
-msgstr ""
+msgstr "**Après (v1.3) :**"
 
 #: ../../source/migration.md:22
 msgid "`chart[\"body_lons\"]` — shape `(14,)` — index 13 = Chiron"
-msgstr ""
+msgstr "`chart[\"body_lons\"]` — forme `(14,)` — indice 13 = Chiron"
 
 #: ../../source/migration.md:23
 msgid "`chart[\"body_lats\"]` — shape `(14,)`"
-msgstr ""
+msgstr "`chart[\"body_lats\"]` — forme `(14,)`"
 
 #: ../../source/migration.md:24
 msgid "`chart[\"body_speeds\"]` — shape `(14,)`"
-msgstr ""
+msgstr "`chart[\"body_speeds\"]` — forme `(14,)`"
 
 #: ../../source/migration.md:25
 msgid "`chart[\"aspect_matrix\"]` — shape `(14, 14)`"
-msgstr ""
+msgstr "`chart[\"aspect_matrix\"]` — forme `(14, 14)`"
 
 #: ../../source/migration.md:26
 msgid "`chart[\"aspect_orbs\"]` — shape `(14, 14)`"
-msgstr ""
+msgstr "`chart[\"aspect_orbs\"]` — forme `(14, 14)`"
 
 #: ../../source/migration.md:27
 msgid "`SYNASTRY_BODY_COUNT = 16` (14 bodies + ASC + MC)"
-msgstr ""
+msgstr "`SYNASTRY_BODY_COUNT = 16` (14 corps + ASC + MC)"
 
 #: ../../source/migration.md:29
 msgid "**Migration actions:**"
-msgstr ""
+msgstr "**Actions de migration :**"
 
 #: ../../source/migration.md:31
 msgid ""
 "**Code that iterates `range(13)` over body arrays**: update to "
 "`range(14)` or use `len(chart[\"body_lons\"])`."
 msgstr ""
+"**Code qui itère sur `range(13)` dans les tableaux de corps** : mettez à "
+"jour vers `range(14)` ou utilisez `len(chart[\"body_lons\"])`."
 
 #: ../../source/migration.md:32
 msgid ""
 "**Cached `CHART_DTYPE` arrays from v1.2**: these are incompatible. "
 "Recompute them with v1.3."
 msgstr ""
+"**Tableaux `CHART_DTYPE` mis en cache depuis v1.2** : ils sont "
+"incompatibles. Recalculez-les avec v1.3."
 
 #: ../../source/migration.md:33
 msgid ""
 "**Downstream consumers checking body count**: update any hardcoded `13` "
 "or `SYNASTRY_BODY_COUNT == 15` assertions."
 msgstr ""
+"**Consommateurs vérifiant le nombre de corps** : mettez à jour toute "
+"assertion codée en dur sur `13` ou `SYNASTRY_BODY_COUNT == 15`."
 
 #: ../../source/migration.md:34
 msgid ""
 "**Index 12 (previously last body = Lilith)**: remains unchanged — Chiron "
 "is index 13."
 msgstr ""
+"**Indice 12 (précédemment dernier corps = Lilith)** : reste inchangé — "
+"Chiron est à l'indice 13."
 
 #: ../../source/migration.md:47
 msgid "New: Chiron access"
-msgstr ""
+msgstr "Nouveau : accès à Chiron"
 
 #: ../../source/migration.md:49
 msgid ""
 "No new import needed — use existing calculation functions with "
 "`body_id=13`:"
 msgstr ""
+"Aucun nouvel import nécessaire — utilisez les fonctions de calcul "
+"existantes avec `body_id=13` :"
 
 #: ../../source/migration.md:58
 msgid ""
 "Valid date range: 1950–2050. Attempting to compute Chiron outside this "
 "range raises a `ValueError`."
 msgstr ""
+"Plage de dates valide : 1950–2050. Tenter de calculer Chiron hors de "
+"cette plage lève une `ValueError`."
 
 #: ../../source/migration.md:62
 msgid "Upgrading from v1.1 to v1.2"
