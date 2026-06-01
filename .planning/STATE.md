@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-06-01T15:06:20Z"
+last_updated: "2026-06-01T18:36:00Z"
 last_activity: 2026-06-01
 progress:
   total_phases: 8
-  completed_phases: 6
+  completed_phases: 7
   total_plans: 17
-  completed_plans: 21
-  percent: 75
+  completed_plans: 22
+  percent: 88
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 26.1 (French Documentation Translation) — Plan 01 DONE
-Plan: 26.1-01 COMPLETE (DOC-13 + charset fix + small narrative pages). Next: Plans 26.1-02..07 (remaining 745 untranslated entries across 13 files)
-Status: Phase 26.1 in progress (1/8 plans done). Plan 01 delivered: DOC-13 requirement (REQUIREMENTS.md 18→19), charset=UTF-8 headers on 5 blockers (arabic_parts, chiron, houses, predictive_charts, relational_charts), 13 entries translated in quickstart/examples/installation/acknowledgments (all 4 now 0 untranslated). Plans 02/03/04 unblocked.
-Last activity: 2026-06-01 — Phase 26.1-01 executed: charset fix + DOC-13 + 13 narrative translations
+Phase: 27 (Release 1.3.0) — READY TO START
+Plan: 26.1-08 COMPLETE (final gate — 17 .mo recompiled, en+fr builds clean at 1 warning, DOC-13 satisfied). Phase 26.1 COMPLETE.
+Status: Phase 26.1 DONE (8/8 plans). 17 .po catalogs 100% translated, all .mo compiled, en+fr Sphinx builds at 1 warning (display_version only). Next: Phase 27 — Release 1.3.0 (REL-10, REL-11).
+Last activity: 2026-06-01 — Phase 26.1-08 executed: final gate recompile + en+fr build verify + commit .mo
 
-Progress: [██████████░░░░] 75% — 6/8 phases completed, 21/21 plans (Phase 26 DONE; 26.1 + 27 remain)
+Progress: [████████████░░] 88% — 7/8 phases completed, 22 plans done (Phase 26.1 DONE; Phase 27 remains)
 
 ## v1.3 Roadmap Structure
 
@@ -115,6 +115,8 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - [Phase 26.1-01]: babel write_po normalizes charset=UTF-8 to lowercase utf-8 — uppercase fix applied via Python string replacement after babel script; charset=UTF-8 uppercase required (plan verification grep); DOC-13 placed in Documentation section before Release section; coverage counts 18→19
 - [Phase 26.1-02]: concepts.po 300/300 translated (50 empties filled, terminology anchor); chiron.po 31/31; predictive_charts.po 39/39; all .mo compiled; glossary applied (Carré/Trigone/Quinconce/Retour solaire/Corps centaure); commit 688a409
 - [Phase 26.1-05]: migration.po 89/89 translated (0 untranslated); shape tuples (13,13)/(14,14) and body_id=13 preserved verbatim; migration.mo compiled; commits c3f0400+18fc6ca
+- [Phase 26.1-08]: make build-mo skips up-to-date .mo by timestamp — force msgfmt loop used to guarantee all 17 catalogs authoritative
+- [Phase 26.1-08]: DOC-13 SATISFIED: 17/17 .po 100% translated, 0 untranslated, no heading-marker regressions, en+fr builds at 1 warning (display_version only); Phase 26.1 COMPLETE — ready for Phase 27 Release
 
 ### Roadmap Evolution
 
@@ -130,12 +132,12 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-06-01 — Phase 26.1-01 executed: DOC-13 + charset fix on 5 .po files + 13 narrative entries translated. Commits b884b79 (feat) + f3b2cf4 (fix) + e9ffd70 (feat).
-Stopped at: 26.1-01 COMPLETE. Next: 26.1-02 (concepts + chiron + predictive_charts, 122 entries).
-Resume file: None — 26.1-02 ready to execute.
+Last session: 2026-06-01 — Phase 26.1-08 executed: final gate recompile of 17 .mo + en+fr build verify at 1 warning + commit. Phase 26.1 COMPLETE. Commits 26b6c94 (.mo) + final metadata.
+Stopped at: 26.1-08 COMPLETE. Phase 26.1 DONE. Next: Phase 27 — Release 1.3.0 (REL-10 version bump + PyPI, REL-11 GitHub release).
+Resume file: None — Phase 27 ready to plan.
 
 - [26.1-06 DONE 2026-06-01] architecture.po: 100 entries translated, 0 untranslated, .mo compiled — commit c17499c
-26.1-03 COMPLETE (2026-06-01): houses.po (72 entries) + relational_charts.po (88 entries) + index.po (11 entries filled → 112 total) translated to French, 3 .mo recompiled. Commit 57cedbd.
-
-- [Phase 26.1-07]: api.po 185 entries translated (188 traduits/0 non traduits); function signatures identity-copied; api.mo recompiled; commit 2ba6c94
-- [Phase 26.1-04 COMPLETE 2026-06-01]: arabic_parts.po (42 entries) + changelog.po (32 new, 117 total) + contributing.po (36 new, 77 total) translated to French; 3 .mo compiled. Commits 8d27609 + 1a71af7 + 285c8dd.
+- [26.1-03 COMPLETE 2026-06-01]: houses.po (72) + relational_charts.po (88) + index.po (112) translated, 3 .mo compiled — commit 57cedbd
+- [Phase 26.1-07 DONE 2026-06-01]: api.po 188 traduits/0 non traduits; api.mo compiled — commit 2ba6c94
+- [Phase 26.1-04 COMPLETE 2026-06-01]: arabic_parts.po (42) + changelog.po (117) + contributing.po (77) translated; 3 .mo compiled — commits 8d27609 + 1a71af7 + 285c8dd
+- [Phase 26.1-08 COMPLETE 2026-06-01]: FINAL GATE — 17/17 .po 100% translated, 17 .mo recompiled (5 committed), en+fr builds 1 warning each (display_version), DOC-13 SATISFIED — commit 26b6c94
