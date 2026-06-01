@@ -74,12 +74,41 @@ EXPECTED_ASPECT_COEFS = (
     1.0,
 )
 
+# Frozen harmonic vector (v1.3) — half-circle convention (Sextile=H3, Trine=H3,
+# Semi-sextile=H6, Quincunx=H6); full-circle (Quintile=H5, Novile=H9, Decile=H10).
+# Guards against the naive 360/angle reading (e.g. Sextile=6 is WRONG per concepts.md).
+EXPECTED_ASPECT_HARMONICS = [1, 6, 10, 9, 3, 5, 9, 2, 10, 3, 5, 6, 9, 1]
+
+# Frozen symbol vector (v1.3) — 7 major glyphs; 7 minors blank.
+EXPECTED_ASPECT_SYMBOLS = [
+    "☌",  # Conjunction
+    "⚺",  # Semi-sextile
+    "",         # Decile (minor)
+    "",         # Novile (minor)
+    "⚹",  # Sextile
+    "",         # Quintile (minor)
+    "",         # Binovile (minor)
+    "□",  # Square
+    "",         # Tredecile (minor)
+    "△",  # Trine
+    "",         # Biquintile (minor)
+    "⚻",  # Quincunx
+    "",         # Quadrinovile (minor)
+    "☍",  # Opposition
+]
+
 # Pin v1.0 byte-level fingerprint — captured during Plan 09-03 Step A.
 # If `test_aspects_byte_fingerprint` fails, core.aspects bytes changed.
 # Verify the change is APPEND-ONLY (rows 0-13 unchanged) per Phase 9
 # invariant before updating this constant.
 EXPECTED_ASPECT_FINGERPRINT_V1 = (
     "c5bd177316ce98d428bee011a5b0f17ae247d1dee1e478c2389af51d39afb359"
+)
+
+# v1.3 fingerprint — folds in harmonic + symbol bytes (append-only extension of V1).
+# name/angle/coef bytes identical to V1 (proved by V1 still passing).
+EXPECTED_ASPECT_FINGERPRINT_V13 = (
+    "3258530818272989c27eb6de6a717947df1a2fccda10d9562aa15ef67b8f27d8"
 )
 from ketu.calculations import (
     local_to_utc,
@@ -122,14 +151,14 @@ class TestData:
         )
 
     def test_aspects_dtype_names(self):
-        """ASP-01: core.aspects field names must match v1.0 schema."""
-        assert aspects_data.dtype.names == ("name", "angle", "coef"), (
+        """ASP-01: core.aspects field names must match v1.3 5-field schema."""
+        assert aspects_data.dtype.names == ("name", "angle", "coef", "harmonic", "symbol"), (
             f"core.aspects dtype.names changed to {aspects_data.dtype.names}; "
-            "v1.1 invariant pins it at ('name', 'angle', 'coef')"
+            "v1.3 invariant pins it at ('name', 'angle', 'coef', 'harmonic', 'symbol')"
         )
 
     def test_aspects_structure(self):
-        """ASP-01: per-row name + angle + coef checks (strengthened from v1.0)."""
+        """ASP-01: per-row name + angle + coef + harmonic + symbol checks (v1.3)."""
         assert len(aspects_data) == 14
         for i, expected_name in enumerate(EXPECTED_ASPECT_NAMES):
             assert aspects_data["name"][i] == expected_name, (
@@ -146,18 +175,41 @@ class TestData:
                 f"row {i} coef drifted: got {aspects_data['coef'][i]}, "
                 f"expected {expected_coef}"
             )
+        for i, expected_harmonic in enumerate(EXPECTED_ASPECT_HARMONICS):
+            assert int(aspects_data["harmonic"][i]) == expected_harmonic, (
+                f"row {i} harmonic drifted: got {aspects_data['harmonic'][i]}, "
+                f"expected {expected_harmonic} (check concepts.md half-circle convention)"
+            )
+        for i, expected_symbol in enumerate(EXPECTED_ASPECT_SYMBOLS):
+            assert aspects_data["symbol"][i] == expected_symbol, (
+                f"row {i} symbol drifted: got {aspects_data['symbol'][i]!r}, "
+                f"expected {expected_symbol!r}"
+            )
 
     def test_aspects_byte_fingerprint(self):
-        """ASP-01: sha256 fingerprint catches dtype/encoding drift that field-by-field tests miss."""
-        h = hashlib.sha256()
-        h.update(aspects_data["name"].tobytes())
-        h.update(aspects_data["angle"].tobytes())
-        h.update(aspects_data["coef"].tobytes())
-        fingerprint = h.hexdigest()
-        assert fingerprint == EXPECTED_ASPECT_FINGERPRINT_V1, (
-            f"core.aspects bytes changed (got {fingerprint}); "
+        """ASP-01: sha256 fingerprints catch dtype/encoding drift (v1 stable + v1.3 extended)."""
+        # v1 fingerprint: name + angle + coef bytes only — must stay UNCHANGED (append-only proof).
+        h1 = hashlib.sha256()
+        h1.update(aspects_data["name"].tobytes())
+        h1.update(aspects_data["angle"].tobytes())
+        h1.update(aspects_data["coef"].tobytes())
+        fingerprint_v1 = h1.hexdigest()
+        assert fingerprint_v1 == EXPECTED_ASPECT_FINGERPRINT_V1, (
+            f"core.aspects name/angle/coef bytes changed (got {fingerprint_v1}); "
             "verify the change is an APPEND (rows 0-13 unchanged) per Phase 9 "
             "invariant, then update EXPECTED_ASPECT_FINGERPRINT_V1"
+        )
+        # v1.3 fingerprint: extends v1 by folding in harmonic + symbol bytes.
+        h13 = hashlib.sha256()
+        h13.update(aspects_data["name"].tobytes())
+        h13.update(aspects_data["angle"].tobytes())
+        h13.update(aspects_data["coef"].tobytes())
+        h13.update(aspects_data["harmonic"].tobytes())
+        h13.update(aspects_data["symbol"].tobytes())
+        fingerprint_v13 = h13.hexdigest()
+        assert fingerprint_v13 == EXPECTED_ASPECT_FINGERPRINT_V13, (
+            f"core.aspects harmonic/symbol bytes changed (got {fingerprint_v13}); "
+            "update EXPECTED_ASPECT_FINGERPRINT_V13 if the change is intentional"
         )
 
     def test_signs_list(self):
