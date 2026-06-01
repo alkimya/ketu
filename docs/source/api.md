@@ -176,15 +176,65 @@ from ketu.aspects import (
 
 ### Preset Aspect Sets
 
-| Name | Aspects included |
-|------|-----------------|
-| `CLASSICAL` | Conjunction, Sextile, Square, Trine, Opposition (5 aspects) |
-| `TRADITIONAL` | CLASSICAL + Semi-sextile, Quincunx (7 aspects) |
-| `EXTENDED` | All 14 aspects (default) |
+| Name | Aspects included | Notes |
+|------|------------------|-------|
+| `TRADITIONAL` | Conjunction, Semi-sextile, Sextile, Square, Trine, Quincunx, Opposition (7 aspects) | **Library default** (v1.3+) |
+| `CLASSICAL` | Conjunction, Sextile, Square, Trine, Opposition (5 aspects) | v1.2 and earlier default |
+| `EXTENDED` | All 14 aspects | Includes full-circle minors (H5/H9/H10) |
 
 All presets are `numpy.ndarray` boolean masks over the 14-aspect table.
 
 `AspectSetSpec = Union[str, list, numpy.ndarray, None]` — any of these can be passed as the `aspects` argument to `calculate_aspects`.
+
+### `aspects_for_harmonics(harmonics)`
+
+Compose a custom aspect set from a list of harmonics. Returns a frozen length-14
+`numpy.bool_` mask that can be used as `aspects=` argument to any Ketu function.
+
+**Parameters:**
+- `harmonics` (`Sequence[int]`): list of harmonic integers; valid values: `{1, 2, 3, 5, 6, 9, 10}`
+
+**Returns:** frozen `numpy.ndarray` of `numpy.bool_`, shape `(14,)`
+
+**Raises:** `ValueError` if any harmonic is not in the valid set or is not an integer.
+
+```python
+from ketu.aspects import aspects_for_harmonics
+
+# The 7 half-circle aspects (= TRADITIONAL, the library default):
+mask = aspects_for_harmonics([1, 2, 3, 6])
+
+# Full-circle minor aspects (H5/H9/H10):
+minors = aspects_for_harmonics([5, 9, 10])
+
+# All 14 aspects (= EXTENDED):
+all14 = aspects_for_harmonics([1, 2, 3, 5, 6, 9, 10])
+
+# Just Sextile + Trine (harmonic 3, half-circle convention):
+h3 = aspects_for_harmonics([3])
+
+# Pass directly to calculate_aspects:
+from ketu.aspects import calculate_aspects
+result = calculate_aspects(jd, aspects=aspects_for_harmonics([1, 2, 3, 6]))
+```
+
+### `core.aspects` columns: `harmonic` and `symbol`
+
+`core.aspects` is a 5-field structured array `(name, angle, coef, harmonic, symbol)`.
+New in v1.3: the `harmonic` and `symbol` columns.
+
+- **`harmonic` (`int32`):** the harmonic base for each aspect. Values: `[1, 6, 10, 9, 3, 5, 9, 2, 10, 3, 5, 6, 9, 1]` for aspects 0–13 in the canonical table order. `aspects_for_harmonics` uses this column internally (data-driven, no hardcoded indices).
+- **`symbol` (`U4`):** Unicode glyph for the 7 half-circle aspects (☌ ⚺ ⚹ □ △ ⚻ ☍); blank (`""`) for the 7 full-circle minor aspects.
+- **`coef` (`float32`):** orb coefficient. Conceptually referred to as `coefficient` in API documentation; the field name in the dtype is `coef` and was **not renamed** in v1.3.
+
+```python
+import ketu
+
+# Access new columns:
+harmonics = ketu.aspects["harmonic"]    # array([1, 6, 10, 9, 3, 5, 9, 2, 10, 3, 5, 6, 9, 1])
+symbols   = ketu.aspects["symbol"]     # ['☌', '⚺', '', '', '⚹', '', '', '□', '', '△', '', '⚻', '', '☍']
+coefs     = ketu.aspects["coef"]       # orb coefficients (field name: 'coef', not 'coefficient')
+```
 
 ### `get_aspect(jday, body1, body2)`
 
@@ -208,7 +258,7 @@ Compute all in-orb aspects for the given date.
 **Parameters:**
 - `jdate` (`float`): Julian Day
 - `l_bodies`: body subset (default: all bodies)
-- `aspects` (`AspectSetSpec`, optional): filter; `None` → EXTENDED; `"classical"` → CLASSICAL etc.
+- `aspects` (`AspectSetSpec`, optional): filter; `None` → TRADITIONAL (7 half-circle, v1.3+ default); `"classical"` → CLASSICAL (5); `"extended"` → EXTENDED (14); etc.
 
 **Returns:** structured array with fields `(body1, body2, i_asp, orb)`
 
@@ -361,7 +411,7 @@ Build a complete natal chart as a single structured array.
 - `jd` (`float`): Julian Day
 - `lat`, `lon` (`float`): geographic coordinates
 - `system` (`str`): house system
-- `aspects` (`AspectSetSpec`): aspect filter (default: EXTENDED)
+- `aspects` (`AspectSetSpec`): aspect filter (default: TRADITIONAL — the 7 half-circle aspects, v1.3+)
 - `polar_fallback` (`str`): high-latitude fallback
 
 **Returns:** scalar `numpy.ndarray` with `CHART_DTYPE` fields

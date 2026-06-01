@@ -125,19 +125,57 @@ Harmonic | Division | Aspects
 
 Ketu supports all 14 aspects across harmonics 1, 2, 3, 5, 6, 9, and 10.
 
-### Configurable Aspect Sets (New in v1.1)
+**Default aspect set (v1.3+):** the library default is the **7 half-circle aspects**
+(harmonics 1, 2, 3, 6 — TRADITIONAL preset): Conjunction, Semi-sextile, Sextile, Square,
+Trine, Quincunx, Opposition. The full-circle minor harmonics (H5/H9/H10) are **opt-in**
+and not included in the default.
+
+### Configurable Aspect Sets (New in v1.1, updated in v1.3)
 
 Rather than always computing all 14 aspects, you can select a preset or pass a custom mask:
 
-- **CLASSICAL**: Conjunction, Sextile, Square, Trine, Opposition (5 aspects)
-- **TRADITIONAL**: CLASSICAL + Semi-sextile and Quincunx (7 aspects)
+- **TRADITIONAL** *(library default)*: the 7 half-circle aspects — Conjunction, Semi-sextile,
+  Sextile, Square, Trine, Quincunx, Opposition (harmonics 1, 2, 3, 6)
+- **CLASSICAL**: Conjunction, Sextile, Square, Trine, Opposition (5 major aspects; the old
+  v1.2 default — still available as the opt-in "5 majors" preset)
 - **EXTENDED**: all 14 aspects
 
 ```python
 from ketu.aspects import calculate_aspects, CLASSICAL, TRADITIONAL, EXTENDED
 
-aspects = calculate_aspects(jday, aspects=CLASSICAL)
+# New library default (7 half-circle aspects):
+aspects = calculate_aspects(jday)                        # uses TRADITIONAL
+
+# Old 5-major default (restore v1.2 behavior):
+aspects = calculate_aspects(jday, aspects=CLASSICAL)     # 5 aspects
+
+# All 14 aspects:
+aspects = calculate_aspects(jday, aspects=EXTENDED)      # 14 aspects
 ```
+
+**Harmonic composition with `aspects_for_harmonics`** (New in v1.3): build a custom
+aspect set from any combination of the supported harmonics. This is the harmonic-selection
+sister function to the named presets:
+
+```python
+from ketu.aspects import aspects_for_harmonics
+
+# Compose the library default explicitly (7 half-circle):
+mask = aspects_for_harmonics([1, 2, 3, 6])
+
+# Opt into the full-circle minor aspects:
+minors = aspects_for_harmonics([5, 9, 10])
+
+# Just the Sextile and Trine (harmonic 3):
+h3_only = aspects_for_harmonics([3])
+
+# All 14:
+all14 = aspects_for_harmonics([1, 2, 3, 5, 6, 9, 10])
+```
+
+`aspects_for_harmonics` returns a frozen `numpy.bool_` mask of length 14, which can be
+passed directly as the `aspects=` argument to any Ketu function. Valid harmonics:
+`{1, 2, 3, 5, 6, 9, 10}`.
 
 ## Orbs
 
