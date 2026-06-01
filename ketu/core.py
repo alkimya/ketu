@@ -31,6 +31,8 @@ aspects : numpy.ndarray
     - name (str): Aspect name (e.g., 'Conjunction', 'Trine').
     - angle (float): Aspect angle in degrees (0-180).
     - coef (float): Coefficient for orb calculation.
+    - harmonic (int): Harmonic number (half-circle 1/2/3/6 divide 180°; full-circle 5/9/10 divide 360°).
+    - symbol (str): Unicode astrological glyph (majors only; minors are blank).
 
     Aspect angles: 0° (conjunction), 30° (semi-sextile), 36° (decile),
     40° (novile), 60° (sextile), 72° (quintile), 80° (binovile),
@@ -84,27 +86,31 @@ bodies = np.array(
     dtype=[("name", "S12"), ("id", "i4"), ("orb", "f4"), ("speed", "f4")],
 )
 
-# Structured array of major aspects (harmonics 1, 2, 3, 6, 9, and 10)
-# Fields: name, angle (degrees), coefficient for orb calculation
+# Structured array of major aspects (harmonics 1, 2, 3, 5, 6, 9, and 10)
+# Fields: name, angle (degrees), coefficient for orb calculation, harmonic number, symbol glyph
+# Harmonic convention: half-circle harmonics (1/2/3/6) divide 180°; full-circle (5/9/10) divide 360°.
+# Frozen mapping: Sextile=H3, Trine=H3, Semi-sextile=H6, Quincunx=H6 (concepts.md).
+# 7 major glyphs (Conjunction, Semi-sextile, Sextile, Square, Trine, Quincunx, Opposition);
+# 7 minor aspects (Decile, Novile, Quintile, Binovile, Tredecile, Biquintile, Quadrinovile) get blank symbol.
 aspects = np.array(
     [
         # Classical aspects (Harmonics 1, 2, 3, 6)
-        ("Conjunction", 0, 1),
-        ("Semi-sextile", 30, 1 / 6),
-        ("Decile", 36, 1 / 10),  # H10 - Semi-quintile
-        ("Novile", 40, 1 / 9),  # H9 - Nonagone
-        ("Sextile", 60, 1 / 3),
-        ("Quintile", 72, 1 / 5),  # H5 (sub-harmonic of H10)
-        ("Binovile", 80, 2 / 9),  # H9
-        ("Square", 90, 1 / 2),
-        ("Tredecile", 108, 3 / 10),  # H10 - Tri-decile
-        ("Trine", 120, 2 / 3),
-        ("Biquintile", 144, 2 / 5),  # H5 (sub-harmonic of H10)
-        ("Quincunx", 150, 5 / 6),
-        ("Quadrinovile", 160, 4 / 9),  # H9
-        ("Opposition", 180, 1),
+        ("Conjunction", 0, 1, 1, "☌"),        # H1, ☌
+        ("Semi-sextile", 30, 1 / 6, 6, "⚺"),  # H6, ⚺
+        ("Decile", 36, 1 / 10, 10, ""),             # H10, blank
+        ("Novile", 40, 1 / 9, 9, ""),               # H9, blank
+        ("Sextile", 60, 1 / 3, 3, "⚹"),        # H3, ⚹
+        ("Quintile", 72, 1 / 5, 5, ""),             # H5, blank
+        ("Binovile", 80, 2 / 9, 9, ""),             # H9, blank
+        ("Square", 90, 1 / 2, 2, "□"),         # H2, □
+        ("Tredecile", 108, 3 / 10, 10, ""),         # H10, blank
+        ("Trine", 120, 2 / 3, 3, "△"),         # H3, △
+        ("Biquintile", 144, 2 / 5, 5, ""),          # H5, blank
+        ("Quincunx", 150, 5 / 6, 6, "⚻"),      # H6, ⚻
+        ("Quadrinovile", 160, 4 / 9, 9, ""),        # H9, blank
+        ("Opposition", 180, 1, 1, "☍"),        # H1, ☍
     ],
-    dtype=[("name", "S16"), ("angle", "f4"), ("coef", "f4")],
+    dtype=[("name", "S16"), ("angle", "f4"), ("coef", "f4"), ("harmonic", "i4"), ("symbol", "U4")],
 )
 
 # Zodiac signs in order
