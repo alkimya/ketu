@@ -10,6 +10,33 @@ This library was originally designed to generate biodynamic calendars and time s
 
 ![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
 
+## What's New in v1.3.0
+
+Ketu v1.3.0 adds Chiron as the 14th body and makes the aspect engine
+data-driven. The public API is additive; the one breaking change is the
+internal positional-array contract (the bodies axis goes 13 → 14) and the
+aspect default/coefficient/preset surface. See [UPGRADING.md](UPGRADING.md)
+for migration recipes and [CHANGELOG.md](CHANGELOG.md) for the full list.
+
+- **Chiron** — the 14th body (`body_id = 13`), evaluated from embedded
+  Chebyshev-by-segment coefficients in **pure NumPy** (no `pyswisseph`,
+  no SciPy, no new runtime dependency). `ketu.calc_planet_position(jd, 13)`
+  returns Chiron's longitude within ~0.006° of Swiss Ephemeris across
+  1950–2050. Chiron participates in `compute_chart`, aspect detection,
+  and the cycle machinery like any other body.
+- **Data-driven aspect engine** — aspects now live in a single declarative
+  table (`name, angle, coef, harmonic, symbol`); the detection logic
+  iterates over it with no per-aspect hardcoding. Compose a set from
+  harmonics with `aspects_for_harmonics([1, 2, 3, 6])`, or use the
+  `CLASSICAL` / `TRADITIONAL` / `EXTENDED` presets.
+- **New default aspect set (breaking)** — the library default is now the
+  7 half-circle harmonics (H1/H2/H3/H6: Conjunction, Semi-sextile, Sextile,
+  Square, Trine, Quincunx, Opposition). The full-circle minors
+  (quintile, novile, decile, and friends — H5/H9/H10) are opt-in. The CLI
+  stays pinned to the classical 5 for byte-stable output.
+- **Full French documentation** — every Sphinx page is now fully
+  translated to French through the gettext pipeline.
+
 ## What's New in v1.2.0
 
 Ketu v1.2.0 is a non-breaking feature release — all v1.1 code works
@@ -48,8 +75,8 @@ For the full list of changes see [CHANGELOG.md](CHANGELOG.md).
 
 ## Features
 
-- **Planetary positions** for 13 bodies (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Rahu/Mean Node, True North Node, Lilith)
-- **Detection of 14 major/minor aspects** (Conjunction, Opposition, Trine, Square, Sextile, Quintile, Novile, Decile, etc.)
+- **Planetary positions** for 14 bodies (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto, Rahu/Mean Node, True North Node, Lilith, Chiron)
+- **Data-driven aspect engine** — a declarative table of 14 major/minor aspects (Conjunction, Opposition, Trine, Square, Sextile, Quincunx, ... through Quintile, Novile, Decile); harmonic-based selection via `aspects_for_harmonics([...])`. The default set is the 7 half-circle aspects; full-circle minors are opt-in.
 - **Aspect windows** - Find when aspects begin, peak, and end
 - **Transit calculations** - Track transits to natal positions
 - **Retrogradation detection** and planet motion helpers
@@ -204,7 +231,7 @@ timestamp = datetime(2025, 6, 15, 14, 30, tzinfo=timezone.utc)
 sun_pos = cache.get_position(timestamp, body_id=0)
 print(f"Sun longitude: {sun_pos[0]:.2f}°")
 
-# Get all 13 bodies at once
+# Get all 14 bodies at once
 all_positions = cache.get_all_positions(timestamp)
 # Returns dict: {body_id: (lon, lat, dist, speed), ...}
 ```
@@ -275,6 +302,7 @@ Run both locally before pushing: `make doc-gates`.
 | Rahu (Mean Node) | 10 | 0° | -0.013 |
 | True North Node | 11 | 0° | -0.013 |
 | Lilith (Black Moon) | 12 | 0° | -0.113 |
+| Chiron | 13 | 0° | 0.019 |
 
 ## Supported aspects
 
@@ -287,6 +315,11 @@ Run both locally before pushing: `make doc-gates`.
 | Trine | 120° | 2/3 |
 | Quincunx | 150° | 5/6 |
 | Opposition | 180° | 1 |
+
+These 7 half-circle aspects (harmonics 1, 2, 3, 6) are the library default.
+The full table also carries 7 full-circle minor aspects (Quintile, Decile,
+Novile, Binovile, Quadrinovile, Biquintile, Tredecile — harmonics 5, 9, 10),
+which are opt-in via `aspects_for_harmonics([...])` or the `EXTENDED` preset.
 
 ## Performance
 
@@ -315,17 +348,26 @@ ketu/
 ├── __init__.py          # Main API
 ├── core.py              # Data structures (bodies, aspects, signs)
 ├── calculations.py      # High-level calculation functions
-├── display.py           # CLI and display utilities
-├── aspect_windows.py    # Aspect timing calculations
-├── transits.py          # Transit calculations
+├── complex.py           # Complex-number engine for cycle analysis
+├── display.py           # Display utilities
+├── lunar_calendar.py    # Biodynamic / lunar calendar helpers
+├── aspects/             # Data-driven aspect engine (presets, harmonics)
+├── charts/              # compute_chart / CHART_DTYPE abstraction
+├── houses/              # Six house systems (Placidus, Whole Sign, ...)
+├── synastry/            # Inter-chart aspect cross-products
+├── composite/           # Midpoint composite charts
+├── returns/             # Solar and lunar returns
+├── parts/               # Arabic Parts framework
+├── cycles/              # Planetary cycle series (NumPy structured arrays)
+├── cli/                 # Interactive command-line interface
 ├── cache/               # High-performance ephemeris cache
-│   ├── __init__.py
-│   └── ephemeris_cache.py  # Monthly pre-computed positions
+├── data/                # Embedded Chiron Chebyshev coefficients (.npz)
 └── ephemeris/           # Astronomical calculations
     ├── time.py          # Time conversions
-    ├── orbital.py       # Orbital mechanics
+    ├── orbital.py       # Orbital mechanics (re-export hub)
     ├── coordinates.py   # Coordinate transformations
-    └── planets.py       # Planetary position calculations
+    ├── planets.py       # Planetary position calculations (per-body strategies)
+    └── chiron.py        # Pure-NumPy Chiron Chebyshev evaluator
 ```
 
 ## Roadmap
@@ -337,6 +379,13 @@ ketu/
 - [x] Transit calculations
 - [x] High-performance ephemeris cache
 - [x] Complex number engine for cycle analysis
+- [x] Configurable aspects and six house systems
+- [x] Chart abstraction (`compute_chart` / `CHART_DTYPE`)
+- [x] Relational charts (synastry, midpoint composite)
+- [x] Predictive charts (solar and lunar returns)
+- [x] Arabic Parts framework
+- [x] Chiron as the 14th body (pure-NumPy Chebyshev evaluation)
+- [x] Data-driven aspect engine with harmonic-based selection
 
 ## Contribution
 
