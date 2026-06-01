@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-05-29T22:49:22Z"
-last_activity: 2026-05-29
+last_updated: "2026-05-31T00:00:00Z"
+last_activity: 2026-05-31
 progress:
-  total_phases: 6
+  total_phases: 7
   completed_phases: 5
   total_plans: 17
   completed_plans: 17
-  percent: 100
+  percent: 71
 ---
 
 # Project State
@@ -20,16 +20,16 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** MILESTONE v1.3 (Chiron & Engine Hardening) — roadmapped into 6 phases (21-26). Axis order BINDING: Quality (21) → Ephemeris Refactor (22) → Spike Chiron (23) → Chiron (24) → Documentation (25) → Release 1.3.0 (26). v1.2.0 live on PyPI; v1.0/v1.1/v1.2 archived to `.planning/milestones/`.
+**Current focus:** MILESTONE v1.3 (Chiron & Engine Hardening) — roadmapped into 7 phases (21-27). Axis order BINDING: Quality (21) → Ephemeris Refactor (22) → Spike Chiron (23) → Chiron (24) → Documentation (25) → Aspects Data-Driven (26) → Release 1.3.0 (27). Release relocated AFTER the aspect refactor (decided 2026-05-31) so v1.3.0 ships the final aspect contract. v1.2.0 live on PyPI; v1.0/v1.1/v1.2 archived to `.planning/milestones/`.
 
 ## Current Position
 
-Phase: 25 of 26 (Documentation) — COMPLETE → Phase 26 (Release 1.3.0) remaining
+Phase: 25 of 27 (Documentation) — COMPLETE → Phase 26 (Aspects Data-Driven) next, then Phase 27 (Release 1.3.0)
 Plan: 25-03 COMPLETE (DOC-12: gettext pipeline regenerated; fr build clean at 1 warning)
-Status: Phase 25 complete (2026-05-29). All 3 plans done: DOC-10 (existing pages), DOC-11 (5 new pages), DOC-12 (fr pipeline). En+fr builds at 1 warning each. 17/17 plans shipped.
-Last activity: 2026-05-29 — Phase 25 plan 03 executed (commits f52fecf, a9ff166)
+Status: Phase 25 complete (2026-05-30). All 3 plans done: DOC-10 (existing pages), DOC-11 (5 new pages), DOC-12 (fr pipeline). En+fr builds at 1 warning each. 17/17 plans shipped. Roadmap restructured 2026-05-31: release relocated after the aspect refactor (Phase 26 inserted, release → Phase 27).
+Last activity: 2026-05-31 — roadmap restructure (Phase 26 Aspects inserted, release → 27); 3 cycles bugfixes shipped 2026-05-30 (commits eb6f5f8, 4867368, 24cb13a)
 
-Progress: [██████████████] 99% — 4/6 phases completed, 16/17 plans
+Progress: [██████████░░░░] 71% — 5/7 phases completed, 17/17 plans
 
 ## v1.3 Roadmap Structure
 
@@ -38,7 +38,8 @@ Progress: [██████████████] 99% — 4/6 phases comple
 - **Phase 23: Spike Chiron** (SPK-01, SPK-02) — Chebyshev-by-segment fit measured (segment size ~32d, degree, coeff size, accuracy < 0.01° vs Swiss); go/no-go decision recorded. Research/spike: deliverable is measurements + a decision, not runtime code. MUST precede Chiron.
 - **Phase 24: Chiron** (CHIR-01..05) — embedded Chebyshev coeffs `.npz` (offline pyswisseph build-only generator → 100% NumPy runtime eval); 6 insertion points (`core.py` bodies, `orbital.py` ORBITAL_ELEMENTS, `planets.py` BODY_INDICES + SWE_IDS + `calc_planet_position` strategy + `get_planet_name` + `calculate_all_positions`); 13→14 bodies breaking `test_body_count_frozen_at_thirteen` (`tests/test_ketu.py:110`) + synastry/transits/charts body-count assertions; accuracy regression pins 1950-2050.
 - **Phase 25: Documentation** (DOC-10, DOC-11, DOC-12) — 12 frozen `docs/source/` pages (stuck at v1.0) lifted to full v1.1/v1.2/v1.3 surface; new pages (relational / predictive / parts / Chiron); fr regenerated via gettext (`docs/locale/`), clean en+fr build. SINGLE phase, near release.
-- **Phase 26: Release 1.3.0** (REL-10, REL-11) — version bump, CHANGELOG `[1.3.0]` + UPGRADING 13→14 note, PyPI via OIDC + GitHub release, fresh-venv Chiron smoke import (no `pyswisseph` in runtime).
+- **Phase 26: Aspects Data-Driven + Dynamic Harmonics** (ASP-01/02/03, TBD) — replace scattered aspect constants with one declarative `Aspect(name, angle, harmonic, coefficient, symbol)` table the engine iterates over; harmonic-based selection API (`aspects_for_harmonics([...])`); default set drops full-circle minors (H5/H9/H10 → opt-in), keeping half-circle harmonics 1/2/3/6; breaking public-surface change documented (CHANGELOG/UPGRADING) + concepts.md/api.md + fr gettext. Supersedes the v1.4 BACKLOG item. MUST precede release.
+- **Phase 27: Release 1.3.0** (REL-10, REL-11) — version bump, CHANGELOG `[1.3.0]` + UPGRADING (13→14 note + aspect changes), PyPI via OIDC + GitHub release, fresh-venv Chiron smoke import (no `pyswisseph` in runtime).
 
 ## Critical Milestone Constraints
 

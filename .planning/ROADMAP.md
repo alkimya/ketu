@@ -5,7 +5,7 @@
 - ✅ **v1.0 Production Stability** — Phases 1-7 (shipped 2026-02-12, archived to `.planning/milestones/v1.0-ROADMAP.md`)
 - ✅ **v1.1 Flexibility & Houses** — Phases 8-12 (shipped 2026-05-08, archived to `.planning/milestones/v1.1-ROADMAP.md`)
 - ✅ **v1.2 Astrologie relationnelle et prédictive** — Phases 13-20 (shipped 2026-05-28; `ketu==1.2.0` on PyPI, archived to `.planning/milestones/v1.2-ROADMAP.md`)
-- 🚧 **v1.3 Chiron & Engine Hardening** — Phases 21-26 (in progress; embed Chiron as 14th body after hardening the engine + lifting quality to 100%, then docs + `ketu==1.3.0`)
+- 🚧 **v1.3 Chiron & Engine Hardening** — Phases 21-27 (in progress; embed Chiron as 14th body after hardening the engine + lifting quality to 100%, then docs, then the data-driven aspect refactor, then `ketu==1.3.0`)
 
 ## Phases
 
@@ -54,12 +54,12 @@ Full details archived to `.planning/milestones/v1.2-ROADMAP.md`.
 
 </details>
 
-### 🚧 v1.3 Chiron & Engine Hardening (Phases 21-26) — IN PROGRESS
+### 🚧 v1.3 Chiron & Engine Hardening (Phases 21-27) — IN PROGRESS
 
 **Milestone Goal:** Embed Chiron (Chebyshev-by-segment coefficients, pure-NumPy runtime) as the 14th body — after hardening the fragile ephemeris engine and lifting project quality to 100% — then bring the Sphinx docs (en+fr) up to the full v1.1/v1.2/v1.3 surface and ship `ketu==1.3.0`.
 
-**Axis order (BINDING):** Quality → Ephemeris refactor → Spike Chiron → Chiron → Docs → Release.
-Refactor lands BEFORE Chiron (clean per-body strategy, not aggravated if-elif debt). Spike lands BEFORE Chiron (measure achievable accuracy + go/no-go). Docs land BEFORE Release.
+**Axis order (BINDING):** Quality → Ephemeris refactor → Spike Chiron → Chiron → Docs → Aspects refactor → Release.
+Refactor lands BEFORE Chiron (clean per-body strategy, not aggravated if-elif debt). Spike lands BEFORE Chiron (measure achievable accuracy + go/no-go). Docs land BEFORE Release. The aspect refactor (Phase 26) lands BEFORE Release so v1.3.0 ships the final aspect contract — no breaking 1.4 follow-up (decided 2026-05-31: relocate the release after the aspect refactor).
 
 **Cross-cutting constraints (v1.3):**
 
@@ -162,26 +162,45 @@ Plans:
 - [x] 25-02-PLAN.md — Author 5 new pages (houses, relational_charts, predictive_charts, arabic_parts, chiron) with runnable examples (DOC-11)
 - [x] 25-03-PLAN.md — Regenerate fr via gettext pipeline (extract→update→resolve fuzzy→compile); clean en+fr build (DOC-12)
 
-#### Phase 26: Release 1.3.0
+#### Phase 26: Aspects Data-Driven + Dynamic Harmonics
 
-**Goal**: `ketu==1.3.0` is published to PyPI via OIDC with a GitHub release — version bumped, CHANGELOG/UPGRADING documenting the additive features and the Chiron 13→14 breaking-contract note — and a fresh-venv smoke import of Chiron + all subpackages is green.
+**Goal**: The aspect engine is data-driven — aspects live in a single declarative table (name, angle, harmonic, coefficient, symbol) and the detection logic iterates over it — with dynamic selection by harmonic, the full-circle minor aspects (H5/H9/H10) removed from the default set, and the public preset/coefficient surface migrated cleanly. Landing this BEFORE the release means v1.3.0 ships the final aspect contract (no breaking 1.4 follow-up).
 **Depends on**: Phase 25
+**Requirements**: ASP-01, ASP-02, ASP-03 (to be defined in REQUIREMENTS.md)
+**Success Criteria** (what must be TRUE):
+
+  1. Aspects are defined in one declarative data table (`Aspect(name, angle, harmonic, coefficient, symbol)`); the detection/orb logic iterates over the table with no per-aspect hardcoding scattered across modules.
+  2. An API composes an aspect set from a list of harmonics (e.g. `aspects_for_harmonics([1, 2, 3, 6])`) in addition to the existing `CLASSICAL`/`TRADITIONAL`/`EXTENDED` presets.
+  3. The default aspect set contains only the half-circle harmonics (1, 2, 3, 6 → 7 aspects); the full-circle minor aspects (H5/H9/H10: quintile, biquintile, novile, binovile, quadrinovile, decile, tredecile) are opt-in, not default.
+  4. The breaking change to the public aspect surface (default set, coefficients, presets) is documented in CHANGELOG + UPGRADING; `concepts.md` Harmonic Theory + `api.md` are updated and the fr gettext catalogs regenerated; full suite green at 100% coverage.
+**Plans**: TBD (supersedes the v1.4 BACKLOG item "Aspects data-driven + dynamic harmonics")
+
+Plans:
+
+- [ ] 26-01: TBD (declarative Aspect table + iterate detection/orb logic, ASP-01)
+- [ ] 26-02: TBD (harmonic-based selection API + default without H5/H9/H10 + preset migration, ASP-02)
+- [ ] 26-03: TBD (CHANGELOG/UPGRADING breaking note + concepts.md/api.md + fr gettext, ASP-03)
+
+#### Phase 27: Release 1.3.0
+
+**Goal**: `ketu==1.3.0` is published to PyPI via OIDC with a GitHub release — version bumped, CHANGELOG/UPGRADING documenting the additive features, the Chiron 13→14 breaking-contract note, and the aspect-engine breaking changes — and a fresh-venv smoke import of Chiron + all subpackages is green.
+**Depends on**: Phase 26
 **Requirements**: REL-10, REL-11
 **Success Criteria** (what must be TRUE):
 
-  1. Version is bumped to 1.3.0; CHANGELOG has a `[1.3.0]` entry listing the additive features plus the Chiron breaking-positional-contract note for Kala; UPGRADING.md documents the 13→14 positional-array change.
+  1. Version is bumped to 1.3.0; CHANGELOG has a `[1.3.0]` entry listing the additive features plus the Chiron breaking-positional-contract note for Kala and the aspect-engine breaking changes; UPGRADING.md documents the 13→14 positional-array change and the aspect default/coefficient/preset changes.
   2. `ketu==1.3.0` is published to PyPI via OIDC trusted publishing with a GitHub release attaching sdist + wheel.
   3. A fresh-venv `pip install ketu==1.3.0` smoke-imports all subpackages and resolves Chiron (`calc_planet_position(jd, 13)` returns a finite longitude) with NO `pyswisseph` in the runtime environment.
 **Plans**: TBD
 
 Plans:
 
-- [ ] 26-01: TBD (version bump + CHANGELOG `[1.3.0]` + UPGRADING 13→14 note, REL-10)
-- [ ] 26-02: TBD (PyPI OIDC publish + GitHub release + fresh-venv Chiron smoke, REL-11)
+- [ ] 27-01: TBD (version bump + CHANGELOG `[1.3.0]` + UPGRADING 13→14 + aspect notes, REL-10)
+- [ ] 27-02: TBD (PyPI OIDC publish + GitHub release + fresh-venv Chiron smoke, REL-11)
 
 ## Progress
 
-**Execution Order:** Phases execute in numeric order: 21 → 22 → 23 → 24 → 25 → 26.
+**Execution Order:** Phases execute in numeric order: 21 → 22 → 23 → 24 → 25 → 26 → 27.
 
 | Phase                                  | Milestone | Plans Complete | Status        | Completed  |
 | -------------------------------------- | --------- | -------------- | ------------- | ---------- |
@@ -204,14 +223,16 @@ Plans:
 | 23. Spike Chiron                       | v1.3      | 2/2            | ✓ Complete    | 2026-05-29 |
 | 24. Chiron                             | v1.3      | 5/5            | ✓ Complete    | 2026-05-29 |
 | 25. Documentation                      | v1.3      | 3/3            | ✓ Complete    | 2026-05-30 |
-| 26. Release 1.3.0                      | v1.3      | 0/TBD          | Not started   | -          |
+| 26. Aspects Data-Driven                | v1.3      | 0/TBD          | Not started   | -          |
+| 27. Release 1.3.0                      | v1.3      | 0/TBD          | Not started   | -          |
 
 ---
 
 *v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`*
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
 *v1.2 phase details archived to `.planning/milestones/v1.2-ROADMAP.md`*
-*Roadmap last updated: 2026-05-30 — Phase 25 (Documentation) COMPLETE: DOC-10/11/12 satisfied. 12 frozen `docs/source/` pages lifted to full v1.1/v1.2/v1.3 surface (api.md rewritten for 11 subpackage sections, conf.py→1.3.0, toctree wired, changelog/migration with 13→14 breaking note, Chiron in body table); 5 new pages authored (houses/relational_charts/predictive_charts/arabic_parts/chiron) with examples actually executed (5/5 pass); fr regenerated via gettext pipeline (`python3 -m` — broken venv shebangs bypassed), 17 .po/.mo, builds clean en+fr (1 baseline warning, zero new). fr msgstr largely English-fallback (plan-accepted). Verifier PASSED 3/3. Next: `/gsd:plan-phase 26` (Release 1.3.0).*
+*Roadmap last updated: 2026-05-31 — Release relocated AFTER the aspect refactor. Inserted Phase 26 (Aspects Data-Driven + Dynamic Harmonics) before the release; the old Phase 26 (Release 1.3.0) is renumbered Phase 27. Rationale: the aspect refactor is a breaking change to the public aspect surface (default set, coefficients, presets) — landing it before publishing means v1.3.0 ships the final aspect contract with no breaking 1.4 follow-up. The v1.4 BACKLOG item "Aspects data-driven + dynamic harmonics" is superseded by Phase 26. Milestone v1.3 now spans Phases 21-27; axis order extended: …→ Docs → Aspects refactor → Release. ASP-01/02/03 to be defined in REQUIREMENTS.md at plan time. Next: `/gsd:plan-phase 26` (Aspects Data-Driven).*
+*Roadmap previous update: 2026-05-30 — Phase 25 (Documentation) COMPLETE: DOC-10/11/12 satisfied. 12 frozen `docs/source/` pages lifted to full v1.1/v1.2/v1.3 surface (api.md rewritten for 11 subpackage sections, conf.py→1.3.0, toctree wired, changelog/migration with 13→14 breaking note, Chiron in body table); 5 new pages authored (houses/relational_charts/predictive_charts/arabic_parts/chiron) with examples actually executed (5/5 pass); fr regenerated via gettext pipeline (`python3 -m` — broken venv shebangs bypassed), 17 .po/.mo, builds clean en+fr (1 baseline warning, zero new). fr msgstr largely English-fallback (plan-accepted). Verifier PASSED 3/3. Next: `/gsd:plan-phase 26` (Release 1.3.0).*
 *Roadmap previous update: 2026-05-29 — Phase 24 (Chiron) COMPLETE: CHIR-01..05 delivered. Chiron is the 14th body (body_id=13). Offline pyswisseph-build-only generator `tools/gen_chiron_coeffs.py` → committed `ketu/data/chiron_coeffs.npz` (289.7 KB, 1142 segments); pure-NumPy evaluator `ketu/ephemeris/chiron.py` (zero swisseph under ketu/). Wired at all 6 insertion points via single BODY_STRATEGIES entry (no special-casing). D-08 breaking change executed: bodies axis 13→14, `test_body_count_frozen_at_thirteen`→`_fourteen` (tests/charts/test_dtype.py:218), CHART_DTYPE (14,)/(14,14), synastry/cache/transits rippled, ketu.data packaged in wheel/sdist. Accuracy regression pins 7 refs 1950-2050, worst Δλ=0.005695° (1.75× under 0.01°). Two Rule-1 bugs fixed mid-flight (last-segment t-normalisation; stale-cache IndexError). Verifier PASSED 4/4, 1373 tests + 100% coverage + mypy strict + 56 doctests. Kala must adapt to the 13→14 positional contract (Phase 26 UPGRADING). Next: `/gsd:plan-phase 25` (Documentation).*
 *Roadmap previous update: 2026-05-29 — Phase 23 (Spike Chiron) COMPLETE: SPK-01/02 delivered. Chebyshev-by-segment fit measured against live pyswisseph — primary config (seg=32j, deg=10) achieves max|Δλ|=0.000861° (11.6× under the 0.01° target) over all 1142 segments 1950-2050; worst segment 2027-04-20. .npz lon+lat+dist footprint 294.4 KB; pure-NumPy chebval evaluator confirmed. GO verdict recorded in 23-DECISION.md with locked Phase 24 params (seg=32j/deg=10/3 quantities). Spike-only: nothing under ketu/, tests/, pyproject.toml touched; suite + 100% coverage gate untouched. Verifier PASSED 3/3. Next: `/gsd:plan-phase 24` (Chiron).*
 *Roadmap previous update: 2026-05-29 — Phase 22 (Ephemeris Refactor) COMPLETE: REF-01/02/03 delivered. planets.py per-body if-elif → BODY_STRATEGIES registry (batch-Ketu bug fixed), orbital.py (859 LOC) split into 5 focused modules + byte-identical re-export hub, 12 conftest fixtures consolidated to root tests/conftest.py. Verifier PASSED 3/3, 1351 tests + 100% coverage. Engine hardened for clean Chiron strategy-add.*
