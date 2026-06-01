@@ -1282,6 +1282,40 @@ class TestAspectsCalculatorMissingPaths:
         # Sun's distance velocity is tiny (AU/day)
         assert abs(vel) < 1.0
 
+    def test_get_aspect_conjunction_return(self) -> None:
+        """get_aspect line 79: conjunction path returns (b1, b2, 0, dist).
+
+        JD=2451550.0 is ~2000-01-06, where Sun (body=0) and Moon (body=1)
+        are ~2.95° apart (firmly inside the conjunction orb). This exercises
+        the ``if i_asp == 0 and dist <= orb: return ...`` branch.
+        """
+        from ketu.aspects.calculator import get_aspect
+
+        jd_new_moon = 2451550.0  # Sun-Moon dist ~2.95° (in conjunction orb)
+        result = get_aspect(jd_new_moon, 0, 1)
+        assert result is not None, (
+            f"Sun-Moon at JD {jd_new_moon} expected in Conjunction orb; got None"
+        )
+        b1, b2, i_asp, orb = result
+        assert i_asp == 0, f"Expected Conjunction (i_asp=0); got i_asp={i_asp}"
+        assert b1 == 0
+        assert b2 == 1
+        # dist is returned directly for conjunction (NOT aspect_angle - dist)
+        assert orb > 0, "Conjunction orb should be positive (== dist)"
+
+    def test_get_aspect_no_aspect_returns_none(self) -> None:
+        """get_aspect line 82: no-aspect path returns None.
+
+        Bodies (Sun=0, Mars=4) at JD=2451545.0 (J2000) are not in orb
+        for any of the 14 aspects — exercises the ``return None`` branch.
+        """
+        from ketu.aspects.calculator import get_aspect
+
+        result = get_aspect(2451545.0, 0, 4)
+        assert result is None, (
+            f"Sun-Mars at J2000 expected no aspect; got {result}"
+        )
+
 
 if __name__ == "__main__":
     pytest.main([__file__, "-v"])

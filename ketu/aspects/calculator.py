@@ -119,18 +119,32 @@ def calculate_aspects(
     """
     # Resolve aspect-set ONCE per API call, never inside per-pair loops.
     mask = resolve_aspect_set(aspects)
-    selected_indices_set = set(int(i) for i in np.where(mask)[0].tolist())
+    selected_indices: list[int] = [int(i) for i in np.where(mask)[0].tolist()]
+    selected_angles: npt.NDArray[np.float64] = _CORE_ASPECTS["angle"][mask]
+    selected_coefs: npt.NDArray[np.float64] = _CORE_ASPECTS["coef"][mask]
 
     bodies_id = l_bodies["id"]
-    # ``get_aspect`` is the low-level single-match scanner; out of scope per
-    # ASP-07 (it does not accept ``aspects=``). We filter its emitted i_asp
-    # against the resolved mask post-hoc to avoid leaking unselected aspects.
-    aspects_data = [get_aspect(jdate, *comb) for comb in combs(bodies_id, 2)]
-    aspects_data = [
-        aspect
-        for aspect in aspects_data
-        if aspect is not None and int(aspect[2]) in selected_indices_set
-    ]
+    aspects_data = []
+    for b1, b2 in combs(bodies_id, 2):
+        # combs() always yields pairs in iteration order (body IDs 0-13 ascending),
+        # so b1 < b2 is guaranteed here. No swap needed.
+        dist = distance(long(jdate, int(b1)), long(jdate, int(b2)))
+        # Iterate ONLY selected aspects (first-match-wins within the selected set).
+        # This matches the vectorized behavior: unselected aspects are not
+        # considered at all, so a pair "blocked" by an unselected first-match
+        # in get_aspect is now correctly checked against the selected set.
+        for k, i_asp in enumerate(selected_indices):
+            aspect_angle = float(selected_angles[k])
+            aspect_coef = float(selected_coefs[k])
+            orb = (l_bodies["orb"][np.where(l_bodies["id"] == b1)[0][0]] +
+                   l_bodies["orb"][np.where(l_bodies["id"] == b2)[0][0]]) / 2 * aspect_coef
+            if i_asp == 0:
+                if dist <= orb:
+                    aspects_data.append((int(b1), int(b2), i_asp, float(dist)))
+                    break
+            elif aspect_angle - orb <= dist <= aspect_angle + orb:
+                aspects_data.append((int(b1), int(b2), i_asp, float(aspect_angle - dist)))
+                break
     return np.array(
         aspects_data,
         dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")],

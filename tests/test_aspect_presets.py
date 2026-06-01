@@ -32,6 +32,7 @@ from ketu.aspects.presets import (
     CLASSICAL,
     EXTENDED,
     TRADITIONAL,
+    aspects_for_harmonics,
     resolve_aspect_set,
 )
 from ketu.calculations import utc_to_julian
@@ -127,10 +128,13 @@ def test_traditional_subset_of_extended() -> None:
 # ---------------------------------------------------------------------------
 
 
-def test_resolve_none_returns_classical() -> None:
-    """resolve_aspect_set(None) returns CLASSICAL (default behavior, ASP-04)."""
+def test_resolve_none_returns_default_half_circle() -> None:
+    """resolve_aspect_set(None) returns TRADITIONAL — 7 half-circle default (Phase 26)."""
     result = resolve_aspect_set(None)
-    np.testing.assert_array_equal(result, CLASSICAL)
+    np.testing.assert_array_equal(result, TRADITIONAL)
+    assert int(result.sum()) == 7, (
+        f"library default must be 7 (TRADITIONAL); got {int(result.sum())}"
+    )
 
 
 def test_resolve_classical_string_lowercase() -> None:
@@ -439,21 +443,21 @@ class TestAspectPresetsIntegration:
         leaked = names - CLASSICAL_NAMES
         assert not leaked, f"find_aspects_between_dates with CLASSICAL leaked: {leaked}"
 
-    def test_find_aspects_between_dates_default_equals_classical(self) -> None:
-        """ASP-04 / Blocker-1: find_aspects_between_dates with no aspects= kwarg behaves
-        identically to aspects=CLASSICAL."""
+    def test_find_aspects_between_dates_default_equals_traditional(self) -> None:
+        """ASP-04 / Phase 26: find_aspects_between_dates with no aspects= kwarg behaves
+        identically to aspects=TRADITIONAL (library default shifted 5->7)."""
         r_default = find_aspects_between_dates(
             self.jd_window_start, self.jd_window_end, body1=0, body2=1
         )
-        r_classical = find_aspects_between_dates(
+        r_traditional = find_aspects_between_dates(
             self.jd_window_start,
             self.jd_window_end,
             body1=0,
             body2=1,
-            aspects=CLASSICAL,
+            aspects=TRADITIONAL,
         )
-        assert r_default == r_classical, (
-            "find_aspects_between_dates default diverges from explicit aspects=CLASSICAL"
+        assert r_default == r_traditional, (
+            "find_aspects_between_dates default diverges from explicit aspects=TRADITIONAL"
         )
 
     def test_find_aspects_between_dates_extended_superset(self) -> None:
@@ -486,10 +490,10 @@ class TestAspectPresetsIntegration:
             f"EXTENDED ({len(r_extended)}) should have >= CLASSICAL ({len(r_classical)}) rows"
         )
 
-    def test_default_equals_classical(self) -> None:
-        """ASP-04: aspects=None default behaves identically to aspects=CLASSICAL on calculate_aspects."""
+    def test_default_equals_traditional(self) -> None:
+        """ASP-04 (Phase 26): aspects=None default behaves identically to aspects=TRADITIONAL on calculate_aspects."""
         r_default = calculate_aspects(self.jd)
-        r_classical = calculate_aspects(self.jd, aspects=CLASSICAL)
+        r_traditional = calculate_aspects(self.jd, aspects=TRADITIONAL)
 
         # Sort by (body1, body2, i_asp, orb) tuple for stable comparison
         def keyed(arr: Any) -> list[tuple[int, int, int, float]]:
@@ -498,8 +502,8 @@ class TestAspectPresetsIntegration:
                 for r in arr
             )
 
-        assert keyed(r_default) == keyed(r_classical), (
-            "default (aspects=None) result diverges from explicit aspects=CLASSICAL"
+        assert keyed(r_default) == keyed(r_traditional), (
+            "default (aspects=None) result diverges from explicit aspects=TRADITIONAL"
         )
 
     def test_traditional_no_leak(self) -> None:
@@ -521,3 +525,133 @@ class TestAspectPresetsIntegration:
                 f"expected subset of {CLASSICAL_INDICES} (0,4,7,9,13). "
                 f"Renumbering bug per RESEARCH.md Pitfall 1."
             )
+
+
+# ---------------------------------------------------------------------------
+# aspects_for_harmonics — full branch coverage (Phase 26 plan 02)
+# ---------------------------------------------------------------------------
+
+
+class TestAspectsForHarmonics:
+    """Full branch coverage for aspects_for_harmonics (Phase 26 plan 02).
+
+    Required by the 100% coverage gate (fail_under=100, zero pragma).
+    Every branch in the new function must be hit: happy paths, empty input,
+    and all four error paths (bool, non-int, harmonic-not-in-table, valid
+    harmonic number out of _VALID_HARMONICS).
+    """
+
+    # --- Happy paths ---
+
+    def test_harmonics_1_2_3_6_is_traditional(self) -> None:
+        """[1,2,3,6] (half-circle harmonics) == TRADITIONAL and sums to 7."""
+        result = aspects_for_harmonics([1, 2, 3, 6])
+        assert int(result.sum()) == 7
+        np.testing.assert_array_equal(result, TRADITIONAL)
+
+    def test_harmonics_5_9_10_minor_sum_7(self) -> None:
+        """[5,9,10] (full-circle minors) sums to 7."""
+        result = aspects_for_harmonics([5, 9, 10])
+        assert int(result.sum()) == 7
+
+    def test_harmonics_all_is_extended(self) -> None:
+        """[1,2,3,5,6,9,10] (all valid harmonics) == EXTENDED and sums to 14."""
+        result = aspects_for_harmonics([1, 2, 3, 5, 6, 9, 10])
+        assert int(result.sum()) == 14
+        np.testing.assert_array_equal(result, EXTENDED)
+
+    def test_harmonics_1_conjunction_and_opposition(self) -> None:
+        """[1] selects Conjunction (H1) + Opposition (H1): sum 2."""
+        result = aspects_for_harmonics([1])
+        assert int(result.sum()) == 2
+        # indices 0 (Conjunction) and 13 (Opposition) must be True
+        assert bool(result[0]), "Conjunction (H1) must be True for harmonics=[1]"
+        assert bool(result[13]), "Opposition (H1) must be True for harmonics=[1]"
+
+    def test_harmonics_3_sextile_and_trine(self) -> None:
+        """[3] selects Sextile (H3) + Trine (H3): sum 2.
+
+        Pins User Decision 2: Sextile=H3 (not H6), Trine=H3 (half-circle
+        convention from concepts.md).
+        """
+        result = aspects_for_harmonics([3])
+        assert int(result.sum()) == 2
+        # Sextile=index 4, Trine=index 9
+        assert bool(result[4]), "Sextile (H3) must be True for harmonics=[3]"
+        assert bool(result[9]), "Trine (H3) must be True for harmonics=[3]"
+
+    def test_harmonics_6_semi_sextile_and_quincunx(self) -> None:
+        """[6] selects Semi-sextile (H6) + Quincunx (H6): sum 2."""
+        result = aspects_for_harmonics([6])
+        assert int(result.sum()) == 2
+        # Semi-sextile=index 1, Quincunx=index 11
+        assert bool(result[1]), "Semi-sextile (H6) must be True for harmonics=[6]"
+        assert bool(result[11]), "Quincunx (H6) must be True for harmonics=[6]"
+
+    def test_harmonics_empty_list_all_false(self) -> None:
+        """Empty input [] returns an all-False frozen mask (sum 0, valid empty selection)."""
+        result = aspects_for_harmonics([])
+        assert int(result.sum()) == 0
+        assert result.shape == (14,)
+        assert result.dtype == np.bool_
+
+    def test_harmonics_result_is_frozen(self) -> None:
+        """aspects_for_harmonics returns a frozen (writeable=False) mask."""
+        result = aspects_for_harmonics([1])
+        assert not result.flags.writeable, "result must be frozen (writeable=False)"
+        with pytest.raises(ValueError):
+            result[0] = False  # type: ignore[index]
+
+    def test_harmonics_result_shape_and_dtype(self) -> None:
+        """Return value is always shape (14,), dtype np.bool_."""
+        for spec in [[1], [1, 2], [1, 2, 3, 6], []]:
+            result = aspects_for_harmonics(spec)
+            assert result.shape == (14,), (
+                f"shape mismatch for spec {spec!r}: got {result.shape}"
+            )
+            assert result.dtype == np.bool_, (
+                f"dtype mismatch for spec {spec!r}: got {result.dtype}"
+            )
+
+    # --- Error paths (each must raise ValueError) ---
+
+    def test_harmonics_7_not_in_table_raises(self) -> None:
+        """[7] is not in the valid-harmonic set — must raise ValueError."""
+        with pytest.raises(ValueError, match="unknown harmonic"):
+            aspects_for_harmonics([7])
+
+    def test_harmonics_4_not_in_table_raises(self) -> None:
+        """[4] is not in the valid-harmonic set — must raise ValueError."""
+        with pytest.raises(ValueError, match="unknown harmonic"):
+            aspects_for_harmonics([4])
+
+    def test_harmonics_error_message_lists_valid(self) -> None:
+        """Error message for unknown harmonic lists all valid harmonics."""
+        try:
+            aspects_for_harmonics([7])
+        except ValueError as exc:
+            msg = str(exc)
+            for valid_h in [1, 2, 3, 5, 6, 9, 10]:
+                assert str(valid_h) in msg, (
+                    f"valid harmonic {valid_h} missing from error message: {msg!r}"
+                )
+
+    def test_harmonics_string_item_raises(self) -> None:
+        """String item like '3' raises ValueError about expected int."""
+        with pytest.raises(ValueError, match="expected int"):
+            aspects_for_harmonics(["3"])  # type: ignore[list-item]
+
+    def test_harmonics_float_item_raises(self) -> None:
+        """Float item like 3.0 raises ValueError about expected int."""
+        with pytest.raises(ValueError, match="expected int"):
+            aspects_for_harmonics([3.0])  # type: ignore[list-item]
+
+    def test_harmonics_bool_true_raises(self) -> None:
+        """[True] must be rejected (bool is a subclass of int — explicit guard)."""
+        with pytest.raises(ValueError, match="expected int"):
+            aspects_for_harmonics([True])  # type: ignore[list-item]
+
+    def test_harmonics_bool_false_raises(self) -> None:
+        """[False] must be rejected (bool is a subclass of int — explicit guard)."""
+        with pytest.raises(ValueError, match="expected int"):
+            aspects_for_harmonics([False])  # type: ignore[list-item]
