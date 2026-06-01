@@ -5,7 +5,7 @@
 - ✅ **v1.0 Production Stability** — Phases 1-7 (shipped 2026-02-12, archived to `.planning/milestones/v1.0-ROADMAP.md`)
 - ✅ **v1.1 Flexibility & Houses** — Phases 8-12 (shipped 2026-05-08, archived to `.planning/milestones/v1.1-ROADMAP.md`)
 - ✅ **v1.2 Astrologie relationnelle et prédictive** — Phases 13-20 (shipped 2026-05-28; `ketu==1.2.0` on PyPI, archived to `.planning/milestones/v1.2-ROADMAP.md`)
-- 🚧 **v1.3 Chiron & Engine Hardening** — Phases 21-27 (in progress; embed Chiron as 14th body after hardening the engine + lifting quality to 100%, then docs, then the data-driven aspect refactor, then `ketu==1.3.0`)
+- 🚧 **v1.3 Chiron & Engine Hardening** — Phases 21-27 (+ inserted 26.1) (in progress; embed Chiron as 14th body after hardening the engine + lifting quality to 100%, then docs, then the data-driven aspect refactor, then the full French translation, then `ketu==1.3.0`)
 
 ## Phases
 
@@ -54,11 +54,11 @@ Full details archived to `.planning/milestones/v1.2-ROADMAP.md`.
 
 </details>
 
-### 🚧 v1.3 Chiron & Engine Hardening (Phases 21-27) — IN PROGRESS
+### 🚧 v1.3 Chiron & Engine Hardening (Phases 21-27, + inserted 26.1) — IN PROGRESS
 
-**Milestone Goal:** Embed Chiron (Chebyshev-by-segment coefficients, pure-NumPy runtime) as the 14th body — after hardening the fragile ephemeris engine and lifting project quality to 100% — then bring the Sphinx docs (en+fr) up to the full v1.1/v1.2/v1.3 surface and ship `ketu==1.3.0`.
+**Milestone Goal:** Embed Chiron (Chebyshev-by-segment coefficients, pure-NumPy runtime) as the 14th body — after hardening the fragile ephemeris engine and lifting project quality to 100% — then bring the Sphinx docs (en+fr) up to the full v1.1/v1.2/v1.3 surface, fully translate the docs to French, and ship `ketu==1.3.0`.
 
-**Axis order (BINDING):** Quality → Ephemeris refactor → Spike Chiron → Chiron → Docs → Aspects refactor → Release.
+**Axis order (BINDING):** Quality → Ephemeris refactor → Spike Chiron → Chiron → Docs → Aspects refactor → French translation → Release.
 Refactor lands BEFORE Chiron (clean per-body strategy, not aggravated if-elif debt). Spike lands BEFORE Chiron (measure achievable accuracy + go/no-go). Docs land BEFORE Release. The aspect refactor (Phase 26) lands BEFORE Release so v1.3.0 ships the final aspect contract — no breaking 1.4 follow-up (decided 2026-05-31: relocate the release after the aspect refactor).
 
 **Cross-cutting constraints (v1.3):**
@@ -181,6 +181,22 @@ Plans:
 - [x] 26-02-PLAN.md (Wave 2, depends 26-01) — aspects_for_harmonics([...]) frozen-mask API + harmonic-derived TRADITIONAL/EXTENDED + resolver default flip 5→7 (CLASSICAL stays curated 5); CLI pinned to classical (byte-stable) + divergence regression; calculator/charts docstrings; full-branch tests at 100% [ASP-02]
 - [x] 26-03-PLAN.md (Wave 3, depends 26-01/02) — CHANGELOG [1.3.0] BREAKING + UPGRADING v1.2->v1.3 restore recipe; concepts.md (default-now-7) + api.md (new API, stale-default fixes, coef==coefficient); fr gettext regenerated; en/fr build clean [ASP-03]
 
+#### Phase 26.1: French Documentation Translation (INSERTED)
+
+**Goal**: Every `docs/source/` page is fully translated to French — zero empty `msgstr` across all `docs/locale/fr/LC_MESSAGES/*.po` — covering the full v1.1/v1.2/v1.3 surface, regenerated and recompiled through the existing gettext pipeline, with a clean en+fr Sphinx build. This replaces the English-fallback assumed since Phases 25/26 and lands BEFORE the PyPI release so `ketu==1.3.0` ships with real French docs.
+**Depends on**: Phase 26 (the final aspect surface must be documented in English before it can be translated)
+**Requirements**: DOC-13 (to be defined in REQUIREMENTS.md at plan time)
+**Success Criteria** (what must be TRUE):
+
+  1. All `docs/locale/fr/LC_MESSAGES/*.po` catalogs have 100% translated `msgstr` (zero empty/English-fallback entries) covering every page: `api`, `concepts`, `houses`, `relational_charts`, `predictive_charts`, `arabic_parts`, `chiron`, `migration`, `architecture`, `changelog`, and all narrative pages (`index`, `quickstart`, `installation`, `examples`, `performance`, `contributing`, `acknowledgments`).
+  2. The translation is regenerated and recompiled through the existing gettext infra (`docs/Makefile`, `docs/migrate_translations.py`, `docs/locale/`) — no manual `.po`/`.mo` duplication, no broken markdown markers in `msgstr`.
+  3. The Sphinx docs build clean for BOTH en and fr (no new warnings vs the Phase 25 baseline of 1 warning each); `.mo` catalogs are compiled and committed.
+**Plans**: TBD (run `/gsd:plan-phase 26.1`)
+
+Plans:
+
+- [ ] TBD (run `/gsd:plan-phase 26.1` to break down — likely batched by page group: narrative / reference (api) / feature pages)
+
 #### Phase 27: Release 1.3.0
 
 **Goal**: `ketu==1.3.0` is published to PyPI via OIDC with a GitHub release — version bumped, CHANGELOG/UPGRADING documenting the additive features, the Chiron 13→14 breaking-contract note, and the aspect-engine breaking changes — and a fresh-venv smoke import of Chiron + all subpackages is green.
@@ -200,7 +216,7 @@ Plans:
 
 ## Progress
 
-**Execution Order:** Phases execute in numeric order: 21 → 22 → 23 → 24 → 25 → 26 → 27.
+**Execution Order:** Phases execute in numeric order: 21 → 22 → 23 → 24 → 25 → 26 → 26.1 → 27.
 
 | Phase                                  | Milestone | Plans Complete | Status        | Completed  |
 | -------------------------------------- | --------- | -------------- | ------------- | ---------- |
@@ -224,6 +240,7 @@ Plans:
 | 24. Chiron                             | v1.3      | 5/5            | ✓ Complete    | 2026-05-29 |
 | 25. Documentation                      | v1.3      | 3/3            | ✓ Complete    | 2026-05-30 |
 | 26. Aspects Data-Driven                | v1.3      | 3/3            | ✓ Complete    | 2026-06-01 |
+| 26.1 French Doc Translation (INSERTED) | v1.3      | 0/TBD          | Not planned   | -          |
 | 27. Release 1.3.0                      | v1.3      | 0/TBD          | Not started   | -          |
 
 ---
@@ -231,7 +248,8 @@ Plans:
 *v1.0 phase details archived to `.planning/milestones/v1.0-ROADMAP.md`*
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
 *v1.2 phase details archived to `.planning/milestones/v1.2-ROADMAP.md`*
-*Roadmap last updated: 2026-06-01 — Phase 26 (Aspects Data-Driven + Dynamic Harmonics) COMPLETE: ASP-01/02/03 satisfied, verifier PASSED 4/4. `core.aspects` enriched in place with `harmonic` (i4) + `symbol` (U4) columns (frozen vector `[1,6,10,9,3,5,9,2,10,3,5,6,9,1]`, half-circle convention Sextile=H3/Trine=H3/Semi-sextile=H6/Quincunx=H6, 7 majors carry Unicode glyphs, 7 minors blank); V1 name/angle/coef fingerprint `c5bd177…` byte-stable (append-only), new V13 fingerprint `3258530…` pinned. `aspects_for_harmonics(list[int])` frozen-mask API added (sister to `resolve_aspect_set`, same ValueError contract); TRADITIONAL/EXTENDED redefined on the harmonic column (single source of truth), CLASSICAL stays a curated index list. Library default flipped CLASSICAL(5)→TRADITIONAL(7); CLI pinned explicitly to `classical` (byte-stable, divergence regression added); D-07 chart-layer ratchet re-pointed to traditional. Pre-existing `calculate_aspects` bug fixed mid-flight (Quincunx masked behind Biquintile for pairs in both orbs — refactored to iterate only selected aspects). CHANGELOG `[1.3.0]` BREAKING + UPGRADING `v1.2 -> v1.3` restore recipe; concepts.md (default-now-7) + api.md (new API, stale EXTENDED-default claims removed, coef==coefficient note) updated; fr gettext regenerated (api.po +18, concepts.po +10, English-fallback), en+fr build clean. 1399 tests, 100% coverage, 57 doctests, mypy --strict clean. No version bump (Phase 27 owns REL-10). Next: `/gsd:plan-phase 27` (Release 1.3.0).*
+*Roadmap last updated: 2026-06-01 — Phase 26.1 (French Documentation Translation) INSERTED after Phase 26, before Phase 27 (Release). Rationale: the fr docs have shipped as English-fallback since Phase 25 (decision [Phase 25-03], plan-accepted) and Phase 26 added more English-fallback (api.po +18, concepts.po +10). Project memory (`project_fr_translations_before_release`) mandates real French + recompiled catalogs BEFORE publishing to PyPI. Scope (user decision 2026-06-01): translate 100% — zero empty msgstr across ALL docs/locale/fr/LC_MESSAGES/*.po (api 186, concepts 63, relational 89, houses 73, migration 69, changelog 49, arabic_parts 43, predictive 40, chiron 32, + remaining narrative pages). Decimal insertion (NOT 27→28 renumber) preserves Release at 27, matching the project's existing Phase 2.1 pattern. Axis order extended: …→ Aspects refactor → French translation → Release. DOC-13 to be defined in REQUIREMENTS.md at plan time. Next: `/gsd:plan-phase 26.1`.*
+*Roadmap previous update: 2026-06-01 — Phase 26 (Aspects Data-Driven + Dynamic Harmonics) COMPLETE: ASP-01/02/03 satisfied, verifier PASSED 4/4. `core.aspects` enriched in place with `harmonic` (i4) + `symbol` (U4) columns (frozen vector `[1,6,10,9,3,5,9,2,10,3,5,6,9,1]`, half-circle convention Sextile=H3/Trine=H3/Semi-sextile=H6/Quincunx=H6, 7 majors carry Unicode glyphs, 7 minors blank); V1 name/angle/coef fingerprint `c5bd177…` byte-stable (append-only), new V13 fingerprint `3258530…` pinned. `aspects_for_harmonics(list[int])` frozen-mask API added (sister to `resolve_aspect_set`, same ValueError contract); TRADITIONAL/EXTENDED redefined on the harmonic column (single source of truth), CLASSICAL stays a curated index list. Library default flipped CLASSICAL(5)→TRADITIONAL(7); CLI pinned explicitly to `classical` (byte-stable, divergence regression added); D-07 chart-layer ratchet re-pointed to traditional. Pre-existing `calculate_aspects` bug fixed mid-flight (Quincunx masked behind Biquintile for pairs in both orbs — refactored to iterate only selected aspects). CHANGELOG `[1.3.0]` BREAKING + UPGRADING `v1.2 -> v1.3` restore recipe; concepts.md (default-now-7) + api.md (new API, stale EXTENDED-default claims removed, coef==coefficient note) updated; fr gettext regenerated (api.po +18, concepts.po +10, English-fallback), en+fr build clean. 1399 tests, 100% coverage, 57 doctests, mypy --strict clean. No version bump (Phase 27 owns REL-10). Next: `/gsd:plan-phase 27` (Release 1.3.0).*
 *Roadmap previous update: 2026-05-31 — Release relocated AFTER the aspect refactor. Inserted Phase 26 (Aspects Data-Driven + Dynamic Harmonics) before the release; the old Phase 26 (Release 1.3.0) is renumbered Phase 27. Rationale: the aspect refactor is a breaking change to the public aspect surface (default set, coefficients, presets) — landing it before publishing means v1.3.0 ships the final aspect contract with no breaking 1.4 follow-up. The v1.4 BACKLOG item "Aspects data-driven + dynamic harmonics" is superseded by Phase 26. Milestone v1.3 now spans Phases 21-27; axis order extended: …→ Docs → Aspects refactor → Release. ASP-01/02/03 to be defined in REQUIREMENTS.md at plan time. Next: `/gsd:plan-phase 26` (Aspects Data-Driven).*
 *Roadmap previous update: 2026-05-30 — Phase 25 (Documentation) COMPLETE: DOC-10/11/12 satisfied. 12 frozen `docs/source/` pages lifted to full v1.1/v1.2/v1.3 surface (api.md rewritten for 11 subpackage sections, conf.py→1.3.0, toctree wired, changelog/migration with 13→14 breaking note, Chiron in body table); 5 new pages authored (houses/relational_charts/predictive_charts/arabic_parts/chiron) with examples actually executed (5/5 pass); fr regenerated via gettext pipeline (`python3 -m` — broken venv shebangs bypassed), 17 .po/.mo, builds clean en+fr (1 baseline warning, zero new). fr msgstr largely English-fallback (plan-accepted). Verifier PASSED 3/3. Next: `/gsd:plan-phase 26` (Release 1.3.0).*
 *Roadmap previous update: 2026-05-29 — Phase 24 (Chiron) COMPLETE: CHIR-01..05 delivered. Chiron is the 14th body (body_id=13). Offline pyswisseph-build-only generator `tools/gen_chiron_coeffs.py` → committed `ketu/data/chiron_coeffs.npz` (289.7 KB, 1142 segments); pure-NumPy evaluator `ketu/ephemeris/chiron.py` (zero swisseph under ketu/). Wired at all 6 insertion points via single BODY_STRATEGIES entry (no special-casing). D-08 breaking change executed: bodies axis 13→14, `test_body_count_frozen_at_thirteen`→`_fourteen` (tests/charts/test_dtype.py:218), CHART_DTYPE (14,)/(14,14), synastry/cache/transits rippled, ketu.data packaged in wheel/sdist. Accuracy regression pins 7 refs 1950-2050, worst Δλ=0.005695° (1.75× under 0.01°). Two Rule-1 bugs fixed mid-flight (last-segment t-normalisation; stale-cache IndexError). Verifier PASSED 4/4, 1373 tests + 100% coverage + mypy strict + 56 doctests. Kala must adapt to the 13→14 positional contract (Phase 26 UPGRADING). Next: `/gsd:plan-phase 25` (Documentation).*
