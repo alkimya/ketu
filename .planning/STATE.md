@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-06-01T14:54:34Z"
+last_updated: "2026-06-01T15:06:20Z"
 last_activity: 2026-06-01
 progress:
   total_phases: 7
-  completed_phases: 5
+  completed_phases: 6
   total_plans: 17
-  completed_plans: 18
-  percent: 74
+  completed_plans: 21
+  percent: 85
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 26 of 27 (Aspects Data-Driven + Dynamic Harmonics) — IN PROGRESS (2/3 plans done)
-Plan: 26-02 COMPLETE → next: 26-03 (CHANGELOG [1.3.0]/UPGRADING + concepts.md/api.md + fr gettext)
-Status: 26-02 complete (2026-06-01). aspects_for_harmonics(harmonics) -> frozen np.bool_[14] mask; TRADITIONAL/EXTENDED redefined via aspects_for_harmonics (single source of truth); library default resolve_aspect_set(None) == TRADITIONAL (7 half-circle); CLI bare --harmonics pinned to "classical" (5, byte-stable); chart-layer D-07 ratchet re-pointed to traditional; calculate_aspects loop bug fixed (was blocking Quincunx behind Biquintile for pairs in both orbs); 1399 tests / 100% coverage. Remaining: 26-03 (CHANGELOG + UPGRADING + docs).
-Last activity: 2026-06-01 — 26-02 executed: aspects_for_harmonics API + library default flip 5->7 + CLI pin + D-07 ratchet re-pointed
+Phase: 26 of 27 (Aspects Data-Driven + Dynamic Harmonics) — COMPLETE (3/3 plans done)
+Plan: 26-03 COMPLETE → Phase 26 DONE. Next: Phase 27 (Release 1.3.0)
+Status: 26-03 complete (2026-06-01). CHANGELOG [1.3.0] + UPGRADING v1.2->v1.3 written; concepts.md/api.md updated (aspects_for_harmonics, harmonic/symbol columns, 3 stale-default fixes); fr gettext api.po+18/concepts.po+10 regenerated; en+fr builds at 1 warning; 1399 tests / 100% coverage.
+Last activity: 2026-06-01 — 26-03 executed: CHANGELOG + UPGRADING + docs + fr gettext regenerated
 
 Progress: [██████████░░░░] 71% — 5/7 phases completed, 17/17 plans
 
@@ -111,6 +111,7 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - [Phase 25-03]: DOC-12 SATISFIED: gettext pipeline regenerated, 17 .mo compiled, en+fr builds at 1 warning each; Phase 25 COMPLETE
 - [Phase 26-01]: core.aspects 5-field dtype (name, angle, coef, harmonic, symbol); frozen harmonic vector [1,6,10,9,3,5,9,2,10,3,5,6,9,1]; half-circle convention (Sextile=H3, Trine=H3, Semi-sextile=H6, Quincunx=H6); V1 fingerprint c5bd177... unchanged; V13 fingerprint 3258530... pinned; 7 major glyphs U+260C/U+26BA/U+26B9/U+25A1/U+25B3/U+26BB/U+260D; 7 minors blank; 1378 tests / 100% coverage
 - [Phase 26-02]: aspects_for_harmonics returns frozen np.bool_[14] mask from harmonic column (data-driven, not hardcoded); TRADITIONAL=aspects_for_harmonics([1,2,3,6]), EXTENDED=aspects_for_harmonics([1,2,3,5,6,9,10]); CLASSICAL stays curated 5-index list (not harmonic-derivable — Pitfall 7); library default resolve_aspect_set(None) == TRADITIONAL (7); CLI pinned to "classical" explicitly (v1.0/v1.1 byte-stable); calculate_aspects loop refactored to iterate only selected aspects (was blocking Quincunx behind Biquintile for pairs in both orbs); 1399 tests / 100% coverage
+- [Phase 26-03]: CHANGELOG [1.3.0] placed separately from [Unreleased] (cycles entry); Phase 27 merges on version bump; 3 stale EXTENDED-default claims fixed in api.md (preset table, calculate_aspects None param, compute_chart param); concepts.md dual-base rule NOT duplicated; coef==coefficient documented (field name unchanged); package version NOT bumped (Phase 27 owns REL-10); en+fr docs builds at 1 warning each (Phase 25 baseline maintained)
 
 ### Pending Todos
 
@@ -122,6 +123,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-06-01 — Phase 26 plan 02 executed: aspects_for_harmonics + library default flip 5->7 + CLI pin to classical + chart-layer D-07 ratchet re-pointed to traditional + calculate_aspects loop bug fixed; 1399 tests pass, 100% coverage, 57 doctests green. Commits ce01b22 (feat) + 15cc462 (test).
-Stopped at: 26-02 COMPLETE — next: /gsd:execute-phase 26 plan 03 (CHANGELOG [1.3.0]/UPGRADING + concepts.md/api.md + fr gettext).
-Resume file: None — 26-03 ready to execute.
+Last session: 2026-06-01 — Phase 26 plan 03 executed: CHANGELOG [1.3.0] + UPGRADING v1.2->v1.3 + concepts.md/api.md updated + fr gettext regenerated; 1399 tests pass, 100% coverage. Commits ef33e8d (docs) + bc07849 (docs) + 3d560ae (chore).
+Stopped at: 26-03 COMPLETE — Phase 26 DONE. Next: /gsd:execute-phase 27 (Release 1.3.0).
+Resume file: None — Phase 27 ready to execute.
