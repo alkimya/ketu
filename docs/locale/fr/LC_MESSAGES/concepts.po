@@ -116,7 +116,7 @@ msgstr "Corps célestes"
 
 #: ../../source/concepts.md:40
 msgid "Ketu calculates the positions of 14 celestial bodies (body IDs 0–13):"
-msgstr ""
+msgstr "Ketu calcule les positions de 14 corps célestes (body IDs 0–13) :"
 
 #: ../../source/concepts.md:42
 msgid "Classical Planets"
@@ -124,31 +124,31 @@ msgstr "Planètes classiques"
 
 #: ../../source/concepts.md:44
 msgid "**Sun** ☉ (body_id=0)"
-msgstr ""
+msgstr "**Soleil** ☉ (body_id=0)"
 
 #: ../../source/concepts.md:45
 msgid "**Moon** ☽ (body_id=1)"
-msgstr ""
+msgstr "**Lune** ☽ (body_id=1)"
 
 #: ../../source/concepts.md:46
 msgid "**Mercury** ☿ (body_id=2)"
-msgstr ""
+msgstr "**Mercure** ☿ (body_id=2)"
 
 #: ../../source/concepts.md:47
 msgid "**Venus** ♀ (body_id=3)"
-msgstr ""
+msgstr "**Vénus** ♀ (body_id=3)"
 
 #: ../../source/concepts.md:48
 msgid "**Mars** ♂ (body_id=4)"
-msgstr ""
+msgstr "**Mars** ♂ (body_id=4)"
 
 #: ../../source/concepts.md:49
 msgid "**Jupiter** ♃ (body_id=5)"
-msgstr ""
+msgstr "**Jupiter** ♃ (body_id=5)"
 
 #: ../../source/concepts.md:50
 msgid "**Saturn** ♄ (body_id=6)"
-msgstr ""
+msgstr "**Saturne** ♄ (body_id=6)"
 
 #: ../../source/concepts.md:52
 msgid "Modern Planets"
@@ -156,15 +156,15 @@ msgstr "Planètes modernes"
 
 #: ../../source/concepts.md:54
 msgid "**Uranus** ♅ (body_id=7)"
-msgstr ""
+msgstr "**Uranus** ♅ (body_id=7)"
 
 #: ../../source/concepts.md:55
 msgid "**Neptune** ♆ (body_id=8)"
-msgstr ""
+msgstr "**Neptune** ♆ (body_id=8)"
 
 #: ../../source/concepts.md:56
 msgid "**Pluto** ♇ (body_id=9)"
-msgstr ""
+msgstr "**Pluton** ♇ (body_id=9)"
 
 #: ../../source/concepts.md:58
 msgid "Fictitious Points"
@@ -172,19 +172,19 @@ msgstr "Points fictifs"
 
 #: ../../source/concepts.md:60
 msgid "**Rahu** ☊ (body_id=10): Mean North Node"
-msgstr ""
+msgstr "**Rahu** ☊ (body_id=10) : Nœud moyen Nord"
 
 #: ../../source/concepts.md:61
 msgid "**Ketu** ☋ (body_id=11): Mean South Node"
-msgstr ""
+msgstr "**Ketu** ☋ (body_id=11) : Nœud moyen Sud"
 
 #: ../../source/concepts.md:62
 msgid "**Lilith** ⚸ (body_id=12): Black Moon (Mean Apogee)"
-msgstr ""
+msgstr "**Lilith** ⚸ (body_id=12) : Lune noire (Apogée moyen)"
 
 #: ../../source/concepts.md:64
 msgid "Centaur Body (New in v1.3)"
-msgstr ""
+msgstr "Corps centaure (Nouveau dans v1.3)"
 
 #: ../../source/concepts.md:66
 msgid ""
@@ -192,6 +192,9 @@ msgid ""
 "Computed via embedded Chebyshev polynomial coefficients; valid range "
 "1950–2050. See [Chiron](chiron.md) for details."
 msgstr ""
+"**Chiron** ⚷ (body_id=13) : Corps centaure entre Saturne et Uranus. "
+"Calculé via des coefficients de polynômes de Chebyshev embarqués ; plage "
+"valide 1950–2050. Voir [Chiron](chiron.md) pour les détails."
 
 #: ../../source/concepts.md ../../source/concepts.md:68
 msgid "Aspects"
@@ -208,6 +211,10 @@ msgid ""
 "landmarks for the main kinds of planetary encounters. Ketu uses two base "
 "angles:"
 msgstr ""
+"Les aspects reposent sur la géométrie du cercle du zodiaque. Un "
+"**harmonique** divise un angle de base en *n* parties égales, et les "
+"fractions résultantes servent de repères pour les principaux types de "
+"rencontres planétaires. Ketu utilise deux angles de base :"
 
 #: ../../source/concepts.md:74
 msgid ""
@@ -216,6 +223,10 @@ msgid ""
 "These yield the classical Ptolemaic aspects plus the semi-sextile and "
 "quincunx."
 msgstr ""
+"Les **harmoniques du demi-cercle** divisent 180° (l'angle entre la "
+"conjonction et l'opposition, c'est-à-dire la séparation minimale) : "
+"harmoniques **1, 2, 3, 6**. Ils produisent les aspects ptolémaïques "
+"classiques ainsi que le semi-sextile et le quinconce."
 
 #: ../../source/concepts.md:75
 msgid ""
@@ -223,12 +234,17 @@ msgid ""
 " 10**. These yield the minor \"harmonic\" aspects (quintiles, noviles, "
 "deciles)."
 msgstr ""
+"Les **harmoniques du cercle complet** divisent le zodiaque entier de "
+"360° : harmoniques **5, 9, 10**. Ils produisent les aspects mineurs "
+"« harmoniques » (quintiles, noviles, déciles)."
 
 #: ../../source/concepts.md:77
 msgid ""
 "This is why the **Division** column below switches between `180°/n` and "
 "`360°/n` depending on the harmonic."
 msgstr ""
+"C'est pourquoi la colonne **Division** ci-dessous alterne entre `180°/n` "
+"et `360°/n` selon l'harmonique."
 
 #: ../../source/concepts.md:79
 msgid "Harmonic 1 (180°/1 = 180°)"
@@ -412,7 +428,7 @@ msgstr "Décile (36°), Trédécile (108°)"
 
 #: ../../source/concepts.md:126
 msgid "Ketu supports all 14 aspects across harmonics 1, 2, 3, 5, 6, 9, and 10."
-msgstr ""
+msgstr "Ketu prend en charge les 14 aspects des harmoniques 1, 2, 3, 5, 6, 9 et 10."
 
 #: ../../source/concepts.md:128
 msgid ""
@@ -422,16 +438,23 @@ msgid ""
 "The full-circle minor harmonics (H5/H9/H10) are **opt-in** and not "
 "included in the default."
 msgstr ""
+"**Ensemble d'aspects par défaut (v1.3+) :** la valeur par défaut de la "
+"bibliothèque est l'ensemble des **7 aspects du demi-cercle** (harmoniques "
+"1, 2, 3, 6 — preset TRADITIONAL) : Conjonction, Semi-sextile, Sextile, "
+"Carré, Trigone, Quinconce, Opposition. Les harmoniques mineurs du cercle "
+"complet (H5/H9/H10) sont **opt-in** et ne sont pas inclus par défaut."
 
 #: ../../source/concepts.md:133
 msgid "Configurable Aspect Sets (New in v1.1, updated in v1.3)"
-msgstr ""
+msgstr "Ensembles d'aspects configurables (Nouveau dans v1.1, mis à jour dans v1.3)"
 
 #: ../../source/concepts.md:135
 msgid ""
 "Rather than always computing all 14 aspects, you can select a preset or "
 "pass a custom mask:"
 msgstr ""
+"Plutôt que de toujours calculer les 14 aspects, vous pouvez sélectionner "
+"un preset ou passer un masque personnalisé :"
 
 #: ../../source/concepts.md:137
 msgid ""
@@ -439,6 +462,9 @@ msgid ""
 "Conjunction, Semi-sextile, Sextile, Square, Trine, Quincunx, Opposition "
 "(harmonics 1, 2, 3, 6)"
 msgstr ""
+"**TRADITIONAL** *(valeur par défaut de la bibliothèque)* : les 7 aspects "
+"du demi-cercle — Conjonction, Semi-sextile, Sextile, Carré, Trigone, "
+"Quinconce, Opposition (harmoniques 1, 2, 3, 6)"
 
 #: ../../source/concepts.md:139
 msgid ""
@@ -446,10 +472,13 @@ msgid ""
 "aspects; the old v1.2 default — still available as the opt-in \"5 "
 "majors\" preset)"
 msgstr ""
+"**CLASSICAL** : Conjonction, Sextile, Carré, Trigone, Opposition (5 "
+"aspects majeurs ; l'ancien défaut de v1.2 — toujours disponible comme "
+"preset opt-in « 5 majeurs »)"
 
 #: ../../source/concepts.md:141
 msgid "**EXTENDED**: all 14 aspects"
-msgstr ""
+msgstr "**EXTENDED** : les 14 aspects"
 
 #: ../../source/concepts.md:156
 msgid ""
@@ -458,6 +487,10 @@ msgid ""
 "harmonics. This is the harmonic-selection sister function to the named "
 "presets:"
 msgstr ""
+"**Composition harmonique avec `aspects_for_harmonics`** (Nouveau dans "
+"v1.3) : construisez un ensemble d'aspects personnalisé à partir de toute "
+"combinaison des harmoniques pris en charge. C'est la fonction sœur de "
+"sélection harmonique des presets nommés :"
 
 #: ../../source/concepts.md:176
 #, python-brace-format
@@ -466,6 +499,9 @@ msgid ""
 " which can be passed directly as the `aspects=` argument to any Ketu "
 "function. Valid harmonics: `{1, 2, 3, 5, 6, 9, 10}`."
 msgstr ""
+"`aspects_for_harmonics` retourne un masque `numpy.bool_` figé de longueur "
+"14, qui peut être passé directement comme argument `aspects=` à toute "
+"fonction Ketu. Harmoniques valides : `{1, 2, 3, 5, 6, 9, 10}`."
 
 #: ../../source/concepts.md:180
 msgid "Orbs"
@@ -533,7 +569,7 @@ msgstr "6°"
 
 #: ../../source/concepts.md
 msgid "Pluto, Chiron"
-msgstr ""
+msgstr "Pluton, Chiron"
 
 #: ../../source/concepts.md
 msgid "4°"
@@ -821,11 +857,11 @@ msgstr "Orbe final : (10 + 10) / 2 × 0.333 = **3.33°**"
 
 #: ../../source/concepts.md:246
 msgid "House Systems"
-msgstr ""
+msgstr "Systèmes de maisons"
 
 #: ../../source/concepts.md:248
 msgid "What Are Houses?"
-msgstr ""
+msgstr "Que sont les maisons ?"
 
 #: ../../source/concepts.md:250
 msgid ""
@@ -835,50 +871,67 @@ msgid ""
 "with the Earth's daily rotation and depend on the local horizon and "
 "meridian."
 msgstr ""
+"Les **maisons astrologiques** divisent le ciel local en douze secteurs "
+"selon la position géographique de l'observateur et l'heure de naissance. "
+"Contrairement aux signes du zodiaque (fixes le long de l'écliptique), les "
+"maisons tournent avec la rotation quotidienne de la Terre et dépendent de "
+"l'horizon et du méridien locaux."
 
 #: ../../source/concepts.md:252
 msgid "Ketu supports six house systems (New in v1.1/v1.2):"
-msgstr ""
+msgstr "Ketu prend en charge six systèmes de maisons (Nouveau dans v1.1/v1.2) :"
 
 #: ../../source/concepts.md:254
 msgid ""
 "**Placidus** (`\"placidus\"`): The most widely used system in Western "
 "astrology. Divides each quadrant by time rather than space."
 msgstr ""
+"**Placidus** (`\"placidus\"`) : Le système le plus utilisé en astrologie "
+"occidentale. Divise chaque quadrant par le temps plutôt que par l'espace."
 
 #: ../../source/concepts.md:255
 msgid ""
 "**Koch** (`\"koch\"`): Similar to Placidus but using a different time-"
 "division formula; sensitive to high latitudes."
 msgstr ""
+"**Koch** (`\"koch\"`) : Similaire à Placidus mais avec une formule de "
+"division temporelle différente ; sensible aux hautes latitudes."
 
 #: ../../source/concepts.md:256
 msgid ""
 "**Porphyry** (`\"porphyry\"`): Divides each quadrant into three equal "
 "parts by longitude. Simpler and works at all latitudes."
 msgstr ""
+"**Porphyre** (`\"porphyry\"`) : Divise chaque quadrant en trois parties "
+"égales par longitude. Plus simple et fonctionne à toutes les latitudes."
 
 #: ../../source/concepts.md:257
 msgid ""
 "**Whole Sign** (`\"whole_sign\"`): Each house corresponds to an entire "
 "zodiac sign, starting from the rising sign."
 msgstr ""
+"**Maisons entières** (`\"whole_sign\"`) : Chaque maison correspond à un "
+"signe entier du zodiaque, en commençant par le signe ascendant."
 
 #: ../../source/concepts.md:258
 msgid ""
 "**Equal** (`\"equal\"`): Houses are 30° each, starting from the Ascendant"
 " degree."
 msgstr ""
+"**Maisons égales** (`\"equal\"`) : Les maisons sont de 30° chacune, en "
+"partant du degré de l'Ascendant."
 
 #: ../../source/concepts.md:259
 msgid ""
 "**Regiomontanus** (`\"regiomontanus\"`): Divides the celestial equator "
 "into equal parts; popular in medieval astrology."
 msgstr ""
+"**Régiomontanus** (`\"regiomontanus\"`) : Divise l'équateur céleste en "
+"parties égales ; populaire en astrologie médiévale."
 
 #: ../../source/concepts.md:261
 msgid "High Latitude Behavior"
-msgstr ""
+msgstr "Comportement aux hautes latitudes"
 
 #: ../../source/concepts.md:263
 msgid ""
@@ -887,18 +940,22 @@ msgid ""
 "gracefully, or `polar_fallback=\"raise\"` (default) to receive a "
 "`HighLatitudeError`."
 msgstr ""
+"Placidus et Koch peuvent échouer à calculer les cuspides aux très hautes "
+"latitudes (au-dessus d'environ 66°). Utilisez `polar_fallback=\"porphyry\"`"
+" pour un repli gracieux, ou `polar_fallback=\"raise\"` (défaut) pour "
+"recevoir une `HighLatitudeError`."
 
 #: ../../source/concepts.md:274
 msgid "See [Houses](houses.md) for the full API reference and examples."
-msgstr ""
+msgstr "Voir [Maisons](houses.md) pour la référence API complète et les exemples."
 
 #: ../../source/concepts.md:276
 msgid "Sect (Day vs. Night Chart)"
-msgstr ""
+msgstr "Sect (Thème diurne vs. nocturne)"
 
 #: ../../source/concepts.md:278
 msgid "What Is Sect?"
-msgstr ""
+msgstr "Qu'est-ce que la Sect ?"
 
 #: ../../source/concepts.md:280
 msgid ""
@@ -908,6 +965,11 @@ msgid ""
 "Part of Fortune and the Part of Spirit, which invert their formulas "
 "between day and night charts."
 msgstr ""
+"La **Sect** est une doctrine classique distinguant les *thèmes diurnes* "
+"(Soleil au-dessus de l'horizon à la naissance) des *thèmes nocturnes* "
+"(Soleil sous l'horizon). Cette distinction affecte le calcul de certaines "
+"Parties arabes comme la Part de Fortune et la Part d'Esprit, qui "
+"inversent leurs formules entre les thèmes diurnes et nocturnes."
 
 #: ../../source/concepts.md:282
 msgid ""
@@ -915,12 +977,18 @@ msgid ""
 "above the horizon at the given time and location. This helper is used "
 "internally by `calculate_part` for sect-sensitive lots."
 msgstr ""
+"Dans Ketu, `is_day_chart(jd, lat, lon)` retourne `True` lorsque le Soleil "
+"est au-dessus de l'horizon au moment et à l'emplacement donnés. Cette "
+"fonction utilitaire est utilisée en interne par `calculate_part` pour les "
+"lots sensibles à la sect."
 
 #: ../../source/concepts.md:292
 msgid ""
 "See [Arabic Parts](arabic_parts.md) for how sect influences Fortune and "
 "Spirit formulas."
 msgstr ""
+"Voir [Parties arabes](arabic_parts.md) pour l'influence de la sect sur "
+"les formules de Fortune et d'Esprit."
 
 #: ../../source/concepts.md:294
 msgid "Planetary Movements"
@@ -1326,6 +1394,9 @@ msgid ""
 "`ketu.returns`. See [Predictive Charts](predictive_charts.md) for "
 "details."
 msgstr ""
+"Ketu fournit des fonctions dédiées pour les retours solaires et lunaires "
+"dans `ketu.returns`. Voir [Thèmes prédictifs](predictive_charts.md) pour "
+"les détails."
 
 #: ../../source/concepts.md:386
 msgid "Next Steps"
@@ -1345,7 +1416,7 @@ msgstr "Lisez le [Guide de démarrage rapide](quickstart.md) pour commencer à c
 
 #: ../../source/concepts.md:391
 msgid "Discover [House Systems](houses.md) for chart calculation"
-msgstr ""
+msgstr "Découvrez les [Systèmes de maisons](houses.md) pour le calcul de thèmes"
 
 #~ msgid "In practice, we use mainly harmonics 1, 2 and 3."
 #~ msgstr "En pratique, nous utilisons principalement les harmoniques 1, 2 et 3."

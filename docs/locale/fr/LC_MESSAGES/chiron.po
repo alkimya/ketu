@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../source/chiron.md:1
 msgid "Chiron — the 14th Body"
-msgstr ""
+msgstr "Chiron — le 14e corps"
 
 #: ../../source/chiron.md:3
 msgid ""
@@ -30,58 +30,63 @@ msgid ""
 "accessible through all standard Ketu calculation functions using "
 "`body_id=13`."
 msgstr ""
+"Ketu v1.3 ajoute **Chiron** comme 14e corps céleste. Chiron est un petit "
+"corps du système solaire (un centaure) en orbite entre Saturne et Uranus, "
+"portant une signification astrologique en tant que « Guérisseur blessé ». "
+"Il est accessible via toutes les fonctions de calcul standard de Ketu en "
+"utilisant `body_id=13`."
 
 #: ../../source/chiron.md:5
 msgid "Implementation Details"
-msgstr ""
+msgstr "Détails d'implémentation"
 
 #: ../../source/chiron.md
 msgid "Property"
-msgstr ""
+msgstr "Propriété"
 
 #: ../../source/chiron.md
 msgid "Value"
-msgstr ""
+msgstr "Valeur"
 
 #: ../../source/chiron.md
 msgid "`body_id`"
-msgstr ""
+msgstr "`body_id`"
 
 #: ../../source/chiron.md
 msgid "13"
-msgstr ""
+msgstr "13"
 
 #: ../../source/chiron.md
 msgid "Valid date range"
-msgstr ""
+msgstr "Plage de dates valide"
 
 #: ../../source/chiron.md
 msgid "1950-01-01 to 2050-12-31 (Julian Days ~2433282 to ~2469807)"
-msgstr ""
+msgstr "1950-01-01 à 2050-12-31 (Jours Juliens ~2433282 à ~2469807)"
 
 #: ../../source/chiron.md
 msgid "Position accuracy"
-msgstr ""
+msgstr "Précision de position"
 
 #: ../../source/chiron.md
 msgid "max error 0.005695° (sub-arcminute, ~20 arcseconds)"
-msgstr ""
+msgstr "erreur max 0.005695° (sous-arcminute, ~20 arcsecondes)"
 
 #: ../../source/chiron.md
 msgid "Evaluation method"
-msgstr ""
+msgstr "Méthode d'évaluation"
 
 #: ../../source/chiron.md
 msgid "Pure-NumPy Chebyshev polynomial evaluation"
-msgstr ""
+msgstr "Évaluation de polynôme de Chebyshev Pure NumPy"
 
 #: ../../source/chiron.md
 msgid "Runtime dependency"
-msgstr ""
+msgstr "Dépendance au runtime"
 
 #: ../../source/chiron.md
 msgid "None — coefficients embedded in `ketu/data/chiron_coeffs.npz`"
-msgstr ""
+msgstr "Aucune — coefficients embarqués dans `ketu/data/chiron_coeffs.npz`"
 
 #: ../../source/chiron.md:15
 msgid ""
@@ -89,28 +94,33 @@ msgid ""
 "(build-only, AGPL-isolated). At runtime, Ketu uses pure NumPy — no "
 "`pyswisseph` dependency required."
 msgstr ""
+"Les coefficients de Chebyshev ont été générés hors ligne à l'aide de "
+"Swiss Ephemeris (build uniquement, isolation AGPL). Au runtime, Ketu "
+"utilise Pure NumPy — aucune dépendance `pyswisseph` requise."
 
 #: ../../source/chiron.md:17
 msgid "Accessing Chiron via Calculation Functions"
-msgstr ""
+msgstr "Accéder à Chiron via les fonctions de calcul"
 
 #: ../../source/chiron.md:19
 msgid "Chiron uses the same API as any other body — just pass `body_id=13`."
-msgstr ""
+msgstr "Chiron utilise la même API que tout autre corps — il suffit de passer `body_id=13`."
 
 #: ../../source/chiron.md:33
 msgid "You can also compute Chiron's properties alongside other bodies:"
-msgstr ""
+msgstr "Vous pouvez aussi calculer les propriétés de Chiron aux côtés d'autres corps :"
 
 #: ../../source/chiron.md:43
 msgid "Chiron in a Natal Chart"
-msgstr ""
+msgstr "Chiron dans un thème natal"
 
 #: ../../source/chiron.md:45
 msgid ""
 "`compute_chart` returns a structured array with a `body_lons` field of "
 "shape `[14]`. Index 13 is Chiron."
 msgstr ""
+"`compute_chart` retourne un tableau structuré avec un champ `body_lons` de "
+"shape `[14]`. L'index 13 est Chiron."
 
 #: ../../source/chiron.md:60
 msgid ""
@@ -118,14 +128,18 @@ msgid ""
 "Chiron automatically — it appears at index 13 in every `body_lons`, "
 "`body_lats`, `body_speeds`, `aspect_matrix`, and `aspect_orbs` field."
 msgstr ""
+"Toutes les fonctions de thèmes relationnels (synastrie, composite, "
+"retours) héritent de Chiron automatiquement — il apparaît à l'index 13 "
+"dans chaque champ `body_lons`, `body_lats`, `body_speeds`, "
+"`aspect_matrix` et `aspect_orbs`."
 
 #: ../../source/chiron.md:62
 msgid "Date Range and Error Behaviour"
-msgstr ""
+msgstr "Plage de dates et comportement en cas d'erreur"
 
 #: ../../source/chiron.md:64
 msgid "Requesting Chiron outside 1950-2050 raises a `ValueError`:"
-msgstr ""
+msgstr "Demander Chiron hors de la plage 1950-2050 lève une `ValueError` :"
 
 #: ../../source/chiron.md:73
 msgid ""
@@ -133,10 +147,13 @@ msgid ""
 "most 0.005695° (about 20 arcseconds), well below the 0.01° target set "
 "during the Chebyshev spike (Phase 23)."
 msgstr ""
+"Pour les dates dans la plage, l'erreur de position est garantie d'être au "
+"plus 0.005695° (environ 20 arcsecondes), bien en dessous de la cible "
+"0.01° définie lors du spike Chebyshev (Phase 23)."
 
 #: ../../source/chiron.md:75
 msgid "Breaking Change in v1.3 (D-08)"
-msgstr ""
+msgstr "Changement incompatible dans v1.3 (D-08)"
 
 #: ../../source/chiron.md:77
 msgid ""
@@ -145,24 +162,32 @@ msgid ""
 "that hardcoded the body count (13) or accessed body arrays by fixed "
 "numeric index beyond 12 must be updated."
 msgstr ""
+"Avant v1.3, `CHART_DTYPE` avait un champ `body_lons[13]` (indices 0–12). "
+"L'ajout de Chiron l'a étendu à `body_lons[14]` (indices 0–13). Tout code "
+"qui codait en dur le nombre de corps (13) ou accédait aux tableaux de "
+"corps par index numérique fixe au-delà de 12 doit être mis à jour."
 
 #: ../../source/chiron.md:79
 msgid ""
 "See [Migration Guide](migration.md) for the full upgrade path from v1.2 "
 "to v1.3."
 msgstr ""
+"Voir le [Guide de migration](migration.md) pour le chemin de mise à jour "
+"complet de v1.2 vers v1.3."
 
 #: ../../source/chiron.md:81
 msgid "Next Steps"
-msgstr ""
+msgstr "Prochaines étapes"
 
 #: ../../source/chiron.md:83
 msgid "[API reference](api.md) — full `ketu.calculations` signature list"
-msgstr ""
+msgstr "[Référence API](api.md) — liste complète des signatures `ketu.calculations`"
 
 #: ../../source/chiron.md:84
 msgid ""
 "[Migration Guide](migration.md) — upgrading from v1.2, D-08 body-axis "
 "changes"
 msgstr ""
+"[Guide de migration](migration.md) — mise à jour depuis v1.2, changements "
+"d'axe de corps D-08"
 

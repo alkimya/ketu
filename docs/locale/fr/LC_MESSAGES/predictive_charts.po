@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../source/predictive_charts.md:1
 msgid "Predictive Charts: Solar and Lunar Returns"
-msgstr ""
+msgstr "Thèmes prédictifs : retours solaires et lunaires"
 
 #: ../../source/predictive_charts.md:3
 msgid ""
@@ -29,6 +29,10 @@ msgid ""
 "`solar_return` for the Sun's annual return, and `lunar_return` for the "
 "Moon's monthly return."
 msgstr ""
+"Les thèmes de retour marquent le moment où une planète revient à la même "
+"longitude écliptique qu'elle occupait à la naissance. Ketu fournit deux "
+"fonctions de retour — `solar_return` pour le retour annuel du Soleil, et "
+"`lunar_return` pour le retour mensuel de la Lune."
 
 #: ../../source/predictive_charts.md:5
 msgid ""
@@ -36,58 +40,62 @@ msgid ""
 "`compute_chart`), with the complete natal house system, body positions, "
 "and aspect matrix computed for the exact moment of return."
 msgstr ""
+"Les deux fonctions retournent un tableau structuré `CHART_DTYPE` complet "
+"(identique à `compute_chart`), avec le système de maisons natal complet, "
+"les positions des corps et la matrice d'aspects calculés pour le moment "
+"exact du retour."
 
 #: ../../source/predictive_charts.md:7
 msgid "Important API Asymmetry"
-msgstr ""
+msgstr "Asymétrie importante de l'API"
 
 #: ../../source/predictive_charts.md
 msgid "Function"
-msgstr ""
+msgstr "Fonction"
 
 #: ../../source/predictive_charts.md
 msgid "Target parameter"
-msgstr ""
+msgstr "Paramètre cible"
 
 #: ../../source/predictive_charts.md
 msgid "Type"
-msgstr ""
+msgstr "Type"
 
 #: ../../source/predictive_charts.md
 msgid "Meaning"
-msgstr ""
+msgstr "Signification"
 
 #: ../../source/predictive_charts.md
 msgid "`solar_return`"
-msgstr ""
+msgstr "`solar_return`"
 
 #: ../../source/predictive_charts.md
 msgid "`target_year`"
-msgstr ""
+msgstr "`target_year`"
 
 #: ../../source/predictive_charts.md
 msgid "`int`"
-msgstr ""
+msgstr "`int`"
 
 #: ../../source/predictive_charts.md
 msgid "Calendar year in which to find the return"
-msgstr ""
+msgstr "Année calendaire dans laquelle trouver le retour"
 
 #: ../../source/predictive_charts.md
 msgid "`lunar_return`"
-msgstr ""
+msgstr "`lunar_return`"
 
 #: ../../source/predictive_charts.md
 msgid "`target_jd`"
-msgstr ""
+msgstr "`target_jd`"
 
 #: ../../source/predictive_charts.md
 msgid "`float`"
-msgstr ""
+msgstr "`float`"
 
 #: ../../source/predictive_charts.md
 msgid "Julian Day to start searching **from**"
-msgstr ""
+msgstr "Jour Julien à partir duquel **commencer** la recherche"
 
 #: ../../source/predictive_charts.md:14
 msgid ""
@@ -96,74 +104,87 @@ msgid ""
 "`lunar_return(natal_jd, ..., target_jd=jd_now)` finds the next lunar "
 "return at or after `target_jd` (there are ~13 per year)."
 msgstr ""
+"Cette distinction est importante : `solar_return(natal_jd, ..., "
+"target_year=2026)` trouve le retour qui tombe dans l'année 2026 (il y en "
+"a exactement un). `lunar_return(natal_jd, ..., target_jd=jd_now)` trouve "
+"le prochain retour lunaire à partir de `target_jd` ou après (il y en a "
+"~13 par an)."
 
 #: ../../source/predictive_charts.md:16
 msgid "solar_return"
-msgstr ""
+msgstr "solar_return"
 
 #: ../../source/predictive_charts.md:30 ../../source/predictive_charts.md:68
 msgid "**Parameters**"
-msgstr ""
+msgstr "**Paramètres :**"
 
 #: ../../source/predictive_charts.md:32 ../../source/predictive_charts.md:70
 msgid "`natal_jd` — Julian Day of the natal chart"
-msgstr ""
+msgstr "`natal_jd` — Jour Julien du thème natal"
 
 #: ../../source/predictive_charts.md:33
 msgid ""
 "`natal_lat`, `natal_lon` — natal location (used as default return "
 "location)"
 msgstr ""
+"`natal_lat`, `natal_lon` — emplacement natal (utilisé comme emplacement "
+"de retour par défaut)"
 
 #: ../../source/predictive_charts.md:34
 msgid "`target_year` — calendar year (int) in which to find the solar return"
-msgstr ""
+msgstr "`target_year` — année calendaire (int) dans laquelle trouver le retour solaire"
 
 #: ../../source/predictive_charts.md:35
 msgid ""
 "`return_lat`, `return_lon` — relocation coordinates (see below); default "
 "`None` = natal location"
 msgstr ""
+"`return_lat`, `return_lon` — coordonnées de relocalisation (voir ci-"
+"dessous) ; défaut `None` = emplacement natal"
 
 #: ../../source/predictive_charts.md:36
 msgid "`system` — house system for the return chart (default `\"placidus\"`)"
-msgstr ""
+msgstr "`system` — système de maisons pour le thème de retour (défaut `\"placidus\"`)"
 
 #: ../../source/predictive_charts.md:38
 msgid "**Example — solar return for 2026, natal location**"
-msgstr ""
+msgstr "**Exemple — retour solaire pour 2026, emplacement natal**"
 
 #: ../../source/predictive_charts.md:54
 msgid "lunar_return"
-msgstr ""
+msgstr "lunar_return"
 
 #: ../../source/predictive_charts.md:71
 msgid "`natal_lat`, `natal_lon` — natal location"
-msgstr ""
+msgstr "`natal_lat`, `natal_lon` — emplacement natal"
 
 #: ../../source/predictive_charts.md:72
 msgid ""
 "`target_jd` — Julian Day to start the search from (float); the function "
 "returns the first lunar return at or after this JD"
 msgstr ""
+"`target_jd` — Jour Julien à partir duquel commencer la recherche (float) ; "
+"la fonction retourne le premier retour lunaire à ce JD ou après"
 
 #: ../../source/predictive_charts.md:73
 msgid ""
 "`return_lat`, `return_lon` — relocation coordinates; default `None` = "
 "natal location"
 msgstr ""
+"`return_lat`, `return_lon` — coordonnées de relocalisation ; défaut `None` "
+"= emplacement natal"
 
 #: ../../source/predictive_charts.md:74
 msgid "`system` — house system for the return chart"
-msgstr ""
+msgstr "`system` — système de maisons pour le thème de retour"
 
 #: ../../source/predictive_charts.md:76
 msgid "**Example — next lunar return from J2000**"
-msgstr ""
+msgstr "**Exemple — prochain retour lunaire depuis J2000**"
 
 #: ../../source/predictive_charts.md:93
 msgid "Relocation"
-msgstr ""
+msgstr "Relocalisation"
 
 #: ../../source/predictive_charts.md:95
 msgid ""
@@ -172,6 +193,11 @@ msgid ""
 "calculated for the relocation coordinates instead of the natal location. "
 "This is used in relocated return chart analysis."
 msgstr ""
+"Les deux fonctions acceptent des paramètres optionnels `return_lat` / "
+"`return_lon`. Lorsqu'ils sont fournis, les cuspides de maisons et les "
+"angles dans le thème de retour sont calculés pour les coordonnées de "
+"relocalisation plutôt que pour l'emplacement natal. C'est utilisé dans "
+"l'analyse des thèmes de retour relocalisés."
 
 #: ../../source/predictive_charts.md:116
 msgid ""
@@ -179,26 +205,32 @@ msgid ""
 "coordinates are used for both the return moment search and the house "
 "calculation."
 msgstr ""
+"Lorsque `return_lat=None` et `return_lon=None` (les défauts), les "
+"coordonnées natales sont utilisées à la fois pour la recherche du moment "
+"de retour et le calcul des maisons."
 
 #: ../../source/predictive_charts.md:118
 msgid "UTC Contract"
-msgstr ""
+msgstr "Contrat UTC"
 
 #: ../../source/predictive_charts.md:120
 msgid ""
 "All Julian Day values (`natal_jd`, `target_jd`) must be in UTC. The "
 "functions do not perform any timezone conversion internally."
 msgstr ""
+"Toutes les valeurs de Jour Julien (`natal_jd`, `target_jd`) doivent être "
+"en UTC. Les fonctions n'effectuent aucune conversion de fuseau horaire "
+"en interne."
 
 #: ../../source/predictive_charts.md:130
 msgid "Next Steps"
-msgstr ""
+msgstr "Prochaines étapes"
 
 #: ../../source/predictive_charts.md:132
 msgid "[Relational charts](relational_charts.md) — synastry and composite charts"
-msgstr ""
+msgstr "[Thèmes relationnels](relational_charts.md) — thèmes de synastrie et composites"
 
 #: ../../source/predictive_charts.md:133
 msgid "[API reference](api.md) — full signatures for `ketu.returns`"
-msgstr ""
+msgstr "[Référence API](api.md) — signatures complètes pour `ketu.returns`"
 
