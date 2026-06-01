@@ -38,6 +38,8 @@ Requirements for the v1.3 milestone. Each maps to exactly one roadmap phase. Ord
 - [ ] **DOC-11**: New Sphinx pages exist for the major new feature areas (relational charts, predictive charts/returns, Arabic Parts, Chiron) with runnable examples
 - [ ] **DOC-12**: The French translation is regenerated via the existing gettext infra (`docs/locale/`, `docs/Makefile`, `docs/migrate_translations.py`) — no manual duplication; `docs/` builds clean en + fr
 
+- [ ] **DOC-13**: All 17 `docs/locale/fr/LC_MESSAGES/*.po` catalogs have 100% translated `msgstr` (zero empty/English-fallback entries) covering every page; translation is regenerated and compiled through the existing gettext infra (`docs/Makefile`); `.mo` catalogs committed; Sphinx builds clean for BOTH en and fr (no new warnings vs the Phase 25/26 baseline of 1 warning each — `display_version` theme warning only).
+
 ### Release
 
 - [ ] **REL-10**: Version bumped to 1.3.0; CHANGELOG `[1.3.0]` entry (additive features + the Chiron breaking-contract note for Kala); UPGRADING.md notes the 13→14 positional change
@@ -90,16 +92,17 @@ Which phase covers which requirement. Phases continue from v1.2 (ended at Phase 
 | DOC-10 | Phase 25 (Documentation) | Pending |
 | DOC-11 | Phase 25 (Documentation) | Pending |
 | DOC-12 | Phase 25 (Documentation) | Pending |
+| DOC-13 | Phase 26.1 (French Doc Translation) | Pending |
 | REL-10 | Phase 26 (Release 1.3.0) | Pending |
 | REL-11 | Phase 26 (Release 1.3.0) | Pending |
 
 **Coverage:**
 
-- v1.3 requirements: 18 total
-- Mapped to phases: 18 (100% coverage; no orphans, no duplicates)
+- v1.3 requirements: 19 total
+- Mapped to phases: 19 (100% coverage; no orphans, no duplicates)
 - Unmapped: 0
 
-Phase split: Phase 21 = 3 (QAL-10..12) | Phase 22 = 3 (REF-01..03) | Phase 23 = 2 (SPK-01..02) | Phase 24 = 5 (CHIR-01..05) | Phase 25 = 3 (DOC-10..12) | Phase 26 = 2 (REL-10..11).
+Phase split: Phase 21 = 3 (QAL-10..12) | Phase 22 = 3 (REF-01..03) | Phase 23 = 2 (SPK-01..02) | Phase 24 = 5 (CHIR-01..05) | Phase 25 = 3 (DOC-10..12) | Phase 26 = 2 (REL-10..11) | Phase 26.1 = 1 (DOC-13).
 
 ---
 *Requirements defined: 2026-05-29*
