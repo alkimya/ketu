@@ -97,9 +97,10 @@ def calculate_aspects(
     l_bodies : np.ndarray, optional
         Bodies array (default: all bodies).
     aspects : AspectSetSpec, default None
-        Aspect set to compute. ``None`` resolves to ``CLASSICAL`` (5 majors:
-        Conjunction, Sextile, Square, Trine, Opposition). Accepts a preset
-        name (``"classical"``, ``"traditional"``, ``"extended"``), a list of
+        Aspect set to compute. ``None`` resolves to the default 7 half-circle
+        aspects (harmonics 1,2,3,6 — Conjunction, Semi-sextile, Sextile,
+        Square, Trine, Quincunx, Opposition). Accepts a preset name
+        (``"classical"``, ``"traditional"``, ``"extended"``), a list of
         aspect names or indices, or a length-14 boolean mask. The result's
         ``i_asp`` field is always a canonical 0-13 index into
         ``ketu.core.aspects``, regardless of the selected subset.
@@ -154,9 +155,10 @@ def calculate_aspects_vectorized(
     l_bodies : np.ndarray, optional
         Array of bodies (default: all bodies).
     aspects : AspectSetSpec, default None
-        Aspect set to compute. ``None`` resolves to ``CLASSICAL`` (5 majors:
-        Conjunction, Sextile, Square, Trine, Opposition). Accepts a preset
-        name (``"classical"``, ``"traditional"``, ``"extended"``), a list of
+        Aspect set to compute. ``None`` resolves to the default 7 half-circle
+        aspects (harmonics 1,2,3,6 — Conjunction, Semi-sextile, Sextile,
+        Square, Trine, Quincunx, Opposition). Accepts a preset name
+        (``"classical"``, ``"traditional"``, ``"extended"``), a list of
         aspect names or indices, or a length-14 boolean mask. The result's
         ``i_asp`` field is always a canonical 0-13 index into
         ``ketu.core.aspects``, regardless of the selected subset.
@@ -272,9 +274,10 @@ def calculate_aspects_batch(
     l_bodies : np.ndarray, optional
         Array of bodies (default: all bodies).
     aspects : AspectSetSpec, default None
-        Aspect set to compute. ``None`` resolves to ``CLASSICAL`` (5 majors:
-        Conjunction, Sextile, Square, Trine, Opposition). Accepts a preset
-        name (``"classical"``, ``"traditional"``, ``"extended"``), a list of
+        Aspect set to compute. ``None`` resolves to the default 7 half-circle
+        aspects (harmonics 1,2,3,6 — Conjunction, Semi-sextile, Sextile,
+        Square, Trine, Quincunx, Opposition). Accepts a preset name
+        (``"classical"``, ``"traditional"``, ``"extended"``), a list of
         aspect names or indices, or a length-14 boolean mask. The result's
         ``i_asp`` field is always a canonical 0-13 index into
         ``ketu.core.aspects``, regardless of the selected subset.
@@ -471,11 +474,12 @@ def find_aspects_between_dates(
     body2 : int, optional
         Second body ID (optional, if None check all).
     aspects : AspectSetSpec, default None
-        Aspect set to search for. ``None`` resolves to ``CLASSICAL`` (5
-        majors). Accepts a preset name (``"classical"``, ``"traditional"``,
-        ``"extended"``), a list of aspect names or indices, or a length-14
-        boolean mask. The returned tuples contain canonical aspect names
-        from ``ketu.core.aspects`` regardless of the selected subset.
+        Aspect set to search for. ``None`` resolves to the default 7
+        half-circle aspects (harmonics 1,2,3,6). Accepts a preset name
+        (``"classical"``, ``"traditional"``, ``"extended"``), a list of
+        aspect names or indices, or a length-14 boolean mask. The returned
+        tuples contain canonical aspect names from ``ketu.core.aspects``
+        regardless of the selected subset.
 
     Returns
     -------

@@ -1,11 +1,12 @@
 """Tests for the dense aspect matrix wired by plan 14-03.
 
-The dense ``(13, 13)`` aspect block of :data:`ketu.charts.CHART_DTYPE` is
+The dense ``(14, 14)`` aspect block of :data:`ketu.charts.CHART_DTYPE` is
 populated by ``_build_aspect_matrix`` (private helper inside
 ``ketu.charts.api``). This module exhaustively covers:
 
-- default ``aspects=None`` ratchet (D-07: ``CLASSICAL`` is the package
-  default),
+- default ``aspects=None`` ratchet (D-07: ``TRADITIONAL`` is the package
+  default — the 7 half-circle aspects, harmonics 1/2/3/6; re-pointed from
+  CLASSICAL by Phase 26 plan 02),
 - symmetry of ``aspect_matrix`` and ``aspect_orbs`` (D-17),
 - diagonal sentinels ``-1`` / ``NaN`` (D-06, RESEARCH §Pitfall 6),
 - consistency vs :func:`ketu.aspects.calculator.calculate_aspects_vectorized`
@@ -33,11 +34,12 @@ from ketu.aspects.calculator import calculate_aspects_vectorized
 from ketu.charts import compute_chart
 
 # Canonical aspect indices into ``ketu.core.aspects``.
-# 0=Conjunction, 4=Sextile, 7=Square, 9=Trine, 13=Opposition (the 5
-# CLASSICAL majors). See ``ketu/aspects/presets.py`` for the full table.
+# 0=Conjunction, 4=Sextile, 7=Square, 9=Trine, 13=Opposition are part of the
+# curated CLASSICAL set (5 majors). See ``ketu/aspects/presets.py`` for the
+# full table. The PACKAGE DEFAULT is now TRADITIONAL (7 half-circle aspects).
 _I_CONJUNCTION: int = 0
 _I_TRINE: int = 9
-_CLASSICAL_INDICES: set[int] = {0, 4, 7, 9, 13}
+_CLASSICAL_INDICES: set[int] = {0, 4, 7, 9, 13}  # curated 5-aspect set (opt-in)
 
 # Tolerance on orb cross-checks: the wrapper passes records through
 # verbatim, so identity is expected modulo float32 narrowing inside
@@ -76,17 +78,22 @@ _HAND_VALIDATED_CHARTS: list[dict[str, Any]] = [
 # ---------------------------------------------------------------------------
 
 
-def test_aspect_matrix_default_aspects_is_classical() -> None:
-    """D-07 ratchet: ``aspects=None`` resolves to CLASSICAL (5 majors)."""
+def test_aspect_matrix_default_aspects_is_traditional() -> None:
+    """D-07 ratchet: ``aspects=None`` resolves to TRADITIONAL (7 half-circle).
+
+    Re-pointed from CLASSICAL by Phase 26 plan 02. The package default is now
+    the 7 half-circle aspects (harmonics 1/2/3/6 — TRADITIONAL), not the
+    curated 5-major CLASSICAL set.
+    """
     chart_default = compute_chart(2451545.0, 48.86, 2.35)
-    chart_explicit = compute_chart(2451545.0, 48.86, 2.35, aspects="classical")
+    chart_explicit = compute_chart(2451545.0, 48.86, 2.35, aspects="traditional")
 
     assert np.array_equal(
         chart_default["aspect_matrix"], chart_explicit["aspect_matrix"]
-    ), "aspects=None must equal aspects='classical' (D-07)"
+    ), "aspects=None must equal aspects='traditional' (D-07)"
     assert np.array_equal(
         chart_default["aspect_orbs"], chart_explicit["aspect_orbs"], equal_nan=True
-    ), "aspects=None must equal aspects='classical' (orbs, D-07)"
+    ), "aspects=None must equal aspects='traditional' (orbs, D-07)"
 
 
 # ---------------------------------------------------------------------------

@@ -128,10 +128,11 @@ def _build_aspect_matrix(
         ``np.ndindex(()) == [()]`` (RESEARCH Assumption A1).
     aspects : AspectSetSpec
         Pass-through to ``calculate_aspects_vectorized``. ``None``
-        resolves to :data:`ketu.aspects.presets.CLASSICAL` (5 majors,
-        per D-07). Accepts a preset name (``"classical"``,
-        ``"traditional"``, ``"extended"``), a list of aspect names or
-        canonical indices, or a length-14 boolean mask.
+        resolves to :data:`ketu.aspects.presets.TRADITIONAL` (the 7
+        half-circle aspects, harmonics 1/2/3/6, per D-07). Accepts a
+        preset name (``"classical"``, ``"traditional"``, ``"extended"``),
+        a list of aspect names or canonical indices, or a length-14
+        boolean mask.
 
     Returns
     -------
@@ -224,11 +225,11 @@ def compute_chart(
         ``"placidus"``, ``"koch"``, ``"porphyry"``). Case-insensitive.
     aspects : AspectSetSpec, default None
         Aspect-set selector. ``None`` resolves to
-        :data:`ketu.aspects.presets.CLASSICAL` (5 majors), aligned with
-        the package-wide default (D-07). Accepts a preset name
-        (``"classical"``, ``"traditional"``, ``"extended"``), a list of
-        aspect names or canonical indices, or a length-14 boolean mask
-        (pass-through to
+        :data:`ketu.aspects.presets.TRADITIONAL` (the 7 half-circle
+        aspects, harmonics 1/2/3/6), aligned with the package-wide
+        default (D-07). Accepts a preset name (``"classical"``,
+        ``"traditional"``, ``"extended"``), a list of aspect names or
+        canonical indices, or a length-14 boolean mask (pass-through to
         :func:`ketu.aspects.calculator.calculate_aspects_vectorized`,
         D-10). The ``aspect_matrix`` field stores canonical 0-13 indices
         regardless of the selected subset; cells outside the subset stay
@@ -284,8 +285,9 @@ def compute_chart(
     Python overhead is constant in ``S``. For ML batches in the
     hundreds (synastry, composite, solar return), this is comfortably
     below the bottleneck threshold; large-batch (>10k) callers should
-    profile and report. ``aspects=None`` resolves to the ``CLASSICAL``
-    preset (5 majors), aligned with the package-wide default (D-07).
+    profile and report. ``aspects=None`` resolves to the ``TRADITIONAL``
+    preset (7 half-circle aspects, harmonics 1/2/3/6), aligned with the
+    package-wide default (D-07).
     The matrix is symmetric (D-17): ``matrix[..., i, j] == matrix[..., j, i]``;
     the diagonal stays at the sentinel ``-1`` (a body has no aspect with
     itself, D-06).

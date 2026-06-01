@@ -55,12 +55,13 @@ from ketu.aspects.transits import (
     compare_dates_transits,
 )
 
-# Aspect set presets and resolver (Phase 9)
+# Aspect set presets and resolver (Phase 9 / Phase 26)
 from ketu.aspects.presets import (
     CLASSICAL,
     TRADITIONAL,
     EXTENDED,
     AspectSetSpec,
+    aspects_for_harmonics,
     resolve_aspect_set,
 )
 
@@ -94,10 +95,11 @@ __all__ = [
     "get_natal_positions",
     "compare_dates_transits",
 
-    # Presets (Phase 9 — configurable aspects)
+    # Presets (Phase 9 / Phase 26 — configurable aspects)
     "CLASSICAL",
     "TRADITIONAL",
     "EXTENDED",
     "AspectSetSpec",
+    "aspects_for_harmonics",
     "resolve_aspect_set",
 ]

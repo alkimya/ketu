@@ -81,9 +81,14 @@ def cmd_aspects(args: argparse.Namespace) -> int:
     int
         Exit code (0 on success).
     """
-    # Resolve --harmonics: None → CLASSICAL (Phase 9 default).
+    # Resolve --harmonics: None → classical (5 aspects, v1.0/v1.1 byte-stable
+    # contract). NOTE: the LIBRARY default (resolve_aspect_set(None)) is now
+    # the 7 half-circle set (TRADITIONAL). The CLI bare default stays pinned
+    # to "classical" intentionally so the CLI byte-stable contract is
+    # preserved across v1.0/v1.1/v1.2 — use resolve_aspect_set("classical")
+    # explicitly here instead of resolve_aspect_set(None).
     if args.harmonics is None:
-        mask = resolve_aspect_set(None)
+        mask = resolve_aspect_set("classical")
         preset_label = "classical"
     else:
         mask = args.harmonics  # already a length-14 np.bool_ mask
@@ -103,11 +108,17 @@ def cmd_aspects(args: argparse.Namespace) -> int:
 
     # Aspect Timing Example — ALWAYS emitted (research §Open Question 2).
     # Reproduces v1.0 main()'s trailing Sun-Moon timing demo verbatim.
+    # NOTE: pinned to "classical" (5 majors) explicitly so the output is
+    # byte-identical regardless of the --harmonics flag (the library default
+    # shifted to TRADITIONAL/7 in Phase 26 plan 02, but this demo block must
+    # stay byte-stable per test_v1_1_reference_byte_stable.py).
     print()
     print("------------- Aspect Timing Example -------------")
     sun_id = body_id("Sun")
     moon_id = body_id("Moon")
-    aspects_found = find_aspects_between_dates(jd - 15, jd + 15, sun_id, moon_id)
+    aspects_found = find_aspects_between_dates(
+        jd - 15, jd + 15, sun_id, moon_id, aspects="classical"
+    )
     for entry in aspects_found[:3]:
         exact_jd, b1, b2, asp_name, _asp_val = entry
         exact_dt = julian_to_utc(float(exact_jd))
