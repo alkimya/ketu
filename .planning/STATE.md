@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 26 of 27 (Aspects Data-Driven + Dynamic Harmonics) — COMPLETE (3/3 plans done)
-Plan: 26-03 COMPLETE → Phase 26 DONE. Next: Phase 27 (Release 1.3.0)
-Status: 26-03 complete (2026-06-01). CHANGELOG [1.3.0] + UPGRADING v1.2->v1.3 written; concepts.md/api.md updated (aspects_for_harmonics, harmonic/symbol columns, 3 stale-default fixes); fr gettext api.po+18/concepts.po+10 regenerated; en+fr builds at 1 warning; 1399 tests / 100% coverage.
-Last activity: 2026-06-01 — 26-03 executed: CHANGELOG + UPGRADING + docs + fr gettext regenerated
+Phase: 26 of 27 (Aspects Data-Driven + Dynamic Harmonics) — COMPLETE + VERIFIED (3/3 plans, verifier PASSED 4/4)
+Plan: All 3 plans done. Next: Phase 27 (Release 1.3.0) → /gsd:plan-phase 27
+Status: Phase 26 COMPLETE (2026-06-01), verifier PASSED 4/4 (26-VERIFICATION.md, status: passed). ASP-01/02/03 satisfied. core.aspects → 5 fields (name, angle, coef, harmonic, symbol), V1 fingerprint byte-stable; aspects_for_harmonics([...]) frozen-mask API; library default flipped 5→7 (TRADITIONAL), CLI pinned to classical (byte-stable + divergence regression); D-07 ratchet re-pointed to traditional; pre-existing calculate_aspects Quincunx-masking bug fixed mid-flight. CHANGELOG [1.3.0] + UPGRADING v1.2->v1.3 + concepts.md/api.md + fr gettext regenerated; en+fr build clean at 1 warning. 1399 tests / 100% coverage / 57 doctests / mypy --strict clean. No version bump (Phase 27 owns REL-10).
+Last activity: 2026-06-01 — Phase 26 executed (3 waves) + verified PASSED; ROADMAP + STATE updated
 
-Progress: [██████████░░░░] 71% — 5/7 phases completed, 17/17 plans
+Progress: [████████████░░] 85% — 6/7 phases completed, 21/21 plans (Phase 26 DONE)
 
 ## v1.3 Roadmap Structure
 
