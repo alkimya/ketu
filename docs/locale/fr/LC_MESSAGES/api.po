@@ -28,30 +28,38 @@ msgid ""
 "**submodule import paths** — the top-level `ketu` namespace re-exports "
 "only the items listed in the \"Top-level exports\" section below."
 msgstr ""
+"L'API de Ketu est organisée en sous-paquets. Toutes les fonctions "
+"publiques utilisent des **chemins d'import de sous-modules** — l'espace "
+"de noms `ketu` de niveau supérieur ne ré-exporte que les éléments listés "
+"dans la section « Exports de niveau supérieur » ci-dessous."
 
 #: ../../source/api.md:5
 msgid "Top-level exports"
-msgstr ""
+msgstr "Exports de niveau supérieur"
 
 #: ../../source/api.md:21
 msgid "Calculations (`ketu.calculations`)"
-msgstr ""
+msgstr "Calculs (`ketu.calculations`)"
 
 #: ../../source/api.md:23
 msgid ""
 "Core position and analysis functions. All work with Julian Day numbers "
 "(float)."
 msgstr ""
+"Fonctions principales de position et d'analyse. Toutes utilisent des "
+"numéros de Jour Julien (float)."
 
 #: ../../source/api.md:37
 msgid "`long(jday, body)` / `lat(jday, body)` / `dist_au(jday, body)`"
-msgstr ""
+msgstr "`long(jday, body)` / `lat(jday, body)` / `dist_au(jday, body)`"
 
 #: ../../source/api.md:39
 msgid ""
 "Return the ecliptic longitude (degrees), latitude (degrees), and distance"
 " (AU) of a body."
 msgstr ""
+"Retourne la longitude écliptique (degrés), la latitude (degrés) et la "
+"distance (UA) d'un corps."
 
 #: ../../source/api.md:41 ../../source/api.md:141 ../../source/api.md:194
 #: ../../source/api.md:258 ../../source/api.md:327 ../../source/api.md:352
@@ -62,177 +70,187 @@ msgstr "**Paramètres :**"
 
 #: ../../source/api.md:42
 msgid "`jday` (`float`): Julian Day number"
-msgstr ""
+msgstr "`jday` (`float`) : numéro de Jour Julien"
 
 #: ../../source/api.md:43
 msgid "`body` (`int`): body ID (0 = Sun … 13 = Chiron)"
-msgstr ""
+msgstr "`body` (`int`) : identifiant du corps (0 = Soleil … 13 = Chiron)"
 
 #: ../../source/api.md:45 ../../source/api.md:127
 msgid "**Returns:** `float`"
-msgstr ""
+msgstr "**Retourne :** `float`"
 
 #: ../../source/api.md:61
 msgid "`positions(jday, l_bodies=bodies)`"
-msgstr ""
+msgstr "`positions(jday, l_bodies=bodies)`"
 
 #: ../../source/api.md:63
 msgid "Return an array of longitudes for all bodies (or a subset)."
-msgstr ""
+msgstr "Retourne un tableau de longitudes pour tous les corps (ou un sous-ensemble)."
 
 #: ../../source/api.md:65
 msgid "**Returns:** `numpy.ndarray` of float64, shape `(N,)`"
-msgstr ""
+msgstr "**Retourne :** `numpy.ndarray` de float64, forme `(N,)`"
 
 #: ../../source/api.md:74
 msgid "`body_sign(b_long)`"
-msgstr ""
+msgstr "`body_sign(b_long)`"
 
 #: ../../source/api.md:76
 msgid "Determine the zodiac sign and degree breakdown for a longitude."
-msgstr ""
+msgstr "Détermine le signe du zodiaque et la décomposition en degrés pour une longitude."
 
 #: ../../source/api.md:78
 msgid "**Parameters:** `b_long` (`float`): ecliptic longitude in degrees"
-msgstr ""
+msgstr "**Paramètres :** `b_long` (`float`) : longitude écliptique en degrés"
 
 #: ../../source/api.md:80
 msgid ""
 "**Returns:** `numpy.ndarray` of int32, fields `[sign_index, degrees, "
 "minutes, seconds]`"
 msgstr ""
+"**Retourne :** `numpy.ndarray` de int32, champs `[sign_index, degrees, "
+"minutes, seconds]`"
 
 #: ../../source/api.md:91
 msgid "`is_retrograde(jday, body)`"
-msgstr ""
+msgstr "`is_retrograde(jday, body)`"
 
 #: ../../source/api.md:93
 msgid ""
 "Return `True` if the body has negative longitudinal velocity (retrograde "
 "motion)."
 msgstr ""
+"Retourne `True` si le corps a une vitesse longitudinale négative "
+"(mouvement rétrograde)."
 
 #: ../../source/api.md:102
 msgid "`body_name(body)`"
-msgstr ""
+msgstr "`body_name(body)`"
 
 #: ../../source/api.md:104
 msgid "Return the string name for a body ID."
-msgstr ""
+msgstr "Retourne le nom en chaîne de caractères pour un identifiant de corps."
 
 #: ../../source/api.md:115
 msgid "Time (`ketu.ephemeris.time`)"
-msgstr ""
+msgstr "Temps (`ketu.ephemeris.time`)"
 
 #: ../../source/api.md:121
 msgid "`utc_to_julian(dtime)`"
-msgstr ""
+msgstr "`utc_to_julian(dtime)`"
 
 #: ../../source/api.md:123
 msgid "Convert a UTC datetime to Julian Day number."
-msgstr ""
+msgstr "Convertit un datetime UTC en numéro de Jour Julien."
 
 #: ../../source/api.md:125
 msgid ""
 "**Parameters:** `dtime` (`datetime`): UTC datetime (timezone-aware or "
 "naive UTC)"
 msgstr ""
+"**Paramètres :** `dtime` (`datetime`) : datetime UTC (avec ou sans "
+"information de fuseau horaire)"
 
 #: ../../source/api.md:137
 msgid "`local_to_utc(dtime, zoneinfo=None)`"
-msgstr ""
+msgstr "`local_to_utc(dtime, zoneinfo=None)`"
 
 #: ../../source/api.md:139
 msgid "Convert a local datetime to UTC."
-msgstr ""
+msgstr "Convertit un datetime local en UTC."
 
 #: ../../source/api.md:142
 msgid "`dtime` (`datetime`): local datetime with or without tzinfo"
-msgstr ""
+msgstr "`dtime` (`datetime`) : datetime local avec ou sans tzinfo"
 
 #: ../../source/api.md:143
 msgid "`zoneinfo` (`ZoneInfo`, optional): timezone if not embedded in dtime"
-msgstr ""
+msgstr "`zoneinfo` (`ZoneInfo`, optionnel) : fuseau horaire si non intégré dans dtime"
 
 #: ../../source/api.md:145
 msgid "**Returns:** `datetime` in UTC"
-msgstr ""
+msgstr "**Retourne :** `datetime` en UTC"
 
 #: ../../source/api.md:160
 msgid "Aspects (`ketu.aspects`)"
-msgstr ""
+msgstr "Aspects (`ketu.aspects`)"
 
 #: ../../source/api.md:162
 msgid "Configurable aspect detection. New in v1.1: preset aspect sets."
-msgstr ""
+msgstr "Détection d'aspects configurable. Nouveau en v1.1 : ensembles d'aspects prédéfinis."
 
 #: ../../source/api.md:177
 msgid "Preset Aspect Sets"
-msgstr ""
+msgstr "Ensembles d'aspects prédéfinis"
 
 #: ../../source/api.md
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: ../../source/api.md
 msgid "Aspects included"
-msgstr ""
+msgstr "Aspects inclus"
 
 #: ../../source/api.md
 msgid "Notes"
-msgstr ""
+msgstr "Notes"
 
 #: ../../source/api.md
 msgid "`TRADITIONAL`"
-msgstr ""
+msgstr "`TRADITIONAL`"
 
 #: ../../source/api.md
 msgid ""
 "Conjunction, Semi-sextile, Sextile, Square, Trine, Quincunx, Opposition "
 "(7 aspects)"
 msgstr ""
+"Conjonction, Semi-sextile, Sextile, Carré, Trigone, Quinconce, "
+"Opposition (7 aspects)"
 
 #: ../../source/api.md
 msgid "**Library default** (v1.3+)"
-msgstr ""
+msgstr "**Défaut de la bibliothèque** (v1.3+)"
 
 #: ../../source/api.md
 msgid "`CLASSICAL`"
-msgstr ""
+msgstr "`CLASSICAL`"
 
 #: ../../source/api.md
 msgid "Conjunction, Sextile, Square, Trine, Opposition (5 aspects)"
-msgstr ""
+msgstr "Conjonction, Sextile, Carré, Trigone, Opposition (5 aspects)"
 
 #: ../../source/api.md
 msgid "v1.2 and earlier default"
-msgstr ""
+msgstr "Défaut de v1.2 et antérieures"
 
 #: ../../source/api.md
 msgid "`EXTENDED`"
-msgstr ""
+msgstr "`EXTENDED`"
 
 #: ../../source/api.md
 msgid "All 14 aspects"
-msgstr ""
+msgstr "Les 14 aspects"
 
 #: ../../source/api.md
 msgid "Includes full-circle minors (H5/H9/H10)"
-msgstr ""
+msgstr "Inclut les mineurs plein-cercle (H5/H9/H10)"
 
 #: ../../source/api.md:185
 msgid "All presets are `numpy.ndarray` boolean masks over the 14-aspect table."
-msgstr ""
+msgstr "Tous les prédéfinis sont des masques booléens `numpy.ndarray` sur la table des 14 aspects."
 
 #: ../../source/api.md:187
 msgid ""
 "`AspectSetSpec = Union[str, list, numpy.ndarray, None]` — any of these "
 "can be passed as the `aspects` argument to `calculate_aspects`."
 msgstr ""
+"`AspectSetSpec = Union[str, list, numpy.ndarray, None]` — l'un quelconque "
+"de ces types peut être passé comme argument `aspects` à `calculate_aspects`."
 
 #: ../../source/api.md:189
 msgid "`aspects_for_harmonics(harmonics)`"
-msgstr ""
+msgstr "`aspects_for_harmonics(harmonics)`"
 
 #: ../../source/api.md:191
 msgid ""
@@ -240,6 +258,9 @@ msgid ""
 "length-14 `numpy.bool_` mask that can be used as `aspects=` argument to "
 "any Ketu function."
 msgstr ""
+"Compose un ensemble d'aspects personnalisé à partir d'une liste "
+"d'harmoniques. Retourne un masque `numpy.bool_` gelé de longueur 14 "
+"utilisable comme argument `aspects=` dans toute fonction Ketu."
 
 #: ../../source/api.md:195
 #, python-brace-format
@@ -247,26 +268,32 @@ msgid ""
 "`harmonics` (`Sequence[int]`): list of harmonic integers; valid values: "
 "`{1, 2, 3, 5, 6, 9, 10}`"
 msgstr ""
+"`harmonics` (`Sequence[int]`) : liste d'entiers harmoniques ; valeurs "
+"valides : `{1, 2, 3, 5, 6, 9, 10}`"
 
 #: ../../source/api.md:197
 msgid "**Returns:** frozen `numpy.ndarray` of `numpy.bool_`, shape `(14,)`"
-msgstr ""
+msgstr "**Retourne :** `numpy.ndarray` gelé de `numpy.bool_`, forme `(14,)`"
 
 #: ../../source/api.md:199
 msgid ""
 "**Raises:** `ValueError` if any harmonic is not in the valid set or is "
 "not an integer."
 msgstr ""
+"**Lève :** `ValueError` si un harmonique n'est pas dans l'ensemble "
+"valide ou n'est pas un entier."
 
 #: ../../source/api.md:221
 msgid "`core.aspects` columns: `harmonic` and `symbol`"
-msgstr ""
+msgstr "`core.aspects` columns: `harmonic` and `symbol`"
 
 #: ../../source/api.md:223
 msgid ""
 "`core.aspects` is a 5-field structured array `(name, angle, coef, "
 "harmonic, symbol)`. New in v1.3: the `harmonic` and `symbol` columns."
 msgstr ""
+"`core.aspects` est un tableau structuré à 5 champs `(name, angle, coef, "
+"harmonic, symbol)`. Nouveau en v1.3 : les colonnes `harmonic` et `symbol`."
 
 #: ../../source/api.md:226
 msgid ""
@@ -275,12 +302,18 @@ msgid ""
 "canonical table order. `aspects_for_harmonics` uses this column "
 "internally (data-driven, no hardcoded indices)."
 msgstr ""
+"**`harmonic` (`int32`) :** la base harmonique de chaque aspect. Valeurs : "
+"`[1, 6, 10, 9, 3, 5, 9, 2, 10, 3, 5, 6, 9, 1]` pour les aspects 0–13 "
+"dans l'ordre canonique de la table. `aspects_for_harmonics` utilise cette "
+"colonne en interne (piloté par les données, sans indices codés en dur)."
 
 #: ../../source/api.md:227
 msgid ""
 "**`symbol` (`U4`):** Unicode glyph for the 7 half-circle aspects (☌ ⚺ ⚹ □"
 " △ ⚻ ☍); blank (`\"\"`) for the 7 full-circle minor aspects."
 msgstr ""
+"**`symbol` (`U4`) :** glyphe Unicode pour les 7 aspects demi-cercle "
+"(☌ ⚺ ⚹ □ △ ⚻ ☍) ; vide (`\"\"`) pour les 7 aspects mineurs plein-cercle."
 
 #: ../../source/api.md:228
 msgid ""
@@ -288,38 +321,45 @@ msgid ""
 "`coefficient` in API documentation; the field name in the dtype is `coef`"
 " and was **not renamed** in v1.3."
 msgstr ""
+"**`coef` (`float32`) :** coefficient d'orbe. Conceptuellement désigné "
+"comme `coefficient` dans la documentation API ; le nom du champ dans le "
+"dtype est `coef` et n'a **pas été renommé** en v1.3."
 
 #: ../../source/api.md:239
 msgid "`get_aspect(jday, body1, body2)`"
-msgstr ""
+msgstr "`get_aspect(jday, body1, body2)`"
 
 #: ../../source/api.md:241
 msgid ""
 "Return the aspect between two bodies, or `None` if no in-orb aspect "
 "exists."
 msgstr ""
+"Retourne l'aspect entre deux corps, ou `None` si aucun aspect dans "
+"l'orbe n'existe."
 
 #: ../../source/api.md:243
 msgid ""
 "**Returns:** `tuple[int, int, int, float]` → `(body1, body2, aspect_id, "
 "orb)` or `None`"
 msgstr ""
+"**Retourne :** `tuple[int, int, int, float]` → `(body1, body2, aspect_id, "
+"orb)` ou `None`"
 
 #: ../../source/api.md:254
 msgid "`calculate_aspects(jdate, l_bodies=bodies, aspects=None)`"
-msgstr ""
+msgstr "`calculate_aspects(jdate, l_bodies=bodies, aspects=None)`"
 
 #: ../../source/api.md:256
 msgid "Compute all in-orb aspects for the given date."
-msgstr ""
+msgstr "Calcule tous les aspects dans l'orbe pour la date donnée."
 
 #: ../../source/api.md:259
 msgid "`jdate` (`float`): Julian Day"
-msgstr ""
+msgstr "`jdate` (`float`) : Jour Julien"
 
 #: ../../source/api.md:260
 msgid "`l_bodies`: body subset (default: all bodies)"
-msgstr ""
+msgstr "`l_bodies` : sous-ensemble de corps (défaut : tous les corps)"
 
 #: ../../source/api.md:261
 msgid ""
@@ -327,252 +367,273 @@ msgid ""
 "half-circle, v1.3+ default); `\"classical\"` → CLASSICAL (5); "
 "`\"extended\"` → EXTENDED (14); etc."
 msgstr ""
+"`aspects` (`AspectSetSpec`, optionnel) : filtre ; `None` → TRADITIONAL "
+"(7 demi-cercle, défaut v1.3+) ; `\"classical\"` → CLASSICAL (5) ; "
+"`\"extended\"` → EXTENDED (14) ; etc."
 
 #: ../../source/api.md:263
 msgid "**Returns:** structured array with fields `(body1, body2, i_asp, orb)`"
-msgstr ""
+msgstr "**Retourne :** tableau structuré avec les champs `(body1, body2, i_asp, orb)`"
 
 #: ../../source/api.md:275
 msgid "`get_orb(body1, body2, asp)`"
-msgstr ""
+msgstr "`get_orb(body1, body2, asp)`"
 
 #: ../../source/api.md:277
 msgid "Return the maximum allowed orb in degrees for an aspect pair."
-msgstr ""
+msgstr "Retourne l'orbe maximum autorisé en degrés pour une paire d'aspects."
 
 #: ../../source/api.md:281
 msgid "Houses (`ketu.houses`)"
-msgstr ""
+msgstr "Maisons (`ketu.houses`)"
 
 #: ../../source/api.md:283
 msgid "House system calculations. New in v1.1/v1.2."
-msgstr ""
+msgstr "Calculs de systèmes de maisons. Nouveau en v1.1/v1.2."
 
 #: ../../source/api.md:296
 msgid "`SYSTEMS`"
-msgstr ""
+msgstr "`SYSTEMS`"
 
 #: ../../source/api.md:298
 msgid "Dictionary of supported house systems:"
-msgstr ""
+msgstr "Dictionnaire des systèmes de maisons pris en charge :"
 
 #: ../../source/api.md:307
 msgid "`HOUSES_DTYPE`"
-msgstr ""
+msgstr "`HOUSES_DTYPE`"
 
 #: ../../source/api.md:309
 msgid "NumPy dtype for house result arrays:"
-msgstr ""
+msgstr "Dtype NumPy pour les tableaux de résultats de maisons :"
 
 #: ../../source/api.md:323
 msgid ""
 "`calculate_houses(jd, lat, lon, system=\"placidus\", "
 "polar_fallback=\"raise\")`"
 msgstr ""
+"`calculate_houses(jd, lat, lon, system=\"placidus\", "
+"polar_fallback=\"raise\")`"
 
 #: ../../source/api.md:325
 msgid "Compute house cusps and angles for a given moment and location."
-msgstr ""
+msgstr "Calcule les cuspides des maisons et les angles pour un moment et un lieu donnés."
 
 #: ../../source/api.md:328 ../../source/api.md:411
 msgid "`jd` (`float`): Julian Day"
-msgstr ""
+msgstr "`jd` (`float`) : Jour Julien"
 
 #: ../../source/api.md:329
 msgid "`lat` (`float`): geographic latitude in degrees"
-msgstr ""
+msgstr "`lat` (`float`) : latitude géographique en degrés"
 
 #: ../../source/api.md:330
 msgid "`lon` (`float`): geographic longitude in degrees"
-msgstr ""
+msgstr "`lon` (`float`) : longitude géographique en degrés"
 
 #: ../../source/api.md:331
 msgid "`system` (`str`): one of `SYSTEMS` keys"
-msgstr ""
+msgstr "`system` (`str`) : l'une des clés de `SYSTEMS`"
 
 #: ../../source/api.md:332
 msgid "`polar_fallback` (`str`): `\"raise\"` (default) or a fallback system name"
-msgstr ""
+msgstr "`polar_fallback` (`str`) : `\"raise\"` (défaut) ou un nom de système de repli"
 
 #: ../../source/api.md:334
 msgid "**Returns:** scalar `numpy.ndarray` with `HOUSES_DTYPE` fields"
-msgstr ""
+msgstr "**Retourne :** `numpy.ndarray` scalaire avec les champs `HOUSES_DTYPE`"
 
 #: ../../source/api.md:348
 msgid "`house_of(planet_lon, cusps)`"
-msgstr ""
+msgstr "`house_of(planet_lon, cusps)`"
 
 #: ../../source/api.md:350
 msgid "Return the house number (1–12) for a given longitude."
-msgstr ""
+msgstr "Retourne le numéro de maison (1–12) pour une longitude donnée."
 
 #: ../../source/api.md:353
 msgid "`planet_lon` (`float` or array): ecliptic longitude"
-msgstr ""
+msgstr "`planet_lon` (`float` ou tableau) : longitude écliptique"
 
 #: ../../source/api.md:354
 msgid "`cusps` (`float[12]`): house cusp array from `HOUSES_DTYPE`"
-msgstr ""
+msgstr "`cusps` (`float[12]`) : tableau des cuspides de maisons issu de `HOUSES_DTYPE`"
 
 #: ../../source/api.md:356
 msgid "**Returns:** `int` or array of int"
-msgstr ""
+msgstr "**Retourne :** `int` ou tableau d'int"
 
 #: ../../source/api.md:367
 msgid "`HighLatitudeError`"
-msgstr ""
+msgstr "`HighLatitudeError`"
 
 #: ../../source/api.md:369
 msgid ""
 "Raised by Placidus/Koch when house cusps cannot be computed above the "
 "polar circle. Catch it or use `polar_fallback`."
 msgstr ""
+"Levée par Placidus/Koch quand les cuspides ne peuvent pas être calculées "
+"au-delà du cercle polaire. Interceptez-la ou utilisez `polar_fallback`."
 
 #: ../../source/api.md:371
 msgid "`register`"
-msgstr ""
+msgstr "`register`"
 
 #: ../../source/api.md:373
 msgid ""
 "Decorator/function to add a custom house system to the registry. See "
 "[Houses](houses.md) for advanced usage."
 msgstr ""
+"Décorateur/fonction pour ajouter un système de maisons personnalisé au "
+"registre. Voir [Maisons](houses.md) pour un usage avancé."
 
 #: ../../source/api.md:377
 msgid "Charts (`ketu.charts`)"
-msgstr ""
+msgstr "Thèmes (`ketu.charts`)"
 
 #: ../../source/api.md:379
 msgid "Full natal chart computation. New in v1.2."
-msgstr ""
+msgstr "Calcul complet du thème natal. Nouveau en v1.2."
 
 #: ../../source/api.md:385
 msgid "`CHART_DTYPE`"
-msgstr ""
+msgstr "`CHART_DTYPE`"
 
 #: ../../source/api.md:387
 msgid "NumPy dtype for a complete natal chart:"
-msgstr ""
+msgstr "Dtype NumPy pour un thème natal complet :"
 
 #: ../../source/api.md:406
 msgid ""
 "`compute_chart(jd, lat, lon, system=\"placidus\", aspects=None, "
 "polar_fallback=\"raise\")`"
 msgstr ""
+"`compute_chart(jd, lat, lon, system=\"placidus\", aspects=None, "
+"polar_fallback=\"raise\")`"
 
 #: ../../source/api.md:408
 msgid "Build a complete natal chart as a single structured array."
-msgstr ""
+msgstr "Construit un thème natal complet en un seul tableau structuré."
 
 #: ../../source/api.md:412
 msgid "`lat`, `lon` (`float`): geographic coordinates"
-msgstr ""
+msgstr "`lat`, `lon` (`float`) : coordonnées géographiques"
 
 #: ../../source/api.md:413 ../../source/api.md:560 ../../source/api.md:581
 msgid "`system` (`str`): house system"
-msgstr ""
+msgstr "`system` (`str`) : système de maisons"
 
 #: ../../source/api.md:414
 msgid ""
 "`aspects` (`AspectSetSpec`): aspect filter (default: TRADITIONAL — the 7 "
 "half-circle aspects, v1.3+)"
 msgstr ""
+"`aspects` (`AspectSetSpec`) : filtre d'aspects (défaut : TRADITIONAL — "
+"les 7 aspects demi-cercle, v1.3+)"
 
 #: ../../source/api.md:415
 msgid "`polar_fallback` (`str`): high-latitude fallback"
-msgstr ""
+msgstr "`polar_fallback` (`str`) : repli pour hautes latitudes"
 
 #: ../../source/api.md:417 ../../source/api.md:524
 msgid "**Returns:** scalar `numpy.ndarray` with `CHART_DTYPE` fields"
-msgstr ""
+msgstr "**Retourne :** `numpy.ndarray` scalaire avec les champs `CHART_DTYPE`"
 
 #: ../../source/api.md:433
 msgid "`is_day_chart(jd, lat, lon)`"
-msgstr ""
+msgstr "`is_day_chart(jd, lat, lon)`"
 
 #: ../../source/api.md:435
 msgid ""
 "Return `True` if the Sun is above the horizon at the given moment and "
 "location (used for sect-aware Arabic Parts)."
 msgstr ""
+"Retourne `True` si le Soleil est au-dessus de l'horizon au moment et au "
+"lieu donnés (utilisé pour les Parts arabes sensibles à la secte)."
 
 #: ../../source/api.md:444 ../../source/api.md:494 ../../source/api.md:537
 msgid "See also: [Relational charts](relational_charts.md)"
-msgstr ""
+msgstr "Voir aussi : [Thèmes relationnels](relational_charts.md)"
 
 #: ../../source/api.md:448
 msgid "Synastry (`ketu.synastry`)"
-msgstr ""
+msgstr "Synastrie (`ketu.synastry`)"
 
 #: ../../source/api.md:450
 msgid "Inter-chart aspect analysis. New in v1.2."
-msgstr ""
+msgstr "Analyse d'aspects inter-thèmes. Nouveau en v1.2."
 
 #: ../../source/api.md:456
 msgid "`SYNASTRY_DTYPE`"
-msgstr ""
+msgstr "`SYNASTRY_DTYPE`"
 
 #: ../../source/api.md:469
 msgid ""
 "`calculate_synastry(chart_a, chart_b, aspects=\"classical\", "
 "orbs=\"synastry\", mode=\"filtered\")`"
 msgstr ""
+"`calculate_synastry(chart_a, chart_b, aspects=\"classical\", "
+"orbs=\"synastry\", mode=\"filtered\")`"
 
 #: ../../source/api.md:471
 msgid "Compute all inter-chart aspects between two `CHART_DTYPE` arrays."
-msgstr ""
+msgstr "Calcule tous les aspects inter-thèmes entre deux tableaux `CHART_DTYPE`."
 
 #: ../../source/api.md:474
 msgid "`chart_a`, `chart_b`: scalar `CHART_DTYPE` arrays from `compute_chart`"
-msgstr ""
+msgstr "`chart_a`, `chart_b` : tableaux `CHART_DTYPE` scalaires issus de `compute_chart`"
 
 #: ../../source/api.md:475
 msgid "`aspects` (`AspectSetSpec`): aspect filter"
-msgstr ""
+msgstr "`aspects` (`AspectSetSpec`) : filtre d'aspects"
 
 #: ../../source/api.md:476
 msgid "`orbs` (`str`): orb set (`\"synastry\"` applies reduced orbs)"
-msgstr ""
+msgstr "`orbs` (`str`) : ensemble d'orbes (`\"synastry\"` applique des orbes réduits)"
 
 #: ../../source/api.md:477
 msgid ""
 "`mode` (`str`): `\"filtered\"` returns only in-orb pairs; `\"full\"` "
 "returns all pairs"
 msgstr ""
+"`mode` (`str`) : `\"filtered\"` retourne uniquement les paires dans "
+"l'orbe ; `\"full\"` retourne toutes les paires"
 
 #: ../../source/api.md:479
 msgid "**Returns:** structured array with `SYNASTRY_DTYPE` fields"
-msgstr ""
+msgstr "**Retourne :** tableau structuré avec les champs `SYNASTRY_DTYPE`"
 
 #: ../../source/api.md:498
 msgid "Composite (`ketu.composite`)"
-msgstr ""
+msgstr "Composite (`ketu.composite`)"
 
 #: ../../source/api.md:500
 msgid "Midpoint composite chart computation. New in v1.2."
-msgstr ""
+msgstr "Calcul du thème composite par point médian. Nouveau en v1.2."
 
 #: ../../source/api.md:506
 msgid "`circular_midpoint(lon_a, lon_b)`"
-msgstr ""
+msgstr "`circular_midpoint(lon_a, lon_b)`"
 
 #: ../../source/api.md:508
 msgid "Compute the circular (shortest-arc) midpoint between two longitudes."
-msgstr ""
+msgstr "Calcule le point médian circulaire (arc le plus court) entre deux longitudes."
 
 #: ../../source/api.md:510
 msgid ""
 "**Parameters:** `lon_a`, `lon_b` (`float` or array): ecliptic longitudes "
 "in degrees"
 msgstr ""
+"**Paramètres :** `lon_a`, `lon_b` (`float` ou tableau) : longitudes "
+"écliptiques en degrés"
 
 #: ../../source/api.md:512
 msgid "**Returns:** `float` or array"
-msgstr ""
+msgstr "**Retourne :** `float` ou tableau"
 
 #: ../../source/api.md:520
 msgid "`calculate_composite(chart_a, chart_b, system=\"placidus\")`"
-msgstr ""
+msgstr "`calculate_composite(chart_a, chart_b, system=\"placidus\")`"
 
 #: ../../source/api.md:522
 msgid ""
@@ -580,234 +641,254 @@ msgid ""
 "The result is a new `CHART_DTYPE` array where each body position is the "
 "circular midpoint of the corresponding bodies in chart A and B."
 msgstr ""
+"Construit un thème composite (point médian) à partir de deux tableaux "
+"`CHART_DTYPE` natals. Le résultat est un nouveau tableau `CHART_DTYPE` "
+"où chaque position de corps est le point médian circulaire des corps "
+"correspondants dans les thèmes A et B."
 
 #: ../../source/api.md:541
 msgid "Returns (`ketu.returns`)"
-msgstr ""
+msgstr "Retours (`ketu.returns`)"
 
 #: ../../source/api.md:543
 msgid "Solar and lunar return charts. New in v1.2."
-msgstr ""
+msgstr "Thèmes de retour solaire et lunaire. Nouveau en v1.2."
 
 #: ../../source/api.md:549
 msgid ""
 "**Key asymmetry:** `solar_return` takes `target_year` as an `int`; "
 "`lunar_return` takes `target_jd` as a `float`."
 msgstr ""
+"**Asymétrie clé :** `solar_return` prend `target_year` comme `int` ; "
+"`lunar_return` prend `target_jd` comme `float`."
 
 #: ../../source/api.md:551
 msgid ""
 "`solar_return(natal_jd, natal_lat, natal_lon, target_year, "
 "return_lat=None, return_lon=None, system=\"placidus\")`"
 msgstr ""
+"`solar_return(natal_jd, natal_lat, natal_lon, target_year, "
+"return_lat=None, return_lon=None, system=\"placidus\")`"
 
 #: ../../source/api.md:553
 msgid ""
 "Find the exact Julian Day when the Sun returns to its natal longitude "
 "during `target_year`, then build the full chart at that moment."
 msgstr ""
+"Trouve le Jour Julien exact où le Soleil retourne à sa longitude natale "
+"pendant `target_year`, puis construit le thème complet à cet instant."
 
 #: ../../source/api.md:556 ../../source/api.md:577
 msgid "`natal_jd` (`float`): Julian Day of birth"
-msgstr ""
+msgstr "`natal_jd` (`float`) : Jour Julien de naissance"
 
 #: ../../source/api.md:557 ../../source/api.md:578
 msgid "`natal_lat`, `natal_lon` (`float`): birth geographic coordinates"
-msgstr ""
+msgstr "`natal_lat`, `natal_lon` (`float`) : coordonnées géographiques de naissance"
 
 #: ../../source/api.md:558
 msgid "`target_year` (`int`): Gregorian year for the return"
-msgstr ""
+msgstr "`target_year` (`int`) : année grégorienne pour le retour"
 
 #: ../../source/api.md:559
 msgid ""
 "`return_lat`, `return_lon` (`float`, optional): relocated return "
 "location; `None` → natal location"
 msgstr ""
+"`return_lat`, `return_lon` (`float`, optionnel) : lieu de retour "
+"relocalisé ; `None` → lieu natal"
 
 #: ../../source/api.md:562
 msgid "**Returns:** scalar `CHART_DTYPE` array for the return chart"
-msgstr ""
+msgstr "**Retourne :** tableau `CHART_DTYPE` scalaire pour le thème de retour"
 
 #: ../../source/api.md:572
 msgid ""
 "`lunar_return(natal_jd, natal_lat, natal_lon, target_jd, return_lat=None,"
 " return_lon=None, system=\"placidus\")`"
 msgstr ""
+"`lunar_return(natal_jd, natal_lat, natal_lon, target_jd, return_lat=None,"
+" return_lon=None, system=\"placidus\")`"
 
 #: ../../source/api.md:574
 msgid ""
 "Find the next lunar return on or after `target_jd` (Moon returns to natal"
 " longitude), then build the chart."
 msgstr ""
+"Trouve le prochain retour lunaire à partir de `target_jd` (la Lune "
+"retourne à sa longitude natale), puis construit le thème."
 
 #: ../../source/api.md:579
 msgid "`target_jd` (`float`): search starts from this Julian Day"
-msgstr ""
+msgstr "`target_jd` (`float`) : la recherche commence à partir de ce Jour Julien"
 
 #: ../../source/api.md:580
 msgid "`return_lat`, `return_lon` (`float`, optional): relocated location"
-msgstr ""
+msgstr "`return_lat`, `return_lon` (`float`, optionnel) : lieu relocalisé"
 
 #: ../../source/api.md:583
 msgid "**Returns:** scalar `CHART_DTYPE` array"
-msgstr ""
+msgstr "**Retourne :** tableau `CHART_DTYPE` scalaire"
 
 #: ../../source/api.md:597
 msgid "See also: [Predictive charts](predictive_charts.md)"
-msgstr ""
+msgstr "Voir aussi : [Thèmes prédictifs](predictive_charts.md)"
 
 #: ../../source/api.md:601
 msgid "Arabic Parts (`ketu.parts`)"
-msgstr ""
+msgstr "Parts arabes (`ketu.parts`)"
 
 #: ../../source/api.md:603
 msgid "Hermetic Lots / Arabic Parts. New in v1.2."
-msgstr ""
+msgstr "Lots hermétiques / Parts arabes. Nouveau en v1.2."
 
 #: ../../source/api.md:616
 msgid "`PARTS`"
-msgstr ""
+msgstr "`PARTS`"
 
 #: ../../source/api.md:618
 msgid ""
 "Registry dictionary mapping part names to `PartSpec` objects. Built-in "
 "parts:"
 msgstr ""
+"Dictionnaire de registre associant les noms de parts aux objets "
+"`PartSpec`. Parts intégrées :"
 
 #: ../../source/api.md
 msgid "Sect-aware"
-msgstr ""
+msgstr "Sensible à la secte"
 
 #: ../../source/api.md
 msgid "Formula (day)"
-msgstr ""
+msgstr "Formule (jour)"
 
 #: ../../source/api.md
 msgid "`\"fortune\"`"
-msgstr ""
+msgstr "`\"fortune\"`"
 
 #: ../../source/api.md
 msgid "Yes"
-msgstr ""
+msgstr "Oui"
 
 #: ../../source/api.md
 msgid "ASC + Moon − Sun"
-msgstr ""
+msgstr "ASC + Lune − Soleil"
 
 #: ../../source/api.md
 msgid "`\"spirit\"`"
-msgstr ""
+msgstr "`\"spirit\"`"
 
 #: ../../source/api.md
 msgid "ASC + Sun − Moon"
-msgstr ""
+msgstr "ASC + Soleil − Lune"
 
 #: ../../source/api.md
 msgid "`\"marriage\"`"
-msgstr ""
+msgstr "`\"marriage\"`"
 
 #: ../../source/api.md
 msgid "No (fixed)"
-msgstr ""
+msgstr "Non (fixe)"
 
 #: ../../source/api.md
 msgid "ASC + Venus − Saturn"
-msgstr ""
+msgstr "ASC + Vénus − Saturne"
 
 #: ../../source/api.md:626
 msgid "`PartSpec` fields: `name`, `day_formula`, `night_formula`, `description`."
-msgstr ""
+msgstr "`PartSpec` fields: `name`, `day_formula`, `night_formula`, `description`."
 
 #: ../../source/api.md:628
 msgid "Formula signature: `(asc_lon, sun_lon, moon_lon, venus_lon) -> float`"
-msgstr ""
+msgstr "Formula signature: `(asc_lon, sun_lon, moon_lon, venus_lon) -> float`"
 
 #: ../../source/api.md:630
 msgid "`calculate_part(part_name, chart)`"
-msgstr ""
+msgstr "`calculate_part(part_name, chart)`"
 
 #: ../../source/api.md:632
 msgid "Compute the longitude of a named Arabic Part for a chart."
-msgstr ""
+msgstr "Calcule la longitude d'une Part arabe nommée pour un thème."
 
 #: ../../source/api.md:635
 msgid "`part_name` (`str`): key in `PARTS` registry"
-msgstr ""
+msgstr "`part_name` (`str`) : clé dans le registre `PARTS`"
 
 #: ../../source/api.md:636
 msgid "`chart`: scalar `CHART_DTYPE` array (must include `asc`, `body_lons`)"
-msgstr ""
+msgstr "`chart` : tableau `CHART_DTYPE` scalaire (doit inclure `asc`, `body_lons`)"
 
 #: ../../source/api.md:638
 msgid "**Returns:** `float` — ecliptic longitude of the Part (degrees)"
-msgstr ""
+msgstr "**Retourne :** `float` — longitude écliptique de la Part (degrés)"
 
 #: ../../source/api.md:640
 msgid ""
 "Fortune and Spirit automatically invert their formulas for night charts "
 "(when Sun is below the horizon)."
 msgstr ""
+"Fortune et Spirit inversent automatiquement leurs formules pour les "
+"thèmes nocturnes (quand le Soleil est sous l'horizon)."
 
 #: ../../source/api.md:658
 msgid "`calculate_all_parts(chart, parts=None)`"
-msgstr ""
+msgstr "`calculate_all_parts(chart, parts=None)`"
 
 #: ../../source/api.md:660
 msgid "Compute all registered parts (or a subset) at once."
-msgstr ""
+msgstr "Calcule toutes les parts enregistrées (ou un sous-ensemble) en une fois."
 
 #: ../../source/api.md:663
 msgid "`chart`: scalar `CHART_DTYPE`"
-msgstr ""
+msgstr "`chart` : `CHART_DTYPE` scalaire"
 
 #: ../../source/api.md:664
 msgid "`parts` (`list[str]`, optional): subset of `PARTS` keys; `None` → all"
-msgstr ""
+msgstr "`parts` (`list[str]`, optionnel) : sous-ensemble de clés `PARTS` ; `None` → toutes"
 
 #: ../../source/api.md:666
 msgid "**Returns:** `dict[str, float]`"
-msgstr ""
+msgstr "**Retourne :** `dict[str, float]`"
 
 #: ../../source/api.md:676
 msgid "`register(name, day_formula, night_formula, description)`"
-msgstr ""
+msgstr "`register(name, day_formula, night_formula, description)`"
 
 #: ../../source/api.md:678
 msgid "Add a custom Arabic Part to the registry."
-msgstr ""
+msgstr "Ajoute une Part arabe personnalisée au registre."
 
 #: ../../source/api.md:689
 msgid "`get_part(name)`"
-msgstr ""
+msgstr "`get_part(name)`"
 
 #: ../../source/api.md:691
 msgid "Retrieve a `PartSpec` from the registry."
-msgstr ""
+msgstr "Récupère un `PartSpec` depuis le registre."
 
 #: ../../source/api.md:693
 msgid "See also: [Arabic Parts](arabic_parts.md)"
-msgstr ""
+msgstr "Voir aussi : [Parts arabes](arabic_parts.md)"
 
 #: ../../source/api.md:697
 msgid "Display / CLI (`ketu.display`, `ketu.cli`)"
-msgstr ""
+msgstr "Affichage / CLI (`ketu.display`, `ketu.cli`)"
 
 #: ../../source/api.md:704
 msgid "`print_positions(jday)`"
-msgstr ""
+msgstr "`print_positions(jday)`"
 
 #: ../../source/api.md:706
 msgid "Print a formatted table of body positions for the given Julian Day."
-msgstr ""
+msgstr "Affiche un tableau formaté des positions des corps pour le Jour Julien donné."
 
 #: ../../source/api.md:708
 msgid "`print_aspects(jday)`"
-msgstr ""
+msgstr "`print_aspects(jday)`"
 
 #: ../../source/api.md:710
 msgid "Print a formatted table of current in-orb aspects."
-msgstr ""
+msgstr "Affiche un tableau formaté des aspects actuels dans l'orbe."
 
 #: ../../source/api.md:712
 msgid "`main()`"
@@ -815,11 +896,11 @@ msgstr "`main()`"
 
 #: ../../source/api.md:714
 msgid "Entry point for the interactive CLI (`ketu` command)."
-msgstr ""
+msgstr "Point d'entrée pour la CLI interactive (commande `ketu`)."
 
 #: ../../source/api.md:718
 msgid "Chiron (body_id=13) — New in v1.3"
-msgstr ""
+msgstr "Chiron (body_id=13) — Nouveau en v1.3"
 
 #: ../../source/api.md:720
 msgid ""
@@ -827,28 +908,33 @@ msgid ""
 " in the public API — it is accessed through the standard calculation "
 "functions using `body_id=13`."
 msgstr ""
+"Chiron est le 14e corps ajouté en v1.3. Il n'existe pas de module Chiron "
+"séparé dans l'API publique — il est accessible via les fonctions de "
+"calcul standard en utilisant `body_id=13`."
 
 #: ../../source/api.md:722
 msgid "**Key facts:**"
-msgstr ""
+msgstr "**Faits clés :**"
 
 #: ../../source/api.md:724
 msgid "`ketu.bodies[\"name\"][13] == b\"Chiron\"`"
-msgstr ""
+msgstr "`ketu.bodies[\"name\"][13] == b\"Chiron\"`"
 
 #: ../../source/api.md:725
 msgid ""
 "Valid date range: 1950–2050 (Chebyshev polynomial coefficients embedded "
 "in `ketu/data/chiron_coeffs.npz`)"
 msgstr ""
+"Plage de dates valide : 1950–2050 (coefficients polynomiaux de Chebyshev "
+"embarqués dans `ketu/data/chiron_coeffs.npz`)"
 
 #: ../../source/api.md:726
 msgid "Accuracy: max error 0.005695° (sub-arcminute) over the 1950–2050 range"
-msgstr ""
+msgstr "Précision : erreur maximale 0,005695° (sous-arcminute) sur la plage 1950–2050"
 
 #: ../../source/api.md:727
 msgid "`CHART_DTYPE` body arrays are 14-wide; index 13 always refers to Chiron"
-msgstr ""
+msgstr "`CHART_DTYPE` body arrays are 14-wide; index 13 always refers to Chiron"
 
 #: ../../source/api.md:729
 msgid ""
@@ -857,10 +943,14 @@ msgid ""
 "hardcoded index 12 as the last body must be updated. See "
 "[Migration](migration.md) for details."
 msgstr ""
+"**Changement majeur (v1.2 → v1.3) :** L'axe de corps `CHART_DTYPE` a "
+"été étendu de 13 à 14 corps (D-08). Le code qui accédait aux corps par "
+"un compte fixe ou l'index codé en dur 12 comme dernier corps doit être "
+"mis à jour. Voir [Migration](migration.md) pour les détails."
 
 #: ../../source/api.md:749
 msgid "See also: [Chiron](chiron.md)"
-msgstr ""
+msgstr "Voir aussi : [Chiron](chiron.md)"
 
 #~ msgid "`vlong()`, `vlat()`, `vdist_au()`"
 #~ msgstr "### `vlong()`, `vlat()`, `vdist_au()`"
@@ -1128,4 +1218,3 @@ msgstr ""
 
 #~ msgid "`aspects` (`AspectSetSpec`): aspect filter (default: EXTENDED)"
 #~ msgstr ""
-
