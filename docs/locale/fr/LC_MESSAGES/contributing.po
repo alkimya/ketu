@@ -43,6 +43,8 @@ msgid ""
 "The `[dev]` extra installs pytest, pytest-cov, mypy, sphinx, myst-parser,"
 " interrogate, and other development tools."
 msgstr ""
+"L'extra `[dev]` installe pytest, pytest-cov, mypy, sphinx, myst-parser,"
+" interrogate et d'autres outils de développement."
 
 #: ../../source/contributing.md:27
 msgid "3. Create a Branch"
@@ -110,11 +112,11 @@ msgstr "Suivre PEP 8 pour le code Python"
 
 #: ../../source/contributing.md:85
 msgid "NumPy-style docstrings (required for numpydoc gate)"
-msgstr ""
+msgstr "Docstrings au style NumPy (obligatoires pour le gate numpydoc)"
 
 #: ../../source/contributing.md:86
 msgid "Type hints everywhere (mypy strict)"
-msgstr ""
+msgstr "Annotations de type partout (mypy strict)"
 
 #: ../../source/contributing.md:87
 msgid "Maximum 88 characters per line (Black default)"
@@ -126,13 +128,15 @@ msgstr "Tests"
 
 #: ../../source/contributing.md:91
 msgid "**Coverage target: 100%** (enforced via `fail_under=100` in CI)"
-msgstr ""
+msgstr "**Objectif de couverture : 100%** (imposé via `fail_under=100` en CI)"
 
 #: ../../source/contributing.md:92
 msgid ""
 "No `# pragma: no cover` annotations — unreachable branches are handled "
 "via `exclude_lines` in `pyproject.toml`"
 msgstr ""
+"Pas d'annotations `# pragma: no cover` — les branches inaccessibles sont"
+" gérées via `exclude_lines` dans `pyproject.toml`"
 
 #: ../../source/contributing.md:93
 msgid "Use pytest for unit tests"
@@ -140,7 +144,7 @@ msgstr "Utiliser pytest pour les tests unitaires"
 
 #: ../../source/contributing.md:94
 msgid "Add doctests (`>>>`) for all public functions"
-msgstr ""
+msgstr "Ajouter des doctests (`>>>`) pour toutes les fonctions publiques"
 
 #: ../../source/contributing.md:96
 msgid "Documentation"
@@ -148,27 +152,31 @@ msgstr "Documentation"
 
 #: ../../source/contributing.md:98
 msgid "Document every new public function with NumPy-style docstrings"
-msgstr ""
+msgstr "Documenter chaque nouvelle fonction publique avec des Docstrings au style NumPy"
 
 #: ../../source/contributing.md:99
 msgid ""
 "Include `Examples` section with `>>>` prompts in docstrings (collected by"
 " `make doctest`)"
 msgstr ""
+"Inclure une section `Examples` avec les invites `>>>` dans les Docstrings"
+" (collectées par `make doctest`)"
 
 #: ../../source/contributing.md:100
 msgid "Update the Sphinx docs in `docs/source/` when adding features"
-msgstr ""
+msgstr "Mettre à jour la documentation Sphinx dans `docs/source/` lors de l'ajout de fonctionnalités"
 
 #: ../../source/contributing.md:101
 msgid ""
 "Use `from ketu.submodule import function` style — not `import ketu; "
 "ketu.function()`"
 msgstr ""
+"Utiliser le style `from ketu.submodule import function` — pas"
+" `import ketu; ketu.function()`"
 
 #: ../../source/contributing.md:103
 msgid "pyswisseph Policy"
-msgstr ""
+msgstr "Politique pyswisseph"
 
 #: ../../source/contributing.md:105
 msgid ""
@@ -178,6 +186,11 @@ msgid ""
 "coefficients (as was done for Chiron in v1.3) and embed them as `.npz` "
 "files."
 msgstr ""
+"`pyswisseph` est **réservé aux tests/validation** — il n'est jamais"
+" importé à l'exécution. Le code d'exécution doit être Pure NumPy. Cela"
+" maintient l'isolation AGPL. Si un nouveau calcul nécessite des données"
+" Swiss Ephemeris, générer des coefficients hors ligne (comme cela a été"
+" fait pour Chiron en v1.3) et les embarquer sous forme de fichiers `.npz`."
 
 #: ../../source/contributing.md:107
 msgid "Project Architecture"
@@ -185,87 +198,87 @@ msgstr "Architecture du projet"
 
 #: ../../source/contributing.md:137
 msgid "Quality Gates (CI)"
-msgstr ""
+msgstr "Gates de qualité (CI)"
 
 #: ../../source/contributing.md:139
 msgid "All of the following must pass before merging:"
-msgstr ""
+msgstr "Tous les éléments suivants doivent passer avant de fusionner :"
 
 #: ../../source/contributing.md
 msgid "Gate"
-msgstr ""
+msgstr "Gate"
 
 #: ../../source/contributing.md
 msgid "Command"
-msgstr ""
+msgstr "Commande"
 
 #: ../../source/contributing.md
 msgid "Target"
-msgstr ""
+msgstr "Cible"
 
 #: ../../source/contributing.md
 msgid "`pytest tests/`"
-msgstr ""
+msgstr "`pytest tests/`"
 
 #: ../../source/contributing.md
 msgid "All pass"
-msgstr ""
+msgstr "Tous passent"
 
 #: ../../source/contributing.md
 msgid "Coverage"
-msgstr ""
+msgstr "Couverture"
 
 #: ../../source/contributing.md
 msgid "`pytest --cov=ketu --cov-fail-under=100`"
-msgstr ""
+msgstr "`pytest --cov=ketu --cov-fail-under=100`"
 
 #: ../../source/contributing.md
 msgid "100%"
-msgstr ""
+msgstr "100%"
 
 #: ../../source/contributing.md
 msgid "Type check"
-msgstr ""
+msgstr "Vérification de types"
 
 #: ../../source/contributing.md
 msgid "`mypy ketu/`"
-msgstr ""
+msgstr "`mypy ketu/`"
 
 #: ../../source/contributing.md
 msgid "0 errors (strict)"
-msgstr ""
+msgstr "0 erreur (strict)"
 
 #: ../../source/contributing.md
 msgid "Docstring coverage"
-msgstr ""
+msgstr "Couverture des Docstrings"
 
 #: ../../source/contributing.md
 msgid "`interrogate ketu/ --fail-under 95`"
-msgstr ""
+msgstr "`interrogate ketu/ --fail-under 95`"
 
 #: ../../source/contributing.md
 msgid "≥95%"
-msgstr ""
+msgstr "≥95%"
 
 #: ../../source/contributing.md
 msgid "Numpydoc lint"
-msgstr ""
+msgstr "Lint numpydoc"
 
 #: ../../source/contributing.md
 msgid "`python -m numpydoc --validate ketu/`"
-msgstr ""
+msgstr "`python -m numpydoc --validate ketu/`"
 
 #: ../../source/contributing.md
 msgid "0 violations"
-msgstr ""
+msgstr "0 violation"
 
 #: ../../source/contributing.md
 msgid "Doctests"
-msgstr ""
+msgstr "Doctests"
 
 #: ../../source/contributing.md
 msgid "`pytest --doctest-modules ketu/ --no-cov`"
-msgstr ""
+msgstr "`pytest --doctest-modules ketu/ --no-cov`"
 
 #: ../../source/contributing.md:150
 msgid "Review Process"
@@ -277,7 +290,7 @@ msgstr "Tests : la suite complète doit passer"
 
 #: ../../source/contributing.md:153
 msgid "Coverage: must stay at 100% (no decrease allowed)"
-msgstr ""
+msgstr "Couverture : doit rester à 100% (aucune diminution autorisée)"
 
 #: ../../source/contributing.md:154
 msgid "Documentation: keep it current and clear"
@@ -304,10 +317,12 @@ msgid ""
 "[Swiss Ephemeris](https://www.astro.com/swisseph/) (validation only — not"
 " a runtime dependency)"
 msgstr ""
+"[Swiss Ephemeris](https://www.astro.com/swisseph/) (validation uniquement"
+" — pas une dépendance d'exécution)"
 
 #: ../../source/contributing.md:163
 msgid "[NumPy documentation](https://numpy.org/doc/stable/)"
-msgstr ""
+msgstr "[Documentation NumPy](https://numpy.org/doc/stable/)"
 
 #: ../../source/contributing.md:165
 msgid "Issues"
@@ -371,4 +386,3 @@ msgstr ""
 #~ "**Timing d'aspects exact** : Trouver les"
 #~ " moments précis où les aspects sont"
 #~ " exacts"
-
