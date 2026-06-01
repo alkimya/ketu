@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
 status: in-progress
-last_updated: "2026-06-01T18:36:00Z"
+last_updated: "2026-06-01T18:55:00Z"
 last_activity: 2026-06-01
 progress:
   total_phases: 8
   completed_phases: 7
   total_plans: 17
-  completed_plans: 22
+  completed_plans: 23
   percent: 88
 ---
 
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 27 (Release 1.3.0) — READY TO START
-Plan: 26.1-08 COMPLETE (final gate — 17 .mo recompiled, en+fr builds clean at 1 warning, DOC-13 satisfied). Phase 26.1 COMPLETE.
-Status: Phase 26.1 DONE (8/8 plans). 17 .po catalogs 100% translated, all .mo compiled, en+fr Sphinx builds at 1 warning (display_version only). Next: Phase 27 — Release 1.3.0 (REL-10, REL-11).
-Last activity: 2026-06-01 — Phase 26.1-08 executed: final gate recompile + en+fr build verify + commit .mo
+Phase: 27 (Release 1.3.0) — IN PROGRESS (Wave 1 DONE)
+Plan: 27-01 COMPLETE (REL-10: version → 1.3.0 both source-of-truth files; CHANGELOG merged into one dated [1.3.0] EN+FR + Chiron entries added; UPGRADING Chiron 13→14 section added; README verified complete). Next: 27-02 (Wave 2) — PyPI publish ceremony with human go/no-go checkpoint.
+Status: 27-01 DONE — commits a9cf350 (version) + 2658264 (CHANGELOG) + 4251709 (UPGRADING). Sync gate green; full suite 1399 passed/100% coverage. CHANGELOG dated 2026-06-01 EN+FR. Next: 27-02 — local pre-flight (build + Chiron-aware fresh-venv smoke) → HUMAN go/no-go → tag/push → PyPI publish → post-publish smoke (REL-11).
+Last activity: 2026-06-01 — Phase 27-01 executed: version bump + release docs finalized (REL-10)
 
-Progress: [████████████░░] 88% — 7/8 phases completed, 22 plans done (Phase 26.1 DONE; Phase 27 remains)
+Progress: [████████████░░] 88% — 7/8 phases completed, 23 plans done (Phase 27 Wave 1 DONE; 27-02 PyPI publish remains)
 
 ## v1.3 Roadmap Structure
 
@@ -141,3 +141,4 @@ Resume file: None — Phase 27 ready to plan.
 - [Phase 26.1-07 DONE 2026-06-01]: api.po 188 traduits/0 non traduits; api.mo compiled — commit 2ba6c94
 - [Phase 26.1-04 COMPLETE 2026-06-01]: arabic_parts.po (42) + changelog.po (117) + contributing.po (77) translated; 3 .mo compiled — commits 8d27609 + 1a71af7 + 285c8dd
 - [Phase 26.1-08 COMPLETE 2026-06-01]: FINAL GATE — 17/17 .po 100% translated, 17 .mo recompiled (5 committed), en+fr builds 1 warning each (display_version), DOC-13 SATISFIED — commit 26b6c94
+- [Phase 27-01 COMPLETE 2026-06-01]: REL-10 — version → 1.3.0 (pyproject.toml + ketu/__init__.py; conf.py left untouched per Pitfall 8); CHANGELOG merged to ONE dated [1.3.0] - 2026-06-01 (no [Unreleased]) + Chiron Added bullet + Chiron BREAKING contract note added; fr/CHANGELOG [1.3.0] synthesized; UPGRADING v1.2→v1.3 Chiron shape-table section added (before aspect section); README What's New verified complete (no change). Sync gate 2 passed; full suite 1399 passed/2 skipped/100% coverage. Commits a9cf350 + 2658264 + 4251709. GPG signing stalled on missing TTY (commit.gpgsign=true) — user unlocked gpg-agent cache to land the final commit; no content rework.
