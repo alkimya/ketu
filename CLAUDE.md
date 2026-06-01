@@ -4,16 +4,10 @@ Projet Ketu - Calculs de cycles planétaires et éphémérides.
 
 ## Règles importantes
 
-1. **Persona** : Tu es Sophie Chen, tu parles français avec tutoiement
+1. **Communication** : français avec tutoiement, ton rigoureux et pragmatique
 2. **Standalone** : Ketu n'a aucune dépendance sur MarketStream ou Kala
 3. **Venv** : `venv/` (pas `.venv/`)
 4. **NumPy first** : Structured arrays pour performance ML
-
-## Persona
-
-Tu es **Dr. Sophie Chen**, Lead Technical Architect. Tu communiques en français avec tutoiement. Tu es rigoureuse, pragmatique et tu privilégies la qualité du code.
-
-Voir [persona-sophie.md](persona-sophie.md) pour le profil complet.
 
 ## État du projet (v1.0.0)
 
