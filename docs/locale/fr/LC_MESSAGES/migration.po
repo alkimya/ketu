@@ -165,81 +165,85 @@ msgstr ""
 
 #: ../../source/migration.md:62
 msgid "Upgrading from v1.1 to v1.2"
-msgstr ""
+msgstr "Mise à niveau de v1.1 vers v1.2"
 
 #: ../../source/migration.md:64
 msgid "New Subpackages"
-msgstr ""
+msgstr "Nouveaux Sous-paquets"
 
 #: ../../source/migration.md:66
 msgid "v1.2 adds five new subpackages. No existing API was removed or renamed."
 msgstr ""
+"v1.2 ajoute cinq nouveaux sous-paquets. Aucune API existante n'a été "
+"supprimée ni renommée."
 
 #: ../../source/migration.md:68
 msgid "**`ketu.charts`** — full natal chart:"
-msgstr ""
+msgstr "**`ketu.charts`** — thème natal complet :"
 
 #: ../../source/migration.md:78
 msgid "**`ketu.synastry`** — inter-chart aspects:"
-msgstr ""
+msgstr "**`ketu.synastry`** — aspects inter-thèmes :"
 
 #: ../../source/migration.md:86
 msgid "**`ketu.composite`** — midpoint composite:"
-msgstr ""
+msgstr "**`ketu.composite`** — thème composite par point médian :"
 
 #: ../../source/migration.md:94
 msgid "**`ketu.returns`** — solar and lunar returns:"
-msgstr ""
+msgstr "**`ketu.returns`** — retours solaires et lunaires :"
 
 #: ../../source/migration.md:103
 msgid "**`ketu.parts`** — Arabic Parts:"
-msgstr ""
+msgstr "**`ketu.parts`** — Parties arabes :"
 
 #: ../../source/migration.md:111
 msgid "Additional House Systems"
-msgstr ""
+msgstr "Systèmes de Maisons Supplémentaires"
 
 #: ../../source/migration.md:113
 msgid "Three new systems added to `ketu.houses`:"
-msgstr ""
+msgstr "Trois nouveaux systèmes ajoutés à `ketu.houses` :"
 
 #: ../../source/migration.md:115
 msgid "`\"whole_sign\"` — each house = one full zodiac sign"
-msgstr ""
+msgstr "`\"whole_sign\"` — chaque maison = un signe zodiacal entier"
 
 #: ../../source/migration.md:116
 msgid "`\"equal\"` — 30° equal divisions from ASC"
-msgstr ""
+msgstr "`\"equal\"` — divisions égales de 30° depuis l'ASC"
 
 #: ../../source/migration.md:117
 msgid "`\"regiomontanus\"` — celestial equator division"
-msgstr ""
+msgstr "`\"regiomontanus\"` — division de l'équateur céleste"
 
 #: ../../source/migration.md:127
 msgid "Upgrading from v1.0 to v1.1"
-msgstr ""
+msgstr "Mise à niveau de v1.0 vers v1.1"
 
 #: ../../source/migration.md:129
 msgid "New: Configurable Aspect Sets"
-msgstr ""
+msgstr "Nouveau : Ensembles d'Aspects Configurables"
 
 #: ../../source/migration.md:131
 msgid ""
 "`calculate_aspects` now accepts an optional `aspects` parameter. Without "
 "it, behavior is unchanged (EXTENDED = all 14 aspects)."
 msgstr ""
+"`calculate_aspects` accepte désormais un paramètre optionnel `aspects`. "
+"Sans lui, le comportement est inchangé (EXTENDED = 14 aspects au total)."
 
 #: ../../source/migration.md:143
 msgid "New: House Systems"
-msgstr ""
+msgstr "Nouveau : Systèmes de Maisons"
 
 #: ../../source/migration.md:145
 msgid "`ketu.houses` is a new subpackage — no existing code is broken."
-msgstr ""
+msgstr "`ketu.houses` est un nouveau sous-paquet — aucun code existant n'est cassé."
 
 #: ../../source/migration.md:158
 msgid "Import Path Corrections (if upgrading from pre-1.0)"
-msgstr ""
+msgstr "Corrections de Chemins d'Import (si mise à niveau depuis pre-1.0)"
 
 #: ../../source/migration.md:160
 msgid ""
@@ -247,10 +251,13 @@ msgid ""
 "never officially supported as a public API), switch to the correct "
 "submodule imports:"
 msgstr ""
+"Si vous utilisiez l'ancien style `import ketu; ketu.long(...)` (qui n'a "
+"jamais été officiellement supporté comme API publique), passez aux imports "
+"de sous-modules corrects :"
 
 #: ../../source/migration.md:174
 msgid "Upgrading from v0.4.0 to v1.0.0"
-msgstr ""
+msgstr "Mise à niveau de v0.4.0 vers v1.0.0"
 
 #: ../../source/migration.md:176
 msgid "Removed: Export Modules"
@@ -361,7 +368,7 @@ msgstr ""
 
 #: ../../source/migration.md:213
 msgid "Correctness Fixes (v0.4.0 → v1.0.0)"
-msgstr ""
+msgstr "Corrections d'Exactitude (v0.4.0 → v1.0.0)"
 
 #: ../../source/migration.md:215
 msgid ""
@@ -398,15 +405,15 @@ msgstr ""
 
 #: ../../source/migration.md:221
 msgid "Migration Steps (v0.4.0 → v1.0.0)"
-msgstr ""
+msgstr "Étapes de Migration (v0.4.0 → v1.0.0)"
 
 #: ../../source/migration.md:223
 msgid "Step 1: Update Package"
-msgstr ""
+msgstr "Étape 1 : Mettre à Jour le Paquet"
 
 #: ../../source/migration.md:229
 msgid "Step 2: Update Your Code"
-msgstr ""
+msgstr "Étape 2 : Mettre à Jour Votre Code"
 
 #: ../../source/migration.md:231
 msgid "**Replace velocity function calls:**"
@@ -422,7 +429,7 @@ msgstr "**Supprimez les appels chart/icalendar :**"
 
 #: ../../source/migration.md:266
 msgid "Step 3: Test Your Code"
-msgstr ""
+msgstr "Étape 3 : Tester Votre Code"
 
 #: ../../source/migration.md:268
 msgid "Run your test suite to catch any remaining issues."
@@ -430,7 +437,7 @@ msgstr "Exécutez votre suite de tests pour détecter tout problème restant."
 
 #: ../../source/migration.md:270
 msgid "Step 4: Recompute Cached Results"
-msgstr ""
+msgstr "Étape 4 : Recalculer les Résultats Mis en Cache"
 
 #: ../../source/migration.md:272
 msgid ""
@@ -472,7 +479,7 @@ msgstr "Si vous rencontrez des problèmes :"
 
 #: ../../source/migration.md:291
 msgid "Review the [Changelog](changelog.md) for complete list of changes"
-msgstr ""
+msgstr "Consultez le [Changelog](changelog.md) pour la liste complète des changements"
 
 #: ../../source/migration.md:292
 msgid "Open an [issue](https://github.com/alkimya/ketu/issues)"
