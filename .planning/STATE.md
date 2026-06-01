@@ -24,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 26 of 27 (Aspects Data-Driven) DONE + VERIFIED. NEXT: Phase 26.1 (French Documentation Translation) — INSERTED, not planned yet
-Plan: Phase 26 all 3 plans done (verifier PASSED 4/4). Next: /gsd:plan-phase 26.1 (full fr translation), then Phase 27 (Release 1.3.0)
-Status: Phase 26 COMPLETE (2026-06-01), verifier PASSED 4/4. Phase 26.1 INSERTED (2026-06-01) after Phase 26, before Release: full French translation of all docs/source/ pages (100% — zero empty msgstr across all docs/locale/fr/LC_MESSAGES/*.po), replacing the English-fallback assumed since Phase 25. Lands BEFORE the PyPI release per project memory (project_fr_translations_before_release). Decimal insertion preserves Release at Phase 27 (Phase 2.1 pattern). DOC-13 to be defined at plan time. Phase 26 recap: core.aspects → 5 fields, aspects_for_harmonics API, library default 5→7, CLI byte-stable, 1399 tests / 100% coverage. No version bump (Phase 27 owns REL-10).
-Last activity: 2026-06-01 — Phase 26 verified PASSED; Phase 26.1 (fr translation) inserted before Release
+Phase: 26.1 (French Documentation Translation) — Plan 01 DONE
+Plan: 26.1-01 COMPLETE (DOC-13 + charset fix + small narrative pages). Next: Plans 26.1-02..07 (remaining 745 untranslated entries across 13 files)
+Status: Phase 26.1 in progress (1/8 plans done). Plan 01 delivered: DOC-13 requirement (REQUIREMENTS.md 18→19), charset=UTF-8 headers on 5 blockers (arabic_parts, chiron, houses, predictive_charts, relational_charts), 13 entries translated in quickstart/examples/installation/acknowledgments (all 4 now 0 untranslated). Plans 02/03/04 unblocked.
+Last activity: 2026-06-01 — Phase 26.1-01 executed: charset fix + DOC-13 + 13 narrative translations
 
 Progress: [██████████░░░░] 75% — 6/8 phases completed, 21/21 plans (Phase 26 DONE; 26.1 + 27 remain)
 
@@ -112,6 +112,7 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - [Phase 26-01]: core.aspects 5-field dtype (name, angle, coef, harmonic, symbol); frozen harmonic vector [1,6,10,9,3,5,9,2,10,3,5,6,9,1]; half-circle convention (Sextile=H3, Trine=H3, Semi-sextile=H6, Quincunx=H6); V1 fingerprint c5bd177... unchanged; V13 fingerprint 3258530... pinned; 7 major glyphs U+260C/U+26BA/U+26B9/U+25A1/U+25B3/U+26BB/U+260D; 7 minors blank; 1378 tests / 100% coverage
 - [Phase 26-02]: aspects_for_harmonics returns frozen np.bool_[14] mask from harmonic column (data-driven, not hardcoded); TRADITIONAL=aspects_for_harmonics([1,2,3,6]), EXTENDED=aspects_for_harmonics([1,2,3,5,6,9,10]); CLASSICAL stays curated 5-index list (not harmonic-derivable — Pitfall 7); library default resolve_aspect_set(None) == TRADITIONAL (7); CLI pinned to "classical" explicitly (v1.0/v1.1 byte-stable); calculate_aspects loop refactored to iterate only selected aspects (was blocking Quincunx behind Biquintile for pairs in both orbs); 1399 tests / 100% coverage
 - [Phase 26-03]: CHANGELOG [1.3.0] placed separately from [Unreleased] (cycles entry); Phase 27 merges on version bump; 3 stale EXTENDED-default claims fixed in api.md (preset table, calculate_aspects None param, compute_chart param); concepts.md dual-base rule NOT duplicated; coef==coefficient documented (field name unchanged); package version NOT bumped (Phase 27 owns REL-10); en+fr docs builds at 1 warning each (Phase 25 baseline maintained)
+- [Phase 26.1-01]: babel write_po normalizes charset=UTF-8 to lowercase utf-8 — uppercase fix applied via Python string replacement after babel script; charset=UTF-8 uppercase required (plan verification grep); DOC-13 placed in Documentation section before Release section; coverage counts 18→19
 
 ### Roadmap Evolution
 
@@ -127,6 +128,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-06-01 — Phase 26 plan 03 executed: CHANGELOG [1.3.0] + UPGRADING v1.2->v1.3 + concepts.md/api.md updated + fr gettext regenerated; 1399 tests pass, 100% coverage. Commits ef33e8d (docs) + bc07849 (docs) + 3d560ae (chore).
-Stopped at: 26-03 COMPLETE — Phase 26 DONE. Next: /gsd:execute-phase 27 (Release 1.3.0).
-Resume file: None — Phase 27 ready to execute.
+Last session: 2026-06-01 — Phase 26.1-01 executed: DOC-13 + charset fix on 5 .po files + 13 narrative entries translated. Commits b884b79 (feat) + f3b2cf4 (fix) + e9ffd70 (feat).
+Stopped at: 26.1-01 COMPLETE. Next: 26.1-02 (concepts + chiron + predictive_charts, 122 entries).
+Resume file: None — 26.1-02 ready to execute.
