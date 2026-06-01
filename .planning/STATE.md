@@ -24,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 25 of 27 (Documentation) — COMPLETE → Phase 26 (Aspects Data-Driven) next, then Phase 27 (Release 1.3.0)
-Plan: 25-03 COMPLETE (DOC-12: gettext pipeline regenerated; fr build clean at 1 warning)
-Status: Phase 25 complete (2026-05-30). All 3 plans done: DOC-10 (existing pages), DOC-11 (5 new pages), DOC-12 (fr pipeline). En+fr builds at 1 warning each. 17/17 plans shipped. Roadmap restructured 2026-05-31: release relocated after the aspect refactor (Phase 26 inserted, release → Phase 27).
-Last activity: 2026-05-31 — roadmap restructure (Phase 26 Aspects inserted, release → 27); 3 cycles bugfixes shipped 2026-05-30 (commits eb6f5f8, 4867368, 24cb13a)
+Phase: 26 of 27 (Aspects Data-Driven + Dynamic Harmonics) — PLANNED (3 plans, 3 waves) → next: execute, then Phase 27 (Release 1.3.0)
+Plan: 26-01/02/03 PLANNED (research HIGH-confidence; plan-checker PASSED after 1 revision iteration)
+Status: Phase 26 planned (2026-06-01). 3 sequential plans: 26-01 (enrich core.aspects with harmonic i4 + symbol U4 columns, append-only byte-stable), 26-02 (aspects_for_harmonics frozen-mask API + harmonic-derived TRADITIONAL/EXTENDED + flip library default 5→7 + pin CLI to classical + re-point chart-layer D-07 ratchet to traditional), 26-03 (CHANGELOG [1.3.0]/UPGRADING + concepts.md/api.md + fr gettext). 4 user decisions locked this session: CLI pinned to classical (lib→7, CLI stays 5/byte-stable); Sextile=H3/Trine=H3/Semi-sextile=H6/Quincunx=H6; minors blank; keep `coef` (no rename). No version bump (Phase 27 owns REL-10).
+Last activity: 2026-06-01 — Phase 26 planned via /gsd:plan-phase (research + 3 plans + plan-checker PASSED; blocker fixed: chart-layer ratchet re-pointed to traditional)
 
 Progress: [██████████░░░░] 71% — 5/7 phases completed, 17/17 plans
 
@@ -120,6 +120,6 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-05-29 — Phase 25 plan 03 executed; gettext pipeline regenerated, 5 new .po catalogs created, 122 fuzzy entries resolved, 17 .mo compiled, en+fr builds at 1 warning each (commits f52fecf, a9ff166).
-Stopped at: Phase 25 COMPLETE — DOC-10+11+12 all satisfied; next: Phase 26 (Release 1.3.0).
-Resume file: None — Phase 25 done.
+Last session: 2026-06-01 — Phase 26 planned (/gsd:plan-phase 26): 26-RESEARCH.md (HIGH confidence, code-grounded), 3 PLAN.md, plan-checker PASSED after 1 revision (commits c72a8ee, 528ff8a + research/state docs). Engine found ~90% data-driven already (all 21 consumers read core.aspects by field name); harmonic mapping resolved via concepts.md dual-base convention.
+Stopped at: Phase 26 PLANNED — next: /gsd:execute-phase 26 (3 sequential waves), then Phase 27 (Release 1.3.0).
+Resume file: None — Phase 26 ready to execute.
