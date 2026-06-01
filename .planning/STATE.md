@@ -132,3 +132,5 @@ Last session: 2026-06-01 — Phase 26.1-01 executed: DOC-13 + charset fix on 5 .
 Stopped at: 26.1-01 COMPLETE. Next: 26.1-02 (concepts + chiron + predictive_charts, 122 entries).
 Resume file: None — 26.1-02 ready to execute.
 26.1-03 COMPLETE (2026-06-01): houses.po (72 entries) + relational_charts.po (88 entries) + index.po (11 entries filled → 112 total) translated to French, 3 .mo recompiled. Commit 57cedbd.
+
+- [Phase 26.1-07]: api.po 185 entries translated (188 traduits/0 non traduits); function signatures identity-copied; api.mo recompiled; commit 2ba6c94
