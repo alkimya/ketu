@@ -191,11 +191,18 @@ Plans:
   1. All `docs/locale/fr/LC_MESSAGES/*.po` catalogs have 100% translated `msgstr` (zero empty/English-fallback entries) covering every page: `api`, `concepts`, `houses`, `relational_charts`, `predictive_charts`, `arabic_parts`, `chiron`, `migration`, `architecture`, `changelog`, and all narrative pages (`index`, `quickstart`, `installation`, `examples`, `performance`, `contributing`, `acknowledgments`).
   2. The translation is regenerated and recompiled through the existing gettext infra (`docs/Makefile`, `docs/migrate_translations.py`, `docs/locale/`) — no manual `.po`/`.mo` duplication, no broken markdown markers in `msgstr`.
   3. The Sphinx docs build clean for BOTH en and fr (no new warnings vs the Phase 25 baseline of 1 warning each); `.mo` catalogs are compiled and committed.
-**Plans**: TBD (run `/gsd:plan-phase 26.1`)
+**Plans**: 8 plans
 
 Plans:
 
-- [ ] TBD (run `/gsd:plan-phase 26.1` to break down — likely batched by page group: narrative / reference (api) / feature pages)
+- [ ] 26.1-01-PLAN.md — charset fix (5 files) + DOC-13 + translate small narrative pages (quickstart/examples/installation/acknowledgments)
+- [ ] 26.1-02-PLAN.md — translate concepts + chiron + predictive_charts (terminology-anchoring)
+- [ ] 26.1-03-PLAN.md — translate houses + relational_charts + index
+- [ ] 26.1-04-PLAN.md — translate arabic_parts + changelog + contributing
+- [ ] 26.1-05-PLAN.md — translate migration guide
+- [ ] 26.1-06-PLAN.md — translate architecture page
+- [ ] 26.1-07-PLAN.md — translate API reference (largest, 185 entries)
+- [ ] 26.1-08-PLAN.md — final gate: recompile 17 .mo, build en+fr (≤1 warning each), commit .mo
 
 #### Phase 27: Release 1.3.0
 
@@ -240,7 +247,7 @@ Plans:
 | 24. Chiron                             | v1.3      | 5/5            | ✓ Complete    | 2026-05-29 |
 | 25. Documentation                      | v1.3      | 3/3            | ✓ Complete    | 2026-05-30 |
 | 26. Aspects Data-Driven                | v1.3      | 3/3            | ✓ Complete    | 2026-06-01 |
-| 26.1 French Doc Translation (INSERTED) | v1.3      | 0/TBD          | Not planned   | -          |
+| 26.1 French Doc Translation (INSERTED) | v1.3      | 0/8            | Planned       | -          |
 | 27. Release 1.3.0                      | v1.3      | 0/TBD          | Not started   | -          |
 
 ---
