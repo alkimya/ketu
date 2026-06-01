@@ -3,6 +3,107 @@
 This guide collects migration notes between Ketu releases. Sections are
 ordered newest-first.
 
+## v1.2 -> v1.3
+
+### Aspect engine changes (1.3.0)
+
+The v1.3.0 release introduces a **breaking change** to the default aspect set used by
+the Python library API. Callers who rely on the implicit default (`aspects=None`) now
+receive **7 half-circle aspects** instead of the previous **5 CLASSICAL aspects**.
+
+#### Two-part default shift
+
+The change is a two-part shift:
+
+1. **Semi-sextile (30°) and Quincunx (150°) are now included** in the implicit default.
+   Both belong to harmonic 6 (180°/6), which completes the half-circle harmonic family
+   (harmonics 1, 2, 3, 6).
+2. **Full-circle minor harmonics (H5/H9/H10) remain opt-in** — Quintile, Biquintile,
+   Novile, Binovile, Quadrinovile, Decile, and Tredecile are NOT included in the new
+   default. Use `aspects="extended"` or `aspects_for_harmonics([5, 9, 10])` to access them.
+
+The **7 half-circle default** (TRADITIONAL preset) includes:
+Conjunction (0°), Semi-sextile (30°), Sextile (60°), Square (90°),
+Trine (120°), Quincunx (150°), Opposition (180°).
+
+#### Restore recipe
+
+```python
+# Old implicit default (5 CLASSICAL majors) — now explicit:
+from ketu.aspects import calculate_aspects
+
+aspects = calculate_aspects(jd, aspects="classical")   # 5 aspects: Conj/Sex/Sq/Tri/Opp
+
+# All 14 aspects (legacy v1.0 EXTENDED behaviour):
+aspects = calculate_aspects(jd, aspects="extended")    # 14 aspects
+```
+
+#### New API: aspects_for_harmonics
+
+```python
+from ketu.aspects import aspects_for_harmonics
+
+# Compose the new default explicitly (the 7 half-circle aspects):
+mask = aspects_for_harmonics([1, 2, 3, 6])
+
+# Opt into the full-circle minor aspects only:
+minors = aspects_for_harmonics([5, 9, 10])
+
+# All 14 aspects programmatically:
+all14 = aspects_for_harmonics([1, 2, 3, 5, 6, 9, 10])
+```
+
+`aspects_for_harmonics` returns a frozen `numpy.bool_` mask of length 14 that can be
+passed directly as the `aspects=` argument to any Ketu function.
+
+Valid harmonics: `{1, 2, 3, 5, 6, 9, 10}` (data-driven from `core.aspects`). Passing an
+unknown or non-integer harmonic raises `ValueError`.
+
+#### Minor aspects: now opt-in
+
+The full-circle minor harmonics (H5, H9, H10) are **not** included in any named preset
+except EXTENDED. There is no new preset for "minors only" — use
+`aspects_for_harmonics([5, 9, 10])` directly.
+
+#### CLI note
+
+The bare `ketu ... --harmonics` CLI default (i.e. calling `ketu aspects --date ...`
+without specifying `--harmonics`) **stays CLASSICAL (5 aspects)**. Only the Python
+library/API default moved to 7. CLI users are unaffected.
+
+```bash
+# CLI behaviour unchanged (still classical = 5 aspects):
+ketu aspects --date 2026-01-01T12:00:00Z
+
+# Explicitly request the new library default via CLI:
+ketu --harmonics traditional aspects --date 2026-01-01T12:00:00Z
+```
+
+#### coef vs coefficient
+
+The orb-coefficient field in `core.aspects` is named `coef` in the NumPy dtype and has
+always been named `coef`. API documentation refers to it as `coefficient` conceptually.
+The field was NOT renamed in v1.3 — access it as `core.aspects["coef"]`.
+
+#### Kala / downstream adapters
+
+If you pass `aspects=` **explicitly** in your Ketu calls, you are **unaffected** — the
+explicit argument always takes precedence over the default.
+
+If you rely on the **implicit default** (no `aspects=` argument), you now receive 7
+aspects instead of 5. Kala adapts to the new default post-release; this is not a release
+blocker. Update calls that depend on a specific aspect count:
+
+```python
+# If you previously relied on implicit default = 5:
+from ketu.aspects import calculate_aspects
+
+# Explicit classical to preserve old behavior:
+aspects = calculate_aspects(jd, aspects="classical")
+```
+
+---
+
 ## v1.1 -> v1.2
 
 Ketu v1.2 is a fully backward-compatible feature release. All v1.1 code

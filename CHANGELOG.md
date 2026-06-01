@@ -31,6 +31,50 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   cache path (`use_cache=True`); it previously raised `AttributeError` because
   the cache lookup read `.year`/`.month` attributes datetime64 does not expose.
 
+## [1.3.0] - Unreleased
+
+### Added
+
+- **`aspects_for_harmonics(harmonics)`** — compose an aspect set from a list of
+  harmonics (e.g. `[1, 2, 3, 6]`) and return a frozen length-14 `numpy.bool_` mask.
+  Valid harmonics: `{1, 2, 3, 5, 6, 9, 10}` (data-driven from `core.aspects`).
+  Raises `ValueError` on unknown or non-integer inputs.
+
+  ```python
+  from ketu.aspects import aspects_for_harmonics
+
+  mask = aspects_for_harmonics([1, 2, 3, 6])   # the new library default (7 half-circle)
+  minors = aspects_for_harmonics([5, 9, 10])   # full-circle minor aspects (opt-in)
+  all14  = aspects_for_harmonics([1, 2, 3, 5, 6, 9, 10])  # all 14 == EXTENDED
+  ```
+
+- **`harmonic` and `symbol` columns on `core.aspects`** — `core.aspects` is now a
+  5-field structured array `(name, angle, coef, harmonic, symbol)`. The new
+  `harmonic` column carries the integer harmonic base for each aspect (e.g. Sextile=3,
+  Semi-sextile=6); `symbol` carries the Unicode glyph for the 7 half-circle aspects
+  (☌ ⚺ ⚹ □ △ ⚻ ☍); the 7 full-circle minor aspects have a blank symbol.
+  The `coef` field (orb coefficient) is unchanged in name — API docs refer to it as
+  `coefficient` for clarity; the field name in the dtype remains `coef`.
+
+### Changed
+
+- **BREAKING: default aspect set for the library API changed from 5 (CLASSICAL) to
+  7 (TRADITIONAL — the half-circle aspects).** When calling `calculate_aspects`,
+  `compute_chart`, or any function that accepts `aspects=None`, the implicit default
+  is now the **7 half-circle aspects** (harmonics 1, 2, 3, 6): Conjunction, Semi-sextile,
+  Sextile, Square, Trine, Quincunx, Opposition. Previously the default was the 5
+  CLASSICAL major aspects (Conjunction, Sextile, Square, Trine, Opposition). This is a
+  **two-part shift**: (a) Semi-sextile and Quincunx are now included in the default; and
+  (b) the full-circle minor harmonics (H5/H9/H10 — Quintile, Biquintile, Novile,
+  Binovile, Quadrinovile, Decile, Tredecile) remain **opt-in** and are NOT included by
+  default.
+
+  **CLI note:** the bare `ketu ... --harmonics` default (no preset name) stays **classical
+  (5 aspects)** for backward compatibility with v1.0/v1.1 CLI scripts. Only the Python
+  library/API default moved to 7.
+
+  **Restore recipe:** see `UPGRADING.md` → "v1.2 -> v1.3" for before/after code examples.
+
 ## [1.2.0] - 2026-05-28
 
 ### Added
