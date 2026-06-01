@@ -214,12 +214,12 @@ Plans:
   1. Version is bumped to 1.3.0; CHANGELOG has a `[1.3.0]` entry listing the additive features plus the Chiron breaking-positional-contract note for Kala and the aspect-engine breaking changes; UPGRADING.md documents the 13→14 positional-array change and the aspect default/coefficient/preset changes.
   2. `ketu==1.3.0` is published to PyPI via OIDC trusted publishing with a GitHub release attaching sdist + wheel.
   3. A fresh-venv `pip install ketu==1.3.0` smoke-imports all subpackages and resolves Chiron (`calc_planet_position(jd, 13)` returns a finite longitude) with NO `pyswisseph` in the runtime environment.
-**Plans**: TBD
+**Plans**: 2 plans
 
 Plans:
 
-- [ ] 27-01: TBD (version bump + CHANGELOG `[1.3.0]` + UPGRADING 13→14 + aspect notes, REL-10)
-- [ ] 27-02: TBD (PyPI OIDC publish + GitHub release + fresh-venv Chiron smoke, REL-11)
+- [ ] 27-01-PLAN.md — version bump (pyproject.toml + ketu/__init__.py → 1.3.0) + merge/date CHANGELOG `[1.3.0]` + ADD Chiron entries + UPGRADING 13→14 Chiron section + fr/CHANGELOG `[1.3.0]` (REL-10)
+- [ ] 27-02-PLAN.md — local pre-flight (build + Chiron-aware fresh-venv smoke) + human go/no-go + tag/push + GitHub release + post-publish PyPI smoke (REL-11)
 
 ## Progress
 
