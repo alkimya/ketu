@@ -173,13 +173,13 @@ Plans:
   2. An API composes an aspect set from a list of harmonics (e.g. `aspects_for_harmonics([1, 2, 3, 6])`) in addition to the existing `CLASSICAL`/`TRADITIONAL`/`EXTENDED` presets.
   3. The default aspect set contains only the half-circle harmonics (1, 2, 3, 6 → 7 aspects); the full-circle minor aspects (H5/H9/H10: quintile, biquintile, novile, binovile, quadrinovile, decile, tredecile) are opt-in, not default.
   4. The breaking change to the public aspect surface (default set, coefficients, presets) is documented in CHANGELOG + UPGRADING; `concepts.md` Harmonic Theory + `api.md` are updated and the fr gettext catalogs regenerated; full suite green at 100% coverage.
-**Plans**: TBD (supersedes the v1.4 BACKLOG item "Aspects data-driven + dynamic harmonics")
+**Plans**: 3 plans (supersedes the v1.4 BACKLOG item "Aspects data-driven + dynamic harmonics")
 
 Plans:
 
-- [ ] 26-01: TBD (declarative Aspect table + iterate detection/orb logic, ASP-01)
-- [ ] 26-02: TBD (harmonic-based selection API + default without H5/H9/H10 + preset migration, ASP-02)
-- [ ] 26-03: TBD (CHANGELOG/UPGRADING breaking note + concepts.md/api.md + fr gettext, ASP-03)
+- [ ] 26-01-PLAN.md (Wave 1) — Enrich core.aspects in place with harmonic (i4) + symbol (U4) columns (frozen mapping Sextile=H3/Trine=H3, minors blank); flip dtype-names test + per-row harmonic/symbol assertions + new fingerprint; name/angle/coef byte-stable [ASP-01]
+- [ ] 26-02-PLAN.md (Wave 2, depends 26-01) — aspects_for_harmonics([...]) frozen-mask API + harmonic-derived TRADITIONAL/EXTENDED + resolver default flip 5→7 (CLASSICAL stays curated 5); CLI pinned to classical (byte-stable) + divergence regression; calculator/charts docstrings; full-branch tests at 100% [ASP-02]
+- [ ] 26-03-PLAN.md (Wave 3, depends 26-01/02) — CHANGELOG [1.3.0] BREAKING + UPGRADING v1.2->v1.3 restore recipe; concepts.md (default-now-7) + api.md (new API, stale-default fixes, coef==coefficient); fr gettext regenerated; en/fr build clean [ASP-03]
 
 #### Phase 27: Release 1.3.0
 
