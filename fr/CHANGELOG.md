@@ -9,6 +9,72 @@
 
 ---
 
+## [1.3.0] - 2026-06-01
+
+### Ajouts
+
+- **Chiron en tant que 14e corps (body_id=13)** — évaluateur polynomial de
+  Chebyshev embarqué (pur NumPy, zéro pyswisseph à l'exécution).
+  `calc_planet_position(jd, 13)` et `calc_planet_position_batch(jds, 13)`
+  résolvent la longitude de Chiron depuis `ketu/data/chiron_coeffs.npz`
+  (289,7 Ko, Chebyshev seg=32j/deg=10). Max |Δλ| = 0,005695° sur
+  1950–2050. Accessible via tous les chemins de calcul standard
+  (`ketu.calculations`, `ketu.charts.compute_chart`, `ketu.synastry`, etc.).
+  L'axe des corps du `CHART_DTYPE` est étendu : 13 corps → 14 corps
+  (body_lons[14], body_speeds[14], aspects[14×14]). (Phase 24 / D-08)
+
+- **`aspects_for_harmonics(harmonics)`** — compose un ensemble d'aspects
+  à partir d'une liste d'harmoniques (ex. `[1, 2, 3, 6]`) et retourne un
+  masque `numpy.bool_` figé de longueur 14. Harmoniques valides :
+  `{1, 2, 3, 5, 6, 9, 10}` (données issues de `core.aspects`). Lève
+  `ValueError` en cas d'entrée inconnue ou non entière.
+
+- **Colonnes `harmonic` et `symbol` sur `core.aspects`** — `core.aspects`
+  est maintenant un tableau structuré à 5 champs `(name, angle, coef,
+  harmonic, symbol)`. La colonne `harmonic` porte la base harmonique entière
+  de chaque aspect (ex. Sextile=3, Semi-sextile=6) ; `symbol` porte le
+  glyphe Unicode des 7 aspects demi-cercle (☌ ⚺ ⚹ □ △ ⚻ ☍) ; les 7 aspects
+  mineurs plein-cercle ont un symbole vide. Le champ `coef` est inchangé.
+
+### Modifié
+
+- **RUPTURE (contrat positionnel Kala / en aval) :** les tableaux du
+  `CHART_DTYPE` sont étendus de la forme (13,) → (14,) et les aspects de
+  (13,13) → (14,14). L'index positionnel 13 est Chiron. Tout code ayant
+  codé en dur le nombre de corps à 13 ou adressant les tableaux de corps
+  par index numérique fixe au-delà de 12 doit être mis à jour. Les tableaux
+  `CHART_DTYPE` mis en cache avec v1.2 sont incompatibles — recalculer avec
+  v1.3. L'axe des corps synastry passe de 15 à 16 (Soleil..Chiron + ASC +
+  MC). Voir `UPGRADING.md → v1.2 -> v1.3`. (Phase 24 / D-08)
+
+- **RUPTURE : ensemble d'aspects par défaut de l'API Python modifié de
+  5 (CLASSICAL) à 7 (TRADITIONAL — les aspects demi-cercle).** L'appel à
+  `calculate_aspects`, `compute_chart` ou toute fonction acceptant
+  `aspects=None` produit désormais les **7 aspects demi-cercle**
+  (harmoniques 1, 2, 3, 6) : Conjonction, Semi-sextile, Sextile, Carré,
+  Trigone, Quinconce, Opposition. Auparavant, le défaut était les 5 aspects
+  CLASSICAL majeurs. Les harmoniques mineurs plein-cercle (H5/H9/H10) restent
+  opt-in. **Note CLI :** le défaut CLI `ketu ... --harmonics` reste
+  **classical (5 aspects)** pour la compatibilité ascendante.
+  Voir `UPGRADING.md → v1.2 -> v1.3`.
+
+- **RUPTURE (convention de données interne).** `CYCLE_DTYPE.angular_separation`
+  (et donc `cycle_progress` et `cycle_phase`) depuis
+  `generate_cycle_series` / `generate_multi_cycle_series` suit désormais
+  la direction documentée body1 → body2 : `(body2_lon - body1_lon) % 360`.
+  Précédemment inversé. Les consommateurs en aval (ex. Kala) doivent
+  ajuster : les valeurs sont maintenant `360 - ancien` de la conjonction
+  sauf à 0°/180°.
+
+### Corrigé
+
+- `generate_cycle_series` accepte désormais un ndarray `numpy.datetime64`
+  sur le chemin cache (`use_cache=True`) ; précédemment levait
+  `AttributeError` car la recherche dans le cache lisait les attributs
+  `.year`/`.month` que datetime64 n'expose pas.
+
+---
+
 ## [1.2.0] - 2026-05-28
 
 ### Ajouts

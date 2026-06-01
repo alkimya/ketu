@@ -7,33 +7,18 @@ All notable changes to Ketu are documented here.
 This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
-
-### Changed
-
-- **BREAKING (internal data convention).** `CYCLE_DTYPE.angular_separation`
-  (and therefore `cycle_progress` and `cycle_phase`) from
-  `generate_cycle_series` / `generate_multi_cycle_series` now follows the
-  documented body1 -> body2 direction: `(body2_lon - body1_lon) % 360`. It
-  previously returned the reversed `(body1_lon - body2_lon) % 360`. For a
-  Sun->Moon pair the lunar phase angle is now the standard 0deg new moon /
-  90deg first quarter / 180deg full moon / 270deg last quarter, and
-  `cycle_phase` (+1 waxing / -1 waning) is no longer inverted. Conjunction
-  (0deg) and opposition (180deg) are unchanged. This aligns the cycle module
-  with `ketu.complex.CycleRatio`, which already used the correct convention.
-  Downstream consumers that read `angular_separation` / `cycle_progress` /
-  `cycle_phase` (e.g. Kala) must adjust: values are now `360 - old` away from
-  the conjunction except at 0deg/180deg.
-
-### Fixed
-
-- `generate_cycle_series` now accepts a `numpy.datetime64` ndarray on the
-  cache path (`use_cache=True`); it previously raised `AttributeError` because
-  the cache lookup read `.year`/`.month` attributes datetime64 does not expose.
-
-## [1.3.0] - Unreleased
+## [1.3.0] - 2026-06-01
 
 ### Added
+
+- **Chiron as the 14th body (body_id=13)** — embedded Chebyshev polynomial
+  evaluator (pure NumPy, zero pyswisseph at runtime). `calc_planet_position(jd, 13)`
+  and `calc_planet_position_batch(jds, 13)` resolve Chiron longitude from
+  `ketu/data/chiron_coeffs.npz` (289.7 KB, Chebyshev seg=32d/deg=10). Max |Δλ| =
+  0.005695° over 1950–2050. Available through all standard calculation paths
+  (`ketu.calculations`, `ketu.charts.compute_chart`, `ketu.synastry`, etc.).
+  CHART_DTYPE body axis expanded: 13 bodies → 14 bodies (body_lons[14],
+  body_speeds[14], aspects[14×14]). (Phase 24 / D-08)
 
 - **`aspects_for_harmonics(harmonics)`** — compose an aspect set from a list of
   harmonics (e.g. `[1, 2, 3, 6]`) and return a frozen length-14 `numpy.bool_` mask.
@@ -58,6 +43,14 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Changed
 
+- **BREAKING (Kala / downstream positional contract):** `CHART_DTYPE` body
+  arrays expanded from shape (13,) → (14,) and aspects from (13,13) → (14,14).
+  Positional index 13 is Chiron. Any code that hardcoded the body count as 13
+  or addressed body arrays by fixed numeric index beyond 12 must be updated.
+  `ketu.cycles` default pairs and `ketu.synastry` cross-product body axis
+  updated accordingly (synastry: 15→16 bodies including ASC/MC).
+  See UPGRADING.md → "v1.2 -> v1.3" for the full migration recipe. (Phase 24 / D-08)
+
 - **BREAKING: default aspect set for the library API changed from 5 (CLASSICAL) to
   7 (TRADITIONAL — the half-circle aspects).** When calling `calculate_aspects`,
   `compute_chart`, or any function that accepts `aspects=None`, the implicit default
@@ -74,6 +67,26 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   library/API default moved to 7.
 
   **Restore recipe:** see `UPGRADING.md` → "v1.2 -> v1.3" for before/after code examples.
+
+- **BREAKING (internal data convention).** `CYCLE_DTYPE.angular_separation`
+  (and therefore `cycle_progress` and `cycle_phase`) from
+  `generate_cycle_series` / `generate_multi_cycle_series` now follows the
+  documented body1 -> body2 direction: `(body2_lon - body1_lon) % 360`. It
+  previously returned the reversed `(body1_lon - body2_lon) % 360`. For a
+  Sun->Moon pair the lunar phase angle is now the standard 0deg new moon /
+  90deg first quarter / 180deg full moon / 270deg last quarter, and
+  `cycle_phase` (+1 waxing / -1 waning) is no longer inverted. Conjunction
+  (0deg) and opposition (180deg) are unchanged. This aligns the cycle module
+  with `ketu.complex.CycleRatio`, which already used the correct convention.
+  Downstream consumers that read `angular_separation` / `cycle_progress` /
+  `cycle_phase` (e.g. Kala) must adjust: values are now `360 - old` away from
+  the conjunction except at 0deg/180deg.
+
+### Fixed
+
+- `generate_cycle_series` now accepts a `numpy.datetime64` ndarray on the
+  cache path (`use_cache=True`); it previously raised `AttributeError` because
+  the cache lookup read `.year`/`.month` attributes datetime64 does not expose.
 
 ## [1.2.0] - 2026-05-28
 
