@@ -31,6 +31,9 @@ msgid ""
 "The example below uses emoji labels in *prose* — not inside Python "
 "strings — to avoid syntax-highlight warnings."
 msgstr ""
+"L'exemple ci-dessous utilise des étiquettes emoji dans la *prose* — pas "
+"dans les chaînes Python — afin d'éviter les avertissements de coloration "
+"syntaxique."
 
 #: ../../source/examples.md:73
 msgid "Planetary Transits"
@@ -42,11 +45,11 @@ msgstr "Analyse de période"
 
 #: ../../source/examples.md:222
 msgid "Full Chart with Synastry (New in v1.2)"
-msgstr ""
+msgstr "Thème complet avec synastrie (Nouveau en v1.2)"
 
 #: ../../source/examples.md:252
 msgid "Solar Return (New in v1.2)"
-msgstr ""
+msgstr "Retour solaire (Nouveau en v1.2)"
 
 #: ../../source/examples.md:280
 msgid "Next steps"
@@ -65,6 +68,8 @@ msgid ""
 "Explore [Relational Charts](relational_charts.md) for synastry and "
 "composite"
 msgstr ""
+"Explorez les [Thèmes relationnels](relational_charts.md) pour la "
+"synastrie et le thème composite"
 
 #: ../../source/examples.md:285
 msgid "Contribute to the project on [GitHub](https://github.com/alkimya/ketu)"

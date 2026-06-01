@@ -68,19 +68,23 @@ msgstr ""
 
 #: ../../source/installation.md:35
 msgid "Development Installation with Extras"
-msgstr ""
+msgstr "Installation de développement avec extras"
 
 #: ../../source/installation.md:37
 msgid ""
 "For contributors, install the `[dev]` extra to get all testing and "
 "documentation tools:"
 msgstr ""
+"Pour les contributeurs, installez l'extra `[dev]` afin d'obtenir tous "
+"les outils de test et de documentation :"
 
 #: ../../source/installation.md:43
 msgid ""
 "This installs pytest, coverage, mypy, sphinx, and other development "
 "dependencies."
 msgstr ""
+"Cela installe pytest, coverage, mypy, sphinx et les autres dépendances "
+"de développement."
 
 #: ../../source/installation.md:45
 msgid "Installation in a Virtual Environment (Recommended)"
@@ -140,6 +144,9 @@ msgid ""
 "generating Chiron ephemeris coefficients (a build-time tool, not a "
 "runtime dependency)."
 msgstr ""
+"Ketu est une bibliothèque Pure NumPy à l'exécution. `pyswisseph` est "
+"utilisé uniquement pour générer les coefficients d'éphémérides de Chiron "
+"(un outil de build, pas une dépendance à l'exécution)."
 
 #: ../../source/installation.md:84
 msgid "Uninstallation"

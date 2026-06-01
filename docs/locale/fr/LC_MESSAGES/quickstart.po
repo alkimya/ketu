@@ -88,13 +88,15 @@ msgstr "Exemple complet : Positions natales"
 
 #: ../../source/quickstart.md:189
 msgid "Building a Full Natal Chart"
-msgstr ""
+msgstr "Construire un thème natal complet"
 
 #: ../../source/quickstart.md:191
 msgid ""
 "New in v1.2: `compute_chart` returns a single structured array containing"
 " positions, house cusps, and aspect matrix."
 msgstr ""
+"Nouveau en v1.2 : `compute_chart` retourne un unique tableau structuré "
+"contenant les positions, les cuspides de maisons et la matrice d'aspects."
 
 #: ../../source/quickstart.md:214
 msgid "Tips and Tricks"
@@ -134,5 +136,5 @@ msgstr "Découvrez les [Concepts astrologiques](concepts.md) utilisés dans Ketu
 
 #: ../../source/quickstart.md:252
 msgid "Discover [House Systems](houses.md) for complete chart calculation"
-msgstr ""
+msgstr "Découvrez les [Systèmes de maisons](houses.md) pour un calcul de thème complet"
 
