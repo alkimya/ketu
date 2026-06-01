@@ -5,6 +5,48 @@ ordered newest-first.
 
 ## v1.2 -> v1.3
 
+### Chiron added as body_id=13 (14th body)
+
+In v1.3.0, Chiron is the 14th celestial body at positional index 13.
+
+#### CHART_DTYPE shape expansion
+
+| Field | v1.2 shape | v1.3 shape |
+| ------- | ------------ | ------------ |
+| `body_lons` | `(13,)` | `(14,)` |
+| `body_speeds` | `(13,)` | `(14,)` |
+| `aspects` | `(13, 13)` | `(14, 14)` |
+
+#### Kala / downstream consumers
+
+Any code that hardcoded the body count as 13 or accessed body arrays by
+fixed numeric index beyond 12 must be updated. Cached `CHART_DTYPE` arrays
+from v1.2 are incompatible — recompute with v1.3.
+
+#### New imports (pure NumPy, no pyswisseph required at runtime)
+
+```python
+from ketu.ephemeris.planets import calc_planet_position
+import numpy as np
+
+jd = 2451545.0  # J2000.0
+pos = calc_planet_position(jd, 13)   # body_id=13 = Chiron
+lon = float(pos[0])                   # ecliptic longitude, finite
+```
+
+No `pyswisseph` installation is required. Chiron longitudes are evaluated
+from the embedded `ketu/data/chiron_coeffs.npz` Chebyshev coefficient file
+(289.7 KB, seg=32d/deg=10). Max |Δλ| = 0.005695° over 1950–2050.
+
+#### Kala synastry body axis
+
+The synastry cross-product body axis expands from 15 → 16 bodies
+(Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto,
+Rahu, Ketu, Lilith, Chiron, ASC, MC). Update any code that expects 15 bodies
+or 225 synastry pairs — it now produces 256 ordered pairs.
+
+---
+
 ### Aspect engine changes (1.3.0)
 
 The v1.3.0 release introduces a **breaking change** to the default aspect set used by
