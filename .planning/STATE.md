@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.3
 milestone_name: Chiron & Engine Hardening
-status: in-progress
-last_updated: "2026-06-01T18:55:00Z"
+status: complete
+last_updated: "2026-06-01T19:02:00Z"
 last_activity: 2026-06-01
 progress:
   total_phases: 8
-  completed_phases: 7
+  completed_phases: 8
   total_plans: 17
-  completed_plans: 23
-  percent: 88
+  completed_plans: 24
+  percent: 100
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
 
 ## Current Position
 
-Phase: 27 (Release 1.3.0) — IN PROGRESS (Wave 1 DONE)
-Plan: 27-01 COMPLETE (REL-10: version → 1.3.0 both source-of-truth files; CHANGELOG merged into one dated [1.3.0] EN+FR + Chiron entries added; UPGRADING Chiron 13→14 section added; README verified complete). Next: 27-02 (Wave 2) — PyPI publish ceremony with human go/no-go checkpoint.
-Status: 27-01 DONE — commits a9cf350 (version) + 2658264 (CHANGELOG) + 4251709 (UPGRADING). Sync gate green; full suite 1399 passed/100% coverage. CHANGELOG dated 2026-06-01 EN+FR. Next: 27-02 — local pre-flight (build + Chiron-aware fresh-venv smoke) → HUMAN go/no-go → tag/push → PyPI publish → post-publish smoke (REL-11).
-Last activity: 2026-06-01 — Phase 27-01 executed: version bump + release docs finalized (REL-10)
+Phase: 27 (Release 1.3.0) — COMPLETE
+Plan: 27-02 COMPLETE (REL-11: v1.3.0 tagged on main + pushed; publish.yml SUCCESS; ketu==1.3.0 live on PyPI; GitHub release with sdist+wheel; post-publish smoke PASSED — version + subpackages + Chiron 251.6125° + no swisseph). Milestone v1.3 COMPLETE.
+Status: 27-02 DONE — tag v1.3.0 on commit 1f9fb80; publish.yml run 26775357483 SUCCESS; PyPI <https://pypi.org/project/ketu/1.3.0/>; GitHub release <https://github.com/alkimya/ketu/releases/tag/v1.3.0>; dist/ cleaned. REL-10 + REL-11 both satisfied.
+Last activity: 2026-06-01 — Phase 27-02 executed: release ceremony (tag + publish + smoke)
 
-Progress: [████████████░░] 88% — 7/8 phases completed, 23 plans done (Phase 27 Wave 1 DONE; 27-02 PyPI publish remains)
+Progress: [██████████████] 100% — 8/8 phases completed, 24 plans done (MILESTONE v1.3 COMPLETE)
 
 ## v1.3 Roadmap Structure
 
@@ -116,6 +116,8 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 - [Phase 26.1-02]: concepts.po 300/300 translated (50 empties filled, terminology anchor); chiron.po 31/31; predictive_charts.po 39/39; all .mo compiled; glossary applied (Carré/Trigone/Quinconce/Retour solaire/Corps centaure); commit 688a409
 - [Phase 26.1-05]: migration.po 89/89 translated (0 untranslated); shape tuples (13,13)/(14,14) and body_id=13 preserved verbatim; migration.mo compiled; commits c3f0400+18fc6ca
 - [Phase 26.1-08]: make build-mo skips up-to-date .mo by timestamp — force msgfmt loop used to guarantee all 17 catalogs authoritative
+- [Phase 27-02]: dist/ artifacts built in pre-flight (27-01) REUSED at publish time — no rebuild before tagging; ensures byte-identical wheel ships to PyPI and GitHub release
+- [Phase 27-02]: ketu==1.3.0 published 2026-06-01 via OIDC trusted publishing (no API tokens); PyPI CDN propagated immediately (retry loop attempt 1 succeeded); Chiron resolution confirmed live at 251.6125° (J2000.0)
 - [Phase 26.1-08]: DOC-13 SATISFIED: 17/17 .po 100% translated, 0 untranslated, no heading-marker regressions, en+fr builds at 1 warning (display_version only); Phase 26.1 COMPLETE — ready for Phase 27 Release
 
 ### Roadmap Evolution
@@ -132,9 +134,9 @@ Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting curr
 
 ## Session Continuity
 
-Last session: 2026-06-01 — Phase 26.1-08 executed: final gate recompile of 17 .mo + en+fr build verify at 1 warning + commit. Phase 26.1 COMPLETE. Commits 26b6c94 (.mo) + final metadata.
-Stopped at: 26.1-08 COMPLETE. Phase 26.1 DONE. Next: Phase 27 — Release 1.3.0 (REL-10 version bump + PyPI, REL-11 GitHub release).
-Resume file: None — Phase 27 ready to plan.
+Last session: 2026-06-01 — Phase 27-02 executed: tag v1.3.0 + push + publish.yml SUCCESS + GitHub release + post-publish smoke PASSED + dist/ cleaned. REL-11 SATISFIED. Milestone v1.3 COMPLETE.
+Stopped at: 27-02 COMPLETE. Phase 27 DONE. MILESTONE v1.3 (Chiron & Engine Hardening) COMPLETE. ketu==1.3.0 live on PyPI.
+Resume file: None — milestone complete; next milestone requires fresh planning.
 
 - [26.1-06 DONE 2026-06-01] architecture.po: 100 entries translated, 0 untranslated, .mo compiled — commit c17499c
 - [26.1-03 COMPLETE 2026-06-01]: houses.po (72) + relational_charts.po (88) + index.po (112) translated, 3 .mo compiled — commit 57cedbd
@@ -142,3 +144,4 @@ Resume file: None — Phase 27 ready to plan.
 - [Phase 26.1-04 COMPLETE 2026-06-01]: arabic_parts.po (42) + changelog.po (117) + contributing.po (77) translated; 3 .mo compiled — commits 8d27609 + 1a71af7 + 285c8dd
 - [Phase 26.1-08 COMPLETE 2026-06-01]: FINAL GATE — 17/17 .po 100% translated, 17 .mo recompiled (5 committed), en+fr builds 1 warning each (display_version), DOC-13 SATISFIED — commit 26b6c94
 - [Phase 27-01 COMPLETE 2026-06-01]: REL-10 — version → 1.3.0 (pyproject.toml + ketu/__init__.py; conf.py left untouched per Pitfall 8); CHANGELOG merged to ONE dated [1.3.0] - 2026-06-01 (no [Unreleased]) + Chiron Added bullet + Chiron BREAKING contract note added; fr/CHANGELOG [1.3.0] synthesized; UPGRADING v1.2→v1.3 Chiron shape-table section added (before aspect section); README What's New verified complete (no change). Sync gate 2 passed; full suite 1399 passed/2 skipped/100% coverage. Commits a9cf350 + 2658264 + 4251709. GPG signing stalled on missing TTY (commit.gpgsign=true) — user unlocked gpg-agent cache to land the final commit; no content rework.
+- [Phase 27-02 COMPLETE 2026-06-01]: REL-11 — tag v1.3.0 (signed annotated, GPG warm) on commit 1f9fb80 + pushed; publish.yml run 26775357483 SUCCESS (build 18s + publish-to-pypi 23s); GitHub release v1.3.0 with wheel+sdist attached; post-publish smoke from PyPI attempt 1: version OK + subpackages OK + Chiron 251.6125° OK + no swisseph OK; dist/ cleaned. MILESTONE v1.3 COMPLETE.
