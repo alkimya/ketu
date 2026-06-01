@@ -50,7 +50,7 @@ class TestListHouseSystems:
         )
 
     def test_every_registered_system_has_description(self, invoke_main, capsys):
-        """Sophie hint (PATTERNS §14.5): no system shall fall through to the
+        """PATTERNS §14.5: no system shall fall through to the
         '(no description available)' default — _SYSTEM_DESCRIPTIONS must
         cover every entry in SYSTEMS."""
         invoke_main(["--list-house-systems"])

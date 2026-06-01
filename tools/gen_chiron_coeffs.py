@@ -38,7 +38,7 @@ Usage::
     # Imprimer les longitudes de référence pour les 7 JD de pin (plan 24-04) :
     SE_EPHE_PATH=... python tools/gen_chiron_coeffs.py --dump-refs
 
-Auteur : Dr. Sophie Chen (Phase 24-01)
+Phase 24-01.
 """
 
 import argparse
