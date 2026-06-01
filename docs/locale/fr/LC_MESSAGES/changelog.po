@@ -38,11 +38,11 @@ msgstr ""
 
 #: ../../source/changelog.md:8
 msgid "[1.3.0] - 2026-06-XX"
-msgstr ""
+msgstr "[1.3.0] - 2026-06-XX"
 
 #: ../../source/changelog.md:10
 msgid "Added 1.3.0"
-msgstr ""
+msgstr "Ajouté 1.3.0"
 
 #: ../../source/changelog.md:12
 msgid ""
@@ -51,6 +51,11 @@ msgid ""
 " valid range 1950–2050, max error 0.005695° (sub-arcminute). Accessed via"
 " standard calculation functions: `long(jd, 13)`, `lat(jd, 13)`, etc."
 msgstr ""
+"**Chiron (14e corps, body_id=13)** : Corps centaure entre Saturne et"
+" Uranus. Calculé via des coefficients polynomiaux de Chebyshev embarqués"
+" (`.npz`), plage valide 1950–2050, erreur maximale 0.005695° (sous"
+" l'arcminute). Accessible via les fonctions de calcul standard :"
+" `long(jd, 13)`, `lat(jd, 13)`, etc."
 
 #: ../../source/changelog.md:13
 msgid ""
@@ -58,16 +63,22 @@ msgid ""
 "segments, seg=32 days, degree=10, three quantities: longitude, latitude, "
 "distance). Generated offline from pyswisseph — not a runtime dependency."
 msgstr ""
+"**`ketu/data/chiron_coeffs.npz`** : Fichier de coefficients embarqué"
+" (1142 segments, seg=32 jours, degré=10, trois quantités : longitude,"
+" latitude, distance). Généré hors ligne depuis pyswisseph — pas une"
+" dépendance d'exécution."
 
 #: ../../source/changelog.md:14
 msgid ""
 "**`ketu/ephemeris/chiron.py`**: Pure-NumPy Chebyshev evaluator for Chiron"
 " positions."
 msgstr ""
+"**`ketu/ephemeris/chiron.py`** : Évaluateur de Chebyshev Pure NumPy pour"
+" les positions de Chiron."
 
 #: ../../source/changelog.md:16
 msgid "Breaking Changes 1.3.0"
-msgstr ""
+msgstr "Changements incompatibles 1.3.0"
 
 #: ../../source/changelog.md:18
 msgid ""
@@ -77,24 +88,31 @@ msgid ""
 "hardcodes the body count or uses index 12 as the last body must be "
 "updated. Index 13 = Chiron."
 msgstr ""
+"**Axe corps de `CHART_DTYPE` étendu de 13 à 14 corps (D-08)** : Les"
+" tableaux `body_lons`, `body_lats`, `body_speeds` ont désormais la forme"
+" `(14,)` au lieu de `(13,)`. Les matrices d'aspects sont maintenant"
+" `(14, 14)`. Le code qui code en dur le nombre de corps ou utilise"
+" l'index 12 comme dernier corps doit être mis à jour. Index 13 = Chiron."
 
 #: ../../source/changelog.md:19
 msgid ""
 "**`SYNASTRY_BODY_COUNT` changed from 15 to 16**: Reflects the additional "
 "Chiron body (14 bodies + ASC + MC)."
 msgstr ""
+"**`SYNASTRY_BODY_COUNT` modifié de 15 à 16** : Reflète le corps Chiron"
+" supplémentaire (14 corps + ASC + MC)."
 
 #: ../../source/changelog.md:21
 msgid "See [Migration Guide](migration.md) for upgrade instructions."
-msgstr ""
+msgstr "Voir le [Guide de migration](migration.md) pour les instructions de mise à niveau."
 
 #: ../../source/changelog.md:23
 msgid "[1.2.0] - 2026-04-XX"
-msgstr ""
+msgstr "[1.2.0] - 2026-04-XX"
 
 #: ../../source/changelog.md:25
 msgid "Added 1.2.0"
-msgstr ""
+msgstr "Ajouté 1.2.0"
 
 #: ../../source/changelog.md:27
 msgid ""
@@ -103,6 +121,11 @@ msgid ""
 "house cusps, angles (ASC, MC, ARMC, Vertex), and a 13×13 aspect matrix. "
 "`is_day_chart(jd, lat, lon)` sect helper."
 msgstr ""
+"**`ketu.charts` — Thème natal complet (`compute_chart`)** : Retourne un"
+" unique tableau structuré `CHART_DTYPE` combinant les positions des corps"
+" (13 corps), les cuspides de maisons, les angles (ASC, MC, ARMC, Vertex)"
+" et une matrice d'aspects 13×13."
+" `is_day_chart(jd, lat, lon)` aide à la détection de sect."
 
 #: ../../source/changelog.md:28
 msgid ""
@@ -111,6 +134,10 @@ msgid ""
 "`SYNASTRY_DTYPE` structured array with applying/separating flag and orb "
 "limits."
 msgstr ""
+"**`ketu.synastry` — Analyse d'aspects inter-thèmes** :"
+" `calculate_synastry(chart_a, chart_b, aspects, orbs, mode)` retourne un"
+" tableau structuré `SYNASTRY_DTYPE` avec indicateur d'application/séparation"
+" et limites d'orbe."
 
 #: ../../source/changelog.md:29
 msgid ""
@@ -119,6 +146,10 @@ msgid ""
 "where each body position is the shortest-arc circular midpoint. "
 "`circular_midpoint(lon_a, lon_b)` utility."
 msgstr ""
+"**`ketu.composite` — Thèmes composites par point médian** :"
+" `calculate_composite(chart_a, chart_b, system)` retourne un `CHART_DTYPE`"
+" où chaque position de corps est le point médian circulaire à arc le plus"
+" court. Utilitaire `circular_midpoint(lon_a, lon_b)`."
 
 #: ../../source/changelog.md:30
 msgid ""
@@ -127,6 +158,11 @@ msgid ""
 "`CHART_DTYPE` for the return chart. Support relocation via "
 "`return_lat/return_lon`."
 msgstr ""
+"**`ketu.returns` — Retours solaires et lunaires** :"
+" `solar_return(natal_jd, …, target_year)` et"
+" `lunar_return(natal_jd, …, target_jd)` retournent tous deux `CHART_DTYPE`"
+" pour le thème de retour. Support de délocalisation via"
+" `return_lat/return_lon`."
 
 #: ../../source/changelog.md:31
 msgid ""
@@ -135,6 +171,11 @@ msgid ""
 "`marriage` (fixed formula). `calculate_part`, `calculate_all_parts`, "
 "`register`, `get_part`, `PartSpec`."
 msgstr ""
+"**`ketu.parts` — Parties arabes / Lots hermétiques** : Système à base de"
+" registre avec les parties intégrées `fortune`, `spirit`"
+" (Fortune/Esprit sensibles à la sect) et `marriage` (formule fixe)."
+" `calculate_part`, `calculate_all_parts`, `register`, `get_part`,"
+" `PartSpec`."
 
 #: ../../source/changelog.md:32
 msgid ""
@@ -142,6 +183,9 @@ msgid ""
 " Regiomontanus (`regiomontanus`) added alongside the existing Placidus, "
 "Koch, Porphyry (v1.1)."
 msgstr ""
+"**Systèmes de maisons supplémentaires** : Maisons entières (`whole_sign`),"
+" Égales (`equal`), Regiomontanus (`regiomontanus`) ajoutés aux systèmes"
+" existants Placidus, Koch, Porphyre (v1.1)."
 
 #: ../../source/changelog.md:33
 msgid ""
@@ -149,26 +193,34 @@ msgid ""
 "`apply_perturbations` to `_perturbations.py`; `orbital.py` is now a "
 "70-LOC re-export hub."
 msgstr ""
+"**Refactorisation des éphémérides** : `ORBITAL_ELEMENTS` extrait vers"
+" `_elements.py` ; `apply_perturbations` vers `_perturbations.py` ;"
+" `orbital.py` est maintenant un hub de ré-export de 70 lignes."
 
 #: ../../source/changelog.md:34
 msgid ""
 "**BODY_STRATEGIES dispatch**: `planets.py` uses a strategy dict instead "
 "of if-elif chains, making body extension (e.g. Chiron in v1.3) clean."
 msgstr ""
+"**Dispatch BODY_STRATEGIES** : `planets.py` utilise un dictionnaire de"
+" stratégies au lieu de chaînes if-elif, rendant l'extension de corps"
+" (ex. Chiron en v1.3) propre."
 
 #: ../../source/changelog.md:35
 msgid ""
 "**Root `conftest.py`**: Shared session-scoped fixtures consolidated in "
 "`tests/conftest.py`."
 msgstr ""
+"**`conftest.py` racine** : Fixtures partagées de portée session"
+" consolidées dans `tests/conftest.py`."
 
 #: ../../source/changelog.md:37
 msgid "[1.1.0] - 2026-03-XX"
-msgstr ""
+msgstr "[1.1.0] - 2026-03-XX"
 
 #: ../../source/changelog.md:39
 msgid "Added 1.1.0"
-msgstr ""
+msgstr "Ajouté 1.1.0"
 
 #: ../../source/changelog.md:41
 msgid ""
@@ -177,6 +229,11 @@ msgid ""
 " list, ndarray, None]`, `resolve_aspect_set`. `calculate_aspects(jdate, "
 "l_bodies, aspects=None)` now accepts an aspect-set spec."
 msgstr ""
+"**`ketu.aspects` — Ensembles d'aspects configurables** : `CLASSICAL`"
+" (5 aspects), `TRADITIONAL` (7), `EXTENDED` (14 — défaut)."
+" `AspectSetSpec = Union[str, list, ndarray, None]`, `resolve_aspect_set`."
+" `calculate_aspects(jdate, l_bodies, aspects=None)` accepte désormais"
+" une spécification d'ensemble d'aspects."
 
 #: ../../source/changelog.md:42
 msgid ""
@@ -185,12 +242,19 @@ msgid ""
 "`HOUSES_DTYPE`, `SYSTEMS`, `HighLatitudeError`, `register`. Initial "
 "systems: `placidus`, `koch`, `porphyry`."
 msgstr ""
+"**`ketu.houses` — Calculs de systèmes de maisons** :"
+" `calculate_houses(jd, lat, lon, system, polar_fallback)`,"
+" `house_of(planet_lon, cusps)`, `HOUSES_DTYPE`, `SYSTEMS`,"
+" `HighLatitudeError`, `register`. Systèmes initiaux : `placidus`,"
+" `koch`, `porphyry`."
 
 #: ../../source/changelog.md:43
 msgid ""
 "**`HOUSES_DTYPE`**: Structured array with fields `jd`, `lat`, `lon`, "
 "`system`, `cusps[12]`, `asc`, `mc`, `armc`, `vertex`."
 msgstr ""
+"**`HOUSES_DTYPE`** : Tableau structuré avec les champs `jd`, `lat`,"
+" `lon`, `system`, `cusps[12]`, `asc`, `mc`, `armc`, `vertex`."
 
 #: ../../source/changelog.md:45
 msgid "[1.0.0] - 2026-02-12"
@@ -198,7 +262,7 @@ msgstr "[1.0.0] - 2026-02-12"
 
 #: ../../source/changelog.md:47
 msgid "Breaking Changes 1.0.0"
-msgstr ""
+msgstr "Changements incompatibles 1.0.0"
 
 #: ../../source/changelog.md:49
 msgid ""
@@ -237,7 +301,7 @@ msgstr ""
 
 #: ../../source/changelog.md:54
 msgid "Fixed 1.0.0"
-msgstr ""
+msgstr "Corrigé 1.0.0"
 
 #: ../../source/changelog.md:56
 msgid ""
@@ -266,7 +330,7 @@ msgstr ""
 
 #: ../../source/changelog.md:60
 msgid "Added 1.0.0"
-msgstr ""
+msgstr "Ajouté 1.0.0"
 
 #: ../../source/changelog.md:62
 msgid "**Type hints everywhere**: mypy strict mode compliance"
@@ -433,7 +497,7 @@ msgstr "Documentation en anglais et en français"
 
 #: ../../source/changelog.md:108
 msgid "Changed 0.2.0"
-msgstr ""
+msgstr "Modifié 0.2.0"
 
 #: ../../source/changelog.md:110
 msgid "Fixed and hardened the unit tests"
@@ -453,7 +517,7 @@ msgstr "Alignement de la documentation avec la nouvelle organisation"
 
 #: ../../source/changelog.md:115
 msgid "Technical PyPI deployment 0.2.0"
-msgstr ""
+msgstr "Déploiement technique PyPI 0.2.0"
 
 #: ../../source/changelog.md:117
 msgid "Official support for Python 3.10–3.13"
@@ -517,7 +581,7 @@ msgstr "Tests unitaires initiaux"
 
 #: ../../source/changelog.md:136
 msgid "Features 0.1.0"
-msgstr ""
+msgstr "Fonctionnalités 0.1.0"
 
 #: ../../source/changelog.md:138
 msgid "Support for 10 planets + Rahu + Lilith"
@@ -541,7 +605,7 @@ msgstr "Cache LRU pour améliorer les performances"
 
 #: ../../source/changelog.md:144
 msgid "Technical 0.1.0"
-msgstr ""
+msgstr "Technique 0.1.0"
 
 #: ../../source/changelog.md:146
 msgid "Requires Python 3.9+"
@@ -612,4 +676,3 @@ msgstr "[Toutes les versions](https://github.com/alkimya/ketu/releases)"
 
 #~ msgid "Changed"
 #~ msgstr "Modifications"
-
