@@ -20,7 +20,7 @@ msgstr ""
 
 #: ../../source/arabic_parts.md:1
 msgid "Arabic Parts (Hermetic Lots)"
-msgstr ""
+msgstr "Parties arabes (Lots hermétiques)"
 
 #: ../../source/arabic_parts.md:3
 msgid ""
@@ -30,82 +30,87 @@ msgid ""
 "Hellenistic and Medieval astrology and remain central to traditional "
 "practice."
 msgstr ""
+"Les parties arabes — également appelées **Lots hermétiques** en astrologie"
+" classique — sont des points sensibles dérivés des longitudes des"
+" positions du thème plutôt que de l'observation directe des planètes."
+" Elles étaient largement utilisées en astrologie hellénistique et"
+" médiévale et restent centrales à la pratique traditionnelle."
 
 #: ../../source/arabic_parts.md:5
 msgid "Ketu provides a sect-aware registry of parts via the `ketu.parts` module."
-msgstr ""
+msgstr "Ketu fournit un registre de parties sensible à la sect via le module `ketu.parts`."
 
 #: ../../source/arabic_parts.md:7
 msgid "Built-in Parts"
-msgstr ""
+msgstr "Parties intégrées"
 
 #: ../../source/arabic_parts.md:9
 msgid "Three parts are registered by default:"
-msgstr ""
+msgstr "Trois parties sont enregistrées par défaut :"
 
 #: ../../source/arabic_parts.md
 msgid "Name"
-msgstr ""
+msgstr "Nom"
 
 #: ../../source/arabic_parts.md
 msgid "Key"
-msgstr ""
+msgstr "Clé"
 
 #: ../../source/arabic_parts.md
 msgid "Sect-aware"
-msgstr ""
+msgstr "Sensible à la sect"
 
 #: ../../source/arabic_parts.md
 msgid "Formula (day)"
-msgstr ""
+msgstr "Formule (jour)"
 
 #: ../../source/arabic_parts.md
 msgid "Formula (night)"
-msgstr ""
+msgstr "Formule (nuit)"
 
 #: ../../source/arabic_parts.md
 msgid "Part of Fortune"
-msgstr ""
+msgstr "Part de Fortune"
 
 #: ../../source/arabic_parts.md
 msgid "`\"fortune\"`"
-msgstr ""
+msgstr "`\"fortune\"`"
 
 #: ../../source/arabic_parts.md
 msgid "Yes"
-msgstr ""
+msgstr "Oui"
 
 #: ../../source/arabic_parts.md
 msgid "ASC + Moon - Sun"
-msgstr ""
+msgstr "ASC + Lune - Soleil"
 
 #: ../../source/arabic_parts.md
 msgid "ASC + Sun - Moon"
-msgstr ""
+msgstr "ASC + Soleil - Lune"
 
 #: ../../source/arabic_parts.md
 msgid "Part of Spirit"
-msgstr ""
+msgstr "Part de l'Esprit"
 
 #: ../../source/arabic_parts.md
 msgid "`\"spirit\"`"
-msgstr ""
+msgstr "`\"spirit\"`"
 
 #: ../../source/arabic_parts.md
 msgid "Part of Marriage"
-msgstr ""
+msgstr "Part du Mariage"
 
 #: ../../source/arabic_parts.md
 msgid "`\"marriage\"`"
-msgstr ""
+msgstr "`\"marriage\"`"
 
 #: ../../source/arabic_parts.md
 msgid "No"
-msgstr ""
+msgstr "Non"
 
 #: ../../source/arabic_parts.md
 msgid "ASC + Venus - Saturn"
-msgstr ""
+msgstr "ASC + Vénus - Saturne"
 
 #: ../../source/arabic_parts.md:17
 msgid ""
@@ -113,10 +118,14 @@ msgid ""
 "standard formula applies; in a night chart the formula is reversed (Sun "
 "and Moon swap roles). Marriage is the same formula regardless of sect."
 msgstr ""
+"**La Fortune et l'Esprit inversent leurs formules selon la sect :** dans"
+" un thème diurne la formule standard s'applique ; dans un thème nocturne"
+" la formule est inversée (Soleil et Lune échangent leurs rôles). Le"
+" Mariage utilise la même formule quelle que soit la sect."
 
 #: ../../source/arabic_parts.md:19
 msgid "Sect Detection"
-msgstr ""
+msgstr "Détection de la sect"
 
 #: ../../source/arabic_parts.md:21
 msgid ""
@@ -124,42 +133,50 @@ msgid ""
 " passed to `calculate_part` carries its own `jd`, `lat`, and `lon` — Ketu"
 " determines sect automatically from those values."
 msgstr ""
+"`ketu.parts` utilise `is_day_chart` de `ketu.charts` en interne. Le thème"
+" transmis à `calculate_part` porte ses propres `jd`, `lat` et `lon` —"
+" Ketu détermine la sect automatiquement à partir de ces valeurs."
 
 #: ../../source/arabic_parts.md:23
 msgid "calculate_part"
-msgstr ""
+msgstr "calculate_part"
 
 #: ../../source/arabic_parts.md:29
 msgid "Computes a single part and returns its ecliptic longitude (0–360°)."
-msgstr ""
+msgstr "Calcule une seule partie et retourne sa longitude écliptique (0–360°)."
 
 #: ../../source/arabic_parts.md:50
 msgid "calculate_all_parts"
-msgstr ""
+msgstr "calculate_all_parts"
 
 #: ../../source/arabic_parts.md:56
 msgid ""
 "Computes all registered parts at once. The result is a plain Python dict "
 "mapping part name to longitude (float, degrees 0–360)."
 msgstr ""
+"Calcule toutes les parties enregistrées en une seule fois. Le résultat est"
+" un dict Python ordinaire associant le nom de la partie à la longitude"
+" (float, degrés 0–360)."
 
 #: ../../source/arabic_parts.md:58
 msgid "`parts=None` computes every registered part."
-msgstr ""
+msgstr "`parts=None` calcule toutes les parties enregistrées."
 
 #: ../../source/arabic_parts.md:59
 msgid "Pass a list of keys to restrict the calculation."
-msgstr ""
+msgstr "Passer une liste de clés pour restreindre le calcul."
 
 #: ../../source/arabic_parts.md:79
 msgid "Formula Signature"
-msgstr ""
+msgstr "Signature de formule"
 
 #: ../../source/arabic_parts.md:81
 msgid ""
 "Every part formula (both day and night variants) must accept exactly four"
 " positional arguments:"
 msgstr ""
+"Toute formule de partie (variantes jour et nuit) doit accepter exactement"
+" quatre arguments positionnels :"
 
 #: ../../source/arabic_parts.md:87
 msgid ""
@@ -167,46 +184,54 @@ msgid ""
 " in this order. Results are automatically normalised to [0°, 360°) by the"
 " registry."
 msgstr ""
+"Même si une formule n'utilise pas les quatre arguments, ils sont toujours"
+" transmis dans cet ordre. Les résultats sont automatiquement normalisés"
+" vers [0°, 360°) par le registre."
 
 #: ../../source/arabic_parts.md:89
 msgid "Registering Custom Parts"
-msgstr ""
+msgstr "Enregistrement de parties personnalisées"
 
 #: ../../source/arabic_parts.md:91
 msgid "Use `register` to add a new part to the global registry:"
-msgstr ""
+msgstr "Utiliser `register` pour ajouter une nouvelle partie au registre global :"
 
 #: ../../source/arabic_parts.md:112
 msgid ""
 "After registration, the new part is included in "
 "`calculate_all_parts(chart)` automatically."
 msgstr ""
+"Après l'enregistrement, la nouvelle partie est incluse dans"
+" `calculate_all_parts(chart)` automatiquement."
 
 #: ../../source/arabic_parts.md:114
 msgid "PartSpec and get_part"
-msgstr ""
+msgstr "PartSpec et get_part"
 
 #: ../../source/arabic_parts.md:116
 msgid "You can inspect any registered part:"
-msgstr ""
+msgstr "Vous pouvez inspecter toute partie enregistrée :"
 
 #: ../../source/arabic_parts.md:126
 msgid ""
 "`PartSpec` is a named-tuple-like object with fields: `name`, "
 "`day_formula`, `night_formula`, `description`."
 msgstr ""
+"`PartSpec` est un objet de type tuple nommé avec les champs : `name`,"
+" `day_formula`, `night_formula`, `description`."
 
 #: ../../source/arabic_parts.md:128
 msgid "Next Steps"
-msgstr ""
+msgstr "Étapes suivantes"
 
 #: ../../source/arabic_parts.md:130
 msgid ""
 "[Relational charts](relational_charts.md) — synastry and composite charts"
 " that can benefit from part analysis"
 msgstr ""
+"[Thèmes relationnels](relational_charts.md) — synastrie et thèmes"
+" composites pouvant bénéficier d'une analyse des parties"
 
 #: ../../source/arabic_parts.md:131
 msgid "[API reference](api.md) — full `ketu.parts` signature list"
-msgstr ""
-
+msgstr "[Référence API](api.md) — liste complète des signatures `ketu.parts`"
