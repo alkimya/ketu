@@ -10,24 +10,23 @@ Cycle calculations must be correct, tested, and performant. If the math is wrong
 
 ## Current State
 
-**Latest shipped:** v1.2.0 (PyPI 2026-05-28) — <https://pypi.org/project/ketu/1.2.0/>
+**Latest shipped:** v1.3.0 (PyPI 2026-06-01) — <https://pypi.org/project/ketu/1.3.0/>
 
-v1.2 turned Ketu into a full relational and predictive astrology framework — strictly non-breaking (every API additive). A chart-abstraction keystone (`CHART_DTYPE` / `compute_chart` / `is_day_chart`) is now the foundation for three new house systems (Whole Sign, Equal, Regiomontanus — six total), synastry, midpoint composite, solar + lunar returns (sharing one pure-NumPy `_solve_return` core, arc-second convergence), and an extensible Arabic Parts framework (Fortune, Spirit, Marriage). The v1.1 ops debt was retired: `interrogate ≥95%` + `numpydoc validate` gates are now BLOCKING in CI, and workflows moved to Node 24. 1286 tests collected; mypy `--strict` clean; 100% coverage on every new subpackage. The runtime stays pure NumPy (`pyswisseph` is test-only).
+v1.3 embedded Chiron as the 14th body (Chebyshev-by-segment coefficients in an embedded `.npz`, evaluated by a pure-NumPy runtime — zero swisseph), after hardening the ephemeris engine (per-body strategies replacing the `calc_planet_position` if-elif, split `orbital.py`, consolidated fixtures) and lifting project coverage to 100%. The aspect engine became data-driven (one declarative `Aspect` table the engine iterates over; `aspects_for_harmonics` for harmonic-based selection; library default = TRADITIONAL 7 half-circle aspects). Sphinx docs (en+fr) were brought to the full v1.1/v1.2/v1.3 surface — 17 `.po` catalogs 100% translated. The 13→14 body shift deliberately broke the frozen-body-count ratchet and the internal Ketu↔Kala positional contract (Kala adapts). 1399 tests; mypy `--strict` clean; runtime stays pure NumPy (`pyswisseph` test/build-only).
 
-## Current Milestone: v1.3 Chiron & Engine Hardening
+## Current Milestone: v1.4 Dynamic Harmonics & Chiron Range
 
-**Goal:** Embed Chiron (Chebyshev-by-segment coefficients, pure-NumPy runtime) as the 14th body, after hardening the ephemeris engine and lifting quality to 100% — then bring the Sphinx docs (en+fr) up to the full v1.1/v1.2/v1.3 surface and ship `ketu==1.3.0`.
+**Goal:** Make aspect harmonics open-ended — any integer harmonic (H17, etc.) usable as a first-class aspect across the whole detection chain via an on-the-fly generator, without disturbing the frozen `core.aspects` table or its preset fingerprints — then widen Chiron's validity range to 1900–2100, correct its orb to 4° (Pluto parity), recentre the documentation on the 180°-division default (H1/H2/H3/H6), and ship `ketu==1.4.0`.
 
-**Target features (ordered):**
+**Target features (ordered intent — phases set by roadmap):**
 
-1. **Quality** — project coverage → 100% (outlier `ketu/houses/_ecliptic.py` ~64%), fix div/0 at `orbital.py:755` (`arcsin(z/r)` guard), deepen docstring examples/Notes (interrogate/numpydoc already 100% quantitative).
-2. **Ephemeris refactor** (before Chiron) — extract the per-body if-elif in `planets.py:calc_planet_position` into a per-body strategy, split `orbital.py:get_body_position` (~856 LOC file), consolidate duplicated natal fixtures across 4 conftest.py into `tests/conftest.py`.
-3. **Spike Chiron** — validate Chebyshev-by-segment (segment size, degree, coeff size, accuracy vs Swiss < 0.01°) on real measurements before planning the implementation.
-4. **Chiron** — embedded Chebyshev coeffs (offline pyswisseph build-only generator → `.npz` in package; 100% NumPy runtime eval). 13→14 bodies: deliberately breaks the `test_body_count_frozen_at_thirteen` ratchet and the positional contract shared with Kala (coordinate the breaking change).
-5. **Docs Sphinx en+fr** — single phase: bring the 12 frozen `docs/source/` pages (stuck at v1.0, 2026-02-12) up to full v1.3 surface incl. synastry/composite/returns/parts/Chiron; fr translation via existing gettext infra (`docs/locale/`).
-6. **Release 1.3.0** — closing phase: version bump, CHANGELOG, GitHub release + PyPI via OIDC.
+1. **Dynamic harmonics** (engine) — an on-the-fly aspect generator: any integer `h` yields its aspect angles (`360/h × k`) and harmonic coefficient (`1/h`) as first-class aspects, integrated through the full detection chain (`calculate_aspects`, orbs, cycles, synastry). The frozen 14-aspect `core.aspects` table, the named presets, and their sha256 fingerprints are PRESERVED — the dynamic path is additive, not a replacement. No reference to Kala anywhere in Ketu docs.
+2. **Chiron range 1900–2100** (data) — regenerate `ketu/data/chiron_coeffs.npz` over 1900–2100 (vs current 1950–2050) via the offline `tools/gen_chiron_coeffs.py` build-only generator; re-validate accuracy < 0.01° on the widened range; re-pin regression references. Runtime unchanged (pure-NumPy eval), only embedded data + clamp bounds.
+3. **Chiron orb 0°→4°** (behaviour) — align `core.bodies['orb']` for Chiron to 4° (astrological intent; Pluto parity). Propagates through the single-source orb derivation to aspect detection; regenerate the byte-stable CLI fixture (`tests/cli/fixtures/v1_1_reference_output.txt`) and adjust synastry orb-mirroring asserts. CHANGELOG `Changed`/`Fixed`.
+4. **Documentation coherence** (docs) — recentre `concepts.md` on the 180°-division default (H1/H2/H3/H6); tables show only CLASSICAL(5)/TRADITIONAL(7) and mark default vs opt-in; move EXTENDED (H5/H9/H10) out of the tables (kept in code); document the dynamic-harmonics generator + Chiron 1900–2100 + orb 4°; fix `migration.md` (default = TRADITIONAL, not "EXTENDED=14 unchanged") and `relational_charts.md` (default = TRADITIONAL, not "classical"); recompile touched fr `.po`/`.mo`.
+5. **Release 1.4.0** (ceremony) — version bump, CHANGELOG `[1.4.0]` (Added: dynamic harmonics, Chiron 1900–2100; Changed: Chiron orb 4°, docs), push **main + tag**, GitHub release + PyPI via OIDC.
 
-**Breaking-change note (D-08 decision):** Chiron lifts the bodies axis 13→14, intentionally breaking the frozen-body-count ratchet (`tests/test_ketu.py:110`) and the positional array contract Kala depends on. Decided 2026-05-29 to **break the freeze in v1.3 and coordinate Kala** rather than expose Chiron as a separate additive index. Version stays **1.3.0**: the *public* Ketu API surface remains additive; the broken contract is the internal Ketu↔Kala positional array, which Kala will adapt to.
+**Versioning note:** v1.4.0 is a **minor** (not a patch). It adds a new public capability (open-ended harmonics) and widens Chiron's validity range — both additive. The frozen `core.aspects` table and preset fingerprints stay intact; the dynamic generator is a parallel path. The Chiron orb change (0°→4°) is a behaviour change in aspect detection, documented in CHANGELOG. (The originally-scoped "v1.3.1 docs patch" was absorbed here once dynamic harmonics + Chiron range made the scope a minor, not a patch.)
 
 ## Requirements
 
@@ -100,19 +99,17 @@ v1.2 turned Ketu into a full relational and predictive astrology framework — s
 
 ### Active
 
-<!-- v1.3 Chiron & Engine Hardening — scoped 2026-05-29. Building toward these. -->
+<!-- v1.4 Dynamic Harmonics & Chiron Range — scoped 2026-06-02. Building toward these. -->
 
-- [ ] Project coverage → 100% (close `ketu/houses/_ecliptic.py` and remaining gaps)
-- [ ] Fix div/0 at `orbital.py:755` (`arcsin(z/r)` guard)
-- [ ] Deepen docstring examples/Notes across public API
-- [ ] Refactor `planets.py:calc_planet_position` per-body if-elif into a per-body strategy
-- [ ] Split `orbital.py:get_body_position` (~856 LOC file)
-- [ ] Consolidate duplicated natal fixtures into `tests/conftest.py`
-- [ ] Spike Chebyshev-by-segment for Chiron (accuracy vs Swiss < 0.01°)
-- [ ] Chiron as 14th body via embedded Chebyshev coeffs (pure-NumPy runtime)
-- [ ] Update body-count ratchet 13→14 and coordinate Kala positional contract
-- [ ] Bring Sphinx docs (en+fr) up to full v1.3 surface
-- [ ] Ship `ketu==1.3.0` (GitHub release + PyPI via OIDC)
+- [ ] On-the-fly aspect generator: any integer harmonic `h` → angles `360/h × k` + coefficient `1/h`
+- [ ] Dynamic aspects integrated through the full detection chain (`calculate_aspects`, orbs, cycles, synastry)
+- [ ] Frozen `core.aspects` table, named presets, and sha256 fingerprints PRESERVED (dynamic path additive)
+- [ ] Regenerate `chiron_coeffs.npz` over 1900–2100; re-validate accuracy < 0.01°; re-pin regression refs
+- [ ] Chiron orb 0°→4° (Pluto parity); regenerate CLI byte-stable fixture + synastry orb asserts
+- [ ] Recentre `concepts.md` on 180°-division default (H1/H2/H3/H6); tables show CLASSICAL(5)/TRADITIONAL(7) only, mark default vs opt-in; EXTENDED out of tables
+- [ ] Fix `migration.md` (default = TRADITIONAL) and `relational_charts.md` (default = TRADITIONAL, not "classical")
+- [ ] Document dynamic-harmonics generator + Chiron 1900–2100 + orb 4°; recompile touched fr `.po`/`.mo`
+- [ ] Ship `ketu==1.4.0` (push main + tag, GitHub release + PyPI via OIDC)
 
 ### Out of Scope
 
@@ -220,4 +217,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-Last updated: 2026-05-29 — milestone v1.3 (Chiron & Engine Hardening) started.
+Last updated: 2026-06-02 — milestone v1.4 (Dynamic Harmonics & Chiron Range) started.

@@ -1,35 +1,35 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.3
-milestone_name: Chiron & Engine Hardening
-status: complete
-last_updated: "2026-06-01T19:02:00Z"
-last_activity: 2026-06-01
+milestone: v1.4
+milestone_name: Dynamic Harmonics & Chiron Range
+status: defining_requirements
+last_updated: "2026-06-02T00:00:00Z"
+last_activity: 2026-06-02
 progress:
-  total_phases: 8
-  completed_phases: 8
-  total_plans: 17
-  completed_plans: 24
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-05-29 — milestone v1.3 started)
+See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** MILESTONE v1.3 (Chiron & Engine Hardening) — roadmapped into 7 phases (21-27) + inserted Phase 26.1. Axis order BINDING: Quality (21) → Ephemeris Refactor (22) → Spike Chiron (23) → Chiron (24) → Documentation (25) → Aspects Data-Driven (26) → French Translation (26.1) → Release 1.3.0 (27). Release relocated AFTER the aspect refactor (decided 2026-05-31); full fr translation inserted before Release (decided 2026-06-01) so v1.3.0 ships with real French docs. v1.2.0 live on PyPI; v1.0/v1.1/v1.2 archived to `.planning/milestones/`.
+**Current focus:** MILESTONE v1.4 (Dynamic Harmonics & Chiron Range) — just started; defining requirements (research-first). Intent axes: (1) on-the-fly aspect generator for arbitrary integer harmonics integrated through the full detection chain, frozen table + preset fingerprints preserved; (2) Chiron range 1900–2100 (regenerate `.npz`, re-validate < 0.01°); (3) Chiron orb 0°→4° (Pluto parity); (4) doc coherence (concepts.md recentred on 180°-division default, EXTENDED out of tables, migration/relational fixes); (5) Release 1.4.0. Phases start at **28** (v1.3 ended at Phase 27 + inserted 26.1). v1.3.0 live on PyPI; v1.0/v1.1/v1.2 archived to `.planning/milestones/`.
 
 ## Current Position
 
-Phase: 27 (Release 1.3.0) — COMPLETE
-Plan: 27-02 COMPLETE (REL-11: v1.3.0 tagged on main + pushed; publish.yml SUCCESS; ketu==1.3.0 live on PyPI; GitHub release with sdist+wheel; post-publish smoke PASSED — version + subpackages + Chiron 251.6125° + no swisseph). Milestone v1.3 COMPLETE.
-Status: 27-02 DONE — tag v1.3.0 on commit 1f9fb80; publish.yml run 26775357483 SUCCESS; PyPI <https://pypi.org/project/ketu/1.3.0/>; GitHub release <https://github.com/alkimya/ketu/releases/tag/v1.3.0>; dist/ cleaned. REL-10 + REL-11 both satisfied.
-Last activity: 2026-06-01 — Phase 27-02 executed: release ceremony (tag + publish + smoke)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements (research-first — 4 parallel researchers)
+Last activity: 2026-06-02 — Milestone v1.4 started
 
-Progress: [██████████████] 100% — 8/8 phases completed, 24 plans done (MILESTONE v1.3 COMPLETE)
+Progress: [░░░░░░░░░░░░░░] 0% — milestone v1.4 just started
 
 ## v1.3 Roadmap Structure
 
