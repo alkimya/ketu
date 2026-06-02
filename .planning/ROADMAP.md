@@ -98,7 +98,10 @@ Full details archived to `.planning/milestones/v1.3-ROADMAP.md`.
   4. `find_aspect_timing` and `find_aspects_between_dates` accept dynamic angles without raising `IndexError`; off-table angles resolve via a synthetic name, not a crash.
   5. The `core.aspects` table sha256 fingerprints (V1 `c5bd177...`, V13 `3258530...`) are unchanged; `test_aspects_byte_fingerprint` passes; `_VALID_HARMONICS` is never consulted on the dynamic path.
 
-**Plans**: TBD
+**Plans**: 3 plans (2 waves)
+- [ ] 28-01-PLAN.md — Dynamic harmonic generator: generate_harmonic_aspects(h) + _fold_to_0_180 + HARMONIC_DTYPE/DynamicAspectSpec, exports, frozen-table guard tests (ASP-04, ASP-05, ASP-08)
+- [ ] 28-02-PLAN.md — calculator.py wiring: dynamic_specs in calculate_aspects scalar/vectorized/batch (i_asp=-2) + the two IndexError guards (find_aspect_timing, find_aspects_between_dates) (ASP-06, ASP-09)
+- [ ] 28-03-PLAN.md — Cross-surface consumers: dynamic_specs in calculate_synastry (aspect_type=-2) and generate_cycle_series/multi (extended candidate set) (ASP-07)
 
 #### Phase 29: Chiron Orb 4°
 
