@@ -2,11 +2,11 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Dynamic Harmonics & Chiron Range
-status: defining_requirements
+status: roadmapped
 last_updated: "2026-06-02T00:00:00Z"
 last_activity: 2026-06-02
 progress:
-  total_phases: 0
+  total_phases: 5
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -20,31 +20,33 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** MILESTONE v1.4 (Dynamic Harmonics & Chiron Range) — just started; defining requirements (research-first). Intent axes: (1) on-the-fly aspect generator for arbitrary integer harmonics integrated through the full detection chain, frozen table + preset fingerprints preserved; (2) Chiron range 1900–2100 (regenerate `.npz`, re-validate < 0.01°); (3) Chiron orb 0°→4° (Pluto parity); (4) doc coherence (concepts.md recentred on 180°-division default, EXTENDED out of tables, migration/relational fixes); (5) Release 1.4.0. Phases start at **28** (v1.3 ended at Phase 27 + inserted 26.1). v1.3.0 live on PyPI; v1.0/v1.1/v1.2 archived to `.planning/milestones/`.
+**Current focus:** MILESTONE v1.4 (Dynamic Harmonics & Chiron Range) — roadmapped, ready to plan. 5 phases (28-32). Intent axes: (1) on-the-fly aspect generator for arbitrary integer harmonics integrated through the full detection chain, frozen table + preset fingerprints preserved; (2) Chiron orb 0°→4° (Pluto parity); (3) Chiron range 1900–2100 (regenerate `.npz`, re-validate < 0.01°, including perihelion spike); (4) doc coherence (concepts.md recentred on 180°-division default, EXTENDED out of tables, migration/relational fixes, full fr gettext cycle); (5) Release 1.4.0. Phases start at **28** (v1.3 ended at Phase 27 + inserted 26.1). v1.3.0 live on PyPI; v1.0–v1.3 archived to `.planning/milestones/`.
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: Not started (roadmap written, ready for `/gsd:plan-phase 28`)
 Plan: —
-Status: Defining requirements (research-first — 4 parallel researchers)
-Last activity: 2026-06-02 — Milestone v1.4 started
+Status: Roadmapped
+Last activity: 2026-06-02 — Milestone v1.4 roadmapped (5 phases, 18 requirements, 100% coverage)
 
-Progress: [░░░░░░░░░░░░░░] 0% — milestone v1.4 just started
+Progress: [░░░░░░░░░░░░░░] 0% — milestone v1.4 roadmapped, not started
 
-## v1.3 Roadmap Structure
+## v1.4 Roadmap Structure
 
-- **Phase 21: Quality** (QAL-10, QAL-11, QAL-12) — coverage → 100% (`ketu/houses/_ecliptic.py` outlier + all gaps), guard div/0 at `orbital.py:755` (`arcsin(z/r)`, floor `r`), deepen docstring example/Notes depth. First phase; clean baseline before engine surgery.
-- **Phase 22: Ephemeris Refactor** (REF-01, REF-02, REF-03) — extract `calc_planet_position` per-body if-elif into a per-body strategy, split `orbital.py:get_body_position` (~856 LOC, byte-stable), consolidate 4 subpackage `conftest.py` natal fixtures into root `tests/conftest.py`. MUST precede Chiron.
-- **Phase 23: Spike Chiron** (SPK-01, SPK-02) — Chebyshev-by-segment fit measured (segment size ~32d, degree, coeff size, accuracy < 0.01° vs Swiss); go/no-go decision recorded. Research/spike: deliverable is measurements + a decision, not runtime code. MUST precede Chiron.
-- **Phase 24: Chiron** (CHIR-01..05) — embedded Chebyshev coeffs `.npz` (offline pyswisseph build-only generator → 100% NumPy runtime eval); 6 insertion points (`core.py` bodies, `orbital.py` ORBITAL_ELEMENTS, `planets.py` BODY_INDICES + SWE_IDS + `calc_planet_position` strategy + `get_planet_name` + `calculate_all_positions`); 13→14 bodies breaking `test_body_count_frozen_at_thirteen` (`tests/test_ketu.py:110`) + synastry/transits/charts body-count assertions; accuracy regression pins 1950-2050.
-- **Phase 25: Documentation** (DOC-10, DOC-11, DOC-12) — 12 frozen `docs/source/` pages (stuck at v1.0) lifted to full v1.1/v1.2/v1.3 surface; new pages (relational / predictive / parts / Chiron); fr regenerated via gettext (`docs/locale/`), clean en+fr build. SINGLE phase, near release.
-- **Phase 26: Aspects Data-Driven + Dynamic Harmonics** (ASP-01/02/03, TBD) — replace scattered aspect constants with one declarative `Aspect(name, angle, harmonic, coefficient, symbol)` table the engine iterates over; harmonic-based selection API (`aspects_for_harmonics([...])`); default set drops full-circle minors (H5/H9/H10 → opt-in), keeping half-circle harmonics 1/2/3/6; breaking public-surface change documented (CHANGELOG/UPGRADING) + concepts.md/api.md + fr gettext. Supersedes the v1.4 BACKLOG item. MUST precede release.
-- **Phase 27: Release 1.3.0** (REL-10, REL-11) — version bump, CHANGELOG `[1.3.0]` + UPGRADING (13→14 note + aspect changes), PyPI via OIDC + GitHub release, fresh-venv Chiron smoke import (no `pyswisseph` in runtime).
+- **Phase 28: Dynamic Harmonic Generator + Detection Integration** (ASP-04, ASP-05, ASP-06, ASP-07, ASP-08, ASP-09) — new public `generate_harmonic_aspects(h)` returning `(angle, coef)` specs for any integer harmonic via the 360° convention (`fold_to_0_180(k·360/h)`, `coef=k/h`); wire `dynamic_specs` parameter into `calculate_aspects` (scalar/vectorized/batch), `find_aspects_between_dates`, `calculate_synastry`; guard `find_aspect_timing:427` and `find_aspects_between_dates:534` table-index lookups against IndexError on dynamic angles; `i_asp=-2` sentinel for dynamic rows; frozen `core.aspects` table and sha256 fingerprints byte-identical; `_VALID_HARMONICS` never consulted on dynamic path; full numpydoc + 100% coverage. First v1.4 phase; independent of Phase 29.
+- **Phase 29: Chiron Orb 4°** (CHIR-06, CHIR-07, CHIR-08) — single constant change `core.bodies['orb']` for Chiron 0→4 (Pluto parity); regenerate + manually audit `tests/cli/fixtures/v1_1_reference_output.txt`; fix synastry test docstrings/asserts that grouped Chiron with zero-orb points; add explicit test pinning Chiron orb=4°. Independent of Phase 28; MUST precede Phase 30.
+- **Phase 30: Chiron Range 1900–2100** (CHIR-09, CHIR-10, CHIR-11) — BLOCKING SPIKE first: run generator over 1900–2100 and measure `max|Δλ|` vs Swiss Ephemeris including the ~1895–1896 perihelion region; raise degree (10→12) if the < 0.01° gate fails; only after spike passes: regenerate `ketu/data/chiron_coeffs.npz` (new `jd_start`/`jd_end`, `actual_len` fix preserved); re-pin regression refs spanning 1900–2100. MUST follow Phase 29.
+- **Phase 31: Documentation (en + fr)** (DOC-14, DOC-15, DOC-16, DOC-17) — recentre `concepts.md` on 180°-division default (CLASSICAL/TRADITIONAL tables only, EXTENDED out of tables); fix `migration.md` and `relational_charts.md` stale default-aspect claims; document `generate_harmonic_aspects`, Chiron 1900–2100, Chiron orb 4°; no Kala references; full fr gettext cycle (re-extract, merge, translate zero English-fallback, recompile); en+fr build at 1-warning baseline. MUST follow all feature phases (28+29+30).
+- **Phase 32: Release v1.4.0** (REL-12, REL-13) — version bump 1.4.0 (`pyproject.toml` + `ketu/__init__.py`); CHANGELOG `[1.4.0]` Added/Changed; fr CHANGELOG synced; PyPI via OIDC + GitHub release (sdist+wheel); push `origin/main` AND tag; fresh-venv smoke (dynamic generator, Chiron 4° orb, 1900–2100 range, no `pyswisseph` at runtime). MUST follow Phase 31.
 
 ## Critical Milestone Constraints
 
-- **Pure-NumPy runtime NON-NEGOTIABLE** — Chiron coeffs offline-generated by a pyswisseph-build-only generator → `.npz` in package; runtime eval 100% NumPy. `pyswisseph` test/build-only (AGPL isolation). No scipy or any new runtime dep.
-- **D-08 breaking change (Phase 24)** — bodies axis 13→14 deliberately breaks the `test_body_count_frozen_at_thirteen` ratchet (`tests/test_ketu.py:110`) and the internal Ketu↔Kala positional array contract. Decided: BREAK the freeze; Kala adapts to Ketu (source-of-truth library). Version stays **1.3.0** — public Ketu API additive; only the internal positional contract changes. Phase 24 updates the ratchet to 14 + body-count assertions; Phase 26 documents it in CHANGELOG + UPGRADING.
+- **Pure-NumPy runtime NON-NEGOTIABLE** — dynamic harmonic generation is plain NumPy arithmetic; Chiron `.npz` regenerated offline by pyswisseph-build-only `tools/gen_chiron_coeffs.py`; runtime eval 100% NumPy. `pyswisseph` test/build-only (AGPL isolation). No scipy or new runtime dep.
+- **Frozen `core.aspects` table** — sha256 fingerprints V1 `c5bd177...` + V13 `3258530...` must be byte-identical after Phase 28; dynamic path is a parallel, additive path that never mutates the 14-row table.
+- **`_VALID_HARMONICS` must NOT gate the dynamic path** — grep gate: no `aspects_for_harmonics` call inside `generate_harmonic_aspects`; ValueError would fire on H7/H11/H17.
+- **IndexError guards MUST ship with Phase 28** — `find_aspect_timing:427` and `find_aspects_between_dates:534` both do `np.where(_CORE_ASPECTS["angle"] == ...)[0]` and crash on any dynamic angle; both guards land in the same phase that introduces `dynamic_specs`.
+- **Phase 30 perihelion spike is a hard gate** — do NOT commit the new `.npz` until the accuracy measurement over 1900–2100 (including perihelion ~1895–1896) passes < 0.01°; if it fails, adjust parameters and write a new decision log entry.
+- **CRITICAL (release):** Push `origin/main` AND the tag `v1.4.0` — RTD follows main, PyPI OIDC follows the tag; pushing only the tag freezes docs at v1.3 content (lesson from v1.3 release).
 
 ## Performance Metrics
 
@@ -53,8 +55,7 @@ Progress: [░░░░░░░░░░░░░░] 0% — milestone v1.4 jus
 - v1.0: 16 plans / 7 phases (decimal Phase 2.1 inserted)
 - v1.1: 27 plans / 5 phases (~3h active)
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
-
-v1.3: 14 plans / 4 phases completed (Phase 21 done, Phase 22 done, Phase 23 done, Phase 24 DONE 2026-05-29 — all CHIR-01..05 satisfied; 1373 tests, 100% coverage, 56 doctests, mypy strict clean).
+- v1.3: 30 plans / 8 phases (21-27 + 26.1) (2026-05-29 → 2026-06-01)
 
 *Updated after each plan completion.*
 
@@ -62,86 +63,30 @@ v1.3: 14 plans / 4 phases completed (Phase 21 done, Phase 22 done, Phase 23 done
 
 ### Decisions
 
-Full log in PROJECT.md Key Decisions table. Recent v1.3 decisions affecting current work:
+Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 
-- (22-02) ORBITAL_ELEMENTS + five _LILITH_* constants extracted to _elements.py (not orbital.py hub) — eliminates all circular-import risk; orbital.py re-exports from _elements.py.
-- (22-02) apply_perturbations if-elif moved verbatim to _perturbations.py; strategy-ification deferred to Phase 24 (Chiron perturbations likely Chebyshev-based via Phase 23 spike).
-- (22-02) orbital.py retained as 70-LOC re-export hub with __all__ matching prior public surface byte-identically; ketu/ephemeris/__init__.py untouched.
-- (22-03) Root conftest.py auto-discovery: shared session-scoped fixtures live in tests/conftest.py; no pytest_plugins; subpackage conftests keep only subpackage-specific oracle helpers.
-- (22-03) chart_b_reykjavik keeps polar_fallback=porphyry (Pitfall 3 ratchet Phase 16).
-- (22-03) natal_* fixtures are dict[str,float] triples, NOT CHART_DTYPE — returns tests work on raw JD/lat/lon.
-- v1.3 stays `1.3.0` despite breaking the 13→14 body freeze — Ketu is source-of-truth; Kala adapts. Public API additive; internal positional contract breaks.
-- Chiron via embedded Chebyshev coeffs, NOT swisseph runtime — preserves pure-NumPy runtime + AGPL isolation.
-- Refactor ephemeris BEFORE adding Chiron — makes Chiron a clean strategy, not aggravated if-elif debt.
-- (21-01) 4 unreachable defensive branches (orbital.py:227, time.py:369, planets.py:362+448) proven dead code after Python modulo — deferred to 21-04 exclude_lines alongside display.py:28.
-- (21-01) body_name aliases "true Node"/"mean Apogee" covered via patch.object since get_planet_name now returns "Ketu"/"Lilith" directly.
-- (21-01) test_no_compute_chart_call_smoke ratchet updated to exclude doctest lines (>>>) — allows Examples section to reference compute_chart without triggering the anti-Davison guard.
-- (21-03) --doctest-modules NOT added to addopts — separate make doctest invocation preserves partial test runs; doctest_optionflags ELLIPSIS + NORMALIZE_WHITESPACE added to pyproject.toml.
-- (21-03) ketu/__init__.py doctest uses from ketu.core import aspects to avoid ketu.aspects module clobbering the array in cross-file --doctest-modules namespace.
-- (21-03) Duplicate Notes sections (previous agent introduced second block) must be merged; numpydoc raises ValueError when Notes appears twice.
-- (21-02) Floor not clamp: np.maximum(r, 1e-10) inline in arcsin argument only; original r returned unchanged so distance return values unaffected.
-- (21-02) Scalar max() vs np.maximum(): scalar paths (353, 503, 558) use Python max(); array/0-d paths (405, 436, 462, 755, 813) and coordinates.py:278 use np.maximum() safe for both.
-- (21-02) coordinates.py degenerate test: height=-6378140.0 zeroes rho_cos/rho_sin + mock spherical_to_rectangular→(0,0,0) forces horizon magnitude=0 without patching numpy.
-- (21-04) 5 exclude_lines for dead branches (not pragmas): TYPE_CHECKING (display.py), if angle < 0 / if gst < 0 (post-modulo, orbital.py + time.py), if avg_speed == 0 (planets.py dict-constant), return (jd_left+jd_right)/2 (planets.py bisection-never-exhausts).
-- (21-04) 9 gap tests added (Rule 3) for aspects/calculator.py (get_aspect swap, vectorized/batch empty paths, find_aspect_timing full coverage, find_aspects_between_dates body filters) and calculations.py:382 (dist_velocity_au) — lines not in RESEARCH inventory but blocking 100% gate.
-- (21-04) In-orb JD selection for find_aspect_timing loop-body coverage: JD=2451550.0 where Sun-Moon separation ≈2.95° exercises backward/forward loop bodies (lines 429/442).
-- [Phase 22-ephemeris-refactor]: Aberration for regular planets moved inside _make_planet_vec — preserves batch byte-stability exactly matching original lines 564-569
-- [Phase 22-ephemeris-refactor]: Ketu batch fix via _scalar_loop_vec(11) delegating to calc_planet_position — batch-Ketu now equals scalar-Ketu; old fallback list [Rahu,NorthNode,Lilith] had omitted Ketu causing 170° heliocentric error
-- [Phase 22-ephemeris-refactor]: Regression test tolerance 0.25° for scalar/batch agreement: pre-existing get_body_position vs get_body_position_vectorized diff for Jupiter/Saturn/Uranus (0.07-0.19°) is byte-stable; 0.25° catches Ketu-class bugs (170° error)
-- [Phase 23-01]: Primary config confirmed: seg=32j, degree=10 — max|Δλ|=0.000861° (11.6× under 0.01° target)
-- [Phase 23-01]: retflag=260 (Moshier fallback) documented — seas_18.se1 seul; diff vs SWIEPH max 0.000067° negligible
-- [Phase 23-01]: n_segs=1142 (not 1153): exact range 36525j via swe.julday; worst segment 2027-04-20 (not 2046 perihelion)
-- [Phase 23-01]: 3-quantity npz confirmed: 294.4 KB; lat max 0.000986 deg, dist max 1.84e-7 AU
-- [Phase 23-02]: GO verdict recorded — 23-DECISION.md written; Phase 24 params locked (seg=32j, deg=10, 3 quantities); .npz layout + seas_18.se1 requirement + insertion points documented; 1351-test suite + 100% coverage gate untouched
-  - [Phase 24-01]: Generator tools/gen_chiron_coeffs.py (659 LOC) + ketu/data/chiron_coeffs.npz committed; validation gate passed max|Δλ|=0.000861° (11.6× under 0.01°); 7 reference longitudes pinned for 24-04; retflag=260 (Moshier) confirmed acceptable; swisseph never at module level (AGPL isolation)
-  - [Phase 24-02]: aberration applied inside `_chiron_vec` (matches `_make_planet_vec` convention) — batch and scalar paths agree; `dlon < -180` branch tested via `patch.object` mock (no natural 1950-2050 JD triggers it at Chiron speed); `inspect.getsource` + import-line filter for AGPL ratchet test (avoids docstring false positives)
-  - [Phase 24-03]: D-08 breaking change executed — bodies axis 13→14; Chiron at id=13 in BODY_INDICES/SWE_IDS/BODY_STRATEGIES/avg_speeds/core.bodies; CHART_DTYPE (14,)/(14,14); SYNASTRY_BODY_COUNT 15→16 (ASC=14, MC=15); ketu.data packaged; 1361 tests, 100% coverage
-  - [Phase 24-04]: _eval_chiron_qty bug fix — last segment (13 days, not 32) used constant seg_len for t-normalisation causing 0.905° error at 2050-01-01; fixed via actual_len=min(seg_start+seg_len,jd_end)-seg_start; CHIR-03 satisfied: 7 pinned refs 1950-2050 max delta 0.005695° (1.75× under 0.01°); 1372 tests, 100% coverage
-- [Phase 24]: Cache stale-file recompute transparent: users with old ~/.ketu/ephemeris_cache/*.npy get silent upgrade on first access post-Chiron
-- [Phase 24]: CHIR-05 satisfied: 4 integration smoke tests (chart/aspect/cycle/positions) green; no special-casing; all v1.3 quality gates hold at 14 bodies (1373 tests, 100% coverage, 56 doctests, mypy strict)
-- [Phase 25-01]: api.md hand-written (no autodoc) — each subpackage section authored manually with correct import paths; 11 sections, 39 from-ketu. imports
-- [Phase 25-01]: conf.py bumped to 1.3.0; ketu/__init__.py and pyproject.toml left at 1.2.0 — Phase 26 owns package version bump
-- [Phase 25-01]: myst.xref_missing warnings for 5 not-yet-created pages (25-02 scope) treated as non-failures — per plan spec; toc.not_readable = same category as toctree warnings
-- [Phase 25-01]: UPGRADING.md/CHANGELOG.md broken cross-refs in migration.md replaced with in-docs changelog.md link — eliminates fr build xref warnings
-- [Phase 25-02]: Task 3 produces no git commit — docs/build/ is gitignored; build verification is the artefact, not HTML files
-- [Phase 25-02]: houses.md includes register() and arabic_parts.md includes PartSpec/get_part beyond minimum spec — public API completeness
-- [Phase 25-03]: All 122 fuzzy entries resolved via English fallback (empty msgstr); no stale French text ships — DOC-12 decision
-- [Phase 25-03]: New pages' .po catalogs left with English-fallback; substantive French translation deferred to future volunteer/phase
-- [Phase 25-03]: Markdown heading markers (#/##/###) in msgstr of performance.po and installation.po were pre-existing bug causing 18 new myst.header warnings; stripped (Rule 1 auto-fix); fr build = 1 warning (equal to en baseline)
-- [Phase 25-03]: DOC-12 SATISFIED: gettext pipeline regenerated, 17 .mo compiled, en+fr builds at 1 warning each; Phase 25 COMPLETE
-- [Phase 26-01]: core.aspects 5-field dtype (name, angle, coef, harmonic, symbol); frozen harmonic vector [1,6,10,9,3,5,9,2,10,3,5,6,9,1]; half-circle convention (Sextile=H3, Trine=H3, Semi-sextile=H6, Quincunx=H6); V1 fingerprint c5bd177... unchanged; V13 fingerprint 3258530... pinned; 7 major glyphs U+260C/U+26BA/U+26B9/U+25A1/U+25B3/U+26BB/U+260D; 7 minors blank; 1378 tests / 100% coverage
-- [Phase 26-02]: aspects_for_harmonics returns frozen np.bool_[14] mask from harmonic column (data-driven, not hardcoded); TRADITIONAL=aspects_for_harmonics([1,2,3,6]), EXTENDED=aspects_for_harmonics([1,2,3,5,6,9,10]); CLASSICAL stays curated 5-index list (not harmonic-derivable — Pitfall 7); library default resolve_aspect_set(None) == TRADITIONAL (7); CLI pinned to "classical" explicitly (v1.0/v1.1 byte-stable); calculate_aspects loop refactored to iterate only selected aspects (was blocking Quincunx behind Biquintile for pairs in both orbs); 1399 tests / 100% coverage
-- [Phase 26-03]: CHANGELOG [1.3.0] placed separately from [Unreleased] (cycles entry); Phase 27 merges on version bump; 3 stale EXTENDED-default claims fixed in api.md (preset table, calculate_aspects None param, compute_chart param); concepts.md dual-base rule NOT duplicated; coef==coefficient documented (field name unchanged); package version NOT bumped (Phase 27 owns REL-10); en+fr docs builds at 1 warning each (Phase 25 baseline maintained)
-- [Phase 26.1-01]: babel write_po normalizes charset=UTF-8 to lowercase utf-8 — uppercase fix applied via Python string replacement after babel script; charset=UTF-8 uppercase required (plan verification grep); DOC-13 placed in Documentation section before Release section; coverage counts 18→19
-- [Phase 26.1-02]: concepts.po 300/300 translated (50 empties filled, terminology anchor); chiron.po 31/31; predictive_charts.po 39/39; all .mo compiled; glossary applied (Carré/Trigone/Quinconce/Retour solaire/Corps centaure); commit 688a409
-- [Phase 26.1-05]: migration.po 89/89 translated (0 untranslated); shape tuples (13,13)/(14,14) and body_id=13 preserved verbatim; migration.mo compiled; commits c3f0400+18fc6ca
-- [Phase 26.1-08]: make build-mo skips up-to-date .mo by timestamp — force msgfmt loop used to guarantee all 17 catalogs authoritative
-- [Phase 27-02]: dist/ artifacts built in pre-flight (27-01) REUSED at publish time — no rebuild before tagging; ensures byte-identical wheel ships to PyPI and GitHub release
-- [Phase 27-02]: ketu==1.3.0 published 2026-06-01 via OIDC trusted publishing (no API tokens); PyPI CDN propagated immediately (retry loop attempt 1 succeeded); Chiron resolution confirmed live at 251.6125° (J2000.0)
-- [Phase 26.1-08]: DOC-13 SATISFIED: 17/17 .po 100% translated, 0 untranslated, no heading-marker regressions, en+fr builds at 1 warning (display_version only); Phase 26.1 COMPLETE — ready for Phase 27 Release
+- [Phase 26-02]: `aspects_for_harmonics` returns frozen `np.bool_[14]` mask from harmonic column; TRADITIONAL=`aspects_for_harmonics([1,2,3,6])`; EXTENDED=`aspects_for_harmonics([1,2,3,5,6,9,10])`; CLASSICAL stays curated 5-index list. Library default = TRADITIONAL (7). CLI pinned to "classical" (byte-stable).
+- [Phase 26-01]: `core.aspects` V1 fingerprint `c5bd177...` (name/angle/coef) + V13 fingerprint `3258530...` (all 5 columns) — both MUST remain byte-identical after Phase 28.
+- [Phase 24-04]: Last-segment `actual_len` fix in `_eval_chiron_qty` — `actual_len=min(seg_start+seg_len, jd_end)-seg_start`; this fix MUST be preserved when `.npz` is regenerated in Phase 30.
+- [Phase 23-01/02]: Phase 23 locked params for 1950–2050: `seg=32d`, `degree=10`, 3 quantities (lon/lat/dist). Phase 30 spike measures whether these hold for 1900–2100 before committing.
+- [Phase 27-02]: Lesson — push `origin/main` in addition to the tag; RTD follows main, PyPI follows tag. Phase 32 release checklist must explicitly include `git push origin main`.
 
 ### Roadmap Evolution
 
-- Phase 26.1 (French Documentation Translation) inserted after Phase 26, before Phase 27 (Release) — 2026-06-01. Reason: fr docs shipped as English-fallback since Phase 25 + Phase 26 added more; project memory mandates real fr translation + recompiled catalogs BEFORE PyPI publish. Scope: 100% (zero empty msgstr across all fr .po). Decimal insertion preserves Release at 27 (Phase 2.1 pattern).
+- v1.4 roadmapped 2026-06-02: 5 phases (28-32), 18 requirements mapped (ASP-04..09, CHIR-06..11, DOC-14..17, REL-12..13), 100% coverage. Phase 28 and Phase 29 are independent; Phase 30 depends on 29; Phase 31 depends on 28+29+30; Phase 32 depends on 31.
+- v1.3 ROADMAP archived to `.planning/milestones/v1.3-ROADMAP.md` on 2026-06-02 before v1.4 roadmap was written.
 
 ### Pending Todos
 
-- `2026-05-28-fix-runtimewarning-divide-by-zero-in-orbital-heliocentric-latitude` — RESOLVED in 21-02. All 9 arcsin(z/r) sites guarded with np.maximum(r, 1e-10).
+None at roadmap time.
 
 ### Blockers/Concerns
 
-- **Kala downstream coordination (Phase 24)** — the 13→14 positional-array contract change requires Kala (`solaris/kala`) to adapt; surface during Phase 24 execution and document in UPGRADING (Phase 26).
+- **Phase 30 perihelion accuracy (empirical unknown)** — whether `seg=32d/degree=10` holds for the 1900–1950 wing cannot be resolved by analysis; the spike sub-task is the hard gate. If the gate fails: options are (a) raise `degree` 10→12, (b) reduce `seg_len` for early segments, (c) shift lower bound to ~1905. Each option requires a new decision log entry.
+- **Build environment prerequisite for Phase 30** — `pyswisseph` + `seas_18.se1` must be accessible on the developer machine. `seas_18.se1` covers 1800–2400 so the 1900–2100 range is within its window. Verify before starting Phase 30.
 
 ## Session Continuity
 
-Last session: 2026-06-01 — Phase 27-02 executed: tag v1.3.0 + push + publish.yml SUCCESS + GitHub release + post-publish smoke PASSED + dist/ cleaned. REL-11 SATISFIED. Milestone v1.3 COMPLETE.
-Stopped at: 27-02 COMPLETE. Phase 27 DONE. MILESTONE v1.3 (Chiron & Engine Hardening) COMPLETE. ketu==1.3.0 live on PyPI.
-Resume file: None — milestone complete; next milestone requires fresh planning.
-
-- [26.1-06 DONE 2026-06-01] architecture.po: 100 entries translated, 0 untranslated, .mo compiled — commit c17499c
-- [26.1-03 COMPLETE 2026-06-01]: houses.po (72) + relational_charts.po (88) + index.po (112) translated, 3 .mo compiled — commit 57cedbd
-- [Phase 26.1-07 DONE 2026-06-01]: api.po 188 traduits/0 non traduits; api.mo compiled — commit 2ba6c94
-- [Phase 26.1-04 COMPLETE 2026-06-01]: arabic_parts.po (42) + changelog.po (117) + contributing.po (77) translated; 3 .mo compiled — commits 8d27609 + 1a71af7 + 285c8dd
-- [Phase 26.1-08 COMPLETE 2026-06-01]: FINAL GATE — 17/17 .po 100% translated, 17 .mo recompiled (5 committed), en+fr builds 1 warning each (display_version), DOC-13 SATISFIED — commit 26b6c94
-- [Phase 27-01 COMPLETE 2026-06-01]: REL-10 — version → 1.3.0 (pyproject.toml + ketu/__init__.py; conf.py left untouched per Pitfall 8); CHANGELOG merged to ONE dated [1.3.0] - 2026-06-01 (no [Unreleased]) + Chiron Added bullet + Chiron BREAKING contract note added; fr/CHANGELOG [1.3.0] synthesized; UPGRADING v1.2→v1.3 Chiron shape-table section added (before aspect section); README What's New verified complete (no change). Sync gate 2 passed; full suite 1399 passed/2 skipped/100% coverage. Commits a9cf350 + 2658264 + 4251709. GPG signing stalled on missing TTY (commit.gpgsign=true) — user unlocked gpg-agent cache to land the final commit; no content rework.
-- [Phase 27-02 COMPLETE 2026-06-01]: REL-11 — tag v1.3.0 (signed annotated, GPG warm) on commit 1f9fb80 + pushed; publish.yml run 26775357483 SUCCESS (build 18s + publish-to-pypi 23s); GitHub release v1.3.0 with wheel+sdist attached; post-publish smoke from PyPI attempt 1: version OK + subpackages OK + Chiron 251.6125° OK + no swisseph OK; dist/ cleaned. MILESTONE v1.3 COMPLETE.
+Last session: 2026-06-02 — Milestone v1.4 roadmapped. ROADMAP.md written (5 phases 28-32, 18 requirements, 100% coverage). STATE.md updated. REQUIREMENTS.md traceability filled. v1.3 ROADMAP archived to milestones/v1.3-ROADMAP.md.
+Stopped at: Roadmap written. Ready for `/gsd:plan-phase 28` (or 29 — both independent).
+Resume file: None — start with `/gsd:plan-phase 28`.

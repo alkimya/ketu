@@ -72,34 +72,34 @@ Explicitly excluded for v1.4. Documented to prevent scope creep.
 
 ## Traceability
 
-Which phases cover which requirements. Filled during roadmap creation.
+Which phases cover which requirements. Filled during roadmap creation (2026-06-02).
 
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| ASP-04 | TBD | Pending |
-| ASP-05 | TBD | Pending |
-| ASP-06 | TBD | Pending |
-| ASP-07 | TBD | Pending |
-| ASP-08 | TBD | Pending |
-| ASP-09 | TBD | Pending |
-| CHIR-06 | TBD | Pending |
-| CHIR-07 | TBD | Pending |
-| CHIR-08 | TBD | Pending |
-| CHIR-09 | TBD | Pending |
-| CHIR-10 | TBD | Pending |
-| CHIR-11 | TBD | Pending |
-| DOC-14 | TBD | Pending |
-| DOC-15 | TBD | Pending |
-| DOC-16 | TBD | Pending |
-| DOC-17 | TBD | Pending |
-| REL-12 | TBD | Pending |
-| REL-13 | TBD | Pending |
+| Requirement | Phase    | Status  |
+|-------------|----------|---------|
+| ASP-04      | Phase 28 | Pending |
+| ASP-05      | Phase 28 | Pending |
+| ASP-06      | Phase 28 | Pending |
+| ASP-07      | Phase 28 | Pending |
+| ASP-08      | Phase 28 | Pending |
+| ASP-09      | Phase 28 | Pending |
+| CHIR-06     | Phase 29 | Pending |
+| CHIR-07     | Phase 29 | Pending |
+| CHIR-08     | Phase 29 | Pending |
+| CHIR-09     | Phase 30 | Pending |
+| CHIR-10     | Phase 30 | Pending |
+| CHIR-11     | Phase 30 | Pending |
+| DOC-14      | Phase 31 | Pending |
+| DOC-15      | Phase 31 | Pending |
+| DOC-16      | Phase 31 | Pending |
+| DOC-17      | Phase 31 | Pending |
+| REL-12      | Phase 32 | Pending |
+| REL-13      | Phase 32 | Pending |
 
 **Coverage:**
 - v1.4 requirements: 18 total
-- Mapped to phases: 0 (roadmap pending)
-- Unmapped: 18 ⚠️
+- Mapped to phases: 18/18 ✓
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-02*
-*Last updated: 2026-06-02 after initial definition*
+*Last updated: 2026-06-02 — traceability filled (roadmap created)*
