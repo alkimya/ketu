@@ -80,8 +80,9 @@ def build_parser() -> argparse.ArgumentParser:
     )
 
     # Top-level --harmonics SPEC. Plan 11-02 wires type=parse_harmonics_spec
-    # which returns a length-14 np.bool_ mask. Default=None means "use the
-    # CLASSICAL preset" (resolved by aspects_cmd in Plan 11-04).
+    # which returns a HarmonicsSelection(mask, dynamic_specs) NamedTuple.
+    # Default=None means "use the CLASSICAL preset" (resolved by aspects_cmd).
+    # Plan 34-03 adds the h<N> harmonic token form (e.g. 'h7').
     parser.add_argument(
         "--harmonics",
         type=parse_harmonics_spec,
@@ -91,8 +92,9 @@ def build_parser() -> argparse.ArgumentParser:
             "Aspect set selector. Named preset ('classical' [default], "
             "'traditional', 'extended', 'all' alias for 'extended'), or "
             "comma-separated indices into core.aspects (e.g. '0,4,7,9,13' "
-            "= classical). Bare integers (e.g. '12') are rejected — use "
-            "named presets or comma-separated lists."
+            "= classical), or an arbitrary harmonic 'h<N>' (e.g. 'h7' → "
+            "septile family, h//2 dynamic aspects). Bare integers (e.g. "
+            "'12') are rejected — use named presets or comma-separated lists."
         ),
     )
 
