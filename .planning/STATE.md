@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Dynamic Harmonics & Chiron Range
 status: in-progress
-last_updated: "2026-06-03T16:45:00Z"
+last_updated: "2026-06-03T16:31:00Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 5
   completed_phases: 4
-  total_plans: 13
-  completed_plans: 13
-  percent: 80
+  total_plans: 14
+  completed_plans: 14
+  percent: 85
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 
 ## Current Position
 
-Phase: 31-documentation-en-fr — COMPLETE (7/7 plans done, verifier PASSED 4/4)
-Plan: 7/7 done (31-07 gettext fr cycle complete)
-Status: Phase 31 COMPLETE; DOC-14..17 satisfied — 6 EN doc pages recentred on 180°-default + generate_harmonic_aspects/Chiron documented; 7 .po re-translated (0 untranslated, 0 fuzzy), 7 .mo recompiled, en+fr builds at 1-warning baseline; next = Phase 32 Release v1.4.0 (CHECKPOINT: user reviews milestone before release per feedback_validation_review_before_release)
-Last activity: 2026-06-03 — Phase 31 COMPLETE; 6 EN doc edits (Wave 1) + fr gettext cycle (Wave 2, concepts/migration/relational_charts/api/chiron/changelog + architecture deviation); both builds clean at 1-warning baseline; verifier PASSED 4/4
+Phase: 32-release-v1-4-0 — IN PROGRESS (1/2 plans done)
+Plan: 1/2 done (32-01 version-bump-changelog-upgrading complete)
+Status: Phase 32 Plan 01 COMPLETE; REL-12 partially satisfied — mypy --strict gate cleared (cast fix at synastry/api.py:392), version bumped to 1.4.0 in both source-of-truth files (sync gate green), CHANGELOG [1.4.0] dated 2026-06-03 (fresh, no Unreleased, Added: dynamic generator + Chiron 1900-2100; Changed: orb 0->4 + clamp + docs recentring), fr/CHANGELOG synced, docs/source/changelog.md date-stamped, UPGRADING v1.3->v1.4 authored, README What's New v1.4.0 added; next = Phase 32-02 (release gate + PyPI publish) — NOTE: per feedback_validation_review_before_release, user milestone review checkpoint must precede tag/publish
+Last activity: 2026-06-03 — Phase 32-01 COMPLETE; 3 tasks / 8 files modified; mypy clean (69 files); 1537 tests passed / 100% coverage
 
-Progress: [███████████░░░] 80% — Phases 28-31 complete (13/13 plans); only Phase 32 (Release v1.4.0) remains
+Progress: [████████████░░] 85% — Phases 28-31 complete + Phase 32 Plan 01 done (14/14 plans); Phase 32 Plan 02 (release gate) remains
 
 ## v1.4 Roadmap Structure
 
@@ -92,6 +92,9 @@ Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 - [Phase 31-04]: api.md DOC-16 — `generate_harmonic_aspects(h)` subsection added beside `aspects_for_harmonics` (runnable example, `dynamic_specs=` Returns note); Chiron section corrected 1950–2050/0.005695° → 1900–2100 (2283 segments)/0.001214°. Zero Kala references.
 - [Phase 31-06]: changelog.md DOC-16 — new `## [1.4.0]` section (Added: generate_harmonic_aspects h=2-64 + Chiron 1900–2100; Changed: Chiron orb 0°→4°, silent clamping, 180°-default doc recentring). v1.1 EXTENDED-default entry annotated inline ("default at v1.1, changed to TRADITIONAL in v1.3") — history NOT rewritten. The `### Added 1.3.0` historical section legitimately keeps 1950–2050/0.005695° (frozen); only the new section documents v1.4. conf.py docs-build version/release → 1.4.0 (Sphinx metadata only).
 - [Phase 31-verify]: verifier PASSED 4/4 — ran BOTH `make html` (en) + `make html-fr` live in venv; each exactly 1 warning (display_version theme, pre-existing baseline). All 7 fr catalogs 0 untranslated/0 fuzzy (Babel-verified). DOC-14..17 satisfied. Phase 32 (Release) unblocked.
+- [Phase 32-01]: cast(np.ndarray, out[out["aspect_type"] != -1]) at synastry/api.py:392 — correct fix for no-any-return; typing-only no-op, zero runtime change; mypy --strict: 69 files clean.
+- [Phase 32-01]: CHANGELOG.md [1.4.0] authored fresh (no [Unreleased] to merge; release date 2026-06-03; [1.3.0] and below untouched). docs/source/conf.py NOT touched — pre-bumped to 1.4.0 in Phase 31.
+- [Phase 32-01]: Version bump requires two edits always together: pyproject.toml version field + ketu/__init__.__version__. Both now at 1.4.0; importlib.metadata synced.
 
 ### Roadmap Evolution
 
@@ -110,6 +113,6 @@ None at roadmap time.
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Phase 31 FULLY EXECUTED via execute-phase (2 waves). Wave 1: 6 EN doc pages edited in parallel (concepts/migration/relational_charts/api/chiron/changelog + conf.py). Wave 2: fr gettext cycle — 7 .po re-translated (0 untranslated, 0 fuzzy), architecture.md stale range fixed as deviation, 7 .mo recompiled, en+fr builds at 1-warning baseline. Verifier PASSED 4/4 (ran both builds live). Phase 31 COMPLETE.
-Stopped at: Phase 31 COMPLETE — all 7 plans done, verifier PASSED 4/4. Next = Phase 32 Release v1.4.0. NOTE: v1.4 is the LAST feature phase before release; per feedback_validation_review_before_release, the user reviews the full milestone before the v1.4.0 tag/PyPI publish — mark a CHECKPOINT before Phase 32, do not chain into release without their go-ahead.
+Last session: 2026-06-03 — Phase 32-01 EXECUTED. 3 tasks / 8 files / 4 min. mypy fix (cast at synastry/api.py:392), version bump 1.3.0->1.4.0 (pyproject.toml + ketu/__init__.py), CHANGELOG [1.4.0] authored fresh (2026-06-03), fr/CHANGELOG synced, docs/source/changelog.md date-stamped, UPGRADING v1.3->v1.4 added, README What's New v1.4.0 added. 1537 tests / 100% coverage.
+Stopped at: Phase 32 Plan 01 COMPLETE — Completed 32-01-version-bump-changelog-upgrading-PLAN.md. Next = Phase 32-02 (release gate: fresh-venv smoke + PyPI OIDC publish). REMINDER: per feedback_validation_review_before_release, user milestone review checkpoint precedes tag/publish.
 Resume file: None — Phase 31 COMPLETE; next phase is 32-release (user milestone review checkpoint first).
