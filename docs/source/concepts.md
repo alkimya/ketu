@@ -223,6 +223,46 @@ H9-4           | Quadnovile
 These traditional names are provided here as a human reference only.  They never appear
 in the structured-array `name` bytes emitted by `generate_harmonic_aspects`.
 
+(harmonics-h7-cli-new-in-v1-5)=
+### `--harmonics h7` — arbitrary harmonics on the CLI (New in v1.5)
+
+The CLI accepts the `h<N>` token form for `--harmonics` to select an arbitrary harmonic
+family on the command line, without writing any Python code.
+
+**Syntax:** `--harmonics h<N>` (h-prefix, case-insensitive; e.g. `h7`, `H7`). `N` must be
+an integer in `[2, 64]`. The token selects only the chosen harmonic family via the
+`dynamic_specs=` channel (see {ref}`synthetic-harmonic-naming` for the two-channel
+explanation). The static aspect table mask is empty — only `H{N}-{k}` dynamic aspects
+are detected.
+
+**Semantics:** the resolved-config header on stderr reads `# Aspect set: h7 (...)`.
+The stdout positions block and "Aspect Timing Example" trailing block are always emitted
+unchanged (the timing example uses the classical Sun-Moon aspects regardless of the
+`--harmonics` selection).
+
+**Tight-grammar boundary — what is supported vs. deferred:**
+
+| Form | Status | Example |
+|---|---|---|
+| `h<N>` alone | Supported (v1.5+) | `--harmonics h7` |
+| Comma-separated index list | Supported (pre-existing) | `--harmonics 0,4,9` |
+| Named preset | Supported (pre-existing) | `--harmonics classical` |
+| Multi-harmonic mixing (`h7,h11`) | NOT YET SUPPORTED (HARMF-01) | rejected with error |
+| Mixed preset+harmonic (`traditional,h7`) | NOT YET SUPPORTED (HARMF-01) | rejected with error |
+
+Mixing forms (`h7,h11`, `traditional,h7`) are **deferred** to HARMF-01 and currently
+rejected with an `argparse` error. Do not attempt them in v1.5.
+
+**Worked example (J2000, septile family):**
+
+```bash
+python -m ketu --harmonics h7 aspects --date 2000-01-01T12:00:00Z
+```
+
+This emits septile-family aspects (`H7-1` ≈51.43°, `H7-2` ≈102.86°, `H7-3` ≈154.29°)
+for all body pairs in orb at J2000, followed by the classical "Aspect Timing Example" block.
+The stderr header confirms the resolved selection: `# Aspect set: h7 (3 aspects: H7-1 51°, H7-2 103°, H7-3 154°)`.
+
 ## Orbs
 
 ### Orb Principle

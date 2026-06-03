@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-03 22:38+0200\n"
+"POT-Creation-Date: 2026-06-03 22:54+0200\n"
 "PO-Revision-Date: 2026-02-12 22:00+0100\n"
 "Last-Translator: Claude <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -637,7 +637,9 @@ msgstr "`jdate` (`float`) : Jour Julien de référence"
 
 #: ../../source/api.md:421
 msgid "`body1`, `body2` (`int`): body IDs (0 = Sun … 13 = Chiron)"
-msgstr "`body1`, `body2` (`int`) : identifiants des corps (0 = Soleil … 13 = Chiron)"
+msgstr ""
+"`body1`, `body2` (`int`) : identifiants des corps (0 = Soleil … 13 = "
+"Chiron)"
 
 #: ../../source/api.md:422
 msgid "`aspect_value` (`float`): aspect angle in degrees"
@@ -649,10 +651,10 @@ msgid ""
 "all internal resolution. **When both `orb` and `dyn_coef` are given, "
 "explicit `orb` wins silently** (no error is raised)."
 msgstr ""
-"`orb` (`float`, optionnel) : orbe explicite en degrés — trappe de secours,"
-" court-circuite toute résolution interne. **Lorsque `orb` et `dyn_coef` "
-"sont tous deux fournis, `orb` explicite l'emporte silencieusement** (aucune"
-" erreur n'est levée)."
+"`orb` (`float`, optionnel) : orbe explicite en degrés — trappe de "
+"secours, court-circuite toute résolution interne. **Lorsque `orb` et "
+"`dyn_coef` sont tous deux fournis, `orb` explicite l'emporte "
+"silencieusement** (aucune erreur n'est levée)."
 
 #: ../../source/api.md:424
 msgid ""
@@ -663,11 +665,11 @@ msgid ""
 "`coef` field from a `generate_harmonic_aspects` row directly — no pre-"
 "computation required."
 msgstr ""
-"`dyn_coef` (`float`, optionnel) : coefficient d'orbe dynamique — **nouveau"
-" en v1.5 (HARM-04)**. Lorsque `orb` vaut `None` et `dyn_coef` n'est pas "
-"`None`, l'orbe est dérivé comme `(bodies['orb'][body1] + "
-"bodies['orb'][body2]) / 2 * dyn_coef`, identique à la formule utilisée par"
-" `calculate_aspects`. Passez directement le champ `coef` d'une ligne "
+"`dyn_coef` (`float`, optionnel) : coefficient d'orbe dynamique — "
+"**nouveau en v1.5 (HARM-04)**. Lorsque `orb` vaut `None` et `dyn_coef` "
+"n'est pas `None`, l'orbe est dérivé comme `(bodies['orb'][body1] + "
+"bodies['orb'][body2]) / 2 * dyn_coef`, identique à la formule utilisée "
+"par `calculate_aspects`. Passez directement le champ `coef` d'une ligne "
 "`generate_harmonic_aspects` — aucun précalcul requis."
 
 #: ../../source/api.md:426
@@ -695,13 +697,15 @@ msgid ""
 "Both `None` → static table lookup via `get_orb(body1, body2, asp_idx)`. "
 "Raises `ValueError` if `aspect_value` is not in the table."
 msgstr ""
-"Les deux à `None` → recherche dans la table statique via "
-"`get_orb(body1, body2, asp_idx)`. Lève `ValueError` si `aspect_value` "
-"n'est pas dans la table."
+"Les deux à `None` → recherche dans la table statique via `get_orb(body1, "
+"body2, asp_idx)`. Lève `ValueError` si `aspect_value` n'est pas dans la "
+"table."
 
 #: ../../source/api.md:432
 msgid "**Returns:** `tuple[float, float, float]` — `(begin_jd, exact_jd, end_jd)`"
-msgstr "**Retourne :** `tuple[float, float, float]` — `(begin_jd, exact_jd, end_jd)`"
+msgstr ""
+"**Retourne :** `tuple[float, float, float]` — `(begin_jd, exact_jd, "
+"end_jd)`"
 
 #: ../../source/api.md:434
 msgid ""
@@ -1244,11 +1248,125 @@ msgstr "`main()`"
 msgid "Entry point for the interactive CLI (`ketu` command)."
 msgstr "Point d'entrée pour la CLI interactive (commande `ketu`)."
 
-#: ../../source/api.md:894
+#: ../../source/api.md:891
+msgid "`parse_harmonics_spec(value)` and `HarmonicsSelection` — Updated in v1.5"
+msgstr "`parse_harmonics_spec(value)` et `HarmonicsSelection` — Mis à jour en v1.5"
+
+#: ../../source/api.md:893
+msgid ""
+"`parse_harmonics_spec` is the argparse `type=` validator wired to the "
+"`--harmonics` CLI argument. It returns a `HarmonicsSelection` NamedTuple "
+"`(mask, dynamic_specs)`."
+msgstr ""
+"`parse_harmonics_spec` est le validateur argparse `type=` connecté à "
+"l'argument CLI `--harmonics`. Il retourne un NamedTuple `HarmonicsSelection` "
+"`(mask, dynamic_specs)`."
+
+#: ../../source/api.md:896
+msgid "**`HarmonicsSelection` fields:**"
+msgstr "**Champs de `HarmonicsSelection` :**"
+
+#: ../../source/api.md:898
+msgid ""
+"`mask` (`np.ndarray[bool_]`, shape `(14,)`): length-14 boolean mask into "
+"`ketu.core.aspects`. All-False for `h<N>` tokens (only dynamic specs are "
+"used); populated for preset / index-list inputs."
+msgstr ""
+"`mask` (`np.ndarray[bool_]`, forme `(14,)`) : masque booléen de longueur 14 "
+"dans `ketu.core.aspects`. Tout-False pour les jetons `h<N>` (seules les "
+"specs dynamiques sont utilisées) ; rempli pour les entrées préréglage / "
+"liste d'indices."
+
+#: ../../source/api.md:900
+msgid ""
+"`dynamic_specs` (`DynamicAspectSpec | None`): structured array from "
+"`generate_harmonic_aspects` for `h<N>` tokens; `None` for preset and "
+"comma-separated-index inputs."
+msgstr ""
+"`dynamic_specs` (`DynamicAspectSpec | None`) : tableau structuré issu de "
+"`generate_harmonic_aspects` pour les jetons `h<N>` ; `None` pour les "
+"entrées préréglage et liste d'indices séparés par des virgules."
+
+#: ../../source/api.md:903
+msgid "**Accepted spec forms:**"
+msgstr "**Formes de spec acceptées :**"
+
+#: ../../source/api.md
+msgid "Spec form"
+msgstr "Forme de spec"
+
+#: ../../source/api.md
+msgid "Returns"
+msgstr "Retourne"
+
+#: ../../source/api.md
+msgid "`\"classical\"` / `\"traditional\"` / `\"extended\"` / `\"all\"`"
+msgstr "`\"classical\"` / `\"traditional\"` / `\"extended\"` / `\"all\"`"
+
+#: ../../source/api.md
+msgid "`HarmonicsSelection(mask=<preset>, dynamic_specs=None)`"
+msgstr "`HarmonicsSelection(mask=<préréglage>, dynamic_specs=None)`"
+
+#: ../../source/api.md
+msgid "`\"all\"` aliases `\"extended\"`"
+msgstr "`\"all\"` est un alias de `\"extended\"`"
+
+#: ../../source/api.md
+msgid "`\"0,4,7,9,13\"`"
+msgstr "`\"0,4,7,9,13\"`"
+
+#: ../../source/api.md
+msgid "`HarmonicsSelection(mask=<computed>, dynamic_specs=None)`"
+msgstr "`HarmonicsSelection(mask=<calculé>, dynamic_specs=None)`"
+
+#: ../../source/api.md
+msgid "Comma-separated indices into `core.aspects`"
+msgstr "Indices séparés par des virgules dans `core.aspects`"
+
+#: ../../source/api.md
+msgid "`\"h7\"` / `\"H7\"`"
+msgstr "`\"h7\"` / `\"H7\"`"
+
+#: ../../source/api.md
+msgid "`HarmonicsSelection(mask=zeros(14), dynamic_specs=<array>)`"
+msgstr "`HarmonicsSelection(mask=zeros(14), dynamic_specs=<tableau>)`"
+
+#: ../../source/api.md
+msgid "**New in v1.5** — arbitrary harmonic token `h<N>`"
+msgstr "**Nouveau en v1.5** — jeton d'harmonique arbitraire `h<N>`"
+
+#: ../../source/api.md
+msgid "`\"h7,h11\"` / `\"traditional,h7\"`"
+msgstr "`\"h7,h11\"` / `\"traditional,h7\"`"
+
+#: ../../source/api.md
+msgid "**Rejected** (HARMF-01, deferred)"
+msgstr "**Rejeté** (HARMF-01, reporté)"
+
+#: ../../source/api.md
+msgid "Multi-harmonic mixing not yet supported"
+msgstr "Mélange multi-harmonique pas encore supporté"
+
+#: ../../source/api.md:912
+#, python-brace-format
+msgid ""
+"The `h<N>` form (case-insensitive, `N` in `[2, 64]`) selects only the "
+"`H{N}-{k}` dynamic aspects via the `dynamic_specs=` channel. Preset / "
+"index-list inputs yield `dynamic_specs=None`. See {ref}`harmonics-h7-cli-"
+"new-in-v1-5` in Concepts for the CLI usage, Tight-grammar boundary, and a"
+" worked example."
+msgstr ""
+"La forme `h<N>` (insensible à la casse, `N` dans `[2, 64]`) sélectionne "
+"uniquement les aspects dynamiques `H{N}-{k}` via le canal `dynamic_specs=`. "
+"Les entrées préréglage / liste d'indices donnent `dynamic_specs=None`. "
+"Voir {ref}`harmonics-h7-cli-new-in-v1-5` dans Concepts pour l'usage CLI, "
+"la limite de la grammaire stricte, et un exemple pratique."
+
+#: ../../source/api.md:920
 msgid "Equatorial Declination (`ketu.calculations`) — New in v1.5"
 msgstr "Déclinaison équatoriale (`ketu.calculations`) — Nouveau dans v1.5"
 
-#: ../../source/api.md:896
+#: ../../source/api.md:922
 msgid ""
 "Equatorial declination (δ) measures how far north or south of the "
 "celestial equator a body lies. It is **distinct from ecliptic latitude** "
@@ -1306,7 +1424,7 @@ msgstr "Équateur céleste"
 msgid "`declination`, `is_ascending_declination`"
 msgstr "`declination`, `is_ascending_declination`"
 
-#: ../../source/api.md:903
+#: ../../source/api.md:929
 msgid ""
 "**β-vs-δ pitfall — \"ascending Moon\" is ambiguous:** `is_ascending` "
 "tracks the β-trajectory (ecliptic latitude rising); "
@@ -1324,7 +1442,7 @@ msgstr ""
 "d'un pic de grand arrêt à δ≈+28,66°), `is_ascending_declination=True` (δ "
 "croissant à +0,30°/jour) tandis que `is_ascending=False` (β décroissant)."
 
-#: ../../source/api.md:905
+#: ../../source/api.md:931
 msgid ""
 "**The Moon's δ cycle** completes in ≈27.21 days (draconic/nodal month). "
 "Montante = northward (dδ/dt > 0); descendante = southward (dδ/dt < 0). "
@@ -1336,7 +1454,7 @@ msgstr ""
 "vers le sud (dδ/dt < 0). C'est le cycle utilisé en biodynamie (cadrage "
 "centré sur les aspects de Loc)."
 
-#: ../../source/api.md:907
+#: ../../source/api.md:933
 msgid ""
 "**Out-of-bounds (OOB):** the Moon's δ can exceed the obliquity ε during "
 "the **major lunar standstill** (~18.6-year nodal cycle). The threshold "
@@ -1348,11 +1466,11 @@ msgstr ""
 "utilise l'obliquité vraie instantanée ε(jd), pas l'obliquité moyenne. En "
 "2024–2025, la Lune atteint |δ| ≈ 28,7°."
 
-#: ../../source/api.md:940
+#: ../../source/api.md:966
 msgid "Chiron (body_id=13) — New in v1.3"
 msgstr "Chiron (body_id=13) — Nouveau en v1.3"
 
-#: ../../source/api.md:942
+#: ../../source/api.md:968
 msgid ""
 "Chiron is the 14th body added in v1.3. There is no separate Chiron module"
 " in the public API — it is accessed through the standard calculation "
@@ -1362,15 +1480,15 @@ msgstr ""
 "séparé dans l'API publique — il est accessible via les fonctions de "
 "calcul standard en utilisant `body_id=13`."
 
-#: ../../source/api.md:944
+#: ../../source/api.md:970
 msgid "**Key facts:**"
 msgstr "**Faits clés :**"
 
-#: ../../source/api.md:946
+#: ../../source/api.md:972
 msgid "`ketu.bodies[\"name\"][13] == b\"Chiron\"`"
 msgstr "`ketu.bodies[\"name\"][13] == b\"Chiron\"`"
 
-#: ../../source/api.md:947
+#: ../../source/api.md:973
 msgid ""
 "Valid date range: 1900–2100 (expanded in v1.4; 2283 Chebyshev segments "
 "embedded in `ketu/data/chiron_coeffs.npz`). Out-of-range input is "
@@ -1381,17 +1499,17 @@ msgstr ""
 "hors plage est silencieusement clampée à la limite de segment la plus "
 "proche."
 
-#: ../../source/api.md:948
+#: ../../source/api.md:974
 msgid "Accuracy: max error 0.001214° (sub-arcminute) over the 1900–2100 range"
 msgstr ""
 "Précision : erreur maximale 0,001214° (sous-arcminute) sur la plage "
 "1900–2100"
 
-#: ../../source/api.md:949
+#: ../../source/api.md:975
 msgid "`CHART_DTYPE` body arrays are 14-wide; index 13 always refers to Chiron"
 msgstr "`CHART_DTYPE` body arrays are 14-wide; index 13 always refers to Chiron"
 
-#: ../../source/api.md:951
+#: ../../source/api.md:977
 msgid ""
 "**Breaking change (v1.2 → v1.3):** The `CHART_DTYPE` body axis expanded "
 "from 13 to 14 bodies (D-08). Code that accessed bodies by fixed count or "
@@ -1403,7 +1521,7 @@ msgstr ""
 "compte fixe ou l'index codé en dur 12 comme dernier corps doit être mis à"
 " jour. Voir [Migration](migration.md) pour les détails."
 
-#: ../../source/api.md:971
+#: ../../source/api.md:997
 msgid "See also: [Chiron](chiron.md)"
 msgstr "Voir aussi : [Chiron](chiron.md)"
 
