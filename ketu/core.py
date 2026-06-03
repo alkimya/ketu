@@ -81,7 +81,7 @@ bodies = np.array(
         ("Rahu", 10, 0, -0.013),  # Mean North Node
         ("Ketu", 11, 0, -0.013),  # Mean South Node (opposite of Rahu)
         ("Lilith", 12, 0, 0.113),  # Mean Apogee (Black Moon)
-        ("Chiron", 13, 0, 0.019),  # Centaur, Chebyshev-based position
+        ("Chiron", 13, 4, 0.019),  # Centaur, Chebyshev-based position
     ],
     dtype=[("name", "S12"), ("id", "i4"), ("orb", "f4"), ("speed", "f4")],
 )
