@@ -73,6 +73,12 @@ from ketu.aspects.presets import resolve_aspect_set
 from ketu.calculations import distance
 from ketu.charts import CHART_DTYPE
 from ketu.core import aspects as _ASPECTS, bodies as _BODIES
+from ketu.ephemeris.coordinates import (
+    ecliptic_to_equatorial,
+    rectangular_to_spherical,
+    spherical_to_rectangular,
+    true_obliquity,
+)
 from ketu.houses.registry import get_system
 
 from .core import circular_midpoint
@@ -243,6 +249,21 @@ def calculate_composite(
         np.asarray(chart_a["body_speeds"], dtype=np.float64)
         + np.asarray(chart_b["body_speeds"], dtype=np.float64)
     ) / 2.0
+    # Derive body_decl from the composite λ,β that were just assigned — the
+    # self-consistent derivation (δ of the composite midpoint chart, NOT a
+    # midpoint of the parents' declinations). Open Question 1 resolved to
+    # option (a): parallel to how body_lats is the midpoint of the ecliptic
+    # latitudes, body_decl is derived via the full coordinates chain on the
+    # composite λ,β. This is the same path used in compute_chart (Plan 02).
+    _eps = true_obliquity(float(out["jd"]))  # scalar ε for composite jd
+    _x, _y, _z = spherical_to_rectangular(
+        np.asarray(out["body_lons"], dtype=np.float64),
+        np.asarray(out["body_lats"], dtype=np.float64),
+        1.0,
+    )
+    _xe, _ye, _ze = ecliptic_to_equatorial(_x, _y, _z, _eps)
+    _, _decl, _ = rectangular_to_spherical(_xe, _ye, _ze)
+    out["body_decl"] = _decl  # shape (14,) — δ ∈ [−90, +90]°, north positive
 
     # 5. Angles — circular midpoints. ARMC and Vertex stored for
     #    bookkeeping; ASC and MC drive the house-cusp trisection in
