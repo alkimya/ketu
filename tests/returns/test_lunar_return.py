@@ -17,12 +17,14 @@ This file pins:
 - Polar relocation does NOT raise.
 - ``system=`` pass-through.
 - ``target_jd`` type contract (float; not str).
+- DECL-07 returns: chart carries inherited body_decl (v1.5).
 """
 from __future__ import annotations
 
 import numpy as np
 import pytest
 
+from ketu.calculations import declination
 from ketu.charts import CHART_DTYPE
 from ketu.ephemeris.planets import calc_planet_position
 from ketu.returns import lunar_return
@@ -390,3 +392,93 @@ class TestLunarReturnTargetJdTypeGuard:
             target_jd=2451545,  # int, not float
         )
         assert chart.dtype == CHART_DTYPE
+
+
+class TestLunarReturnBodyDecl:
+    """DECL-07 returns: inherited body_decl (Plan 33-03).
+
+    Returns call :func:`ketu.charts.compute_chart` directly, so they
+    inherit ``body_decl`` for free — this test proves that inheritance
+    rather than assuming it. The comparison is against the ARRAY path
+    of :func:`ketu.calculations.declination` (same evaluator:
+    ``calc_planet_position_batch``), which matches to 0.0 absolute
+    difference (established in Plan 33-02).
+    """
+
+    def test_body_decl_is_in_chart_dtype(
+        self, natal_diana: dict[str, float]
+    ) -> None:
+        """Output dtype is CHART_DTYPE, which includes body_decl.
+
+        Parameters
+        ----------
+        natal_diana : dict[str, float]
+            Princess Diana natal triple (session-scoped fixture).
+        """
+        chart = lunar_return(
+            natal_diana["jd"],
+            natal_diana["lat"],
+            natal_diana["lon"],
+            target_jd=2451545.0,
+        )
+        assert chart.dtype == CHART_DTYPE
+        assert "body_decl" in chart.dtype.names
+
+    def test_body_decl_is_populated(
+        self, natal_diana: dict[str, float]
+    ) -> None:
+        """body_decl carries non-zero values (not uninitialized zeros).
+
+        Returns call compute_chart, which assigns body_decl from
+        already-fetched body_lons/body_lats via the coordinates chain
+        (Plan 33-02). At least one body must have |δ| > 0.01°.
+
+        Parameters
+        ----------
+        natal_diana : dict[str, float]
+            Princess Diana natal triple (session-scoped fixture).
+        """
+        chart = lunar_return(
+            natal_diana["jd"],
+            natal_diana["lat"],
+            natal_diana["lon"],
+            target_jd=2451545.0,
+        )
+        decl = np.asarray(chart["body_decl"])
+        assert decl.shape == (14,), f"expected shape (14,), got {decl.shape}"
+        assert np.any(np.abs(decl) > 0.01), (
+            "body_decl is all-zero — returns did not inherit body_decl "
+            "from compute_chart (DECL-07 regression)"
+        )
+
+    def test_body_decl_matches_declination_array_path(
+        self, natal_diana: dict[str, float]
+    ) -> None:
+        """Moon's body_decl matches declination() ARRAY path to 0.0.
+
+        The chart's body_decl uses calc_planet_position_batch (via
+        compute_chart) and so does the array path of declination().
+        Comparison is exact (0.0 diff) for body index 1 (Moon).
+
+        Parameters
+        ----------
+        natal_diana : dict[str, float]
+            Princess Diana natal triple (session-scoped fixture).
+        """
+        chart = lunar_return(
+            natal_diana["jd"],
+            natal_diana["lat"],
+            natal_diana["lon"],
+            target_jd=2451545.0,
+        )
+        jd_return = float(chart["jd"])
+        # ARRAY path: declination(jdate_array, body_int) uses
+        # calc_planet_position_batch — same evaluator as compute_chart.
+        moon_decl_array = declination(np.array([jd_return]), 1)
+        chart_moon_decl = float(chart["body_decl"][1])
+        diff = abs(chart_moon_decl - float(moon_decl_array[0]))
+        assert diff == 0.0, (
+            f"body_decl[Moon] = {chart_moon_decl:.9f}° but "
+            f"declination(array)[Moon] = {float(moon_decl_array[0]):.9f}°; "
+            f"diff = {diff:.2e}° (expected 0.0 — same evaluator)"
+        )
