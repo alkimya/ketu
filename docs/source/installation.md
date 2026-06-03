@@ -68,7 +68,7 @@ ketu
 ```python
 import ketu
 print(ketu.__version__)
-# Output: 1.3.0
+# Output: 1.4.0
 ```
 
 ## Dependencies

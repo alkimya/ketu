@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-30 00:44+0200\n"
+"POT-Creation-Date: 2026-06-03 17:08+0200\n"
 "PO-Revision-Date: 2026-02-12 22:00+0100\n"
 "Last-Translator: Claude <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -78,19 +78,35 @@ msgstr "Calcul d'aspects"
 msgid "Aspects Between Two Planets"
 msgstr "Aspects entre deux planètes"
 
-#: ../../source/quickstart.md:110
+#: ../../source/quickstart.md:111
+msgid ""
+"Use `ketu.core.aspects` (the aspect-type table) here, **not** "
+"`ketu.aspects`. Because `ketu/aspects/` is a subpackage, `from "
+"ketu.aspects import ...` binds the name `ketu.aspects` to that module — "
+"so `ketu.aspects[\"name\"]` would raise `TypeError: 'module' object is "
+"not subscriptable`. The structured table always lives at "
+"`ketu.core.aspects`."
+msgstr ""
+"Utilise ici `ketu.core.aspects` (la table des types d'aspects), **et non** "
+"`ketu.aspects`. Comme `ketu/aspects/` est un sous-paquet, `from "
+"ketu.aspects import ...` lie le nom `ketu.aspects` à ce module — "
+"si bien que `ketu.aspects[\"name\"]` lèverait `TypeError: 'module' object "
+"is not subscriptable`. La table structurée se trouve toujours à "
+"`ketu.core.aspects`."
+
+#: ../../source/quickstart.md:118
 msgid "All Current Aspects"
 msgstr "Tous les aspects actuels"
 
-#: ../../source/quickstart.md:130
+#: ../../source/quickstart.md:138
 msgid "Complete Example: Natal Positions"
 msgstr "Exemple complet : Positions natales"
 
-#: ../../source/quickstart.md:189
+#: ../../source/quickstart.md:198
 msgid "Building a Full Natal Chart"
 msgstr "Construire un thème natal complet"
 
-#: ../../source/quickstart.md:191
+#: ../../source/quickstart.md:200
 msgid ""
 "New in v1.2: `compute_chart` returns a single structured array containing"
 " positions, house cusps, and aspect matrix."
@@ -98,43 +114,45 @@ msgstr ""
 "Nouveau en v1.2 : `compute_chart` retourne un unique tableau structuré "
 "contenant les positions, les cuspides de maisons et la matrice d'aspects."
 
-#: ../../source/quickstart.md:214
+#: ../../source/quickstart.md:223
 msgid "Tips and Tricks"
 msgstr "Trucs et astuces"
 
-#: ../../source/quickstart.md:216
+#: ../../source/quickstart.md:225
 msgid "Using the Cache"
 msgstr "Utiliser le cache"
 
-#: ../../source/quickstart.md:218
+#: ../../source/quickstart.md:227
 msgid "Position calculations use `@lru_cache` to optimize performance:"
 msgstr ""
 "Les calculs de positions utilisent `@lru_cache` pour optimiser les "
 "performances :"
 
-#: ../../source/quickstart.md:232
+#: ../../source/quickstart.md:241
 msgid "Working with NumPy"
 msgstr "Travailler avec NumPy"
 
-#: ../../source/quickstart.md:247
+#: ../../source/quickstart.md:256
 msgid "Next Steps"
 msgstr "Prochaines étapes"
 
-#: ../../source/quickstart.md:249
+#: ../../source/quickstart.md:258
 msgid "Explore [Advanced Examples](examples.md) for complex use cases"
 msgstr ""
 "Explorez les [Exemples avancés](examples.md) pour des cas d'usage "
 "complexes"
 
-#: ../../source/quickstart.md:250
+#: ../../source/quickstart.md:259
 msgid "See the [API Reference](api.md) for all details"
 msgstr "Consultez la [Référence API](api.md) pour tous les détails"
 
-#: ../../source/quickstart.md:251
+#: ../../source/quickstart.md:260
 msgid "Learn about [Astrological Concepts](concepts.md) used in Ketu"
 msgstr "Découvrez les [Concepts astrologiques](concepts.md) utilisés dans Ketu"
 
-#: ../../source/quickstart.md:252
+#: ../../source/quickstart.md:261
 msgid "Discover [House Systems](houses.md) for complete chart calculation"
-msgstr "Découvrez les [Systèmes de maisons](houses.md) pour un calcul de thème complet"
+msgstr ""
+"Découvrez les [Systèmes de maisons](houses.md) pour un calcul de thème "
+"complet"
 

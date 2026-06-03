@@ -79,7 +79,7 @@ from zoneinfo import ZoneInfo
 from ketu.ephemeris.time import utc_to_julian
 from ketu.calculations import long, body_name
 from ketu.aspects import get_orb
-import ketu
+import ketu.core
 
 
 @dataclass
@@ -113,14 +113,14 @@ def search_transits(natal_date, transit_date, planets_to_follow=None):
             if diff > 180:
                 diff = 360 - diff
 
-            for j, angle in enumerate(ketu.aspects["value"]):
+            for j, angle in enumerate(ketu.core.aspects["angle"]):
                 max_orb = get_orb(i_transit, natal_i, j)
                 orb = abs(diff - angle)
 
                 if orb <= max_orb:
                     transit = Transit(
                         planet=body_name(i_transit),
-                        aspect=ketu.aspects["name"][j].decode(),
+                        aspect=ketu.core.aspects["name"][j].decode(),
                         natal_planet=body_name(natal_i),
                         date=transit_date,
                         orb=orb,
@@ -150,6 +150,7 @@ from ketu.ephemeris.time import utc_to_julian
 from ketu.calculations import long, body_sign, is_retrograde, body_name
 from ketu.aspects import calculate_aspects
 import ketu
+import ketu.core
 
 
 def analyze_period(start_date, end_date, step_days=1):
@@ -196,7 +197,7 @@ def analyze_period(start_date, end_date, step_days=1):
             if abs(asp[3]) < 0.5:
                 results["exact_aspects"].append({
                     "date": current,
-                    "aspect": ketu.aspects["name"][asp[2]].decode(),
+                    "aspect": ketu.core.aspects["name"][asp[2]].decode(),
                     "planet1": body_name(asp[0]),
                     "planet2": body_name(asp[1]),
                     "orb": asp[3]

@@ -94,17 +94,25 @@ else:
 
 ```python
 from ketu.aspects import get_aspect
-import ketu
+import ketu.core
 
 # Sun-Moon aspect
 aspect = get_aspect(jday, 0, 1)  # 0=Sun, 1=Moon
 
 if aspect:
     body1, body2, asp_type, orb = aspect
-    aspect_name = ketu.aspects["name"][asp_type].decode()
+    aspect_name = ketu.core.aspects["name"][asp_type].decode()
     print(f"Sun-Moon: {aspect_name} (orb: {orb:.2f}°)")
 else:
     print("No Sun-Moon aspect")
+```
+
+```{note}
+Use `ketu.core.aspects` (the aspect-type table) here, **not** `ketu.aspects`.
+Because `ketu/aspects/` is a subpackage, `from ketu.aspects import ...`
+binds the name `ketu.aspects` to that module — so `ketu.aspects["name"]`
+would raise `TypeError: 'module' object is not subscriptable`. The
+structured table always lives at `ketu.core.aspects`.
 ```
 
 #### All Current Aspects
@@ -112,7 +120,7 @@ else:
 ```python
 from ketu.aspects import calculate_aspects
 from ketu.calculations import body_name
-import ketu
+import ketu.core
 
 # Calculate all aspects
 aspects_array = calculate_aspects(jday)
@@ -122,7 +130,7 @@ for aspect in aspects_array:
     b1, b2, asp_idx, orb = aspect
     name1 = body_name(b1)
     name2 = body_name(b2)
-    asp_name = ketu.aspects["name"][asp_idx].decode()
+    asp_name = ketu.core.aspects["name"][asp_idx].decode()
 
     print(f"{name1} - {name2}: {asp_name} ({orb:.2f}°)")
 ```
@@ -133,6 +141,7 @@ for aspect in aspects_array:
 from datetime import datetime
 from zoneinfo import ZoneInfo
 import ketu
+import ketu.core
 from ketu.ephemeris.time import utc_to_julian, local_to_utc
 from ketu.calculations import long, body_sign, is_retrograde, body_name, positions
 from ketu.aspects import calculate_aspects
@@ -179,7 +188,7 @@ def natal_positions(year, month, day, hour, minute, timezone_str):
         if abs(orb) < 5:
             name1 = body_name(b1)
             name2 = body_name(b2)
-            asp_name = ketu.aspects["name"][asp_idx].decode()
+            asp_name = ketu.core.aspects["name"][asp_idx].decode()
             print(f"{name1:8} {asp_name:12} {name2:8} ({orb:+.2f}°)")
 
 # Usage
