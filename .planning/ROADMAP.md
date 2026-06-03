@@ -130,11 +130,9 @@ Plans:
   2. `ketu/data/chiron_coeffs.npz` is regenerated with `jd_start`/`jd_end` reflecting the 1900–2100 range; the embedded `actual_len` for the partial first/last segments is correct (the Phase 24 last-segment fix preserved); runtime evaluation stays 100% pure NumPy (no `pyswisseph` import in `ketu/ephemeris/chiron.py`).
   3. Regression tests are re-pinned to span 1900–2100: at minimum one new reference longitude pre-1950 (e.g. 1920 or 1930) and one post-2050 (e.g. 2080) are pinned, and `test_chiron_regression.py` passes the < 0.01° gate on the full new range.
 
-**Plans**: 2 plans
-
-Plans:
-- [ ] 30-01-PLAN.md — Blocking spike (HARD GATE): pre-flight build check + dense 1900–2100 accuracy measurement (1900–1910 edge prioritized) → degree decision (keep 10 / raise to 12 / STOP+ask user if 1900.0 fails) → record verdict in decision log; ephemeral spike thrown away
-- [ ] 30-02-PLAN.md — Regenerate `.npz` over 1900–2100 with spike-decided degree (CHIR-10), update breaking shape/degree test atomically, re-pin regression refs (1950–2050 kept + wings added, CHIR-11), preserve actual_len fix + pure-NumPy runtime, verify bounds/clamp + 100% coverage
+**Plans**: 2 plans — ✅ COMPLETE 2026-06-03 (verifier PASSED 3/3)
+- [x] 30-01-PLAN.md — Blocking spike (HARD GATE): pre-flight build check + dense 1900–2100 accuracy measurement (1900–1910 edge prioritized) → degree decision (keep 10 / raise to 12 / STOP+ask user if 1900.0 fails) → record verdict in decision log; ephemeral spike thrown away
+- [x] 30-02-PLAN.md — Regenerate `.npz` over 1900–2100 with spike-decided degree (CHIR-10), update breaking shape/degree test atomically, re-pin regression refs (1950–2050 kept + wings added, CHIR-11), preserve actual_len fix + pure-NumPy runtime, verify bounds/clamp + 100% coverage
 
 #### Phase 31: Documentation (en + fr)
 
@@ -193,7 +191,7 @@ Plans:
 | 27. Release 1.3.0                                 | v1.3      | 2/2            | ✓ Complete | 2026-06-01 |
 | **28. Dynamic Harmonic Generator + Detection**    | **v1.4**  | **3/3**        | ✓ Complete | 2026-06-03 |
 | **29. Chiron Orb 4°**                             | **v1.4**  | **1/1**        | ✓ Complete | 2026-06-03 |
-| **30. Chiron Range 1900–2100**                    | **v1.4**  | **0/TBD**      | ⬜ Pending  | —          |
+| **30. Chiron Range 1900–2100**                    | **v1.4**  | **2/2**        | ✓ Complete | 2026-06-03 |
 | **31. Documentation (en + fr)**                   | **v1.4**  | **0/TBD**      | ⬜ Pending  | —          |
 | **32. Release v1.4.0**                            | **v1.4**  | **0/TBD**      | ⬜ Pending  | —          |
 
@@ -203,4 +201,4 @@ Plans:
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
 *v1.2 phase details archived to `.planning/milestones/v1.2-ROADMAP.md`*
 *v1.3 phase details archived to `.planning/milestones/v1.3-ROADMAP.md`*
-*Roadmap last updated: 2026-06-03 — Phase 29 (Chiron Orb 4°) complete (verifier PASSED 6/6): Chiron orb 0°→4° via single-source constant in core.py, propagating to get_orb/synastry/cycles/composite/CLI; CLI fixture audited (+2 Sun-Chiron / Moon-Chiron Semi-sextile lines); synastry docstrings corrected + Chiron orb=4 pinning test; 1531 tests / 100% coverage, frozen fingerprints byte-identical. v1.4 at 2/5 phases. Phase 30 (Chiron range 1900–2100) now unblocked — `.npz` regeneration with the orb finalized.*
+*Roadmap last updated: 2026-06-03 — Phase 30 (Chiron Range 1900–2100) complete (verifier PASSED 3/3): blocking spike PASSED at degree=10/seg=32d (max|Δλ|=0.001214°, 8.2× margin; 1900–1910 perihelion-aftermath edge max 0.000013° — empirically a non-issue, no degree escalation); `.npz` regenerated over 1900–2100 (shape (2283,11), jd_start=2415020.5/jd_end=2488069.5, built-in <0.01° gate); regression re-pinned to 9 refs spanning 1920–2080 + 4 bounds clamp tests; Phase 24-04 actual_len fix + pure-NumPy runtime preserved; 1537 tests / 100% coverage, doctest 60/60. v1.4 at 3/5 phases. Phase 31 (Documentation en+fr) now unblocked — all feature phases (28+29+30) done; all v1.4 API surface + constant values are final.*
