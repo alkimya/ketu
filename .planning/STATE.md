@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Lunar Declination & Harmonics Debt
 status: in-progress
-last_updated: "2026-06-03T22:15:00Z"
+last_updated: "2026-06-03T20:45:00Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 8
-  completed_plans: 4
-  percent: 33
+  completed_plans: 5
+  percent: 40
 ---
 
 # Project State
@@ -24,16 +24,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-03 — v1.5 milestone started)
 
 ## Current Position
 
-Phase: 33 — Lunar Declination δ (COMPLETE — all 4 plans done)
-Plan: Phase 33 complete; Phase 34 next
-Status: Phase 33 COMPLETE and VERIFIED (gsd-verifier PASSED 5/5 must-haves, 33-VERIFICATION.md status=passed). All 9 DECL requirements shipped: declination/declination_velocity/is_ascending_declination/is_out_of_bounds in ketu.calculations (+ `__all__`), body_decl in CHART_DTYPE populated in compute_chart AND calculate_composite (no zero-fill), inherited by Returns, DECL-08 ratchet across 5 test locations, docs en+fr (api/concepts/changelog + translated .po/.mo). 1584 tests, 100% coverage, mypy --strict clean. is_ascending (β) byte-for-byte unchanged.
-Last activity: 2026-06-03 — Phase 33 executed (4 waves, commits 6183bad..ee4736b) + verified (33-VERIFICATION.md passed); ROADMAP.md + STATE.md updated.
+Phase: 34 — Harmonics Debt (in progress — Plan 01 done)
+Plan: Plan 01 of Phase 34 complete; Plan 02 next (ASP-F3 find_aspect_timing dyn_coef=)
+Status: Plan 34-01 complete. HARM-01/02/03 satisfied: TestNamingContractF2 (5 tests, h=2..64 regex sweep + collision), generator docstring "Public API contract" paragraph, two-channel GENERATOR/DETECTION distinction in concepts.md + api.md, traditional-name reference table, FR translations. 1593 tests, 100% coverage, all gates green.
+Last activity: 2026-06-03 — Plan 34-01 executed (3 tasks, commits 3d06108/12b22b3/ec2d412).
 
-Progress: Phase 33 complete (4/4 plans done)
+Progress: Phase 34 in progress (1/3 plans done)
 
 ## Next Step
 
-**`/gsd:plan-phase 34`** (if not already planned) or **`/gsd:execute-phase 34 --plan 01`** — Phase 34 Harmonics Debt (ASP-F2 → ASP-F3 → ASP-F1). Plans already exist at `.planning/phases/34-harmonics-debt/`.
+**`/gsd:execute-phase 34 --plan 02`** — Plan 34-02 (ASP-F3: `find_aspect_timing` `dyn_coef=` orb derivation). F2 naming contract is stable; F3 can proceed.
 
 **Phase map (v1.5):**
 
@@ -59,6 +59,8 @@ Full log in `.planning/PROJECT.md` Key Decisions table. v1.5 decisions locked at
 - eps_b[..., np.newaxis] broadcast pattern for ε over the (14,) body axis — works for 0-d (scalar jd) and (S,) (array jd) cases.
 - [Phase 33]: Composite body_decl derived via coordinates chain on composite λ,β (NOT midpoint of parents' δ) — Open Question 1 resolved option (a)
 - [Phase 33]: Equatorial Declination section uses MyST anchor for cross-references between api.md sections
+- [Phase 34-01]: Detection channel is static-first — 120° always Trine (i_asp=9), never H3-1 (i_asp=-2)
+- [Phase 34-01]: Cross-file MyST anchor reference uses {ref} role, not path-based concepts.md#anchor (path form triggers myst.xref_missing)
 
 ### Blockers/Concerns
 
@@ -77,10 +79,10 @@ None. See `.planning/research/DECLINATION.md` and `.planning/research/HARMONICS_
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 - v1.3: 30 plans / 8 phases (21-27 + 26.1) (2026-05-29 → 2026-06-01)
 - v1.4: 15 plans / 5 phases (28-32) (2026-06-02 → 2026-06-03)
-- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files); Plan 33-04 done (7 min, 2 tasks, 9 files) — Phase 33 COMPLETE
+- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files); Plan 33-04 done (7 min, 2 tasks, 9 files) — Phase 33 COMPLETE; Plan 34-01 done (15 min, 3 tasks, 8 files) — HARM-01/02/03 satisfied
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Plan 04 of Phase 33 executed. DECL-09 docs en+fr complete: api.md (4 functions + Equatorial Declination section), concepts.md (β-vs-δ, montant/descendant, OOB), changelog.md (v1.5 entry). FR .po fully translated + .mo recompiled. Both builds clean. Commits: 9b4b6e6 (docs EN), 38ceb61 (docs FR).
-Stopped at: Phase 33 Plan 04 complete. Phase 33 FULLY DONE.
-Resume file: None — proceed with Phase 34 (Harmonics Debt).
+Last session: 2026-06-03 — Plan 01 of Phase 34 executed. HARM-01/02/03 satisfied: TestNamingContractF2 (5 tests h=2..64), generator docstring public API contract paragraph, two-channel docs en+fr. Commits: 3d06108 (test), 12b22b3 (docstring), ec2d412 (docs+FR).
+Stopped at: Phase 34 Plan 01 complete.
+Resume file: None — proceed with Plan 34-02 (ASP-F3).
