@@ -24,16 +24,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-03 — v1.5 milestone started)
 
 ## Current Position
 
-Phase: 34 — Harmonics Debt (in progress — Plans 01, 02, and 03 done)
-Plan: Plan 03 of Phase 34 complete; Plan 04 next (byte-stability fixture + docs en+fr)
-Status: Plan 34-03 complete. HARM-06/07 satisfied: HarmonicsSelection NamedTuple, --harmonics h7 end-to-end, Quadrinovile bug fixed, harmonic header label, Tight grammar tested. 1617 tests, 100% coverage, mypy --strict clean.
-Last activity: 2026-06-03 — Plan 34-03 executed (3 tasks, commits e9efc2f/74608e1/a466b48).
+Phase: 34 — Harmonics Debt (COMPLETE — all 4 plans done)
+Plan: Plan 04 of Phase 34 complete; Phase 34 fully closed. Phase 35 (Release v1.5.0) is next.
+Status: Plan 34-04 complete. HARM-08/09 satisfied: h7 byte-stability fixture pinned + audited, TestHarmonicsH7ByteStable (6 tests), --harmonics h7 CLI surface documented en+fr. 1623 tests, 100% coverage.
+Last activity: 2026-06-03 — Plan 34-04 executed (3 tasks, commits e64cabe/ee88b09/0f20569).
 
-Progress: Phase 34 in progress (1/3 plans done)
+Progress: Phase 34 complete (4/4 plans done). Phase 35 next.
 
 ## Next Step
 
-**`/gsd:execute-phase 34 --plan 04`** — Plan 34-04 (byte-stability fixture + docs en+fr). F1 CLI is functional; pinnable now.
+**`/gsd:execute-phase 35`** — Phase 35: Release v1.5.0 (quality gates, version bump + CHANGELOG/UPGRADING, PyPI via OIDC). USER CHECKPOINT REQUIRED before executing (relecture validation decision).
 
 **Phase map (v1.5):**
 
@@ -65,6 +65,8 @@ Full log in `.planning/PROJECT.md` Key Decisions table. v1.5 decisions locked at
 - [Phase 34-02]: dyn_coef orb formula mirrors calculate_aspects:215-216 exactly — single canonical formula across the library
 - [Phase 34-03]: _resolve_dynamic_name recomputes angular separation from jdate+body IDs to identify matched dyn row (result dtype stores dyn_angle-dist, not dyn_angle itself)
 - [Phase 34-03]: assert isinstance(dyn, np.ndarray) at _harmonic_label call site narrows DynamicAspectSpec union for mypy (hN token always produces single array)
+- [Phase 34-04]: Fixture audited against 5 criteria before pinning — H7-k names, no Quadrinovile, septile angles, timing block identical to v1.1, U+00BA degree symbol
+- [Phase 34-04]: Tight-grammar boundary: h<N> alone supported in v1.5; h7,h11 and traditional,h7 mixing deferred to HARMF-01, documented and rejected with argparse error
 
 ### Blockers/Concerns
 
@@ -83,10 +85,10 @@ None. See `.planning/research/DECLINATION.md` and `.planning/research/HARMONICS_
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 - v1.3: 30 plans / 8 phases (21-27 + 26.1) (2026-05-29 → 2026-06-01)
 - v1.4: 15 plans / 5 phases (28-32) (2026-06-02 → 2026-06-03)
-- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files); Plan 33-04 done (7 min, 2 tasks, 9 files) — Phase 33 COMPLETE; Plan 34-01 done (15 min, 3 tasks, 8 files) — HARM-01/02/03 satisfied; Plan 34-02 done (12 min, 3 tasks, 5 files) — HARM-04/05 satisfied; Plan 34-03 done (11 min, 3 tasks, 8 files) — HARM-06/07 satisfied
+- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files); Plan 33-04 done (7 min, 2 tasks, 9 files) — Phase 33 COMPLETE; Plan 34-01 done (15 min, 3 tasks, 8 files) — HARM-01/02/03 satisfied; Plan 34-02 done (12 min, 3 tasks, 5 files) — HARM-04/05 satisfied; Plan 34-03 done (11 min, 3 tasks, 8 files) — HARM-06/07 satisfied; Plan 34-04 done (8 min, 3 tasks, 8 files) — HARM-08/09 satisfied — Phase 34 COMPLETE
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Plan 03 of Phase 34 executed. HARM-06/07 satisfied: HarmonicsSelection NamedTuple, --harmonics h7 end-to-end, Quadrinovile bug fixed, 1617 tests 100% coverage. Commits: e9efc2f (feat), 74608e1 (feat), a466b48 (test).
-Stopped at: Phase 34 Plan 03 complete.
-Resume file: None — proceed with Plan 34-04 (byte-stability fixture + docs en+fr).
+Last session: 2026-06-03 — Plan 04 of Phase 34 executed. HARM-08/09 satisfied: h7 byte-stability fixture pinned+audited, TestHarmonicsH7ByteStable (6 tests), --harmonics h7 CLI surface documented en+fr. 1623 tests, 100% coverage. Commits: e64cabe (chore), ee88b09 (test), 0f20569 (docs).
+Stopped at: Phase 34 Plan 04 complete — Phase 34 (Harmonics Debt) FULLY CLOSED.
+Resume file: None — proceed with user relecture checkpoint, then Phase 35 (Release v1.5.0).
