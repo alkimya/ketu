@@ -85,6 +85,7 @@ Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 - [Phase 30-02]: .npz regenerated with degree=10 / jd_start=2415020.5 / jd_end=2488069.5 / 2283 segs / shape (2283,11) / 577 KB. Gate PASS max|Δλ|=0.001214° (margin 8.2×). Wing refs added: 1920-01-01 (2.609080°) + 2080-01-01 (36.885249°). No 1905 ref needed (1900-1910 edge max 0.000013°). actual_len fix (Phase 24-04) preserved; zero pyswisseph in chiron.py. 1537 tests, 100% coverage.
 - [Phase 31-03]: relational_charts.md DOC-15 — compute_chart aspects=None now names TRADITIONAL (v1.3+) as library default; calculate_synastry aspects="classical" explicitly documented as function-level backward-compat default (NOT changed to TRADITIONAL — intentional byte-stability pin). No remaining "default classical set" text in relational_charts.md.
 - [Phase 31-05]: chiron.md: ValueError behavior replaced with silent clamping (Phase 30); range 1900-2100, accuracy 0.001214° documented with v1.4 badges
+- [Phase 31-02]: migration.md DOC-15 — stale "behavior is unchanged (EXTENDED = all 14 aspects)" replaced with v1.1 history annotation + explicit TRADITIONAL pointer; code comment updated. DOC-16 Chiron-behavior — "1950-2050 / raises ValueError" replaced with "1900-2100 (v1.4) / silently clamped".
 
 ### Roadmap Evolution
 
