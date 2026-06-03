@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Dynamic Harmonics & Chiron Range
 status: in-progress
-last_updated: "2026-06-03T14:10:00Z"
+last_updated: "2026-06-03T16:30:00Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 5
-  completed_phases: 3
+  completed_phases: 4
   total_plans: 13
-  completed_plans: 8
-  percent: 62
+  completed_plans: 9
+  percent: 69
 ---
 
 # Project State
@@ -24,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 
 ## Current Position
 
-Phase: 31-documentation-en-fr — IN PROGRESS (1/6 plans done, Wave 1 parallel)
-Plan: 1/6 done (31-01 concepts.md complete); sibling plans 31-02..31-06 in parallel
-Status: 31-01 complete; concepts.md recentred on 180°-division default; generate_harmonic_aspects documented; Chiron range 1900-2100 noted
-Last activity: 2026-06-03 — Phase 31-01 COMPLETE; concepts.md tables trimmed (H5/H9/H10 prose note, 14→7 coefficient table), generate_harmonic_aspects subsection added, Chiron 1900-2100 note updated
+Phase: 31-documentation-en-fr — COMPLETE (7/7 plans done)
+Plan: 7/7 done (31-07 gettext fr cycle complete)
+Status: Phase 31 COMPLETE; DOC-17 satisfied — 6 .po re-translated (0 empty, 0 fuzzy), 7 .mo recompiled, en+fr builds at 1-warning baseline; next = Phase 32 Release v1.4.0
+Last activity: 2026-06-03 — Phase 31-07 COMPLETE; fr gettext cycle done (concepts, migration, relational_charts, api, chiron, changelog + architecture); builds clean
 
 Progress: [████████░░░░░░] 62% — Phase 30 complete; Phase 31 in progress (8/13 plans)
 
@@ -87,6 +87,7 @@ Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 - [Phase 31-05]: chiron.md: ValueError behavior replaced with silent clamping (Phase 30); range 1900-2100, accuracy 0.001214° documented with v1.4 badges
 - [Phase 31-02]: migration.md DOC-15 — stale "behavior is unchanged (EXTENDED = all 14 aspects)" replaced with v1.1 history annotation + explicit TRADITIONAL pointer; code comment updated. DOC-16 Chiron-behavior — "1950-2050 / raises ValueError" replaced with "1900-2100 (v1.4) / silently clamped".
 - [Phase 31-documentation-en-fr]: conf.py version/release bumped to 1.4.0 here (docs-build metadata); pyproject.toml + ketu/__init__.py stay at 1.3.0 until Phase 32
+- [Phase 31-07]: MyST explicit label syntax required for heading xrefs in MyST v5 — `(anchor-id)=` before heading; fragment-only links do not auto-resolve during gettext/html build. architecture.md Chiron range was stale (1950-2050) — corrected to 1900-2100 / 2283 segs / 0.001214° as part of DOC-17 grep gate.
 
 ### Roadmap Evolution
 
@@ -105,6 +106,6 @@ None at roadmap time.
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Phase 31-06 EXECUTED (2/2 tasks). [1.4.0] changelog section added to docs/source/changelog.md; v1.1 EXTENDED-default entry annotated; conf.py docs-build version/release bumped to 1.4.0 (pyproject.toml + ketu/__init__.py unchanged).
-Stopped at: Phase 31-06 complete — changelog.md + conf.py updated for v1.4. Remaining Phase 31 plans (31-07 gettext fr) in progress in parallel.
-Resume file: None — Phase 30 COMPLETE; next phase is 31-documentation.
+Last session: 2026-06-03 — Phase 31-07 EXECUTED (2/2 tasks). fr gettext cycle complete: 6 .po re-translated (0 empty, 0 fuzzy), architecture.md stale range fixed, 7 .mo recompiled, en+fr builds at 1-warning baseline. Phase 31 COMPLETE.
+Stopped at: Phase 31 COMPLETE — all 7 plans done. Next = Phase 32 Release v1.4.0.
+Resume file: None — Phase 31 COMPLETE; next phase is 32-release.
