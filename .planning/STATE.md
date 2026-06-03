@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Lunar Declination & Harmonics Debt
 status: in-progress
-last_updated: "2026-06-03T19:41:13Z"
+last_updated: "2026-06-03T19:59:27Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 0
-  completed_plans: 2
-  percent: 5
+  completed_plans: 3
+  percent: 10
 ---
 
 # Project State
@@ -24,16 +24,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-03 — v1.5 milestone started)
 
 ## Current Position
 
-Phase: 33 — Lunar Declination δ (in progress — Plan 02 complete)
-Plan: 03 (next)
-Status: Plan 02 complete. body_decl (f8, (14,)) added to CHART_DTYPE and populated in compute_chart from already-fetched ecliptic positions via coordinates chain. DECL-07 chart wiring + DECL-08 ratchet. 1577 tests, 100% coverage, all gates green.
-Last activity: 2026-06-03 — Plan 02 executed (33-02-SUMMARY.md, commits ab5e01d/56de87c/7ce64fc).
+Phase: 33 — Lunar Declination δ (in progress — Plan 03 complete)
+Plan: 04 (next)
+Status: Plan 03 complete. calculate_composite now explicitly assigns out["body_decl"] via coordinates chain on composite λ,β (Pitfall 4 closed). Returns body_decl inheritance proven at 0.0 diff. 1584 tests, 100% coverage, all gates green.
+Last activity: 2026-06-03 — Plan 03 executed (33-03-SUMMARY.md, commits 6b5af52/af70f4d/fb80084).
 
-Progress: In progress (Plan 01/N done in Phase 33)
+Progress: In progress (Plan 03/N done in Phase 33)
 
 ## Next Step
 
-**`/gsd:execute-phase 33 --plan 03`** — execute Plan 03 of Phase 33 (composite chart body_decl wiring). Plan 02 CHART_DTYPE wiring complete as dependency.
+**`/gsd:execute-phase 33 --plan 04`** — execute Plan 04 of Phase 33 (documentation: body_decl visible in numpydoc, composite api.py docstring update, docs en+fr).
 
 **Phase map (v1.5):**
 
@@ -57,6 +57,7 @@ Full log in `.planning/PROJECT.md` Key Decisions table. v1.5 decisions locked at
 - β-vs-δ independence confirmed: 2025-03-07 (JD=2460742.0) is the anchor date where `is_ascending_declination=True` (vel=+0.30°/day) and `is_ascending=False` (β descending).
 - CHART_DTYPE body_decl consistency boundary: body_decl matches declination() ARRAY path (both use calc_planet_position_batch); scalar declination() uses calc_planet_position (up to 0.025° diff on outer planets). Chart is internally self-consistent.
 - eps_b[..., np.newaxis] broadcast pattern for ε over the (14,) body axis — works for 0-d (scalar jd) and (S,) (array jd) cases.
+- [Phase 33]: Composite body_decl derived via coordinates chain on composite λ,β (NOT midpoint of parents' δ) — Open Question 1 resolved option (a)
 
 ### Blockers/Concerns
 
@@ -75,10 +76,10 @@ None. See `.planning/research/DECLINATION.md` and `.planning/research/HARMONICS_
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 - v1.3: 30 plans / 8 phases (21-27 + 26.1) (2026-05-29 → 2026-06-01)
 - v1.4: 15 plans / 5 phases (28-32) (2026-06-02 → 2026-06-03)
-- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files)
+- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files)
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Plan 02 of Phase 33 executed. body_decl (f8,14) added to CHART_DTYPE, populated in compute_chart, DECL-08 ratchet extended. 1577 tests, 100% coverage, all gates green. Commits: ab5e01d (feat), 56de87c (feat), 7ce64fc (test).
-Stopped at: Phase 33 Plan 02 complete.
-Resume file: None — proceed with `/gsd:execute-phase 33 --plan 03`.
+Last session: 2026-06-03 — Plan 03 of Phase 33 executed. calculate_composite now assigns body_decl via coordinates chain (Pitfall 4 zero-fill closed). Returns body_decl inheritance proven at 0.0 diff (same evaluator). 1584 tests, 100% coverage, all gates green. Commits: 6b5af52 (feat), af70f4d (test), fb80084 (test).
+Stopped at: Phase 33 Plan 03 complete.
+Resume file: None — proceed with `/gsd:execute-phase 33 --plan 04`.
