@@ -21,10 +21,13 @@ change from v1.0).
 from __future__ import annotations
 
 import argparse
+from typing import Optional, Tuple
 
 import numpy as np
+import numpy.typing as npt
 
 from ketu.aspects import find_aspects_between_dates
+from ketu.aspects.harmonics import DynamicAspectSpec
 from ketu.aspects.presets import resolve_aspect_set
 from ketu.calculations import (
     body_id,
@@ -65,6 +68,37 @@ def _preset_label_for_mask(mask: np.ndarray) -> str:
     return "custom"
 
 
+def _harmonic_label(dyn: npt.NDArray[np.void]) -> Tuple[str, str]:
+    """
+    Derive the harmonic token and detail string from a dynamic specs array.
+
+    Used to build the ``# Aspect set: h{N} (...)`` resolved-config header
+    when ``--harmonics h<N>`` is supplied.
+
+    Parameters
+    ----------
+    dyn : np.ndarray
+        Dynamic aspect specs structured array as returned by
+        :func:`~ketu.aspects.harmonics.generate_harmonic_aspects`.
+
+    Returns
+    -------
+    tuple[str, str]
+        ``(label, detail)`` where *label* is ``"h{N}"`` (e.g. ``"h7"``) and
+        *detail* is the human detail string, e.g.
+        ``"3 aspects: H7-1 51°, H7-2 103°, H7-3 154°"``.
+    """
+    h = int(dyn["harmonic"][0])
+    label = f"h{h}"
+    parts = []
+    for row in dyn:
+        name = row["name"].decode() if isinstance(row["name"], bytes) else str(row["name"])
+        angle = int(round(float(row["angle"])))
+        parts.append(f"{name} {angle}°")
+    detail = f"{len(dyn)} aspects: " + ", ".join(parts)
+    return label, detail
+
+
 def cmd_aspects(args: argparse.Namespace) -> int:
     """
     Compute and print body positions + aspects for a date.
@@ -73,8 +107,9 @@ def cmd_aspects(args: argparse.Namespace) -> int:
     ----------
     args : argparse.Namespace
         Required: ``date``. Optional (top-level): ``harmonics`` — a
-        length-14 ``np.bool_`` mask or None (None resolves to CLASSICAL
-        via :func:`ketu.aspects.presets.resolve_aspect_set`).
+        :class:`~ketu.cli.harmonics_spec.HarmonicsSelection` NamedTuple or
+        None.  ``None`` resolves to CLASSICAL via
+        :func:`ketu.aspects.presets.resolve_aspect_set`.
 
     Returns
     -------
@@ -87,15 +122,27 @@ def cmd_aspects(args: argparse.Namespace) -> int:
     # to "classical" intentionally so the CLI byte-stable contract is
     # preserved across v1.0/v1.1/v1.2 — use resolve_aspect_set("classical")
     # explicitly here instead of resolve_aspect_set(None).
+    dyn: Optional[DynamicAspectSpec]
+    dynamic_label: Optional[str]
     if args.harmonics is None:
         mask = resolve_aspect_set("classical")
+        dyn = None
         preset_label = "classical"
+        dynamic_label = None
     else:
-        mask = args.harmonics  # already a length-14 np.bool_ mask
-        preset_label = _preset_label_for_mask(mask)
+        mask = args.harmonics.mask
+        dyn = args.harmonics.dynamic_specs
+        if dyn is None:
+            preset_label = _preset_label_for_mask(mask)
+            dynamic_label = None
+        else:
+            # dyn is a single structured array from generate_harmonic_aspects;
+            # isinstance narrows from DynamicAspectSpec union to NDArray[np.void].
+            assert isinstance(dyn, np.ndarray)
+            preset_label, dynamic_label = _harmonic_label(dyn)
 
     # Resolved-config header to STDERR (CLI-06; preserves CLI-03 stdout).
-    emit_resolved_config(mask, preset_label, house_system=None)
+    emit_resolved_config(mask, preset_label, house_system=None, dynamic_label=dynamic_label)
 
     jd = parse_iso_utc(args.date)
 
@@ -104,7 +151,7 @@ def cmd_aspects(args: argparse.Namespace) -> int:
 
     # Aspects block — library helper extended in Plan 11-04 to accept aspects=.
     # SINGLE SOURCE OF TRUTH for the v1.0 'º' format string (BLOCKER 1 fix).
-    print_aspects(jd, aspects=mask)
+    print_aspects(jd, aspects=mask, dynamic_specs=dyn)
 
     # Aspect Timing Example — ALWAYS emitted (research §Open Question 2).
     # Reproduces v1.0 main()'s trailing Sun-Moon timing demo verbatim.
