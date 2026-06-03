@@ -65,6 +65,13 @@ from ketu.aspects.presets import (
     resolve_aspect_set,
 )
 
+# Dynamic harmonic generator (Phase 28)
+from ketu.aspects.harmonics import (
+    generate_harmonic_aspects,
+    HARMONIC_DTYPE,
+    DynamicAspectSpec,
+)
+
 __all__ = [
     # Calculator (high-level API)
     "get_aspect",
@@ -102,4 +109,9 @@ __all__ = [
     "AspectSetSpec",
     "aspects_for_harmonics",
     "resolve_aspect_set",
+
+    # Dynamic harmonic generator (Phase 28)
+    "generate_harmonic_aspects",
+    "HARMONIC_DTYPE",
+    "DynamicAspectSpec",
 ]

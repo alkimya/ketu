@@ -1,4 +1,5 @@
-"""Dynamic harmonic aspect generator.
+"""
+Dynamic harmonic aspect generator.
 
 Provides :func:`generate_harmonic_aspects` which emits aspect specs for **any**
 integer harmonic ``h`` using the locked unified 360° convention.  The output
@@ -10,21 +11,20 @@ does not import or call ``aspects_for_harmonics``, ``resolve_aspect_set``, or
 ``_VALID_HARMONICS`` (those APIs would reject ``h=7/11/17`` with
 :exc:`ValueError`).  The frozen 14-row table is never mutated.
 
-Public API
-----------
+Notes
+-----
+Public symbols:
+
 - :data:`HARMONIC_DTYPE` — dtype mirroring ``core.aspects``.
 - :data:`DynamicAspectSpec` — type alias for the ``dynamic_specs=`` parameter
   threaded through all consumers (Plans 02/03).
 - :func:`_fold_to_0_180` — maps any angle into the closed [0°, 180°] range.
 - :func:`generate_harmonic_aspects` — public generator for harmonic ``h``.
 
-Requirements satisfied
-----------------------
-- ASP-04: public generator for any integer ``h``.
-- ASP-05: unified 360° convention (fold, mirror-dedup, no 0°/360°, blank
-  symbol).
-- ASP-08: frozen ``core.aspects`` table untouched; ``_VALID_HARMONICS`` never
-  consulted on the dynamic path.
+Requirements satisfied: ASP-04 (public generator for any integer ``h``),
+ASP-05 (unified 360° convention — fold, mirror-dedup, no 0°/360°, blank symbol),
+ASP-08 (frozen ``core.aspects`` table untouched; ``_VALID_HARMONICS`` never
+consulted on the dynamic path).
 """
 from __future__ import annotations
 
@@ -73,7 +73,8 @@ DynamicAspectSpec = Optional[Union[npt.NDArray[np.void], List[npt.NDArray[np.voi
 
 
 def _fold_to_0_180(angle_deg: float) -> float:
-    """Fold any angle into the closed range [0°, 180°].
+    """
+    Fold any angle into the closed range [0°, 180°].
 
     Implements the locked 360° convention: ``min(a % 360, 360 - a % 360)``.
     Both 0° and 180° are valid outputs (they correspond to the conjunction and
@@ -115,31 +116,12 @@ def _fold_to_0_180(angle_deg: float) -> float:
 
 
 def generate_harmonic_aspects(h: int) -> npt.NDArray[np.void]:
-    """Generate aspect specs for integer harmonic *h*.
+    """
+    Generate aspect specs for integer harmonic *h*.
 
     Returns a structured array with :data:`HARMONIC_DTYPE` (identical to
     ``ketu.core.aspects.dtype``) containing one row per unique folded angle
     ``fold_to_0_180(k·360/h)`` for ``k = 1 … h//2``.
-
-    Convention (locked, 360° unified)
-    ----------------------------------
-    - Angle  : ``fold_to_0_180(k · 360 / h)`` — values in ``(0°, 180°]``.
-    - Coef   : ``k / h`` — used as the orb-scaling factor by consumers.
-    - Name   : ``b'H{h}-{k}'`` (byte string, field width S16).
-    - Harmonic: ``h`` (the input integer).
-    - Symbol : ``''`` (blank U4 — same convention as the 7 minor aspects in the
-      frozen table).
-
-    Guarantees
-    ----------
-    - ``0°`` and ``360°`` are **never** emitted (``k`` starts at 1 and stops
-      before ``k = h``, so the conjunction/full-circle poles are excluded).
-    - Mirror pairs **deduplicated**: only ``k = 1 … h//2``; the fold maps
-      ``k·360/h`` and ``(h-k)·360/h`` to the same angle, so we emit it once.
-    - Deterministic row ordering by ``k``.
-    - The frozen ``core.aspects`` table is **never imported or mutated**.
-    - ``_VALID_HARMONICS`` / ``aspects_for_harmonics`` are **never** called;
-      this function accepts any valid ``h`` including 7, 11, 17, etc.
 
     Parameters
     ----------
@@ -161,6 +143,28 @@ def generate_harmonic_aspects(h: int) -> npt.NDArray[np.void]:
     ------
     ValueError
         If ``h`` is a ``bool``, not an ``int``, or outside ``[2, 64]``.
+
+    Notes
+    -----
+    Convention (locked, 360° unified):
+
+    - Angle  : ``fold_to_0_180(k · 360 / h)`` — values in ``(0°, 180°]``.
+    - Coef   : ``k / h`` — used as the orb-scaling factor by consumers.
+    - Name   : ``b'H{h}-{k}'`` (byte string, field width S16).
+    - Harmonic: ``h`` (the input integer).
+    - Symbol : ``''`` (blank U4 — same convention as the 7 minor aspects in
+      the frozen table).
+
+    Guarantees:
+
+    - ``0°`` and ``360°`` are **never** emitted (``k`` starts at 1 and stops
+      before ``k = h``, so the conjunction/full-circle poles are excluded).
+    - Mirror pairs **deduplicated**: only ``k = 1 … h//2``; the fold maps
+      ``k·360/h`` and ``(h-k)·360/h`` to the same angle, so we emit it once.
+    - Deterministic row ordering by ``k``.
+    - The frozen ``core.aspects`` table is **never imported or mutated**.
+    - ``_VALID_HARMONICS`` / ``aspects_for_harmonics`` are **never** called;
+      this function accepts any valid ``h`` including 7, 11, 17, etc.
 
     Examples
     --------
