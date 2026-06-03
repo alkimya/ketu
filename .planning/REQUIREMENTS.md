@@ -11,12 +11,12 @@ Requirements for the v1.4 minor release. Each maps to exactly one roadmap phase 
 
 ### Dynamic Harmonics
 
-- [ ] **ASP-04**: A user can generate the aspects of ANY integer harmonic `h` via a new public generator (e.g. `generate_harmonic_aspects(h)`), returning angle + coefficient specs — not limited to the preset set `{1,2,3,5,6,9,10}`
-- [ ] **ASP-05**: The generator uses the unified 360° convention — angles `fold_to_0_180(k·360/h)` for `k=1..h//2`, coefficient `k/h` — deduplicating mirror pairs and never emitting 0°/360°; unnamed high harmonics emit a blank symbol
-- [ ] **ASP-06**: A user can pass dynamically-generated aspects to `calculate_aspects` and have them detected with correct per-pair orbs `((orb1+orb2)/2 × dynamic_coef)` — dynamic aspects are first-class through the full detection chain (`calculate_aspects`, vectorized, batch)
-- [ ] **ASP-07**: Dynamic aspects flow correctly through cycles and synastry (orb derived from `core.bodies['orb']` × dynamic coefficient); no code path assumes the 14-row table for a dynamic aspect
-- [ ] **ASP-08**: The frozen `core.aspects` table and the named-preset sha256 fingerprints are unchanged (regression-pinned); `_VALID_HARMONICS` does NOT gate the dynamic path
-- [ ] **ASP-09**: `find_aspect_timing` and `find_aspects_between_dates` (hardcoded table-index lookups) are guarded so dynamic angles do not raise `IndexError`; off-table aspects resolve via a synthetic name, not a crash
+- [x] **ASP-04**: A user can generate the aspects of ANY integer harmonic `h` via a new public generator (e.g. `generate_harmonic_aspects(h)`), returning angle + coefficient specs — not limited to the preset set `{1,2,3,5,6,9,10}`
+- [x] **ASP-05**: The generator uses the unified 360° convention — angles `fold_to_0_180(k·360/h)` for `k=1..h//2`, coefficient `k/h` — deduplicating mirror pairs and never emitting 0°/360°; unnamed high harmonics emit a blank symbol
+- [x] **ASP-06**: A user can pass dynamically-generated aspects to `calculate_aspects` and have them detected with correct per-pair orbs `((orb1+orb2)/2 × dynamic_coef)` — dynamic aspects are first-class through the full detection chain (`calculate_aspects`, vectorized, batch)
+- [x] **ASP-07**: Dynamic aspects flow correctly through cycles and synastry (orb derived from `core.bodies['orb']` × dynamic coefficient); no code path assumes the 14-row table for a dynamic aspect
+- [x] **ASP-08**: The frozen `core.aspects` table and the named-preset sha256 fingerprints are unchanged (regression-pinned); `_VALID_HARMONICS` does NOT gate the dynamic path
+- [x] **ASP-09**: `find_aspect_timing` and `find_aspects_between_dates` (hardcoded table-index lookups) are guarded so dynamic angles do not raise `IndexError`; off-table aspects resolve via a synthetic name, not a crash
 
 ### Chiron Orb
 
@@ -76,12 +76,12 @@ Which phases cover which requirements. Filled during roadmap creation (2026-06-0
 
 | Requirement | Phase    | Status  |
 |-------------|----------|---------|
-| ASP-04      | Phase 28 | Pending |
-| ASP-05      | Phase 28 | Pending |
-| ASP-06      | Phase 28 | Pending |
-| ASP-07      | Phase 28 | Pending |
-| ASP-08      | Phase 28 | Pending |
-| ASP-09      | Phase 28 | Pending |
+| ASP-04      | Phase 28 | Complete |
+| ASP-05      | Phase 28 | Complete |
+| ASP-06      | Phase 28 | Complete |
+| ASP-07      | Phase 28 | Complete |
+| ASP-08      | Phase 28 | Complete |
+| ASP-09      | Phase 28 | Complete |
 | CHIR-06     | Phase 29 | Pending |
 | CHIR-07     | Phase 29 | Pending |
 | CHIR-08     | Phase 29 | Pending |

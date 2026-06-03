@@ -7,10 +7,10 @@ last_updated: "2026-06-03T10:41:14Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 5
-  completed_phases: 0
-  total_plans: 15
-  completed_plans: 4
-  percent: 27
+  completed_phases: 1
+  total_plans: 3
+  completed_plans: 3
+  percent: 20
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 
 ## Current Position
 
-Phase: 28-dynamic-harmonic-generator
-Plan: 28-02 complete — Wave 2 complete (both 28-02 and 28-03 done)
-Status: In progress
-Last activity: 2026-06-03 — Phase 28 Plans 01+02+03 complete (full dynamic harmonic integration: generator + calculator/timing + synastry/cycles)
+Phase: 28-dynamic-harmonic-generator — ✓ COMPLETE (verifier PASSED 5/5, 2026-06-03)
+Plan: All 3 plans done (28-01, 28-02, 28-03); Wave 1 + Wave 2 complete
+Status: Phase 28 closed; milestone v1.4 at 1/5 phases
+Last activity: 2026-06-03 — Phase 28 verified PASSED 5/5; full dynamic harmonic integration (generator + calculator/timing + synastry/cycles); 1530 tests, 100% coverage, frozen fingerprints intact
 
-Progress: [████░░░░░░░░░░] 27% — 4/15 plans complete (28-01, 28-02, 28-03 done)
+Progress: [███░░░░░░░░░░░] 20% — Phase 28 of 5 complete (3/3 plans)
 
 ## v1.4 Roadmap Structure
 
@@ -97,6 +97,6 @@ None at roadmap time.
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Phase 28 complete. Plans 28-01, 28-02, 28-03 all done. Plan 28-02: `dynamic_specs=` threaded into `calculate_aspects` (scalar/vectorized/batch) + `find_aspects_between_dates`; `i_asp=-2` sentinel; `orb=Optional[float]` param on `find_aspect_timing` closes IndexError trap; `_normalize_dynamic_specs` helper; 35 new tests. 1530 tests green, 100% coverage, doctests pass.
-Stopped at: Completed 28-02-PLAN.md. Phase 28 fully closed.
-Resume file: None — Phase 28 done; proceed with Phase 29 (Chiron Orb 4°) or Phase 31 (Documentation) as independent next step.
+Last session: 2026-06-03 — Phase 28 EXECUTED + VERIFIED (gsd-verifier PASSED 5/5). All 3 plans done across 2 waves: 28-01 (generator `generate_harmonic_aspects(h)` + `_fold_to_0_180` + `HARMONIC_DTYPE`/`DynamicAspectSpec`), 28-02 (`dynamic_specs=` in `calculate_aspects` scalar/vec/batch + 2 IndexError guards, `i_asp=-2`), 28-03 (synastry `aspect_type=-2` + cycles candidate-set extension). 1530 tests / 100% coverage, frozen sha256 V1/V13 byte-identical, `_VALID_HARMONICS` never on dynamic path, output dtype unchanged. ROADMAP + STATE updated, VERIFICATION.md written.
+Stopped at: Phase 28 fully closed and verified.
+Resume file: None — Phase 28 done. Next: `/gsd:plan-phase 29` (Chiron Orb 4°) — independent of 28, MUST precede Phase 30. Phase 31 (docs) also unblocked w.r.t. 28 but depends on 29+30 too.
