@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Dynamic Harmonics & Chiron Range
-status: roadmapped
-last_updated: "2026-06-02T00:00:00Z"
-last_activity: 2026-06-02
+status: in-progress
+last_updated: "2026-06-03T10:26:45Z"
+last_activity: 2026-06-03
 progress:
   total_phases: 5
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 15
+  completed_plans: 1
+  percent: 7
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 
 ## Current Position
 
-Phase: Not started (roadmap written, ready for `/gsd:plan-phase 28`)
-Plan: —
-Status: Roadmapped
-Last activity: 2026-06-02 — Milestone v1.4 roadmapped (5 phases, 18 requirements, 100% coverage)
+Phase: 28-dynamic-harmonic-generator
+Plan: 28-01 complete — ready for 28-02
+Status: In progress
+Last activity: 2026-06-03 — Phase 28 Plan 01 complete (dynamic harmonic generator)
 
-Progress: [░░░░░░░░░░░░░░] 0% — milestone v1.4 roadmapped, not started
+Progress: [█░░░░░░░░░░░░░] 7% — 1/15 plans complete (28-01 done)
 
 ## v1.4 Roadmap Structure
 
@@ -70,6 +70,10 @@ Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 - [Phase 24-04]: Last-segment `actual_len` fix in `_eval_chiron_qty` — `actual_len=min(seg_start+seg_len, jd_end)-seg_start`; this fix MUST be preserved when `.npz` is regenerated in Phase 30.
 - [Phase 23-01/02]: Phase 23 locked params for 1950–2050: `seg=32d`, `degree=10`, 3 quantities (lon/lat/dist). Phase 30 spike measures whether these hold for 1900–2100 before committing.
 - [Phase 27-02]: Lesson — push `origin/main` in addition to the tag; RTD follows main, PyPI follows tag. Phase 32 release checklist must explicitly include `git push origin main`.
+- [Phase 28-01]: `generate_harmonic_aspects(h)` bounds [2..64]: h=1 degenerate (0 rows via h//2=0), h>64 impractically small orbs (coef=k/h). Both rejected via ValueError.
+- [Phase 28-01]: `DynamicAspectSpec = Optional[Union[NDArray, List[NDArray]]]` — type alias for `dynamic_specs=` parameter across all consumers (calculator, synastry, cycles). Plans 02/03 import from `ketu.aspects.harmonics`.
+- [Phase 28-01]: `HARMONIC_DTYPE` mirrors `core.aspects.dtype` exactly (5 fields S16/f4/f4/i4/U4). Consumers need no dtype conversion. H-names stored as bytes (S16 field).
+- [Phase 28-01]: `_fold_to_0_180` is the canonical fold; all consumers must import from `ketu.aspects.harmonics`, not reimplement.
 
 ### Roadmap Evolution
 
@@ -87,6 +91,6 @@ None at roadmap time.
 
 ## Session Continuity
 
-Last session: 2026-06-02 — Milestone v1.4 roadmapped. ROADMAP.md written (5 phases 28-32, 18 requirements, 100% coverage). STATE.md updated. REQUIREMENTS.md traceability filled. v1.3 ROADMAP archived to milestones/v1.3-ROADMAP.md.
-Stopped at: Roadmap written. Ready for `/gsd:plan-phase 28` (or 29 — both independent).
-Resume file: None — start with `/gsd:plan-phase 28`.
+Last session: 2026-06-03 — Phase 28-01 complete. `generate_harmonic_aspects(h)` module shipped: `ketu/aspects/harmonics.py` + 96-test suite + public exports in `ketu/aspects/__init__.py`. 1495 tests green, 100% coverage, numpydoc and doctest gates pass.
+Stopped at: Completed 28-01-PLAN.md.
+Resume file: None — continue with 28-02-PLAN.md (calculator/synastry `dynamic_specs=` integration).
