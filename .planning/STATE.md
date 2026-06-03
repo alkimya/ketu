@@ -9,7 +9,7 @@ progress:
   total_phases: 3
   completed_phases: 0
   total_plans: 0
-  completed_plans: 1
+  completed_plans: 2
   percent: 5
 ---
 
@@ -24,16 +24,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-03 — v1.5 milestone started)
 
 ## Current Position
 
-Phase: 33 — Lunar Declination δ (in progress — Plan 01 complete)
-Plan: 02 (next)
-Status: Plan 01 complete. Four declination functions added to ketu.calculations: `declination` (scalar + vectorized), `declination_velocity` (FD step=0.01), `is_ascending_declination` (dδ/dt > 0), `is_out_of_bounds` (|δ| > true_obliquity). DECL-03 equivalence regression pins machine-precision agreement with Meeus 13.4. 1575 tests, 100% coverage, all gates green.
-Last activity: 2026-06-03 — Plan 01 executed (33-01-SUMMARY.md, commits 6183bad/ad11073/60da1f9).
+Phase: 33 — Lunar Declination δ (in progress — Plan 02 complete)
+Plan: 03 (next)
+Status: Plan 02 complete. body_decl (f8, (14,)) added to CHART_DTYPE and populated in compute_chart from already-fetched ecliptic positions via coordinates chain. DECL-07 chart wiring + DECL-08 ratchet. 1577 tests, 100% coverage, all gates green.
+Last activity: 2026-06-03 — Plan 02 executed (33-02-SUMMARY.md, commits ab5e01d/56de87c/7ce64fc).
 
 Progress: In progress (Plan 01/N done in Phase 33)
 
 ## Next Step
 
-**`/gsd:execute-phase 33 --plan 02`** — execute Plan 02 of Phase 33 (body_decl in CHART_DTYPE + ratchet test). Plan 01 foundation functions are ready as dependencies.
+**`/gsd:execute-phase 33 --plan 03`** — execute Plan 03 of Phase 33 (composite chart body_decl wiring). Plan 02 CHART_DTYPE wiring complete as dependency.
 
 **Phase map (v1.5):**
 
@@ -55,6 +55,8 @@ Full log in `.planning/PROJECT.md` Key Decisions table. v1.5 decisions locked at
 - `find_aspect_timing` gets `dyn_coef: Optional[float] = None` (Option (a) — clean under mypy `--strict`); explicit `orb` wins / precedence defined + tested.
 - Scalar/array dispatch in `declination()`: `long`/`lat` reject array jdate (lru_cache, unhashable); scalar path uses `long`/`lat`, array path uses `calc_planet_position_batch` (loop-free).
 - β-vs-δ independence confirmed: 2025-03-07 (JD=2460742.0) is the anchor date where `is_ascending_declination=True` (vel=+0.30°/day) and `is_ascending=False` (β descending).
+- CHART_DTYPE body_decl consistency boundary: body_decl matches declination() ARRAY path (both use calc_planet_position_batch); scalar declination() uses calc_planet_position (up to 0.025° diff on outer planets). Chart is internally self-consistent.
+- eps_b[..., np.newaxis] broadcast pattern for ε over the (14,) body axis — works for 0-d (scalar jd) and (S,) (array jd) cases.
 
 ### Blockers/Concerns
 
@@ -77,6 +79,6 @@ None. See `.planning/research/DECLINATION.md` and `.planning/research/HARMONICS_
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Plan 01 of Phase 33 executed. Four declination functions added to ketu.calculations. 1575 tests, 100% coverage, all gates green. Commits: 6183bad (feat), ad11073 (test), 60da1f9 (test).
-Stopped at: Phase 33 Plan 01 complete.
-Resume file: None — proceed with `/gsd:execute-phase 33 --plan 02`.
+Last session: 2026-06-03 — Plan 02 of Phase 33 executed. body_decl (f8,14) added to CHART_DTYPE, populated in compute_chart, DECL-08 ratchet extended. 1577 tests, 100% coverage, all gates green. Commits: ab5e01d (feat), 56de87c (feat), 7ce64fc (test).
+Stopped at: Phase 33 Plan 02 complete.
+Resume file: None — proceed with `/gsd:execute-phase 33 --plan 03`.
