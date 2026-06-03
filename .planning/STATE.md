@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Dynamic Harmonics & Chiron Range
 status: in-progress
-last_updated: "2026-06-03T12:40:00Z"
+last_updated: "2026-06-03T14:00:00Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 5
-  completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
-  percent: 40
+  completed_phases: 3
+  total_plans: 7
+  completed_plans: 7
+  percent: 60
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 
 ## Current Position
 
-Phase: 30-chiron-range-1900-2100 — in-progress (plan 01 complete, plan 02 next)
-Plan: 1/2 plans done (30-01 SPIKE complete); Phase 30 in-progress
-Status: Phase 30 plan 01 (blocking spike) complete; degree_final=10 confirmed; Plan 30-02 next (.npz regeneration)
-Last activity: 2026-06-03 — Phase 30-01 COMPLETE; Chiron 1900-2100 spike: max|delta-lon|=0.001214 deg, GATE PASS, degree=10 kept
+Phase: 30-chiron-range-1900-2100 — COMPLETE (2/2 plans done)
+Plan: 2/2 plans done; Phase 30 complete
+Status: Phase 30 fully executed; .npz regenerated 1900-2100 (2283 segs, gate PASS); regression + bounds tests green; 1537 tests, 100% coverage
+Last activity: 2026-06-03 — Phase 30-02 COMPLETE; Chiron .npz 1900-2100 (2283 segs, max|Δλ|=0.001214°), regression re-pinned 9 refs, bounds clamp locked
 
-Progress: [██████░░░░░░░░] 40% — Phase 29 of 5 complete (5/5 plans total, Phase 30 in-progress)
+Progress: [████████░░░░░░] 60% — Phase 30 of 5 complete (7/7 plans total through Phase 30)
 
 ## v1.4 Roadmap Structure
 
@@ -82,6 +82,7 @@ Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 - [Phase 28-02]: `_normalize_dynamic_specs` centralises None/single/list normalization — imported/reused by all calculator consumers (not reimplemented per-function).
 - [Phase 29-01]: Chiron natal orb=4° (Pluto parity); single literal in `core.bodies['orb'][13]`; `_BODY_ORBS_16` rebuilds from it at import — no second source patched. CLI fixture audited: exactly 2 added lines (Sun-Chiron + Moon-Chiron Semi-sextile), 0 removed. orbs.py docstring already correct (no Chiron in zero-orb group).
 - [Phase 30-01]: Chiron range 1900-2100 spike: max|delta-lon|=0.001214 deg, params seg=32d/degree=10, gate PASS < 0.01 deg; new .npz = 2283 segs, jd_start=2415020.5, jd_end=2488069.5. Dense 1900-1910 edge: segs 0-10 max 0.000013 deg (worst 1900 seg 0.000005 deg). Worst case 1926-04-18 (seg 300, JD 2424624.04). Ephemeral spike thrown away (spike-only). Plan 30-02 regenerates with degree=10.
+- [Phase 30-02]: .npz regenerated with degree=10 / jd_start=2415020.5 / jd_end=2488069.5 / 2283 segs / shape (2283,11) / 577 KB. Gate PASS max|Δλ|=0.001214° (margin 8.2×). Wing refs added: 1920-01-01 (2.609080°) + 2080-01-01 (36.885249°). No 1905 ref needed (1900-1910 edge max 0.000013°). actual_len fix (Phase 24-04) preserved; zero pyswisseph in chiron.py. 1537 tests, 100% coverage.
 
 ### Roadmap Evolution
 
@@ -94,11 +95,12 @@ None at roadmap time.
 
 ### Blockers/Concerns
 
-- **Phase 30 perihelion accuracy** — RESOLVED by Phase 30-01 spike. degree=10/seg=32d PASSES < 0.01 deg over 1900-2100 (max 0.001214 deg, 8.2x margin). No parameter change needed. Plan 30-02 regenerates with degree=10.
+- **Phase 30 perihelion accuracy** — RESOLVED by Phase 30-01 spike. degree=10/seg=32d PASSES < 0.01 deg over 1900-2100 (max 0.001214 deg, 8.2x margin). No parameter change needed. Plan 30-02 executed; .npz regenerated.
 - **Build environment prerequisite for Phase 30** — RESOLVED. pyswisseph + seas_18.se1 confirmed accessible at /home/loc/workspace/rahu/kerykeion/kerykeion/sweph.
+- **Phase 30 .npz regeneration** — RESOLVED by Phase 30-02. .npz regenerated (2283 segs, 1900-2100, gate PASS). Phase 30 COMPLETE.
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Phase 30-01 EXECUTED (3/3 tasks). Blocking spike complete: degree=10/seg=32d PASS over 1900-2100 (max delta-lon=0.001214 deg, gate < 0.01 deg, margin 8.2x). Dense 1900-1910 edge sampled (segs 0-10, max 0.000013 deg). Verdict recorded in PROJECT.md + STATE.md decisions. Ephemeral spike script deleted.
-Stopped at: Phase 30-01 complete — blocking spike done, degree=10 confirmed.
-Resume file: None — next is Phase 30-02 (.npz regeneration with degree=10, jd_start=2415020.5, jd_end=2488069.5).
+Last session: 2026-06-03 — Phase 30-02 EXECUTED (3/3 tasks). .npz regenerated 1900-2100 (2283 segs, degree=10, gate PASS max|Δλ|=0.001214°, 577 KB). Regression re-pinned to 9 refs (1920-2080). 4 bounds tests added. 1537 tests green at 100% coverage. Phase 30 COMPLETE.
+Stopped at: Phase 30-02 complete — Phase 30 fully done. Next: Phase 31 (Documentation en+fr).
+Resume file: None — Phase 30 COMPLETE; next phase is 31-documentation.
