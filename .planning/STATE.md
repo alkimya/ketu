@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Lunar Declination & Harmonics Debt
 status: in-progress
-last_updated: "2026-06-03T22:39:00Z"
+last_updated: "2026-06-03T20:45:51Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 3
   completed_phases: 1
   total_plans: 8
-  completed_plans: 6
-  percent: 46
+  completed_plans: 7
+  percent: 56
 ---
 
 # Project State
@@ -24,16 +24,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-03 — v1.5 milestone started)
 
 ## Current Position
 
-Phase: 34 — Harmonics Debt (in progress — Plans 01 and 02 done)
-Plan: Plan 02 of Phase 34 complete; Plan 03 next (ASP-F1 CLI --harmonics h7)
-Status: Plan 34-02 complete. HARM-04/05 satisfied: find_aspect_timing dyn_coef= param (3-branch orb resolution, explicit-orb-first), TestFindAspectTimingF3 (5 tests), api.md find_aspect_timing section + FR translations. 100% coverage on calculator.py, mypy --strict clean, numpydoc lint passes.
-Last activity: 2026-06-03 — Plan 34-02 executed (3 tasks, commits cfd4bfe/c542f63/b63f446).
+Phase: 34 — Harmonics Debt (in progress — Plans 01, 02, and 03 done)
+Plan: Plan 03 of Phase 34 complete; Plan 04 next (byte-stability fixture + docs en+fr)
+Status: Plan 34-03 complete. HARM-06/07 satisfied: HarmonicsSelection NamedTuple, --harmonics h7 end-to-end, Quadrinovile bug fixed, harmonic header label, Tight grammar tested. 1617 tests, 100% coverage, mypy --strict clean.
+Last activity: 2026-06-03 — Plan 34-03 executed (3 tasks, commits e9efc2f/74608e1/a466b48).
 
 Progress: Phase 34 in progress (1/3 plans done)
 
 ## Next Step
 
-**`/gsd:execute-phase 34 --plan 03`** — Plan 34-03 (ASP-F1: CLI `--harmonics h7`). F3 dyn_coef= complete; F1 CLI surface depends on stable naming contract (Plan 34-01 ✓) and runtime (Plan 34-02 ✓).
+**`/gsd:execute-phase 34 --plan 04`** — Plan 34-04 (byte-stability fixture + docs en+fr). F1 CLI is functional; pinnable now.
 
 **Phase map (v1.5):**
 
@@ -63,6 +63,8 @@ Full log in `.planning/PROJECT.md` Key Decisions table. v1.5 decisions locked at
 - [Phase 34-01]: Cross-file MyST anchor reference uses {ref} role, not path-based concepts.md#anchor (path form triggers myst.xref_missing)
 - [Phase 34-02]: Explicit orb wins silently when both orb= and dyn_coef= given — no ValueError raised (HARM-05 locked, overrides brief §4-C)
 - [Phase 34-02]: dyn_coef orb formula mirrors calculate_aspects:215-216 exactly — single canonical formula across the library
+- [Phase 34-03]: _resolve_dynamic_name recomputes angular separation from jdate+body IDs to identify matched dyn row (result dtype stores dyn_angle-dist, not dyn_angle itself)
+- [Phase 34-03]: assert isinstance(dyn, np.ndarray) at _harmonic_label call site narrows DynamicAspectSpec union for mypy (hN token always produces single array)
 
 ### Blockers/Concerns
 
@@ -81,10 +83,10 @@ None. See `.planning/research/DECLINATION.md` and `.planning/research/HARMONICS_
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 - v1.3: 30 plans / 8 phases (21-27 + 26.1) (2026-05-29 → 2026-06-01)
 - v1.4: 15 plans / 5 phases (28-32) (2026-06-02 → 2026-06-03)
-- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files); Plan 33-04 done (7 min, 2 tasks, 9 files) — Phase 33 COMPLETE; Plan 34-01 done (15 min, 3 tasks, 8 files) — HARM-01/02/03 satisfied; Plan 34-02 done (12 min, 3 tasks, 5 files) — HARM-04/05 satisfied
+- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files); Plan 33-04 done (7 min, 2 tasks, 9 files) — Phase 33 COMPLETE; Plan 34-01 done (15 min, 3 tasks, 8 files) — HARM-01/02/03 satisfied; Plan 34-02 done (12 min, 3 tasks, 5 files) — HARM-04/05 satisfied; Plan 34-03 done (11 min, 3 tasks, 8 files) — HARM-06/07 satisfied
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Plan 02 of Phase 34 executed. HARM-04/05 satisfied: find_aspect_timing dyn_coef= (3-branch orb resolution), TestFindAspectTimingF3 (5 tests), api.md + FR api.po/api.mo updated. Commits: cfd4bfe (feat), c542f63 (test), b63f446 (docs+FR).
-Stopped at: Phase 34 Plan 02 complete.
-Resume file: None — proceed with Plan 34-03 (ASP-F1 CLI).
+Last session: 2026-06-03 — Plan 03 of Phase 34 executed. HARM-06/07 satisfied: HarmonicsSelection NamedTuple, --harmonics h7 end-to-end, Quadrinovile bug fixed, 1617 tests 100% coverage. Commits: e9efc2f (feat), 74608e1 (feat), a466b48 (test).
+Stopped at: Phase 34 Plan 03 complete.
+Resume file: None — proceed with Plan 34-04 (byte-stability fixture + docs en+fr).
