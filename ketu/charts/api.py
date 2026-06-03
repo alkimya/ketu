@@ -37,6 +37,12 @@ import numpy as np
 from ketu.aspects.calculator import calculate_aspects_vectorized
 from ketu.aspects.presets import AspectSetSpec
 from ketu.core import bodies as _CANONICAL_BODIES
+from ketu.ephemeris.coordinates import (
+    ecliptic_to_equatorial,
+    rectangular_to_spherical,
+    spherical_to_rectangular,
+    true_obliquity,
+)
 from ketu.ephemeris.planets import calc_planet_position_batch
 from ketu.houses import calculate_houses
 from ketu.houses.ascmc import compute_ascmc
@@ -370,6 +376,22 @@ def compute_chart(
     out["body_lons"] = body_lons
     out["body_lats"] = body_lats
     out["body_speeds"] = body_speeds
+    # DECL-07: Equatorial declination δ per body, derived from the
+    # already-fetched ecliptic (body_lons, body_lats) + instantaneous ε(jd).
+    # No S-loop, no re-fetch — vectorised over S + (14,) in one pass.
+    # true_obliquity is typed jd: float -> float but works on arrays at runtime;
+    # np.asarray + float cast keeps mypy --strict clean without modifying the
+    # function's own hint.
+    eps_b: np.ndarray = np.asarray(
+        true_obliquity(float(jd_b) if jd_b.ndim == 0 else jd_b)  # type: ignore[arg-type]
+    )
+    # eps_b[..., None] adds a trailing axis: 0-d -> (1,), (S,) -> (S,1),
+    # broadcasting correctly against body_lons / body_lats shape S+(14,).
+    eps_bc = eps_b[..., np.newaxis]
+    x_ecl, y_ecl, z_ecl = spherical_to_rectangular(body_lons, body_lats, 1.0)
+    x_eq, y_eq, z_eq = ecliptic_to_equatorial(x_ecl, y_ecl, z_ecl, eps_bc)
+    _, decl, _ = rectangular_to_spherical(x_eq, y_eq, z_eq)
+    out["body_decl"] = decl
     out["cusps"] = houses["cusps"]
     out["asc"] = houses["asc"]
     out["mc"] = houses["mc"]
