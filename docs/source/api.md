@@ -218,6 +218,35 @@ from ketu.aspects import calculate_aspects
 result = calculate_aspects(jd, aspects=aspects_for_harmonics([1, 2, 3, 6]))
 ```
 
+### `generate_harmonic_aspects(h)`
+
+Generate aspect specs on the fly for **any** integer harmonic `h` — not just the named preset harmonics `{1, 2, 3, 5, 6, 9, 10}`. For each `k = 1 … h//2`, the function computes `angle = fold_to_0_180(k · 360 / h)` and `coef = k / h`, using the full-circle 360° convention folded to 0–180°.
+
+**Parameters:**
+
+- `h` (`int`): the harmonic, `2 ≤ h ≤ 64`. `h = 1` is rejected (degenerate, 0 rows); `h > 64` is rejected (impractically small orbs).
+
+**Returns:** structured array with the **same dtype as `core.aspects`** (drop-in), shape `(h // 2,)`. Names are auto-generated (`b'H7-1'`, `b'H7-2'`, …). Pass the result as the `dynamic_specs=` argument to `calculate_aspects`, `find_aspects_between_dates`, and `calculate_synastry`.
+
+**Raises:** `ValueError` if `h` is not an `int` or is outside `[2, 64]`.
+
+```python
+from ketu.aspects import generate_harmonic_aspects
+
+# Harmonic 7: 3 unique folded angles (septile family)
+specs = generate_harmonic_aspects(7)
+print(len(specs))          # 3
+print(specs['name'])       # [b'H7-1', b'H7-2', b'H7-3']
+print(specs['angle'])      # [51.43, 102.86, 154.29]
+print(specs['coef'])       # [0.1429, 0.2857, 0.4286]
+
+# Pass to calculate_aspects via dynamic_specs:
+from ketu.aspects import calculate_aspects
+result = calculate_aspects(jd, dynamic_specs=generate_harmonic_aspects(7))
+```
+
+> **Note on orbs:** Dynamic harmonic orbs use `coef = k / h` (full-circle convention). For high harmonics this yields orbs roughly half the size of the equivalent half-circle aspect — accepted behaviour; the two conventions coexist without unification (see the v1.4 release notes).
+
 ### `core.aspects` columns: `harmonic` and `symbol`
 
 `core.aspects` is a 5-field structured array `(name, angle, coef, harmonic, symbol)`.
