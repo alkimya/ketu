@@ -105,21 +105,26 @@ v1.4 made aspect harmonics open-ended. A new public `generate_harmonic_aspects(h
 
 ### Active
 
-<!-- Next milestone (v1.5) not yet scoped. Run /gsd:new-milestone to define requirements. -->
+<!-- Current milestone: v1.5 Lunar Declination & Harmonics Debt. Requirements defined by /gsd:new-milestone. -->
 
-_None yet — v1.4 shipped. Run `/gsd:new-milestone` to scope v1.5._
+**Current Milestone: v1.5 Lunar Declination & Harmonics Debt**
 
-**Tracked for a future milestone (surfaced during v1.4):**
+**Goal:** Add lunar (and body) declination δ with biodynamic montant/descendant semantics, and pay down the dynamic-harmonics debt left open by v1.4 (CLI surface, naming contract, timing orb derivation) — additive minor, no breaking changes.
 
-- [ ] CLI surface for arbitrary harmonics (`--harmonics h7`) — return-type + CLI byte-stability work (ASP-F1)
-- [ ] Formalize the synthetic off-table aspect naming scheme (`H7k1`) as a documented API contract (ASP-F2)
-- [ ] `find_aspect_timing` orb-derivation design debt (orb passed directly vs table-derived) (ASP-F3)
-- [ ] Lunar declination (montant/descendant biodynamique, true declination δ) — deferred; `is_ascending` (latitude β) suffices at daily resolution
+**Target features:**
+
+- [ ] Declination δ as a first-class quantity: `declination(jdate, body)` scalar + vectorizable (via `ecliptic_to_equatorial` → `rectangular_to_spherical`), with a biodynamic montant/descendant helper driven by the velocity of δ (analogue of `is_ascending`/`lat_velocity`, which stay UNCHANGED — δ and ecliptic-latitude β are distinct notions)
+- [ ] `body_decl` field added to `CHART_DTYPE` (14 bodies, additive, mirrors `body_lats`) — declination available wherever a chart is computed (returns / synastry / composite inherit it)
+- [ ] **ASP-F1** — CLI surface for arbitrary harmonics: `--harmonics h7` (h-prefixed notation, disambiguated from the rejected bare-int), wired through to `dynamic_specs=` + CLI byte-stability
+- [ ] **ASP-F2** — formalize the synthetic off-table aspect naming scheme (`H{h}-{k}`, e.g. `H7-1`) as a documented, pinned public API contract
+- [ ] **ASP-F3** — `find_aspect_timing` derives the orb from a dynamic spec instead of receiving it raw from the caller (consistency with the rest of the detection chain)
+- [ ] `ketu==1.5.0` shipped to PyPI via OIDC (minor additive)
 
 ### Out of Scope
 
-<!-- Explicit boundaries (audited at v1.2 close). -->
+<!-- Explicit boundaries (audited at v1.2 close; declination scope tranché at v1.5 open). -->
 
+- Declination aspects (parallels / contra-parallels) — defer beyond v1.5; a real Western-astrology technique (parallel ≈ conjunction, contra-parallel ≈ opposition) but it touches the aspect engine (new aspect type, dedicated orbs, detection-chain integration) and is NOT needed by the biodynamic montant/descendant core (which depends only on the Moon's δ trajectory). Named future candidate, not v1.5 scope
 - True/Osculating Lilith (h13) — defer; Mean Lilith is de-facto standard in 95% of astrology software
 - Asteroid Lilith #1181 — defer; different body, separate effort
 - Davison composite — defer beyond v1.3; v1.2 shipped midpoint composite only; v1.3 focuses on Chiron + engine hardening
@@ -229,4 +234,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-Last updated: 2026-06-03 — after v1.4 (Dynamic Harmonics & Chiron Range) milestone. `ketu==1.4.0` shipped to PyPI; milestone archived. Next: `/gsd:new-milestone` to scope v1.5.
+Last updated: 2026-06-03 — v1.5 (Lunar Declination & Harmonics Debt) milestone started. Scope: declination δ (scalar + biodynamic montant/descendant + `body_decl` in CHART_DTYPE) + harmonics debt (ASP-F1 CLI `--harmonics h7`, ASP-F2 naming contract, ASP-F3 timing orb) + release. Declination aspects out of scope. Next: requirements → roadmap (phases continue at 33).

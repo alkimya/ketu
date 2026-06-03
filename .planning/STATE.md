@@ -1,45 +1,47 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.4
-milestone_name: Dynamic Harmonics & Chiron Range
-status: complete
-last_updated: "2026-06-03T17:30:00Z"
+milestone: v1.5
+milestone_name: Lunar Declination & Harmonics Debt
+status: defining-requirements
+last_updated: "2026-06-03T18:00:00Z"
 last_activity: 2026-06-03
 progress:
-  total_phases: 5
-  completed_phases: 5
-  total_plans: 15
-  completed_plans: 15
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-06-03 — after v1.4 milestone)
+See: `.planning/PROJECT.md` (updated 2026-06-03 — v1.5 milestone started)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Planning next milestone (v1.5). MILESTONE v1.4 (Dynamic Harmonics & Chiron Range) SHIPPED & ARCHIVED — `ketu==1.4.0` live on PyPI. Run `/gsd:new-milestone` to scope v1.5. v1.0–v1.4 archived to `.planning/milestones/`.
+**Current focus:** Defining v1.5 requirements (Lunar Declination & Harmonics Debt). Scope locked via `/gsd:new-milestone` questioning: declination δ (scalar + biodynamic montant/descendant + `body_decl` in CHART_DTYPE) + harmonics debt (ASP-F1/F2/F3) + release v1.5.0. Research pass in flight, then requirements → roadmap (phases continue at 33). v1.0–v1.4 archived to `.planning/milestones/`.
 
 ## Current Position
 
-Phase: — (between milestones)
-Status: MILESTONE v1.4 COMPLETE & ARCHIVED — `ketu==1.4.0` live on PyPI (OIDC, `publish.yml` SUCCESS); GitHub release v1.4.0 (sdist+wheel); tag `v1.4.0` (`3f3f9b4`, annotated `ca9e24c`) + `origin/main` pushed; post-publish fresh-venv smoke 4/4 PASS. All 5 phases (28-32), 15/15 plans. Roadmap + requirements archived; PROJECT.md evolved; MILESTONES.md entry written.
-Last activity: 2026-06-03 — `/gsd:complete-milestone v1.4` (archive + collapse roadmap + evolve PROJECT.md)
+Phase: Not started (defining requirements)
+Plan: —
+Status: Defining requirements — v1.5 scope locked (δ lunar declination additive + montant/descendant biodynamic + `body_decl` in CHART_DTYPE; ASP-F1 CLI `--harmonics h7`; ASP-F2 `H{h}-{k}` naming contract; ASP-F3 `find_aspect_timing` orb derivation; release 1.5.0). Declination aspects (parallels/contra-parallels) out of scope (named future candidate). `is_ascending` (β) stays unchanged. Targeted domain research selected (biodynamic declination conventions). User reviews the whole milestone before tag/publish — checkpoint before Release phase.
+Last activity: 2026-06-03 — Milestone v1.5 started (`/gsd:new-milestone`); PROJECT.md + STATE.md updated
 
-Progress: [██████████████] 100% — v1.4 SHIPPED & ARCHIVED
+Progress: Not started
 
 ## Next Step
 
-**Start the next milestone** — `/gsd:new-milestone` (questioning → research → requirements → roadmap). Phase numbering continues at **33** (v1.4 ended at Phase 32). A fresh `.planning/REQUIREMENTS.md` is created by that flow.
+**Research → requirements → roadmap.** Targeted research on biodynamic lunar declination conventions (montant/descendant, sign of δ vs velocity, OOB, sidereal mounting/descending vs declination) is in flight, then `REQUIREMENTS.md` with REQ-IDs, then roadmap. Phase numbering continues at **33** (v1.4 ended at Phase 32).
 
-Candidate seeds carried forward (not yet scoped):
+**Scope reference (decided in questioning):**
 
-- CLI surface for arbitrary harmonics `--harmonics h7` (ASP-F1) — return-type + CLI byte-stability work
-- Formalize the synthetic off-table aspect naming scheme `H7k1` as a documented API contract (ASP-F2)
-- `find_aspect_timing` orb-derivation design debt (ASP-F3)
-- Lunar declination (montant/descendant biodynamique, true δ) — deferred; `is_ascending` (latitude β) suffices at daily resolution
+- Declination δ: `declination(jdate, body)` scalar + vectorizable; biodynamic montant/descendant via velocity of δ; `body_decl` added to CHART_DTYPE; `is_ascending` (β) UNCHANGED — additive, non-breaking
+- ASP-F1: CLI `--harmonics h7` (h-prefixed, disambiguated from rejected bare-int) wired to `dynamic_specs=` + byte-stability
+- ASP-F2: `H{h}-{k}` synthetic naming formalized as a documented + pinned public API contract
+- ASP-F3: `find_aspect_timing` derives orb from a dynamic spec instead of receiving it raw
+- Declination aspects (parallels/contra-parallels) — OUT of scope (future candidate)
 - See `.planning/BACKLOG.md` for the full backlog.
 
 ## Accumulated Context
