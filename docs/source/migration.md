@@ -128,12 +128,12 @@ h = calculate_houses(jd, lat, lon, system="whole_sign")
 
 ### New: Configurable Aspect Sets
 
-`calculate_aspects` now accepts an optional `aspects` parameter. Without it, behavior is unchanged (EXTENDED = all 14 aspects).
+`calculate_aspects` now accepts an optional `aspects` parameter. When introduced in v1.1 the default was `EXTENDED` (all 14 aspects). **As of v1.3 the library default is `TRADITIONAL`** (7 half-circle aspects); see [Aspects](concepts.md) for the preset table.
 
 ```python
 from ketu.aspects import calculate_aspects, CLASSICAL, TRADITIONAL, EXTENDED
 
-# v1.0 behavior (unchanged default)
+# v1.1 default at the time (EXTENDED — all 14 aspects; the current v1.3+ default is TRADITIONAL)
 all_aspects = calculate_aspects(jd)
 
 # New v1.1: filter to classical only
