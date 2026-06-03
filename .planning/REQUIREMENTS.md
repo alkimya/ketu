@@ -76,33 +76,33 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DECL-01 | TBD | Pending |
-| DECL-02 | TBD | Pending |
-| DECL-03 | TBD | Pending |
-| DECL-04 | TBD | Pending |
-| DECL-05 | TBD | Pending |
-| DECL-06 | TBD | Pending |
-| DECL-07 | TBD | Pending |
-| DECL-08 | TBD | Pending |
-| DECL-09 | TBD | Pending |
-| HARM-01 | TBD | Pending |
-| HARM-02 | TBD | Pending |
-| HARM-03 | TBD | Pending |
-| HARM-04 | TBD | Pending |
-| HARM-05 | TBD | Pending |
-| HARM-06 | TBD | Pending |
-| HARM-07 | TBD | Pending |
-| HARM-08 | TBD | Pending |
-| HARM-09 | TBD | Pending |
-| REL-01 | TBD | Pending |
-| REL-02 | TBD | Pending |
-| REL-03 | TBD | Pending |
+| DECL-01 | Phase 33 | Pending |
+| DECL-02 | Phase 33 | Pending |
+| DECL-03 | Phase 33 | Pending |
+| DECL-04 | Phase 33 | Pending |
+| DECL-05 | Phase 33 | Pending |
+| DECL-06 | Phase 33 | Pending |
+| DECL-07 | Phase 33 | Pending |
+| DECL-08 | Phase 33 | Pending |
+| DECL-09 | Phase 33 | Pending |
+| HARM-01 | Phase 34 | Pending |
+| HARM-02 | Phase 34 | Pending |
+| HARM-03 | Phase 34 | Pending |
+| HARM-04 | Phase 34 | Pending |
+| HARM-05 | Phase 34 | Pending |
+| HARM-06 | Phase 34 | Pending |
+| HARM-07 | Phase 34 | Pending |
+| HARM-08 | Phase 34 | Pending |
+| HARM-09 | Phase 34 | Pending |
+| REL-01 | Phase 35 | Pending |
+| REL-02 | Phase 35 | Pending |
+| REL-03 | Phase 35 | Pending |
 
 **Coverage:**
 - v1.5 requirements: 21 total (9 DECL + 9 HARM + 3 REL)
-- Mapped to phases: 0 (roadmap pending)
-- Unmapped: 21 ⚠️ (filled by roadmap)
+- Mapped to phases: 21 (9 → Phase 33, 9 → Phase 34, 3 → Phase 35)
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-03*
-*Last updated: 2026-06-03 after initial definition*
+*Last updated: 2026-06-03 — roadmap created; traceability filled (Phase 33 Declination / Phase 34 Harmonics Debt / Phase 35 Release), 21/21 mapped, zero unmapped.*
