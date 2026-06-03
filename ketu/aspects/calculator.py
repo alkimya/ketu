@@ -60,6 +60,91 @@ def _normalize_dynamic_specs(
     return dynamic_specs
 
 
+_RESULT_DTYPE = [("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")]
+
+
+def _detect_aspects_for_date(
+    distances: np.ndarray,
+    body1_ids: np.ndarray,
+    body2_ids: np.ndarray,
+    static_iasp: list,
+    static_angles: list,
+    static_orbs: list,
+    dyn_angles: list,
+    dyn_orbs: list,
+) -> list:
+    """
+    Detect aspects for a single date's pairwise distances.
+
+    Shared detection core used by both :func:`calculate_aspects_vectorized`
+    (one call) and :func:`calculate_aspects_batch` (one call per date). It
+    enforces the documented contract — **exactly one row per ``(body1, body2)``
+    pair**, static-first then dynamic, first-match-wins — so the two public
+    APIs cannot drift apart.
+
+    Parameters
+    ----------
+    distances : np.ndarray
+        Angular separations for every pair, shape ``(n_pairs,)``.
+    body1_ids, body2_ids : np.ndarray
+        Canonical body IDs for each pair, shape ``(n_pairs,)``.
+    static_iasp : list of int
+        Canonical 0-13 aspect index for each selected static aspect.
+    static_angles : list of float
+        Exact angle (degrees) for each selected static aspect.
+    static_orbs : list of np.ndarray
+        Per-pair orb tolerance arrays (shape ``(n_pairs,)``) for each selected
+        static aspect, already scaled by the aspect coefficient.
+    dyn_angles : list of float
+        Exact angle for each dynamic aspect row (empty when none).
+    dyn_orbs : list of np.ndarray
+        Per-pair orb tolerance arrays for each dynamic aspect row.
+
+    Returns
+    -------
+    list of tuple
+        ``(body1, body2, i_asp, orb)`` rows; at most one per pair. Dynamic
+        rows carry ``i_asp = -2``.
+    """
+    results = []
+    matched_pairs: set = set()
+
+    # Static aspects first (first-match-wins per pair).
+    for k, i_asp in enumerate(static_iasp):
+        aspect_angle = static_angles[k]
+        orbs = static_orbs[k]
+
+        if i_asp == 0:  # Conjunction (canonical index 0)
+            in_orb = distances <= orbs
+            orb_values = distances[in_orb]
+        else:
+            in_orb = (distances >= aspect_angle - orbs) & (distances <= aspect_angle + orbs)
+            # aspect_angle - distance (not abs) to match original behavior;
+            # this can be negative when distance > aspect_angle.
+            orb_values = aspect_angle - distances[in_orb]
+
+        if np.any(in_orb):
+            for i, idx in enumerate(np.where(in_orb)[0]):
+                pair = (body1_ids[idx], body2_ids[idx])
+                if pair not in matched_pairs:
+                    # Emit canonical i_asp (NOT k) to preserve Kala contract.
+                    results.append((body1_ids[idx], body2_ids[idx], i_asp, orb_values[i]))
+                    matched_pairs.add(pair)
+
+    # Dynamic aspects second — only pairs not matched by a static aspect.
+    for di, dyn_angle in enumerate(dyn_angles):
+        orbs = dyn_orbs[di]
+        in_orb = np.abs(distances - dyn_angle) <= orbs
+        if np.any(in_orb):
+            for idx in np.where(in_orb)[0]:
+                pair = (body1_ids[idx], body2_ids[idx])
+                if pair not in matched_pairs:
+                    results.append((body1_ids[idx], body2_ids[idx], -2, dyn_angle - distances[idx]))
+                    matched_pairs.add(pair)
+
+    return results
+
+
 def get_orb(body1: int, body2: int, asp: int) -> float:
     """
     Calculate the orb tolerance for two bodies and an aspect.
@@ -307,80 +392,36 @@ def calculate_aspects_vectorized(
     body1_ids = bodies_id[i_indices]
     body2_ids = bodies_id[j_indices]
 
-    # Prepare to collect results
-    results = []
-    # Track which pairs have already been matched to an aspect
-    # (to match loop behavior which returns on first aspect found)
-    matched_pairs = set()
+    # Pre-compute per-pair orb sums once (independent of aspect type), then
+    # scale by each aspect's coefficient. ``i_asp`` is the canonical 0-13 index
+    # emitted to results — Kala's positional contract.
+    pair_orb_sums = (l_bodies["orb"][i_indices] + l_bodies["orb"][j_indices]) / 2
+    static_iasp = [int(v) for v in selected_indices]
+    static_angles = [float(v) for v in selected_angles]
+    static_orbs = [pair_orb_sums * float(c) for c in selected_coefs]
 
-    # Pre-compute orb arrays once (independent of aspect type).
-    orbs_body1 = l_bodies["orb"][i_indices]
-    orbs_body2 = l_bodies["orb"][j_indices]
-
-    # For each SELECTED aspect type, check all pairs at once (vectorized).
-    # ``k`` is the position within the filtered subset (used for parallel
-    # selected_angles/selected_coefs lookup); ``i_asp`` is the canonical
-    # 0-13 index emitted to results — Kala's positional contract.
-    for k, i_asp_val in enumerate(selected_indices):
-        i_asp = int(i_asp_val)
-        aspect_angle = float(selected_angles[k])
-        aspect_coef = float(selected_coefs[k])
-
-        # Calculate orbs for all pairs (vectorized)
-        orbs = (orbs_body1 + orbs_body2) / 2 * aspect_coef
-
-        if i_asp == 0:  # Conjunction (canonical index 0)
-            # Check which pairs are in orb (vectorized)
-            in_orb = all_distances <= orbs
-            orb_values = all_distances[in_orb]  # type: ignore[index]
-        else:
-            # Check which pairs are in orb (vectorized)
-            in_orb = (all_distances >= aspect_angle - orbs) & (all_distances <= aspect_angle + orbs)
-            # Note: Using aspect_angle - distance (not abs) to match original behavior
-            # This can produce negative values when distance > aspect_angle
-            orb_values = aspect_angle - all_distances[in_orb]  # type: ignore[index]
-
-        # Collect results for this aspect
-        if np.any(in_orb):
-            for i, idx in enumerate(np.where(in_orb)[0]):
-                pair = (body1_ids[idx], body2_ids[idx])
-                # Only add if this pair hasn't been matched yet
-                # (matches loop behavior: first aspect found wins)
-                if pair not in matched_pairs:
-                    # Emit canonical i_asp (NOT k) to preserve Kala contract.
-                    results.append((body1_ids[idx], body2_ids[idx], i_asp, orb_values[i]))
-                    matched_pairs.add(pair)
-
-    # Dynamic path — runs after all static aspects (static-first/dynamic-second).
-    # Only pairs not yet matched by a static aspect are eligible.
+    dyn_angles: list = []
+    dyn_orbs: list = []
     if dyn is not None:
-        for dyn_row in dyn:
-            dyn_angle = float(dyn_row["angle"])
-            dyn_coef = float(dyn_row["coef"])
-            orbs = (orbs_body1 + orbs_body2) / 2 * dyn_coef
-            in_orb = np.abs(all_distances - dyn_angle) <= orbs
-            if np.any(in_orb):
-                for idx in np.where(in_orb)[0]:
-                    pair = (body1_ids[idx], body2_ids[idx])
-                    if pair not in matched_pairs:
-                        results.append(
-                            (
-                                body1_ids[idx],
-                                body2_ids[idx],
-                                -2,
-                                dyn_angle - all_distances[idx],
-                            )
-                        )
-                        matched_pairs.add(pair)
+        dyn_angles = [float(r["angle"]) for r in dyn]
+        dyn_orbs = [pair_orb_sums * float(r["coef"]) for r in dyn]
+
+    results = _detect_aspects_for_date(
+        all_distances,
+        body1_ids,
+        body2_ids,
+        static_iasp,
+        static_angles,
+        static_orbs,
+        dyn_angles,
+        dyn_orbs,
+    )
 
     # Convert to structured array
     if len(results) == 0:
-        return np.array([], dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")])
+        return np.array([], dtype=_RESULT_DTYPE)
 
-    return np.array(
-        results,
-        dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")],
-    )
+    return np.array(results, dtype=_RESULT_DTYPE)
 
 
 def calculate_aspects_batch(
@@ -502,65 +543,28 @@ def calculate_aspects_batch(
     if dyn is not None:
         dyn_orbs_per_row = [pair_orb_sums * c for c in dyn_coefs_f]
 
-    # Process each date
+    # Process each date through the shared detection core, so batch and
+    # vectorized cannot drift apart (one row per pair, static-first/dynamic-second).
     results_by_date = []
     for date_idx in range(n_dates):
-        date_results = []
         distances_this_date = all_distances[:, date_idx]  # All pair distances for this date
 
-        # Check each SELECTED aspect type. ``k`` is the position within the
-        # filtered subset (parallel to selected_angles / selected_coefs);
-        # ``i_asp`` is the canonical 0-13 index emitted to results — Kala's
-        # positional contract.
-        # Build matched_pairs for the date to support static-first/dynamic-second.
-        matched_pairs: set = set()
-        for k in range(len(selected_iasp_ints)):
-            i_asp = selected_iasp_ints[k]
-            aspect_angle = selected_angles_f[k]
-            orbs = selected_orbs_per_aspect[k]
-
-            if i_asp == 0:  # Conjunction (canonical index 0)
-                in_orb = distances_this_date <= orbs
-                orb_values = distances_this_date[in_orb]  # type: ignore[index]
-            else:
-                in_orb = (distances_this_date >= aspect_angle - orbs) & (distances_this_date <= aspect_angle + orbs)
-                # Note: Using aspect_angle - distance (not abs) to match original behavior
-                orb_values = aspect_angle - distances_this_date[in_orb]  # type: ignore[index]
-
-            # Collect results for this aspect
-            if np.any(in_orb):
-                indices_in_orb = np.where(in_orb)[0]
-                for i, idx in enumerate(indices_in_orb):
-                    # Emit canonical i_asp (NOT k) to preserve Kala contract.
-                    date_results.append((body1_ids[idx], body2_ids[idx], i_asp, orb_values[i]))
-                    matched_pairs.add((body1_ids[idx], body2_ids[idx]))
-
-        # Dynamic path — runs after all static aspects for this date.
-        if dyn is not None:
-            for di, dyn_angle in enumerate(dyn_angles_f):
-                orbs = dyn_orbs_per_row[di]
-                in_orb = np.abs(distances_this_date - dyn_angle) <= orbs
-                if np.any(in_orb):
-                    for idx in np.where(in_orb)[0]:
-                        pair = (body1_ids[idx], body2_ids[idx])
-                        if pair not in matched_pairs:
-                            date_results.append(
-                                (
-                                    body1_ids[idx],
-                                    body2_ids[idx],
-                                    -2,
-                                    dyn_angle - distances_this_date[idx],
-                                )
-                            )
-                            matched_pairs.add(pair)
+        date_results = _detect_aspects_for_date(
+            distances_this_date,
+            body1_ids,
+            body2_ids,
+            selected_iasp_ints,
+            selected_angles_f,
+            selected_orbs_per_aspect,
+            dyn_angles_f,
+            dyn_orbs_per_row,
+        )
 
         # Convert to structured array for this date
         if len(date_results) == 0:
-            results_by_date.append(np.array([], dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")]))
+            results_by_date.append(np.array([], dtype=_RESULT_DTYPE))
         else:
-            results_by_date.append(
-                np.array(date_results, dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")])
-            )
+            results_by_date.append(np.array(date_results, dtype=_RESULT_DTYPE))
 
     return results_by_date
 

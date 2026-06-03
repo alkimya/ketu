@@ -428,6 +428,44 @@ class TestAspectPresetsIntegration:
                     all_leaked |= leaked
         assert not all_leaked, f"CLASSICAL leaked non-classical i_asp across batch: {all_leaked}"
 
+    def test_batch_emits_one_row_per_pair(self) -> None:
+        """Regression: calculate_aspects_batch must not emit duplicate (body1, body2)
+        rows. Before the shared-detection-core refactor, the static loop lacked the
+        first-match-wins guard, so overlapping orbs in the EXTENDED set produced
+        multiple rows for the same pair on a single date."""
+        jd_array = np.array(
+            [
+                utc_to_julian(datetime(2024, 1, 1, tzinfo=timezone.utc) + timedelta(days=6 * i))
+                for i in range(60)
+            ]
+        )
+        for result in calculate_aspects_batch(jd_array, aspects=EXTENDED):
+            pairs = [(int(r["body1"]), int(r["body2"])) for r in result]
+            assert len(pairs) == len(set(pairs)), f"duplicate pair in batch row: {pairs}"
+
+    def test_batch_and_vectorized_agree_on_pairs(self) -> None:
+        """Regression: the shared detection core keeps batch and vectorized in lockstep.
+        They must select the same set of (body1, body2) pairs per date (orb-edge
+        rounding from the scalar-vs-batch position engines is tolerated by comparing
+        pair sets, not exact orb values)."""
+        jd_array = np.array(
+            [
+                utc_to_julian(datetime(2024, 1, 1, tzinfo=timezone.utc) + timedelta(days=6 * i))
+                for i in range(60)
+            ]
+        )
+        batch = calculate_aspects_batch(jd_array, aspects=EXTENDED)
+        agree = 0
+        for i, jd in enumerate(jd_array):
+            v = calculate_aspects_vectorized(float(jd), aspects=EXTENDED)
+            vpairs = {(int(r["body1"]), int(r["body2"])) for r in v}
+            bpairs = {(int(r["body1"]), int(r["body2"])) for r in batch[i]}
+            # Symmetric difference can only come from orb-edge cases (<~0.03°);
+            # the overwhelming majority of dates must agree exactly.
+            if vpairs == bpairs:
+                agree += 1
+        assert agree >= 50, f"batch/vectorized pair sets agreed on only {agree}/60 dates"
+
     def test_find_aspects_between_dates_classical_no_leak(self) -> None:
         """ASP-07 / Blocker-1: find_aspects_between_dates(..., aspects=CLASSICAL) returns no
         row whose aspect_name is outside the 5-major set."""
