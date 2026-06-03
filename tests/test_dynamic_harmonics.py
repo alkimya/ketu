@@ -644,3 +644,121 @@ class TestFindAspectsBetweenDatesDynamic:
         )
         # No crash, result is a list (may be empty).
         assert isinstance(results, list)
+
+
+# ---------------------------------------------------------------------------
+# Task F2: Naming contract pinning — ASP-F2 / HARM-01..03
+# ---------------------------------------------------------------------------
+
+
+class TestNamingContractF2:
+    """
+    Pin the public API contract: generator always emits ``b'H{h}-{k}'`` (S16),
+    k = 1..h//2, ascending, no traditional-name substitution.
+
+    HARM-01: naming is documented and pinned for representative h values.
+    HARM-02: pinning covers h=2 (opposition-only), even-h last-row-180°,
+             and all h in [2..64].
+    HARM-03: collision semantics — 120° hit reports Trine (i_asp=9), not H3-1.
+    """
+
+    # ------------------------------------------------------------------
+    # HARM-01 / HARM-02: h=7 exact pinning
+    # ------------------------------------------------------------------
+
+    def test_naming_contract_h7_exact(self) -> None:
+        """H7 emits exactly [b'H7-1', b'H7-2', b'H7-3'] in S16 bytes."""
+        specs = generate_harmonic_aspects(7)
+
+        # Name bytes and dtype
+        assert specs["name"].tolist() == [b"H7-1", b"H7-2", b"H7-3"]
+        assert specs["name"].dtype == np.dtype("S16")
+
+        # Angles (round 2 decimal places)
+        assert [round(float(a), 2) for a in specs["angle"]] == [51.43, 102.86, 154.29]
+
+        # Coefs (round 4 decimal places)
+        assert [round(float(c), 4) for c in specs["coef"]] == [0.1429, 0.2857, 0.4286]
+
+        # Symbols are unicode empty string (U4), NOT bytes b''
+        assert specs["symbol"].tolist() == ["", "", ""]
+
+        # Harmonic column
+        assert specs["harmonic"].tolist() == [7, 7, 7]
+
+    # ------------------------------------------------------------------
+    # HARM-02: h=2 boundary — opposition-only, single row
+    # ------------------------------------------------------------------
+
+    def test_naming_contract_h2_opposition_only(self) -> None:
+        """H2 emits exactly 1 row: b'H2-1' at 180°."""
+        specs = generate_harmonic_aspects(2)
+        assert len(specs) == 1
+        assert specs["name"].tolist() == [b"H2-1"]
+        assert float(specs["angle"][0]) == pytest.approx(180.0)
+
+    # ------------------------------------------------------------------
+    # HARM-02: even-h — last row is always 180°, row count == h // 2
+    # ------------------------------------------------------------------
+
+    @pytest.mark.parametrize("h", [2, 4, 6, 8, 12])
+    def test_naming_contract_even_h_last_row(self, h: int) -> None:
+        """Even h: len == h // 2 and last angle == 180° (within 1e-4°)."""
+        specs = generate_harmonic_aspects(h)
+        assert len(specs) == h // 2
+        assert float(specs["angle"][-1]) == pytest.approx(180.0, abs=1e-4)
+
+    # ------------------------------------------------------------------
+    # HARM-02: full sweep h=2..64 — format + row count
+    # ------------------------------------------------------------------
+
+    def test_naming_contract_all_h(self) -> None:
+        """
+        For ALL h in [2..64]: row count == h // 2, and every name matches
+        the pattern b'H{h}-{k}' with k = 1..h//2 (ascending 1-indexed).
+        Locks the complete contract across the valid range.
+        """
+        import re
+
+        pattern = re.compile(rb"^H(\d+)-(\d+)$")
+
+        for h in range(2, 65):
+            specs = generate_harmonic_aspects(h)
+            assert len(specs) == h // 2, (
+                f"h={h}: expected {h // 2} rows, got {len(specs)}"
+            )
+            for j, row in enumerate(specs):
+                name_bytes = bytes(row["name"])
+                m = pattern.match(name_bytes)
+                assert m is not None, (
+                    f"h={h} k={j+1}: name {name_bytes!r} does not match H{{h}}-{{k}}"
+                )
+                assert int(m.group(1)) == h, (
+                    f"h={h} k={j+1}: embedded h={m.group(1)} != {h}"
+                )
+                assert int(m.group(2)) == j + 1, (
+                    f"h={h} k={j+1}: embedded k={m.group(2)} != {j+1}"
+                )
+
+    # ------------------------------------------------------------------
+    # HARM-03: collision semantics — DETECTION channel prefers static table
+    # ------------------------------------------------------------------
+
+    def test_naming_collision_detection_prefers_table_name(self) -> None:
+        """
+        H3-1 at 120° collides with Trine (i_asp=9 in core.aspects).
+        The DETECTION layer (calculate_aspects) must report Trine (i_asp=9),
+        NOT i_asp=-2 (dynamic hit), proving static-first priority.
+        """
+        from ketu.aspects.calculator import calculate_aspects
+
+        # H3-1 is 120° — same angle as Trine (i_asp=9)
+        specs = generate_harmonic_aspects(3)
+        result = calculate_aspects(2451545.0, dynamic_specs=specs)
+
+        # The 120° match must be tagged as Trine (i_asp=9), not dynamic (i_asp=-2)
+        trine_rows = [r for r in result if int(r["i_asp"]) == 9]
+        assert len(trine_rows) >= 1, (
+            "No Trine (i_asp=9) found: static-first priority not enforced — "
+            "120° hit was captured as dynamic instead of Trine"
+        )
