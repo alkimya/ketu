@@ -23,11 +23,41 @@ from ketu.core import bodies, aspects as _CORE_ASPECTS
 # boolean mask into ``_CORE_ASPECTS``).
 from ketu.aspects.presets import resolve_aspect_set, AspectSetSpec
 
+# Import dynamic aspect spec type alias and helper
+from ketu.aspects.harmonics import DynamicAspectSpec
+
 # Import ephemeris functions
 from ketu.ephemeris.planets import find_exact_aspect, find_all_aspects
 
 # Import calculation utilities
 from ketu.calculations import long, positions, distance
+
+
+def _normalize_dynamic_specs(
+    dynamic_specs: DynamicAspectSpec,
+) -> Optional[np.ndarray]:
+    """
+    Normalise *dynamic_specs* into a single structured array or ``None``.
+
+    Parameters
+    ----------
+    dynamic_specs : DynamicAspectSpec
+        A single ``generate_harmonic_aspects`` array, a list of such arrays,
+        or ``None``.
+
+    Returns
+    -------
+    np.ndarray or None
+        Concatenated structured array when *dynamic_specs* is non-empty,
+        ``None`` when it is ``None`` or an empty list.
+    """
+    if dynamic_specs is None:
+        return None
+    if isinstance(dynamic_specs, list):
+        if len(dynamic_specs) == 0:
+            return None
+        return np.concatenate(dynamic_specs)
+    return dynamic_specs
 
 
 def get_orb(body1: int, body2: int, asp: int) -> float:
@@ -86,6 +116,7 @@ def calculate_aspects(
     jdate: float,
     l_bodies: np.ndarray = bodies,
     aspects: AspectSetSpec = None,
+    dynamic_specs: DynamicAspectSpec = None,
 ) -> np.ndarray:
     """
     Calculate all aspects between bodies at a given date.
@@ -104,6 +135,16 @@ def calculate_aspects(
         aspect names or indices, or a length-14 boolean mask. The result's
         ``i_asp`` field is always a canonical 0-13 index into
         ``ketu.core.aspects``, regardless of the selected subset.
+    dynamic_specs : DynamicAspectSpec, default None
+        Optional dynamic aspect specs as returned by
+        :func:`~ketu.aspects.harmonics.generate_harmonic_aspects`, or a list
+        of such arrays (they are concatenated internally).  When provided,
+        dynamic aspects are detected **after** the static set (static-first,
+        dynamic-second, first-match-wins per pair).  Dynamic rows carry
+        ``i_asp = -2`` sentinel.  The orb is derived from
+        ``(core.bodies['orb'][b1] + core.bodies['orb'][b2]) / 2 × dyn_coef``.
+        Output dtype is UNCHANGED: ``(body1 i4, body2 i4, i_asp i4, orb f4)``;
+        exactly one row per ``(body1, body2)`` pair.
 
     Returns
     -------
@@ -115,13 +156,29 @@ def calculate_aspects(
     The ``i_asp`` field in the returned structured array is the canonical
     index into ``ketu.core.aspects`` (0-13), not a position within the
     selected subset. Downstream consumers (e.g. Kala) rely on this
-    positional contract.
+    positional contract. Dynamic rows carry ``i_asp = -2``.
+
+    Examples
+    --------
+    >>> import numpy as np
+    >>> from ketu.aspects.calculator import calculate_aspects
+    >>> from ketu.aspects.harmonics import generate_harmonic_aspects
+    >>> jd = 2451545.0
+    >>> specs = generate_harmonic_aspects(7)
+    >>> result = calculate_aspects(jd, dynamic_specs=specs)
+    >>> result.dtype.names == ('body1', 'body2', 'i_asp', 'orb')
+    True
+    >>> any(r['i_asp'] == -2 for r in result)  # at least one dynamic row detected
+    True
     """
     # Resolve aspect-set ONCE per API call, never inside per-pair loops.
     mask = resolve_aspect_set(aspects)
     selected_indices: list[int] = [int(i) for i in np.where(mask)[0].tolist()]
     selected_angles: npt.NDArray[np.float64] = _CORE_ASPECTS["angle"][mask]
     selected_coefs: npt.NDArray[np.float64] = _CORE_ASPECTS["coef"][mask]
+
+    # Normalise dynamic_specs once (None / single array / list → array or None).
+    dyn = _normalize_dynamic_specs(dynamic_specs)
 
     bodies_id = l_bodies["id"]
     aspects_data = []
@@ -133,6 +190,7 @@ def calculate_aspects(
         # This matches the vectorized behavior: unselected aspects are not
         # considered at all, so a pair "blocked" by an unselected first-match
         # in get_aspect is now correctly checked against the selected set.
+        matched = False
         for k, i_asp in enumerate(selected_indices):
             aspect_angle = float(selected_angles[k])
             aspect_coef = float(selected_coefs[k])
@@ -141,10 +199,27 @@ def calculate_aspects(
             if i_asp == 0:
                 if dist <= orb:
                     aspects_data.append((int(b1), int(b2), i_asp, float(dist)))
+                    matched = True
                     break
             elif aspect_angle - orb <= dist <= aspect_angle + orb:
                 aspects_data.append((int(b1), int(b2), i_asp, float(aspect_angle - dist)))
+                matched = True
                 break
+
+        # Dynamic path — only when the static loop did NOT match this pair.
+        if dyn is not None and not matched:
+            orb_b1 = float(l_bodies["orb"][np.where(l_bodies["id"] == b1)[0][0]])
+            orb_b2 = float(l_bodies["orb"][np.where(l_bodies["id"] == b2)[0][0]])
+            for dyn_row in dyn:
+                dyn_angle = float(dyn_row["angle"])
+                dyn_coef = float(dyn_row["coef"])
+                dyn_orb = (orb_b1 + orb_b2) / 2 * dyn_coef
+                if abs(dist - dyn_angle) <= dyn_orb:
+                    aspects_data.append(
+                        (int(b1), int(b2), -2, float(dyn_angle - dist))
+                    )
+                    break
+
     return np.array(
         aspects_data,
         dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")],
@@ -155,6 +230,7 @@ def calculate_aspects_vectorized(
     jdate: float,
     l_bodies: np.ndarray = bodies,
     aspects: AspectSetSpec = None,
+    dynamic_specs: DynamicAspectSpec = None,
 ) -> np.ndarray:
     """
     Calculate all aspects using vectorized operations (faster).
@@ -176,6 +252,16 @@ def calculate_aspects_vectorized(
         aspect names or indices, or a length-14 boolean mask. The result's
         ``i_asp`` field is always a canonical 0-13 index into
         ``ketu.core.aspects``, regardless of the selected subset.
+    dynamic_specs : DynamicAspectSpec, default None
+        Optional dynamic aspect specs as returned by
+        :func:`~ketu.aspects.harmonics.generate_harmonic_aspects`, or a list
+        of such arrays (they are concatenated internally).  Dynamic aspects
+        are detected **after** the static set (static-first, dynamic-second,
+        first-match-wins per pair).  Dynamic rows carry ``i_asp = -2``
+        sentinel.  The orb is derived from
+        ``(core.bodies['orb'][b1] + core.bodies['orb'][b2]) / 2 × dyn_coef``.
+        Output dtype is UNCHANGED: ``(body1 i4, body2 i4, i_asp i4, orb f4)``;
+        exactly one row per ``(body1, body2)`` pair.
 
     Returns
     -------
@@ -187,7 +273,7 @@ def calculate_aspects_vectorized(
     The ``i_asp`` field in the returned structured array is the canonical
     index into ``ketu.core.aspects`` (0-13), not a position within the
     selected subset. Downstream consumers (e.g. Kala) rely on this
-    positional contract.
+    positional contract. Dynamic rows carry ``i_asp = -2``.
     """
     # Resolve aspect-set ONCE per API call (above the per-pair / per-aspect
     # work). The resolved mask, selected indices, and parallel angle/coef
@@ -196,6 +282,9 @@ def calculate_aspects_vectorized(
     selected_indices: npt.NDArray[np.intp] = np.where(mask)[0]
     selected_angles: npt.NDArray[np.float64] = _CORE_ASPECTS["angle"][mask]
     selected_coefs: npt.NDArray[np.float64] = _CORE_ASPECTS["coef"][mask]
+
+    # Normalise dynamic_specs once.
+    dyn = _normalize_dynamic_specs(dynamic_specs)
 
     bodies_id = l_bodies["id"]
     n_bodies = len(bodies_id)
@@ -224,6 +313,10 @@ def calculate_aspects_vectorized(
     # (to match loop behavior which returns on first aspect found)
     matched_pairs = set()
 
+    # Pre-compute orb arrays once (independent of aspect type).
+    orbs_body1 = l_bodies["orb"][i_indices]
+    orbs_body2 = l_bodies["orb"][j_indices]
+
     # For each SELECTED aspect type, check all pairs at once (vectorized).
     # ``k`` is the position within the filtered subset (used for parallel
     # selected_angles/selected_coefs lookup); ``i_asp`` is the canonical
@@ -234,8 +327,6 @@ def calculate_aspects_vectorized(
         aspect_coef = float(selected_coefs[k])
 
         # Calculate orbs for all pairs (vectorized)
-        orbs_body1 = l_bodies["orb"][i_indices]
-        orbs_body2 = l_bodies["orb"][j_indices]
         orbs = (orbs_body1 + orbs_body2) / 2 * aspect_coef
 
         if i_asp == 0:  # Conjunction (canonical index 0)
@@ -260,6 +351,28 @@ def calculate_aspects_vectorized(
                     results.append((body1_ids[idx], body2_ids[idx], i_asp, orb_values[i]))
                     matched_pairs.add(pair)
 
+    # Dynamic path — runs after all static aspects (static-first/dynamic-second).
+    # Only pairs not yet matched by a static aspect are eligible.
+    if dyn is not None:
+        for dyn_row in dyn:
+            dyn_angle = float(dyn_row["angle"])
+            dyn_coef = float(dyn_row["coef"])
+            orbs = (orbs_body1 + orbs_body2) / 2 * dyn_coef
+            in_orb = np.abs(all_distances - dyn_angle) <= orbs
+            if np.any(in_orb):
+                for idx in np.where(in_orb)[0]:
+                    pair = (body1_ids[idx], body2_ids[idx])
+                    if pair not in matched_pairs:
+                        results.append(
+                            (
+                                body1_ids[idx],
+                                body2_ids[idx],
+                                -2,
+                                dyn_angle - all_distances[idx],
+                            )
+                        )
+                        matched_pairs.add(pair)
+
     # Convert to structured array
     if len(results) == 0:
         return np.array([], dtype=[("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")])
@@ -274,6 +387,7 @@ def calculate_aspects_batch(
     jd_array: np.ndarray,
     l_bodies: np.ndarray = bodies,
     aspects: AspectSetSpec = None,
+    dynamic_specs: DynamicAspectSpec = None,
 ) -> List[np.ndarray]:
     """
     Calculate aspects for multiple dates (batch processing).
@@ -295,6 +409,16 @@ def calculate_aspects_batch(
         aspect names or indices, or a length-14 boolean mask. The result's
         ``i_asp`` field is always a canonical 0-13 index into
         ``ketu.core.aspects``, regardless of the selected subset.
+    dynamic_specs : DynamicAspectSpec, default None
+        Optional dynamic aspect specs as returned by
+        :func:`~ketu.aspects.harmonics.generate_harmonic_aspects`, or a list
+        of such arrays (they are concatenated internally).  Dynamic aspects
+        are detected **after** the static set for each date
+        (static-first, dynamic-second, first-match-wins per pair).  Dynamic
+        rows carry ``i_asp = -2`` sentinel.  The orb is derived from
+        ``(core.bodies['orb'][b1] + core.bodies['orb'][b2]) / 2 × dyn_coef``.
+        Output dtype is UNCHANGED: ``(body1 i4, body2 i4, i_asp i4, orb f4)``;
+        exactly one row per ``(body1, body2)`` pair per date.
 
     Returns
     -------
@@ -306,7 +430,7 @@ def calculate_aspects_batch(
     The ``i_asp`` field in the returned structured arrays is the canonical
     index into ``ketu.core.aspects`` (0-13), not a position within the
     selected subset. Downstream consumers (e.g. Kala) rely on this
-    positional contract.
+    positional contract. Dynamic rows carry ``i_asp = -2``.
     """
     from ketu.ephemeris.planets import calc_planet_position_batch
 
@@ -325,6 +449,18 @@ def calculate_aspects_batch(
     selected_angles_f: list[float] = [float(v) for v in selected_angles]
     selected_coefs_f: list[float] = [float(v) for v in selected_coefs]
 
+    # Normalise dynamic_specs once (date-independent).
+    dyn = _normalize_dynamic_specs(dynamic_specs)
+
+    # Hoist dynamic angle/coef extractions ABOVE the per-date loop
+    # (dyn specs are date-independent — mirror the existing hoisting of
+    # selected_orbs_per_aspect below).
+    dyn_angles_f: list[float] = []
+    dyn_coefs_f: list[float] = []
+    if dyn is not None:
+        dyn_angles_f = [float(r["angle"]) for r in dyn]
+        dyn_coefs_f = [float(r["coef"]) for r in dyn]
+
     bodies_id = l_bodies["id"]
     n_bodies = len(bodies_id)
     n_dates = len(jd_array)
@@ -340,7 +476,6 @@ def calculate_aspects_batch(
 
     # Prepare pairwise combinations indices
     i_indices, j_indices = np.triu_indices(n_bodies, k=1)
-    n_pairs = len(i_indices)
 
     # Calculate all distances for all pairs for all dates (vectorized!)
     # Shape: (n_pairs, n_dates)
@@ -362,6 +497,11 @@ def calculate_aspects_batch(
     pair_orb_sums = (orbs_body1 + orbs_body2) / 2  # Shape: (n_pairs,)
     selected_orbs_per_aspect = [pair_orb_sums * c for c in selected_coefs_f]
 
+    # Pre-compute dynamic orb arrays per spec row (also date-independent).
+    dyn_orbs_per_row: list[np.ndarray] = []
+    if dyn is not None:
+        dyn_orbs_per_row = [pair_orb_sums * c for c in dyn_coefs_f]
+
     # Process each date
     results_by_date = []
     for date_idx in range(n_dates):
@@ -372,6 +512,8 @@ def calculate_aspects_batch(
         # filtered subset (parallel to selected_angles / selected_coefs);
         # ``i_asp`` is the canonical 0-13 index emitted to results — Kala's
         # positional contract.
+        # Build matched_pairs for the date to support static-first/dynamic-second.
+        matched_pairs: set = set()
         for k in range(len(selected_iasp_ints)):
             i_asp = selected_iasp_ints[k]
             aspect_angle = selected_angles_f[k]
@@ -391,6 +533,26 @@ def calculate_aspects_batch(
                 for i, idx in enumerate(indices_in_orb):
                     # Emit canonical i_asp (NOT k) to preserve Kala contract.
                     date_results.append((body1_ids[idx], body2_ids[idx], i_asp, orb_values[i]))
+                    matched_pairs.add((body1_ids[idx], body2_ids[idx]))
+
+        # Dynamic path — runs after all static aspects for this date.
+        if dyn is not None:
+            for di, dyn_angle in enumerate(dyn_angles_f):
+                orbs = dyn_orbs_per_row[di]
+                in_orb = np.abs(distances_this_date - dyn_angle) <= orbs
+                if np.any(in_orb):
+                    for idx in np.where(in_orb)[0]:
+                        pair = (body1_ids[idx], body2_ids[idx])
+                        if pair not in matched_pairs:
+                            date_results.append(
+                                (
+                                    body1_ids[idx],
+                                    body2_ids[idx],
+                                    -2,
+                                    dyn_angle - distances_this_date[idx],
+                                )
+                            )
+                            matched_pairs.add(pair)
 
         # Convert to structured array for this date
         if len(date_results) == 0:
@@ -403,7 +565,13 @@ def calculate_aspects_batch(
     return results_by_date
 
 
-def find_aspect_timing(jdate: float, body1: int, body2: int, aspect_value: float) -> Tuple[float, float, float]:
+def find_aspect_timing(
+    jdate: float,
+    body1: int,
+    body2: int,
+    aspect_value: float,
+    orb: Optional[float] = None,
+) -> Tuple[float, float, float]:
     """
     Find beginning, exact, and end times for an aspect.
 
@@ -417,20 +585,36 @@ def find_aspect_timing(jdate: float, body1: int, body2: int, aspect_value: float
         Second body ID.
     aspect_value : float
         Aspect angle in degrees.
+    orb : float, optional
+        Explicit orb in degrees.  When provided, the ``_CORE_ASPECTS`` table
+        lookup is skipped entirely — this is the **dynamic path** for
+        off-table angles (e.g. ``51.4286`` for H7-1).  Pass the orb derived
+        from your ``dynamic_specs`` row, e.g.
+        ``(bodies['orb'][b1] + bodies['orb'][b2]) / 2 * dyn_coef``.
+
+        When ``orb`` is ``None`` (default), the orb is resolved from the
+        ``_CORE_ASPECTS`` table using ``get_orb(body1, body2, asp_idx)``.
+        If ``aspect_value`` is not found in the table a clear
+        :exc:`ValueError` is raised (never :exc:`IndexError`).
 
     Returns
     -------
     tuple of (float, float, float)
         Tuple of (begin_jd, exact_jd, end_jd).
-    """
-    # Get the aspect index
-    asp_idx = np.where(_CORE_ASPECTS["angle"] == aspect_value)[0]
-    if len(asp_idx) == 0:
-        raise ValueError(f"unknown aspect value: {aspect_value}")
-    asp_idx = asp_idx[0]
 
-    # Calculate orb
-    orb = get_orb(body1, body2, asp_idx)
+    Raises
+    ------
+    ValueError
+        If ``orb`` is ``None`` and ``aspect_value`` is not found in the
+        ``_CORE_ASPECTS`` table.
+    """
+    if orb is None:
+        # Static path — look up the aspect in the frozen table.
+        asp_idx = np.where(_CORE_ASPECTS["angle"] == aspect_value)[0]
+        if len(asp_idx) == 0:
+            raise ValueError(f"unknown aspect value: {aspect_value}")
+        # Calculate orb from the table.
+        orb = get_orb(body1, body2, int(asp_idx[0]))
 
     # Search backward for beginning
     jd_begin = jdate
@@ -473,6 +657,7 @@ def find_aspects_between_dates(
     body1: Optional[int] = None,
     body2: Optional[int] = None,
     aspects: AspectSetSpec = None,
+    dynamic_specs: DynamicAspectSpec = None,
 ) -> List[Tuple]:
     """
     Find all aspects between two dates.
@@ -494,6 +679,14 @@ def find_aspects_between_dates(
         aspect names or indices, or a length-14 boolean mask. The returned
         tuples contain canonical aspect names from ``ketu.core.aspects``
         regardless of the selected subset.
+    dynamic_specs : DynamicAspectSpec, default None
+        Optional dynamic aspect specs as returned by
+        :func:`~ketu.aspects.harmonics.generate_harmonic_aspects`, or a list
+        of such arrays.  When provided, the angles in the specs are added to
+        the search angles passed to ``find_all_aspects`` (union of static and
+        dynamic angles).  Returned tuples with a dynamic angle carry the
+        **synthetic name** from the spec (e.g. ``"H7-1"``) instead of
+        crashing with :exc:`IndexError`.
 
     Returns
     -------
@@ -506,6 +699,16 @@ def find_aspects_between_dates(
     # aspects (no leak of unselected aspect angles).
     mask: npt.NDArray[np.bool_] = resolve_aspect_set(aspects)
     selected_angles: npt.NDArray[np.float64] = _CORE_ASPECTS["angle"][mask]
+
+    # Normalise dynamic_specs and build the union angle list.
+    dyn = _normalize_dynamic_specs(dynamic_specs)
+    if dyn is not None:
+        # Use Python floats from f4 array so round-trip through find_all_aspects
+        # preserves exact equality on the name-lookup comparison below.
+        dyn_angles_list: list[float] = [float(a) for a in dyn["angle"].tolist()]
+        search_angles: list[float] = list(selected_angles) + dyn_angles_list
+    else:
+        search_angles = list(selected_angles)
 
     results = []
 
@@ -524,16 +727,47 @@ def find_aspects_between_dates(
         if b1 > b2:
             b1, b2 = b2, b1
 
-        # Find all aspects for this pair (filtered to selected aspect set)
-        aspect_list = find_all_aspects(jdate_start, jdate_end, b1, b2, list(selected_angles))
+        # Find all aspects for this pair (filtered to selected aspect set + dynamic angles)
+        aspect_list = find_all_aspects(jdate_start, jdate_end, b1, b2, search_angles)
 
         for exact_jd, aspect_angle in aspect_list:
-            # Find aspect type — the ``np.where`` lookup against the FULL
-            # core.aspects["angle"] yields a canonical 0-13 index, never a
-            # filtered-subset position.
-            asp_idx = np.where(_CORE_ASPECTS["angle"] == aspect_angle)[0][0]
-            aspect_name_bytes = _CORE_ASPECTS["name"][asp_idx]
-            aspect_name = aspect_name_bytes.decode() if isinstance(aspect_name_bytes, bytes) else str(aspect_name_bytes)
+            # Len-checked name resolution — never crashes with IndexError on
+            # dynamic off-table angles (ASP-09 guard).
+            static_idx = np.where(_CORE_ASPECTS["angle"] == aspect_angle)[0]
+            if len(static_idx) > 0:
+                aspect_name_bytes = _CORE_ASPECTS["name"][static_idx[0]]
+                aspect_name = (
+                    aspect_name_bytes.decode()
+                    if isinstance(aspect_name_bytes, bytes)
+                    else str(aspect_name_bytes)
+                )
+            elif dyn is not None:
+                # Dynamic angle — look up synthetic name from spec.
+                dyn_idx = np.where(dyn["angle"] == aspect_angle)[0]
+                if len(dyn_idx) == 0:  # pragma: no cover
+                    # Fallback: close-match in case f4 round-trip introduces tiny drift.
+                    # Unreachable in practice: dyn_angles_list uses Python floats from f4
+                    # values and find_all_aspects returns those exact values, so the
+                    # exact-equality lookup above always succeeds.
+                    dyn_idx = np.where(np.isclose(dyn["angle"], aspect_angle, atol=1e-4))[0]
+                if len(dyn_idx) > 0:
+                    raw_name = dyn["name"][dyn_idx[0]]
+                    aspect_name = (
+                        raw_name.decode()
+                        if isinstance(raw_name, bytes)
+                        else str(raw_name)
+                    )
+                else:  # pragma: no cover
+                    # Defensive fallback — unreachable: find_all_aspects only returns
+                    # angles from search_angles, which includes all dyn angles; isclose
+                    # covers any f4 round-trip drift, so this branch cannot be triggered
+                    # by well-formed calls.
+                    aspect_name = f"{aspect_angle:.4f}"
+            else:  # pragma: no cover
+                # Defensive fallback — unreachable: when dyn is None, search_angles
+                # contains only static angles; find_all_aspects can only return one of
+                # those, so the static_idx lookup above always succeeds.
+                aspect_name = f"{aspect_angle:.4f}"
 
             results.append((exact_jd, b1, b2, aspect_name, aspect_angle))
 
