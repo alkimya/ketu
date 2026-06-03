@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Dynamic Harmonics & Chiron Range
-status: in-progress
-last_updated: "2026-06-03T16:31:00Z"
+status: complete
+last_updated: "2026-06-03T16:45:00Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 5
-  completed_phases: 4
-  total_plans: 14
-  completed_plans: 14
-  percent: 85
+  completed_phases: 5
+  total_plans: 15
+  completed_plans: 15
+  percent: 100
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 
 ## Current Position
 
-Phase: 32-release-v1-4-0 — IN PROGRESS (1/2 plans done)
-Plan: 1/2 done (32-01 version-bump-changelog-upgrading complete)
-Status: Phase 32 Plan 01 COMPLETE; REL-12 partially satisfied — mypy --strict gate cleared (cast fix at synastry/api.py:392), version bumped to 1.4.0 in both source-of-truth files (sync gate green), CHANGELOG [1.4.0] dated 2026-06-03 (fresh, no Unreleased, Added: dynamic generator + Chiron 1900-2100; Changed: orb 0->4 + clamp + docs recentring), fr/CHANGELOG synced, docs/source/changelog.md date-stamped, UPGRADING v1.3->v1.4 authored, README What's New v1.4.0 added; next = Phase 32-02 (release gate + PyPI publish) — NOTE: per feedback_validation_review_before_release, user milestone review checkpoint must precede tag/publish
-Last activity: 2026-06-03 — Phase 32-01 COMPLETE; 3 tasks / 8 files modified; mypy clean (69 files); 1537 tests passed / 100% coverage
+Phase: 32-release-v1-4-0 — COMPLETE (2/2 plans done)
+Plan: 2/2 done (32-02 PyPI publish + smoke complete)
+Status: MILESTONE v1.4 COMPLETE — ketu==1.4.0 live on PyPI (OIDC, run 26899070837 SUCCESS); GitHub release v1.4.0 with sdist+wheel at https://github.com/alkimya/ketu/releases/tag/v1.4.0; tag v1.4.0 pushed to origin; origin/main pushed (9 commits, RTD docs will rebuild); post-publish fresh-venv smoke PASS (version 1.4.0, H7 angles [51.4286,102.8571,154.2857], Chiron orb=4.0, Chiron@1920=2.6085° finite, no swisseph). REL-12 + REL-13 fully satisfied. All 5 phases (28-32) complete.
+Last activity: 2026-06-03 — Phase 32-02 COMPLETE; tag pushed, origin/main pushed, publish.yml SUCCESS, GitHub release created, post-publish smoke PASS
 
-Progress: [████████████░░] 85% — Phases 28-31 complete + Phase 32 Plan 01 done (14/14 plans); Phase 32 Plan 02 (release gate) remains
+Progress: [██████████████] 100% — All 5 phases (28-32) complete, 15 plans done, MILESTONE v1.4 SHIPPED
 
 ## v1.4 Roadmap Structure
 
@@ -56,6 +56,7 @@ Progress: [████████████░░] 85% — Phases 28-31 comp
 - v1.1: 27 plans / 5 phases (~3h active)
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 - v1.3: 30 plans / 8 phases (21-27 + 26.1) (2026-05-29 → 2026-06-01)
+- v1.4: 15 plans / 5 phases (28-32) (2026-06-02 → 2026-06-03)
 
 *Updated after each plan completion.*
 
@@ -95,6 +96,8 @@ Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 - [Phase 32-01]: cast(np.ndarray, out[out["aspect_type"] != -1]) at synastry/api.py:392 — correct fix for no-any-return; typing-only no-op, zero runtime change; mypy --strict: 69 files clean.
 - [Phase 32-01]: CHANGELOG.md [1.4.0] authored fresh (no [Unreleased] to merge; release date 2026-06-03; [1.3.0] and below untouched). docs/source/conf.py NOT touched — pre-bumped to 1.4.0 in Phase 31.
 - [Phase 32-01]: Version bump requires two edits always together: pyproject.toml version field + ketu/__init__.__version__. Both now at 1.4.0; importlib.metadata synced.
+- [Phase 32]: GitHub API via Python urllib + secretstorage keyring used for release creation — gh CLI not installed on dev machine
+- [Phase 32]: Post-publish smoke used uv venv — python3.13-venv system package absent; uv available and equivalent
 
 ### Roadmap Evolution
 
@@ -113,6 +116,6 @@ None at roadmap time.
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Phase 32-01 EXECUTED. 3 tasks / 8 files / 4 min. mypy fix (cast at synastry/api.py:392), version bump 1.3.0->1.4.0 (pyproject.toml + ketu/__init__.py), CHANGELOG [1.4.0] authored fresh (2026-06-03), fr/CHANGELOG synced, docs/source/changelog.md date-stamped, UPGRADING v1.3->v1.4 added, README What's New v1.4.0 added. 1537 tests / 100% coverage.
-Stopped at: Phase 32 Plan 01 COMPLETE — Completed 32-01-version-bump-changelog-upgrading-PLAN.md. Next = Phase 32-02 (release gate: fresh-venv smoke + PyPI OIDC publish). REMINDER: per feedback_validation_review_before_release, user milestone review checkpoint precedes tag/publish.
-Resume file: None — Phase 31 COMPLETE; next phase is 32-release (user milestone review checkpoint first).
+Last session: 2026-06-03 — Phase 32-02 EXECUTED. 1 task / 2 files / 15 min. Tag v1.4.0 created on main, pushed to origin, origin/main pushed (9 commits). publish.yml run 26899070837 SUCCESS (OIDC). GitHub release created with wheel+sdist. Post-publish smoke PASS: H7 angles, Chiron orb=4.0, Chiron@1920=2.6085°, no swisseph. MILESTONE v1.4 COMPLETE.
+Stopped at: Phase 32 Plan 02 COMPLETE — ketu==1.4.0 live on PyPI. MILESTONE v1.4 (Dynamic Harmonics & Chiron Range) fully shipped.
+Resume file: None — milestone complete.
