@@ -3,13 +3,13 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Dynamic Harmonics & Chiron Range
 status: in-progress
-last_updated: "2026-06-03T13:25:00Z"
+last_updated: "2026-06-03T12:40:00Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 5
   completed_phases: 2
-  total_plans: 4
-  completed_plans: 4
+  total_plans: 5
+  completed_plans: 5
   percent: 40
 ---
 
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 
 ## Current Position
 
-Phase: 29-chiron-orb-4 — ✓ COMPLETE (2026-06-03)
-Plan: 1 plan done (29-01); Phase 29 complete
-Status: Phase 29 closed; milestone v1.4 at 2/5 phases
-Last activity: 2026-06-03 — Phase 29 COMPLETE; Chiron orb 0→4° (CHIR-06/07/08); 1531 tests, 100% coverage, frozen fingerprints intact
+Phase: 30-chiron-range-1900-2100 — in-progress (plan 01 complete, plan 02 next)
+Plan: 1/2 plans done (30-01 SPIKE complete); Phase 30 in-progress
+Status: Phase 30 plan 01 (blocking spike) complete; degree_final=10 confirmed; Plan 30-02 next (.npz regeneration)
+Last activity: 2026-06-03 — Phase 30-01 COMPLETE; Chiron 1900-2100 spike: max|delta-lon|=0.001214 deg, GATE PASS, degree=10 kept
 
-Progress: [██████░░░░░░░░] 40% — Phase 29 of 5 complete (4/4 plans total)
+Progress: [██████░░░░░░░░] 40% — Phase 29 of 5 complete (5/5 plans total, Phase 30 in-progress)
 
 ## v1.4 Roadmap Structure
 
@@ -94,11 +94,11 @@ None at roadmap time.
 
 ### Blockers/Concerns
 
-- **Phase 30 perihelion accuracy (empirical unknown)** — whether `seg=32d/degree=10` holds for the 1900–1950 wing cannot be resolved by analysis; the spike sub-task is the hard gate. If the gate fails: options are (a) raise `degree` 10→12, (b) reduce `seg_len` for early segments, (c) shift lower bound to ~1905. Each option requires a new decision log entry.
-- **Build environment prerequisite for Phase 30** — `pyswisseph` + `seas_18.se1` must be accessible on the developer machine. `seas_18.se1` covers 1800–2400 so the 1900–2100 range is within its window. Verify before starting Phase 30.
+- **Phase 30 perihelion accuracy** — RESOLVED by Phase 30-01 spike. degree=10/seg=32d PASSES < 0.01 deg over 1900-2100 (max 0.001214 deg, 8.2x margin). No parameter change needed. Plan 30-02 regenerates with degree=10.
+- **Build environment prerequisite for Phase 30** — RESOLVED. pyswisseph + seas_18.se1 confirmed accessible at /home/loc/workspace/rahu/kerykeion/kerykeion/sweph.
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Phase 29 EXECUTED (29-01 complete, 3/3 tasks). Chiron orb 0→4° in core.bodies (CHIR-06); CLI fixture regenerated + audited: +2 Semi-sextile lines (Sun-Chiron + Moon-Chiron), 0 removed (CHIR-07); synastry docstrings corrected + test_synastry_orb_limit_chiron_chiron_parity_pluto added pinning _BODY_ORBS_16[13]==4.0 (CHIR-08). 1531 tests / 100% coverage, frozen fingerprints V1/V13 unchanged.
-Stopped at: Phase 29 fully closed.
-Resume file: None — Phase 29 done. Next: Phase 30 (Chiron Range 1900-2100) — MUST follow Phase 29; spike sub-task first (measure max|Δλ| over 1900-2100 vs swisseph including perihelion ~1895-1896).
+Last session: 2026-06-03 — Phase 30-01 EXECUTED (3/3 tasks). Blocking spike complete: degree=10/seg=32d PASS over 1900-2100 (max delta-lon=0.001214 deg, gate < 0.01 deg, margin 8.2x). Dense 1900-1910 edge sampled (segs 0-10, max 0.000013 deg). Verdict recorded in PROJECT.md + STATE.md decisions. Ephemeral spike script deleted.
+Stopped at: Phase 30-01 complete — blocking spike done, degree=10 confirmed.
+Resume file: None — next is Phase 30-02 (.npz regeneration with degree=10, jd_start=2415020.5, jd_end=2488069.5).
