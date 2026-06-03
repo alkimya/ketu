@@ -61,16 +61,16 @@ All relational chart functions (synastry, composite, returns) inherit Chiron aut
 
 ## Date Range and Error Behaviour
 
-Requesting Chiron outside 1950-2050 raises a `ValueError`:
+Chiron's embedded coefficients cover **1900-01-01 to 2100-12-31** (expanded in v1.4). Input outside this range is **silently clamped** to the nearest segment boundary — no `ValueError` is raised:
 
 ```python
 from ketu.calculations import long
 
-# This raises ValueError: JD outside Chiron's supported range
-chiron_lon = long(2300000.0, 13)
+# Out-of-range JD: result is clamped to the nearest boundary (no exception)
+chiron_lon = long(2300000.0, 13)   # clamped to the 1900/2100 edge
 ```
 
-For dates inside the range, the positional error is guaranteed to be at most 0.005695° (about 20 arcseconds), well below the 0.01° target set during the Chebyshev spike (Phase 23).
+For dates inside the range, the positional error is guaranteed to be at most 0.001214° (about 4 arcseconds), well below the 0.01° target set during the Chebyshev spike (Phase 23).
 
 ## Breaking Change in v1.3 (D-08)
 
