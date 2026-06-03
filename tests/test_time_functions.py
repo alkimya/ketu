@@ -10,6 +10,7 @@ from zoneinfo import ZoneInfo
 
 from ketu.ephemeris.time import (
     utc_to_julian,
+    coerce_to_jd,
     julian_to_utc,
     local_to_utc,
     delta_t,
@@ -101,6 +102,29 @@ class TestBasicTimeConversions:
         dt_back = julian_to_utc(jd)
         assert dt_back.month == 2
         assert dt_back.day == 28
+
+
+class TestCoerceToJD:
+    """Test coerce_to_jd accepts datetime, ISO string, and float identically."""
+
+    def test_all_three_inputs_agree(self):
+        dt = datetime(2025, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+        jd_from_dt = coerce_to_jd(dt)
+        jd_from_str = coerce_to_jd("2025-01-01T12:00:00+00:00")
+        jd_from_float = coerce_to_jd(jd_from_dt)
+        assert jd_from_dt == jd_from_str == jd_from_float
+
+    def test_datetime_matches_utc_to_julian(self):
+        dt = datetime(2000, 1, 1, 12, 0, 0, tzinfo=timezone.utc)
+        assert coerce_to_jd(dt) == utc_to_julian(dt)
+
+    def test_naive_string_assumed_utc(self):
+        assert coerce_to_jd("2025-06-21T00:00:00") == utc_to_julian(
+            datetime(2025, 6, 21, 0, 0, 0)
+        )
+
+    def test_float_passthrough(self):
+        assert coerce_to_jd(2451545.0) == 2451545.0
 
 
 class TestLocalToUTC:

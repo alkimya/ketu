@@ -23,6 +23,7 @@ from ketu.calculations import (
     long,
     long_velocity,
     utc_to_julian,
+    coerce_to_jd,
     julian_to_utc,
 )
 from ketu.aspects.calculator import get_orb
@@ -299,14 +300,7 @@ def find_aspect_window(
     aspect_angle = float(aspects["angle"][aspect_idx])
 
     # Convert date to Julian Date
-    if isinstance(around_date, str):
-        # Parse ISO format string
-        dt = datetime.fromisoformat(around_date)
-        jd_center = utc_to_julian(dt)
-    elif isinstance(around_date, datetime):
-        jd_center = utc_to_julian(around_date)
-    else:
-        jd_center = float(around_date)
+    jd_center = coerce_to_jd(around_date)
 
     # Calculate orb
     if custom_orb is not None:
@@ -453,21 +447,8 @@ def find_aspects_timeline(
         aspects_list = list(_CLASSICAL_NAMES)
 
     # Convert dates
-    if isinstance(start_date, str):
-        start_dt = datetime.fromisoformat(start_date)
-        jd_start = utc_to_julian(start_dt)
-    elif isinstance(start_date, datetime):
-        jd_start = utc_to_julian(start_date)
-    else:
-        jd_start = float(start_date)
-
-    if isinstance(end_date, str):
-        end_dt = datetime.fromisoformat(end_date)
-        jd_end = utc_to_julian(end_dt)
-    elif isinstance(end_date, datetime):
-        jd_end = utc_to_julian(end_date)
-    else:
-        jd_end = float(end_date)
+    jd_start = coerce_to_jd(start_date)
+    jd_end = coerce_to_jd(end_date)
 
     # Calculate search parameters
     total_days = jd_end - jd_start

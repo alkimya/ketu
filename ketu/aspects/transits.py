@@ -33,6 +33,7 @@ from ketu.calculations import (
     long,
     long_velocity,
     utc_to_julian,
+    coerce_to_jd,
     julian_to_utc,
     positions,
 )
@@ -326,21 +327,8 @@ def find_transits_to_position(
         aspects_list = list(_CLASSICAL_NAMES)
 
     # Convert dates
-    if isinstance(start_date, str):
-        start_dt = datetime.fromisoformat(start_date)
-        jd_start = utc_to_julian(start_dt)
-    elif isinstance(start_date, datetime):
-        jd_start = utc_to_julian(start_date)
-    else:
-        jd_start = float(start_date)
-
-    if isinstance(end_date, str):
-        end_dt = datetime.fromisoformat(end_date)
-        jd_end = utc_to_julian(end_dt)
-    elif isinstance(end_date, datetime):
-        jd_end = utc_to_julian(end_date)
-    else:
-        jd_end = float(end_date)
+    jd_start = coerce_to_jd(start_date)
+    jd_end = coerce_to_jd(end_date)
 
     all_windows = []
 
@@ -467,13 +455,7 @@ def get_natal_positions(
     True
     """
     # Convert date
-    if isinstance(reference_date, str):
-        dt = datetime.fromisoformat(reference_date)
-        jd = utc_to_julian(dt)
-    elif isinstance(reference_date, datetime):
-        jd = utc_to_julian(reference_date)
-    else:
-        jd = float(reference_date)
+    jd = coerce_to_jd(reference_date)
 
     # Default to all bodies
     if bodies_list is None:

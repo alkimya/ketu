@@ -6,6 +6,7 @@ calculations, replacing the pyswisseph dependency.
 
 from .time import (
     utc_to_julian,
+    coerce_to_jd,
     julian_to_utc,
     local_to_utc,
     delta_t,
@@ -54,6 +55,7 @@ from .planets import (
 __all__ = [
     # Time functions
     "utc_to_julian",
+    "coerce_to_jd",
     "julian_to_utc",
     "local_to_utc",
     "delta_t",
