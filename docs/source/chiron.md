@@ -7,8 +7,8 @@ Ketu v1.3 adds **Chiron** as the 14th celestial body. Chiron is a small solar sy
 | Property | Value |
 |---|---|
 | `body_id` | 13 |
-| Valid date range | 1950-01-01 to 2050-12-31 (Julian Days ~2433282 to ~2469807) |
-| Position accuracy | max error 0.005695° (sub-arcminute, ~20 arcseconds) |
+| Valid date range | 1900-01-01 to 2100-12-31 (Julian Days 2415020.5 to 2488069.5) — expanded in v1.4 |
+| Position accuracy | max error 0.001214° (sub-arcminute, ~4 arcseconds) — improved in v1.4 |
 | Evaluation method | Pure-NumPy Chebyshev polynomial evaluation |
 | Runtime dependency | None — coefficients embedded in `ketu/data/chiron_coeffs.npz` |
 
