@@ -86,6 +86,7 @@ Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 - [Phase 31-03]: relational_charts.md DOC-15 — compute_chart aspects=None now names TRADITIONAL (v1.3+) as library default; calculate_synastry aspects="classical" explicitly documented as function-level backward-compat default (NOT changed to TRADITIONAL — intentional byte-stability pin). No remaining "default classical set" text in relational_charts.md.
 - [Phase 31-05]: chiron.md: ValueError behavior replaced with silent clamping (Phase 30); range 1900-2100, accuracy 0.001214° documented with v1.4 badges
 - [Phase 31-02]: migration.md DOC-15 — stale "behavior is unchanged (EXTENDED = all 14 aspects)" replaced with v1.1 history annotation + explicit TRADITIONAL pointer; code comment updated. DOC-16 Chiron-behavior — "1950-2050 / raises ValueError" replaced with "1900-2100 (v1.4) / silently clamped".
+- [Phase 31-documentation-en-fr]: conf.py version/release bumped to 1.4.0 here (docs-build metadata); pyproject.toml + ketu/__init__.py stay at 1.3.0 until Phase 32
 
 ### Roadmap Evolution
 
@@ -104,6 +105,6 @@ None at roadmap time.
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Phase 30-02 EXECUTED (3/3 tasks). .npz regenerated 1900-2100 (2283 segs, degree=10, gate PASS max|Δλ|=0.001214°, 577 KB). Regression re-pinned to 9 refs (1920-2080). 4 bounds tests added. 1537 tests green at 100% coverage. Phase 30 COMPLETE.
-Stopped at: Phase 30-02 complete — Phase 30 fully done. Next: Phase 31 (Documentation en+fr).
+Last session: 2026-06-03 — Phase 31-06 EXECUTED (2/2 tasks). [1.4.0] changelog section added to docs/source/changelog.md; v1.1 EXTENDED-default entry annotated; conf.py docs-build version/release bumped to 1.4.0 (pyproject.toml + ketu/__init__.py unchanged).
+Stopped at: Phase 31-06 complete — changelog.md + conf.py updated for v1.4. Remaining Phase 31 plans (31-07 gettext fr) in progress in parallel.
 Resume file: None — Phase 30 COMPLETE; next phase is 31-documentation.
