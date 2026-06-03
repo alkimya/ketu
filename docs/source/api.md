@@ -257,12 +257,12 @@ New in v1.3: the `harmonic` and `symbol` columns.
 - **`coef` (`float32`):** orb coefficient. Conceptually referred to as `coefficient` in API documentation; the field name in the dtype is `coef` and was **not renamed** in v1.3.
 
 ```python
-import ketu
+import ketu.core
 
 # Access new columns:
-harmonics = ketu.aspects["harmonic"]    # array([1, 6, 10, 9, 3, 5, 9, 2, 10, 3, 5, 6, 9, 1])
-symbols   = ketu.aspects["symbol"]     # ['☌', '⚺', '', '', '⚹', '', '', '□', '', '△', '', '⚻', '', '☍']
-coefs     = ketu.aspects["coef"]       # orb coefficients (field name: 'coef', not 'coefficient')
+harmonics = ketu.core.aspects["harmonic"]    # array([1, 6, 10, 9, 3, 5, 9, 2, 10, 3, 5, 6, 9, 1])
+symbols   = ketu.core.aspects["symbol"]     # ['☌', '⚺', '', '', '⚹', '', '', '□', '', '△', '', '⚻', '', '☍']
+coefs     = ketu.core.aspects["coef"]       # orb coefficients (field name: 'coef', not 'coefficient')
 ```
 
 ### `get_aspect(jday, body1, body2)`
