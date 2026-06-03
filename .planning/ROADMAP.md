@@ -130,7 +130,11 @@ Plans:
   2. `ketu/data/chiron_coeffs.npz` is regenerated with `jd_start`/`jd_end` reflecting the 1900–2100 range; the embedded `actual_len` for the partial first/last segments is correct (the Phase 24 last-segment fix preserved); runtime evaluation stays 100% pure NumPy (no `pyswisseph` import in `ketu/ephemeris/chiron.py`).
   3. Regression tests are re-pinned to span 1900–2100: at minimum one new reference longitude pre-1950 (e.g. 1920 or 1930) and one post-2050 (e.g. 2080) are pinned, and `test_chiron_regression.py` passes the < 0.01° gate on the full new range.
 
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 30-01-PLAN.md — Blocking spike (HARD GATE): pre-flight build check + dense 1900–2100 accuracy measurement (1900–1910 edge prioritized) → degree decision (keep 10 / raise to 12 / STOP+ask user if 1900.0 fails) → record verdict in decision log; ephemeral spike thrown away
+- [ ] 30-02-PLAN.md — Regenerate `.npz` over 1900–2100 with spike-decided degree (CHIR-10), update breaking shape/degree test atomically, re-pin regression refs (1950–2050 kept + wings added, CHIR-11), preserve actual_len fix + pure-NumPy runtime, verify bounds/clamp + 100% coverage
 
 #### Phase 31: Documentation (en + fr)
 
