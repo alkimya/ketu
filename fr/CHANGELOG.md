@@ -9,6 +9,41 @@
 
 ---
 
+## [1.4.0] - 2026-06-03
+
+### Ajouts
+
+- **`generate_harmonic_aspects(h)` — générateur d'harmoniques dynamiques** : construit
+  des spécifications d'aspects à la volée pour tout harmonique entier `h` (2 ≤ h ≤ 64),
+  en utilisant la convention plein-cercle 360° ramenée à 0–180° (`coef = k/h`). Retourne
+  un tableau structuré compatible avec `core.aspects` ; à passer via l'argument
+  `dynamic_specs=` à `calculate_aspects`, `find_aspects_between_dates` et
+  `calculate_synastry`. La table figée `core.aspects` (14 lignes) et les empreintes de
+  préréglages restent octet-identiques (chemin parallèle et additif). Disponible via
+  `ketu.aspects.generate_harmonic_aspects` et
+  `ketu.aspects.harmonics.generate_harmonic_aspects`. (Phase 28)
+- **Plage de Chiron étendue à 1900–2100** : `ketu/data/chiron_coeffs.npz` régénéré
+  (2283 segments Chebyshev, `jd_start=2415020.5`, `jd_end=2488069.5`, seg=32 j,
+  degré=10) ; erreur max |Δλ| = 0,001214° sur la nouvelle plage. Moteur d'évaluation
+  pur NumPy préservé ; `.npz` ~578 Ko (était 289,7 Ko). `calc_planet_position(jd, 13)`
+  résout tout JD dans la nouvelle plage, y compris 1900–1949 et 2051–2100. (Phase 30)
+
+### Modifié
+
+- **Orbe de Chiron 0° → 4°** (parité Pluton) : `core.bodies['orb']` pour Chiron vaut
+  désormais 4° ; Chiron forme maintenant des aspects scorés dans `calculate_aspects`,
+  `compute_chart`, `calculate_synastry` et `find_aspects_between_dates`. Le code aval
+  supposant zéro aspect Chiron doit être adapté ; voir
+  [UPGRADING.md](../UPGRADING.md) → « v1.3 -> v1.4 ». (Phase 29)
+- **Comportement hors-plage de Chiron bridé** : un JD en dehors de 1900–2100 passé à
+  `calc_planet_position(jd, 13)` / `calc_planet_position_batch(jds, 13)` est désormais
+  silencieusement bridé au segment le plus proche ; auparavant, une `ValueError` était
+  levée. (Phase 30)
+- **Documentation recentrée sur le défaut 180°** : les tables d'aspects de `concepts.md`
+  n'affichent plus que CLASSICAL (5) et TRADITIONAL (7) ; les harmoniques mineurs
+  plein-cercle (H5/H9/H10 / EXTENDED) restent disponibles dans le code mais sont retirés
+  des tables récapitulatives. (Phase 31)
+
 ## [1.3.0] - 2026-06-01
 
 ### Ajouts

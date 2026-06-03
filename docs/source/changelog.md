@@ -5,7 +5,7 @@ All notable changes to Ketu are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.4.0] - 2026-06-XX
+## [1.4.0] - 2026-06-03
 
 ### Added 1.4.0
 
@@ -18,7 +18,7 @@ and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **Chiron out-of-range behaviour**: input outside 1900–2100 is now **silently clamped** to the nearest segment boundary (previously raised `ValueError`).
 - **Documentation recentred on the 180°-division default**: `concepts.md` aspect tables now show CLASSICAL (5) and TRADITIONAL (7) only; the full-circle minor harmonics (H5/H9/H10 / EXTENDED) remain available in code but are out of the summary tables.
 
-## [1.3.0] - 2026-06-XX
+## [1.3.0] - 2026-06-01
 
 ### Added 1.3.0
 
