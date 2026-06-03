@@ -169,7 +169,12 @@ Plans:
   2. `ketu==1.4.0` is live on PyPI via OIDC trusted publishing with a GitHub release attaching sdist + wheel; both `origin/main` AND the tag `v1.4.0` are pushed (RTD follows main, PyPI follows tag).
   3. A fresh-venv `pip install ketu==1.4.0` smoke confirms: `generate_harmonic_aspects(7)` returns the correct H7 angles; `core.bodies['orb']` for Chiron is 4°; `calc_planet_position(jd_1920, 13)` returns a finite Chiron longitude (1900–2100 range); `importlib.util.find_spec('swisseph')` is `None` (no pyswisseph at runtime).
 
-**Plans**: TBD
+**Plans**: 2 plans (2 waves)
+
+Plans:
+
+- [ ] 32-01-PLAN.md — Fix mypy --strict (synastry/api.py:392) + bump 1.4.0 (pyproject + __init__) + author root CHANGELOG [1.4.0] fresh + sync fr/CHANGELOG + date-stamp docs/source/changelog.md + UPGRADING v1.3 -> v1.4 + README What's New (REL-12) [Wave 1]
+- [ ] 32-02-PLAN.md — Full local pre-flight HARD GATES (mypy clean, .npz-in-wheel, four v1.4 smoke assertions) → BLOCKING human go/no-go → tag v1.4.0 + push tag + push origin/main + GitHub release (sdist+wheel) + post-publish fresh-venv smoke from PyPI (REL-13) [Wave 2]
 
 ## Progress
 
@@ -203,7 +208,7 @@ Plans:
 | **29. Chiron Orb 4°**                             | **v1.4**  | **1/1**        | ✓ Complete | 2026-06-03 |
 | **30. Chiron Range 1900–2100**                    | **v1.4**  | **2/2**        | ✓ Complete | 2026-06-03 |
 | **31. Documentation (en + fr)**                   | **v1.4**  | **7/7**        | ✓ Complete | 2026-06-03 |
-| **32. Release v1.4.0**                            | **v1.4**  | **0/TBD**      | ⬜ Pending  | —          |
+| **32. Release v1.4.0**                            | **v1.4**  | **0/2**        | ⬜ Pending  | —          |
 
 ---
 
