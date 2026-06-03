@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 
 ## Current Position
 
-Phase: 28-dynamic-harmonic-generator — ✓ COMPLETE (verifier PASSED 5/5, 2026-06-03)
-Plan: All 3 plans done (28-01, 28-02, 28-03); Wave 1 + Wave 2 complete
-Status: Phase 28 closed; milestone v1.4 at 1/5 phases
-Last activity: 2026-06-03 — Phase 28 verified PASSED 5/5; full dynamic harmonic integration (generator + calculator/timing + synastry/cycles); 1530 tests, 100% coverage, frozen fingerprints intact
+Phase: 29-chiron-orb-4 — ✓ COMPLETE (2026-06-03)
+Plan: 1 plan done (29-01); Phase 29 complete
+Status: Phase 29 closed; milestone v1.4 at 2/5 phases
+Last activity: 2026-06-03 — Phase 29 COMPLETE; Chiron orb 0→4° (CHIR-06/07/08); 1531 tests, 100% coverage, frozen fingerprints intact
 
-Progress: [███░░░░░░░░░░░] 20% — Phase 28 of 5 complete (3/3 plans)
+Progress: [██████░░░░░░░░] 40% — Phase 29 of 5 complete (4/4 plans total)
 
 ## v1.4 Roadmap Structure
 
@@ -80,6 +80,7 @@ Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 - [Phase 28-02]: `find_aspect_timing` orb param: explicit `orb=float` skips table lookup entirely (dynamic path); `orb=None` does table lookup with clear ValueError on miss (never IndexError). Simpler than coef param.
 - [Phase 28-02]: Two unreachable defensive fallback branches in `find_aspects_between_dates` name resolution marked `pragma: no cover` — `find_all_aspects` only returns angles from the search list, so lookups always succeed for well-formed calls.
 - [Phase 28-02]: `_normalize_dynamic_specs` centralises None/single/list normalization — imported/reused by all calculator consumers (not reimplemented per-function).
+- [Phase 29-01]: Chiron natal orb=4° (Pluto parity); single literal in `core.bodies['orb'][13]`; `_BODY_ORBS_16` rebuilds from it at import — no second source patched. CLI fixture audited: exactly 2 added lines (Sun-Chiron + Moon-Chiron Semi-sextile), 0 removed. orbs.py docstring already correct (no Chiron in zero-orb group).
 
 ### Roadmap Evolution
 
@@ -97,6 +98,6 @@ None at roadmap time.
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Phase 28 EXECUTED + VERIFIED (gsd-verifier PASSED 5/5). All 3 plans done across 2 waves: 28-01 (generator `generate_harmonic_aspects(h)` + `_fold_to_0_180` + `HARMONIC_DTYPE`/`DynamicAspectSpec`), 28-02 (`dynamic_specs=` in `calculate_aspects` scalar/vec/batch + 2 IndexError guards, `i_asp=-2`), 28-03 (synastry `aspect_type=-2` + cycles candidate-set extension). 1530 tests / 100% coverage, frozen sha256 V1/V13 byte-identical, `_VALID_HARMONICS` never on dynamic path, output dtype unchanged. ROADMAP + STATE updated, VERIFICATION.md written.
-Stopped at: Phase 28 fully closed and verified.
-Resume file: None — Phase 28 done. Next: `/gsd:plan-phase 29` (Chiron Orb 4°) — independent of 28, MUST precede Phase 30. Phase 31 (docs) also unblocked w.r.t. 28 but depends on 29+30 too.
+Last session: 2026-06-03 — Phase 29 EXECUTED (29-01 complete, 3/3 tasks). Chiron orb 0→4° in core.bodies (CHIR-06); CLI fixture regenerated + audited: +2 Semi-sextile lines (Sun-Chiron + Moon-Chiron), 0 removed (CHIR-07); synastry docstrings corrected + test_synastry_orb_limit_chiron_chiron_parity_pluto added pinning _BODY_ORBS_16[13]==4.0 (CHIR-08). 1531 tests / 100% coverage, frozen fingerprints V1/V13 unchanged.
+Stopped at: Phase 29 fully closed.
+Resume file: None — Phase 29 done. Next: Phase 30 (Chiron Range 1900-2100) — MUST follow Phase 29; spike sub-task first (measure max|Δλ| over 1900-2100 vs swisseph including perihelion ~1895-1896).
