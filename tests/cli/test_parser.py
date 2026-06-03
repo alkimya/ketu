@@ -109,12 +109,14 @@ class TestBuildParser:
                 "2026-05-06T12:00:00Z",
             ]
         )
-        # After Plan 11-02, type=parse_harmonics_spec returns a length-14 mask.
+        # After Plan 34-03, type=parse_harmonics_spec returns a HarmonicsSelection.
+        from ketu.cli.harmonics_spec import HarmonicsSelection
         import numpy as np
-        assert isinstance(args.harmonics, np.ndarray)
-        assert args.harmonics.dtype == np.bool_
-        assert args.harmonics.shape == (14,)
-        assert args.harmonics.sum() == 5  # CLASSICAL = 5 majors
+        assert isinstance(args.harmonics, HarmonicsSelection)
+        assert args.harmonics.mask.dtype == np.bool_
+        assert args.harmonics.mask.shape == (14,)
+        assert args.harmonics.mask.sum() == 5  # CLASSICAL = 5 majors
+        assert args.harmonics.dynamic_specs is None
 
     def test_harmonics_default_is_none(self):
         """Default --harmonics value is None (resolved to CLASSICAL by aspects_cmd)."""
