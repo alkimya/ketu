@@ -61,6 +61,19 @@ class TestAspectsCmdTimingExampleAlwaysEmitted:
         assert "Aspect Timing Example" in out
 
 
+class TestAspectsCmdCustomMask:
+    """--harmonics <custom-list> → header label 'custom' (covers _preset_label_for_mask)."""
+
+    def test_custom_mask_header_says_custom(self, invoke_main, capsys):
+        """Indices not matching any preset → label 'custom' in header."""
+        invoke_main([
+            "--harmonics", "0,4",
+            "aspects", "--date", "2000-01-01T12:00:00Z",
+        ])
+        err = capsys.readouterr().err
+        assert "Aspect set: custom" in err
+
+
 class TestAspectsCmdHarmonicsList:
     """--harmonics 0,4,7,9,13 == classical."""
 
@@ -129,3 +142,36 @@ class TestAspectsCmdUsesDegreeCharFromDisplay:
             "BLOCKER 1 regression: aspects block contains U+00B0 '°' "
             "(DEGREE SIGN); v1.0 used U+00BA 'º' (MASCULINE ORDINAL INDICATOR)."
         )
+
+
+class TestAspectsCmdHarmonicsH7:
+    """HARM-06/07: --harmonics h7 end-to-end (F1 debt, Plan 34-03)."""
+
+    def test_h7_runs_and_shows_synthetic_names(self, invoke_main, capsys):
+        """--harmonics h7 runs (rc=0); stdout has H7-k names; no Quadrinovile."""
+        rc = invoke_main([
+            "--harmonics", "h7",
+            "aspects", "--date", "2000-01-01T12:00:00Z",
+        ])
+        assert rc == 0
+        out = capsys.readouterr().out
+        assert "H7-" in out
+        assert "Quadrinovile" not in out
+
+    def test_h7_header_says_h7(self, invoke_main, capsys):
+        """Stderr header contains '# Aspect set: h7'."""
+        invoke_main([
+            "--harmonics", "h7",
+            "aspects", "--date", "2000-01-01T12:00:00Z",
+        ])
+        err = capsys.readouterr().err
+        assert "# Aspect set: h7" in err
+
+    def test_h7_timing_example_still_classical(self, invoke_main, capsys):
+        """The always-on classical-pinned 'Aspect Timing Example' block is still emitted."""
+        invoke_main([
+            "--harmonics", "h7",
+            "aspects", "--date", "2000-01-01T12:00:00Z",
+        ])
+        out = capsys.readouterr().out
+        assert "Aspect Timing Example" in out
