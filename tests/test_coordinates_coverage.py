@@ -21,6 +21,9 @@ from ketu.ephemeris.coordinates import (
     true_obliquity,
     aberration_correction,
 )
+from ketu.calculations import declination, utc_to_julian
+from ketu.ephemeris.planets import calc_planet_position_batch
+from datetime import datetime, timezone
 
 # J2000.0 Julian Date
 J2000 = 2451545.0
@@ -681,3 +684,87 @@ class TestCrossFunctionIntegration:
         assert_allclose(lon_back, lon, atol=1e-10)
         assert_allclose(lat_back, lat, atol=1e-10)
         assert_allclose(r_back, r, atol=1e-10)
+
+
+# ---------------------------------------------------------------------------
+# DECL-03: declination() equivalence — chain and Meeus 13.4 (STATE.md lock)
+#
+# STATE.md locks true_obliquity (instantaneous ε) for ALL three computations
+# so the comparison is apples-to-apples. The brief's mean_obliquity
+# recommendation is OVERRIDDEN.
+# ---------------------------------------------------------------------------
+
+
+class TestDeclinationEquivalenceDECL03:
+    """DECL-03 regression: declination() ≡ explicit chain ≡ Meeus 13.4.
+
+    All three use true_obliquity (instantaneous ε) per STATE.md lock.
+    Tolerance < 1e-9 (research measured max|Δ| = 7.1e-15 over arrays).
+    """
+
+    # 50 dates spread over ~1 year starting 2025-01-01
+    JD_BASE = utc_to_julian(datetime(2025, 1, 1, 12, 0, tzinfo=timezone.utc))
+    JD_ARRAY = np.linspace(JD_BASE, JD_BASE + 365.0, 50)
+
+    def _chain_decl(self, jd_array: np.ndarray, body_id: int) -> np.ndarray:
+        """Explicit coordinates chain: λ,β → rect → ecliptic_to_equatorial(ε) → spherical."""
+        batch = calc_planet_position_batch(jd_array, body_id)
+        lam = batch[:, 0]
+        bet = batch[:, 1]
+        x, y, z = spherical_to_rectangular(lam, bet, 1.0)
+        eps = true_obliquity(jd_array)
+        xe, ye, ze = ecliptic_to_equatorial(x, y, z, eps)
+        _, decl, _ = rectangular_to_spherical(xe, ye, ze)
+        return decl
+
+    def _meeus_decl(self, jd_array: np.ndarray, body_id: int) -> np.ndarray:
+        """Meeus eq. 13.4: δ = arcsin(sin β·cos ε + cos β·sin ε·sin λ).
+
+        All angles in radians; ε = true_obliquity(jd) per STATE.md lock.
+        """
+        batch = calc_planet_position_batch(jd_array, body_id)
+        lam_rad = np.deg2rad(batch[:, 0])
+        bet_rad = np.deg2rad(batch[:, 1])
+        eps_rad = np.deg2rad(true_obliquity(jd_array))
+        sin_decl = (
+            np.sin(bet_rad) * np.cos(eps_rad)
+            + np.cos(bet_rad) * np.sin(eps_rad) * np.sin(lam_rad)
+        )
+        return np.rad2deg(np.arcsin(sin_decl))
+
+    def test_decl_eq_chain_moon(self):
+        """declination() ≡ explicit chain for the Moon (50 dates, < 1e-9°)."""
+        decl_fn = declination(self.JD_ARRAY, 1)
+        decl_chain = self._chain_decl(self.JD_ARRAY, 1)
+        assert np.max(np.abs(decl_fn - decl_chain)) < 1e-9
+
+    def test_decl_eq_meeus_moon(self):
+        """declination() ≡ Meeus 13.4 for the Moon (50 dates, < 1e-9°)."""
+        decl_fn = declination(self.JD_ARRAY, 1)
+        decl_meeus = self._meeus_decl(self.JD_ARRAY, 1)
+        assert np.max(np.abs(decl_fn - decl_meeus)) < 1e-9
+
+    def test_decl_eq_chain_sun(self):
+        """declination() ≡ explicit chain for the Sun (50 dates, < 1e-9°)."""
+        decl_fn = declination(self.JD_ARRAY, 0)
+        decl_chain = self._chain_decl(self.JD_ARRAY, 0)
+        assert np.max(np.abs(decl_fn - decl_chain)) < 1e-9
+
+    def test_decl_eq_meeus_sun(self):
+        """declination() ≡ Meeus 13.4 for the Sun (50 dates, < 1e-9°)."""
+        decl_fn = declination(self.JD_ARRAY, 0)
+        decl_meeus = self._meeus_decl(self.JD_ARRAY, 0)
+        assert np.max(np.abs(decl_fn - decl_meeus)) < 1e-9
+
+    def test_decl_chain_eq_meeus_moon(self):
+        """Explicit chain ≡ Meeus 13.4 for the Moon (50 dates, < 1e-9°)."""
+        decl_chain = self._chain_decl(self.JD_ARRAY, 1)
+        decl_meeus = self._meeus_decl(self.JD_ARRAY, 1)
+        assert np.max(np.abs(decl_chain - decl_meeus)) < 1e-9
+
+    def test_true_obliquity_used_not_mean(self):
+        """Confirm true_obliquity ≠ mean_obliquity (nutation contribution non-zero)."""
+        true_obl = true_obliquity(self.JD_BASE)
+        mean_obl = mean_obliquity(self.JD_BASE)
+        # Nutation in obliquity is non-zero; the two must differ
+        assert true_obl != mean_obl
