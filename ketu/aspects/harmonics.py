@@ -166,6 +166,17 @@ def generate_harmonic_aspects(h: int) -> npt.NDArray[np.void]:
     - ``_VALID_HARMONICS`` / ``aspects_for_harmonics`` are **never** called;
       this function accepts any valid ``h`` including 7, 11, 17, etc.
 
+    Public API contract (frozen, v1.5+):
+
+    The ``name`` field is **always** the byte string ``b'H{h}-{k}'`` (dtype
+    S16) for ``k = 1 … h//2`` in ascending ``k`` order.  This
+    ``(h, k) → (name, angle, coef)`` mapping is **frozen** across v1.5+
+    minor and patch releases — no traditional-name substitution is ever
+    performed by the generator.  Traditional names (quintile, septile,
+    novile, …) are documentation references only and never appear in the
+    emitted ``name`` bytes.  Adding support for new ``h`` values in future
+    releases never alters existing rows for previously valid ``h``.
+
     Examples
     --------
     >>> specs = generate_harmonic_aspects(7)
