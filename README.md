@@ -10,6 +10,28 @@ This library was originally designed to generate biodynamic calendars and time s
 
 ![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
 
+## What's New in v1.4.0
+
+Ketu v1.4.0 introduces a dynamic harmonic aspect generator and expands the Chiron
+ephemeris to 1900–2100. There are two behavioural changes: Chiron now forms scored
+aspects (orb raised from 0° to 4°) and out-of-range Chiron inputs are silently clamped
+instead of raising `ValueError`. See [UPGRADING.md](UPGRADING.md) for migration recipes
+and [CHANGELOG.md](CHANGELOG.md) for the full list of changes.
+
+- **Dynamic harmonic generator** — `ketu.aspects.generate_harmonic_aspects(h)` builds
+  aspect specs on the fly for any integer harmonic 2 ≤ h ≤ 64 (full-circle 360°
+  folded to 0–180°, `coef = k/h`). Pass the result as `dynamic_specs=` to
+  `calculate_aspects`, `find_aspects_between_dates`, or `calculate_synastry`. The
+  frozen 14-row `core.aspects` table and preset fingerprints are byte-identical.
+- **Chiron range 1900–2100** — `ketu/data/chiron_coeffs.npz` regenerated (2283
+  Chebyshev segments, max error 0.001214°, ~578 KB). `calc_planet_position(jd, 13)`
+  now resolves any JD in the expanded range with no code changes required.
+- **Chiron orb 4°** — `core.bodies['orb']` for Chiron is now 4° (Pluto parity).
+  Chiron forms scored aspects in all detection functions. Downstream code that assumed
+  zero Chiron aspects must adapt (see UPGRADING.md → "v1.3 -> v1.4").
+
+---
+
 ## What's New in v1.3.0
 
 Ketu v1.3.0 adds Chiron as the 14th body and makes the aspect engine

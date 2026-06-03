@@ -3,6 +3,106 @@
 This guide collects migration notes between Ketu releases. Sections are
 ordered newest-first.
 
+## v1.3 -> v1.4
+
+### Chiron orb changed from 0° to 4° — Chiron now forms aspects
+
+In v1.4.0, `core.bodies['orb']` for Chiron (body_id=13) is **4°** (was 0°). Chiron
+now participates in scored aspect detection in `calculate_aspects`, `compute_chart`,
+`calculate_synastry`, and `find_aspects_between_dates`.
+
+**What changes:** Body-pair tallies involving Chiron (index 13) are now non-empty.
+Any downstream code that assumed zero Chiron aspects must be updated.
+
+**CHART_DTYPE body axis:** Unchanged from v1.3 — still 14 bodies / indices 0–13. Only
+the orb scalar for body_id=13 changed from 0° to 4°.
+
+**Kala / downstream guidance:** After upgrading, body_id=13 (Chiron) aspect tallies
+will be non-empty. Recompute cached charts and synastry results after upgrade.
+
+```python
+# Verify the new orb value:
+from ketu.core import bodies
+import numpy as np
+
+chiron_idx = np.where(bodies['name'] == b'Chiron')[0][0]  # 13
+assert float(bodies['orb'][chiron_idx]) == 4.0
+```
+
+---
+
+### Chiron out-of-range behaviour: ValueError -> silent clamp
+
+In v1.3, passing a Julian Date outside the Chiron coefficient range to
+`calc_planet_position(jd, 13)` or `calc_planet_position_batch(jds, 13)` raised
+`ValueError`.
+
+In v1.4, out-of-range JD is **silently clamped** to the nearest segment boundary.
+
+**Action required for code relying on the ValueError for bounds checking:** Add
+explicit range validation before calling the Chiron evaluator if you need to guard
+against out-of-range inputs.
+
+```python
+# Explicit range guard (if needed):
+JD_CHIRON_MIN = 2415020.5  # 1900-01-01
+JD_CHIRON_MAX = 2488069.5  # 2100-01-01
+
+if not (JD_CHIRON_MIN <= jd <= JD_CHIRON_MAX):
+    raise ValueError(f"JD {jd} outside Chiron range 1900-2100")
+
+from ketu.ephemeris.planets import calc_planet_position
+lon = float(calc_planet_position(jd, 13)[0])
+```
+
+---
+
+### Chiron range expanded: 1950–2050 -> 1900–2100
+
+The embedded `ketu/data/chiron_coeffs.npz` has been regenerated to cover the full
+1900–2100 range (2283 Chebyshev segments, max |Δλ| = 0.001214°). No code changes are
+needed to access the expanded range — `calc_planet_position(jd, 13)` resolves any JD
+in 1900–2100 automatically.
+
+**Verify the expanded range:**
+
+```python
+import math
+from ketu.ephemeris.planets import calc_planet_position
+
+# JD 2422324.5 ≈ 1920-01-01 (previously out-of-range)
+jd_1920 = 2422324.5
+pos = calc_planet_position(jd_1920, 13)
+lon = float(pos[0])
+assert math.isfinite(lon) and 0 <= lon < 360, f"Expected valid longitude, got {lon}"
+print(f"Chiron longitude 1920-01-01: {lon:.6f}°")
+```
+
+---
+
+### Dynamic harmonic generator — additive, no migration needed
+
+`ketu.aspects.generate_harmonic_aspects(h)` is a **new, purely additive** function
+(Phase 28). No existing imports, callers, or presets change.
+
+Opt in by passing `dynamic_specs=generate_harmonic_aspects(h)` to
+`calculate_aspects`, `find_aspects_between_dates`, or `calculate_synastry`.
+
+```python
+from ketu.aspects import generate_harmonic_aspects
+from ketu.aspects import calculate_aspects
+from ketu.calculations import utc_to_julian
+from datetime import datetime, timezone
+
+jd = utc_to_julian(datetime(2026, 6, 3, 12, 0, tzinfo=timezone.utc))
+
+# Dynamic 7th-harmonic aspects — pure-additive, frozen core.aspects unchanged:
+h7_specs = generate_harmonic_aspects(7)
+result = calculate_aspects(jd, dynamic_specs=h7_specs)
+```
+
+---
+
 ## v1.2 -> v1.3
 
 ### Chiron added as body_id=13 (14th body)
