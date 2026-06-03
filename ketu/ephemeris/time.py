@@ -61,6 +61,37 @@ def utc_to_julian(dtime: datetime) -> float:
     return float(JD)
 
 
+def coerce_to_jd(value: Union[datetime, str, float]) -> float:
+    """
+    Coerce a date-like value to a Julian Date.
+
+    Accepts the three date inputs used across the aspect APIs and normalizes
+    them to a single Julian Date float.
+
+    Parameters
+    ----------
+    value : datetime or str or float
+        An ISO-8601 string, a :class:`datetime` object, or a Julian Date
+        already expressed as a float.
+
+    Returns
+    -------
+    float
+        Julian Date as float.
+
+    Notes
+    -----
+    Strings are parsed with :func:`datetime.fromisoformat`; datetimes are
+    converted via :func:`utc_to_julian` (naive datetimes assumed UTC); any
+    other value is taken to already be a Julian Date and cast to ``float``.
+    """
+    if isinstance(value, str):
+        return utc_to_julian(datetime.fromisoformat(value))
+    if isinstance(value, datetime):
+        return utc_to_julian(value)
+    return float(value)
+
+
 def julian_to_utc(jd: float) -> datetime:
     """
     Convert Julian Date to UTC datetime.
