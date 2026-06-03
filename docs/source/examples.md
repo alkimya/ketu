@@ -244,9 +244,17 @@ print(f"Person B — ASC: {chart_b['asc']:.2f}°  Sun: {chart_b['body_lons'][0]:
 syn = calculate_synastry(chart_a, chart_b)
 
 print(f"\nSynastry aspects ({len(syn)} in orb):")
+
+# calculate_synastry extends the 14-body axis with two angles:
+# index 14 = ASC, index 15 = MC. body_name() only knows 0–13, so map the angles.
+ANGLE_LABEL = {14: "ASC", 15: "MC"}
+
+def synastry_label(idx):
+    return ANGLE_LABEL.get(idx, body_name(idx))
+
 for row in syn[:5]:   # Show first 5
-    name_a = body_name(int(row["body_a"]))
-    name_b = body_name(int(row["body_b"]))
+    name_a = synastry_label(int(row["body_a"]))
+    name_b = synastry_label(int(row["body_b"]))
     print(f"  {name_a} (A) — {name_b} (B): orb {row['orb']:.2f}°")
 ```
 

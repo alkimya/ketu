@@ -179,6 +179,7 @@ print(specs['coef'])       # [0.1429, 0.2857, 0.4286]
 
 # Pass to calculate_aspects via dynamic_specs:
 from ketu.aspects import calculate_aspects
+jd = 2451545.0  # J2000
 result = calculate_aspects(jd, dynamic_specs=generate_harmonic_aspects(7))
 ```
 
@@ -275,6 +276,7 @@ Placidus and Koch may fail to compute cusps at very high latitudes (above approx
 ```python
 from ketu.houses import calculate_houses, HighLatitudeError
 
+jd = 2451545.0  # J2000
 try:
     h = calculate_houses(jd, lat=70.0, lon=25.0, system="placidus")
 except HighLatitudeError:

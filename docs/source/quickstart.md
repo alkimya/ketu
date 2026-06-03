@@ -228,14 +228,14 @@ Position calculations use `@lru_cache` to optimize performance:
 
 ```python
 from ketu.calculations import long, lat
-from ketu.ephemeris.planets import body_properties
+from ketu.ephemeris.planets import calc_planet_position
 
 # These calls use the cache
 long1 = long(jday, 0)
-lat1 = lat(jday, 0)  # Uses body_properties cache
+lat1 = lat(jday, 0)  # Cache lives on calc_planet_position
 
 # To clear the cache
-body_properties.cache_clear()
+calc_planet_position.cache_clear()
 ```
 
 #### Working with NumPy

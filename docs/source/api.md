@@ -702,7 +702,7 @@ for name, lon in all_lots.items():
     print(f"{name}: {lon:.2f}°")
 ```
 
-### `register(name, day_formula, night_formula, description)`
+### `register(name, *, day_formula, night_formula, description="")`
 
 Add a custom Arabic Part to the registry.
 
@@ -712,7 +712,7 @@ from ketu.parts import register
 def my_formula(asc, sun, moon, venus):
     return (asc + moon - venus) % 360
 
-register("my_part", my_formula, my_formula, "Custom part")
+register("my_part", day_formula=my_formula, night_formula=my_formula, description="Custom part")
 ```
 
 ### `get_part(name)`
