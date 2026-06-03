@@ -42,10 +42,20 @@ def test_public_imports_resolve() -> None:
 # ---------------------------------------------------------------------------
 
 def test_dtype_has_expected_field_names() -> None:
-    """CHART-02: 14 fields in canonical order (metadata -> bodies -> houses -> aspects)."""
+    """CHART-02: 15 fields in canonical order (metadata -> bodies -> houses -> aspects).
+
+    ``body_decl`` is the v1.5 additive dtype-version bump (DECL-08): a new
+    field appended after ``body_speeds``, carrying equatorial declination δ
+    per body. This is a dtype-version bump (new field), NOT an axis change —
+    the body COUNT stays 14. Downstream positional-offset / ``.view()``
+    consumers (Kala) must adapt; this ratchet goes red if ``body_decl`` is
+    ever removed or reshaped, catching unintended regressions.
+    Parallel to the v1.3 13→14 body-count ratchet in
+    ``test_body_count_frozen_at_fourteen``.
+    """
     expected = (
         "jd", "lat", "lon", "system",
-        "body_lons", "body_lats", "body_speeds",
+        "body_lons", "body_lats", "body_speeds", "body_decl",
         "cusps", "asc", "mc", "armc", "vertex",
         "aspect_matrix", "aspect_orbs",
     )
@@ -60,6 +70,7 @@ def test_dtype_has_expected_field_names() -> None:
         ("body_lons",     (14,)),
         ("body_lats",     (14,)),
         ("body_speeds",   (14,)),
+        ("body_decl",     (14,)),
         ("cusps",         (12,)),
         ("aspect_matrix", (14, 14)),
         ("aspect_orbs",   (14, 14)),
@@ -89,6 +100,7 @@ def test_dtype_subarray_shapes(name: str, expected_shape: tuple) -> None:
         ("body_lons",   "f", 8),
         ("body_lats",   "f", 8),
         ("body_speeds", "f", 8),
+        ("body_decl",   "f", 8),
         ("cusps",       "f", 8),
         # U10
         ("system",        "U", 40),  # U10 -> 10 codepoints * 4 bytes UCS-4
@@ -120,6 +132,7 @@ def test_dtype_supports_vectorized_construction() -> None:
     assert arr["body_lons"].shape == (5, 14)
     assert arr["body_lats"].shape == (5, 14)
     assert arr["body_speeds"].shape == (5, 14)
+    assert arr["body_decl"].shape == (5, 14)
     assert arr["cusps"].shape == (5, 12)
     assert arr["aspect_matrix"].shape == (5, 14, 14)
     assert arr["aspect_orbs"].shape == (5, 14, 14)
@@ -134,6 +147,7 @@ def test_dtype_scalar_zero_dim_construction() -> None:
     assert elem["body_lons"].shape == (14,)
     assert elem["body_lats"].shape == (14,)
     assert elem["body_speeds"].shape == (14,)
+    assert elem["body_decl"].shape == (14,)
     assert elem["cusps"].shape == (12,)
     assert elem["aspect_matrix"].shape == (14, 14)
     assert elem["aspect_orbs"].shape == (14, 14)
