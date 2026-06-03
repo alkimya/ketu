@@ -146,17 +146,17 @@ Plans:
   3. `generate_harmonic_aspects(h)` is documented in the API and/or concepts pages with a runnable example, the accepted ~2× smaller full-circle orb note, Chiron 1900–2100 range, and Chiron orb 4°; no reference to Kala appears anywhere in the Ketu docs.
   4. Every French gettext catalog whose source strings changed (due to any of the above edits) is re-extracted, translated (zero new English-fallback `msgstr`), and recompiled to `.mo`; `make html` (en) and `make html-fr` build clean at the established 1-warning baseline (no new warnings introduced).
 
-**Plans**: 7 plans
+**Plans**: 7 plans — ✅ COMPLETE 2026-06-03 (verifier PASSED 4/4)
 
 Plans:
 
-- [ ] 31-01-PLAN.md — concepts.md: recentre on 180°-division default (EXTENDED out of tables, generate_harmonic_aspects subsection, Chiron range note) [Wave 1]
-- [ ] 31-02-PLAN.md — migration.md: fix stale EXTENDED-default claim + Chiron range/clamping [Wave 1]
-- [ ] 31-03-PLAN.md — relational_charts.md: fix stale classical-default claims (library TRADITIONAL vs synastry classical) [Wave 1]
-- [ ] 31-04-PLAN.md — api.md: add generate_harmonic_aspects subsection + correct Chiron range/accuracy [Wave 1]
-- [ ] 31-05-PLAN.md — chiron.md: range 1900–2100, accuracy 0.001214°, clamping (not ValueError) [Wave 1]
-- [ ] 31-06-PLAN.md — changelog.md [1.4.0] section + v1.1 annotation + conf.py docs-build version 1.4.0 [Wave 1]
-- [ ] 31-07-PLAN.md — French gettext cycle (6 .po/.mo) + final en+fr build verification at 1-warning baseline [Wave 2]
+- [x] 31-01-PLAN.md — concepts.md: recentre on 180°-division default (EXTENDED out of tables, generate_harmonic_aspects subsection, Chiron range note) [Wave 1]
+- [x] 31-02-PLAN.md — migration.md: fix stale EXTENDED-default claim + Chiron range/clamping [Wave 1]
+- [x] 31-03-PLAN.md — relational_charts.md: fix stale classical-default claims (library TRADITIONAL vs synastry classical) [Wave 1]
+- [x] 31-04-PLAN.md — api.md: add generate_harmonic_aspects subsection + correct Chiron range/accuracy [Wave 1]
+- [x] 31-05-PLAN.md — chiron.md: range 1900–2100, accuracy 0.001214°, clamping (not ValueError) [Wave 1]
+- [x] 31-06-PLAN.md — changelog.md [1.4.0] section + v1.1 annotation + conf.py docs-build version 1.4.0 [Wave 1]
+- [x] 31-07-PLAN.md — French gettext cycle (6 .po/.mo + architecture.po) + final en+fr build verification at 1-warning baseline [Wave 2]
 
 #### Phase 32: Release v1.4.0
 
@@ -202,7 +202,7 @@ Plans:
 | **28. Dynamic Harmonic Generator + Detection**    | **v1.4**  | **3/3**        | ✓ Complete | 2026-06-03 |
 | **29. Chiron Orb 4°**                             | **v1.4**  | **1/1**        | ✓ Complete | 2026-06-03 |
 | **30. Chiron Range 1900–2100**                    | **v1.4**  | **2/2**        | ✓ Complete | 2026-06-03 |
-| **31. Documentation (en + fr)**                   | **v1.4**  | **0/TBD**      | ⬜ Pending  | —          |
+| **31. Documentation (en + fr)**                   | **v1.4**  | **7/7**        | ✓ Complete | 2026-06-03 |
 | **32. Release v1.4.0**                            | **v1.4**  | **0/TBD**      | ⬜ Pending  | —          |
 
 ---
@@ -211,4 +211,4 @@ Plans:
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
 *v1.2 phase details archived to `.planning/milestones/v1.2-ROADMAP.md`*
 *v1.3 phase details archived to `.planning/milestones/v1.3-ROADMAP.md`*
-*Roadmap last updated: 2026-06-03 — Phase 30 (Chiron Range 1900–2100) complete (verifier PASSED 3/3): blocking spike PASSED at degree=10/seg=32d (max|Δλ|=0.001214°, 8.2× margin; 1900–1910 perihelion-aftermath edge max 0.000013° — empirically a non-issue, no degree escalation); `.npz` regenerated over 1900–2100 (shape (2283,11), jd_start=2415020.5/jd_end=2488069.5, built-in <0.01° gate); regression re-pinned to 9 refs spanning 1920–2080 + 4 bounds clamp tests; Phase 24-04 actual_len fix + pure-NumPy runtime preserved; 1537 tests / 100% coverage, doctest 60/60. v1.4 at 3/5 phases. Phase 31 (Documentation en+fr) now unblocked — all feature phases (28+29+30) done; all v1.4 API surface + constant values are final.*
+*Roadmap last updated: 2026-06-03 — Phase 31 (Documentation en+fr) complete (verifier PASSED 4/4): 6 EN doc pages recentred on the 180°-division default (concepts.md EXTENDED out of tables → prose "available in code"; migration/relational stale-default claims fixed; api/chiron Chiron 1900–2100/0.001214°/clamping; changelog [1.4.0] + conf.py docs-build 1.4.0); `generate_harmonic_aspects(h)` documented with runnable example + ~2× full-circle orb note in both concepts.md and api.md; zero Kala references. Full FR gettext cycle: 7 catalogs (concepts/migration/relational_charts/api/chiron/changelog + architecture deviation) re-extracted, translated to 0 untranslated/0 fuzzy, 7 .mo recompiled; `make html` (en) + `make html-fr` both build at the 1-warning baseline (display_version theme warning, pre-existing). v1.4 at 4/5 phases. Phase 32 (Release v1.4.0) now unblocked — all docs reflect the final v1.4 API surface.*

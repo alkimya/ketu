@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Dynamic Harmonics & Chiron Range
 status: in-progress
-last_updated: "2026-06-03T16:30:00Z"
+last_updated: "2026-06-03T16:45:00Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 5
   completed_phases: 4
   total_plans: 13
-  completed_plans: 9
-  percent: 69
+  completed_plans: 13
+  percent: 80
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 
 ## Current Position
 
-Phase: 31-documentation-en-fr — COMPLETE (7/7 plans done)
+Phase: 31-documentation-en-fr — COMPLETE (7/7 plans done, verifier PASSED 4/4)
 Plan: 7/7 done (31-07 gettext fr cycle complete)
-Status: Phase 31 COMPLETE; DOC-17 satisfied — 6 .po re-translated (0 empty, 0 fuzzy), 7 .mo recompiled, en+fr builds at 1-warning baseline; next = Phase 32 Release v1.4.0
-Last activity: 2026-06-03 — Phase 31-07 COMPLETE; fr gettext cycle done (concepts, migration, relational_charts, api, chiron, changelog + architecture); builds clean
+Status: Phase 31 COMPLETE; DOC-14..17 satisfied — 6 EN doc pages recentred on 180°-default + generate_harmonic_aspects/Chiron documented; 7 .po re-translated (0 untranslated, 0 fuzzy), 7 .mo recompiled, en+fr builds at 1-warning baseline; next = Phase 32 Release v1.4.0 (CHECKPOINT: user reviews milestone before release per feedback_validation_review_before_release)
+Last activity: 2026-06-03 — Phase 31 COMPLETE; 6 EN doc edits (Wave 1) + fr gettext cycle (Wave 2, concepts/migration/relational_charts/api/chiron/changelog + architecture deviation); both builds clean at 1-warning baseline; verifier PASSED 4/4
 
-Progress: [████████░░░░░░] 62% — Phase 30 complete; Phase 31 in progress (8/13 plans)
+Progress: [███████████░░░] 80% — Phases 28-31 complete (13/13 plans); only Phase 32 (Release v1.4.0) remains
 
 ## v1.4 Roadmap Structure
 
@@ -88,6 +88,10 @@ Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 - [Phase 31-02]: migration.md DOC-15 — stale "behavior is unchanged (EXTENDED = all 14 aspects)" replaced with v1.1 history annotation + explicit TRADITIONAL pointer; code comment updated. DOC-16 Chiron-behavior — "1950-2050 / raises ValueError" replaced with "1900-2100 (v1.4) / silently clamped".
 - [Phase 31-documentation-en-fr]: conf.py version/release bumped to 1.4.0 here (docs-build metadata); pyproject.toml + ketu/__init__.py stay at 1.3.0 until Phase 32
 - [Phase 31-07]: MyST explicit label syntax required for heading xrefs in MyST v5 — `(anchor-id)=` before heading; fragment-only links do not auto-resolve during gettext/html build. architecture.md Chiron range was stale (1950-2050) — corrected to 1900-2100 / 2283 segs / 0.001214° as part of DOC-17 grep gate.
+- [Phase 31-01]: concepts.md DOC-14 — EXTENDED (H5/H9/H10) removed from BOTH tables (summary 7→4 harmonic rows H1/H2/H3/H6; coefficient table 14→7 half-circle aspects), collapsed to prose "available in code" note after H6. New `### Dynamic Harmonic Generator (generate_harmonic_aspects)` subsection (H7 runnable example + ~2× smaller full-circle orb "accepted/coexist" note) inserted between Configurable Aspect Sets and Orbs. Chiron note → 1900–2100.
+- [Phase 31-04]: api.md DOC-16 — `generate_harmonic_aspects(h)` subsection added beside `aspects_for_harmonics` (runnable example, `dynamic_specs=` Returns note); Chiron section corrected 1950–2050/0.005695° → 1900–2100 (2283 segments)/0.001214°. Zero Kala references.
+- [Phase 31-06]: changelog.md DOC-16 — new `## [1.4.0]` section (Added: generate_harmonic_aspects h=2-64 + Chiron 1900–2100; Changed: Chiron orb 0°→4°, silent clamping, 180°-default doc recentring). v1.1 EXTENDED-default entry annotated inline ("default at v1.1, changed to TRADITIONAL in v1.3") — history NOT rewritten. The `### Added 1.3.0` historical section legitimately keeps 1950–2050/0.005695° (frozen); only the new section documents v1.4. conf.py docs-build version/release → 1.4.0 (Sphinx metadata only).
+- [Phase 31-verify]: verifier PASSED 4/4 — ran BOTH `make html` (en) + `make html-fr` live in venv; each exactly 1 warning (display_version theme, pre-existing baseline). All 7 fr catalogs 0 untranslated/0 fuzzy (Babel-verified). DOC-14..17 satisfied. Phase 32 (Release) unblocked.
 
 ### Roadmap Evolution
 
@@ -106,6 +110,6 @@ None at roadmap time.
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Phase 31-07 EXECUTED (2/2 tasks). fr gettext cycle complete: 6 .po re-translated (0 empty, 0 fuzzy), architecture.md stale range fixed, 7 .mo recompiled, en+fr builds at 1-warning baseline. Phase 31 COMPLETE.
-Stopped at: Phase 31 COMPLETE — all 7 plans done. Next = Phase 32 Release v1.4.0.
-Resume file: None — Phase 31 COMPLETE; next phase is 32-release.
+Last session: 2026-06-03 — Phase 31 FULLY EXECUTED via execute-phase (2 waves). Wave 1: 6 EN doc pages edited in parallel (concepts/migration/relational_charts/api/chiron/changelog + conf.py). Wave 2: fr gettext cycle — 7 .po re-translated (0 untranslated, 0 fuzzy), architecture.md stale range fixed as deviation, 7 .mo recompiled, en+fr builds at 1-warning baseline. Verifier PASSED 4/4 (ran both builds live). Phase 31 COMPLETE.
+Stopped at: Phase 31 COMPLETE — all 7 plans done, verifier PASSED 4/4. Next = Phase 32 Release v1.4.0. NOTE: v1.4 is the LAST feature phase before release; per feedback_validation_review_before_release, the user reviews the full milestone before the v1.4.0 tag/PyPI publish — mark a CHECKPOINT before Phase 32, do not chain into release without their go-ahead.
+Resume file: None — Phase 31 COMPLETE; next phase is 32-release (user milestone review checkpoint first).
