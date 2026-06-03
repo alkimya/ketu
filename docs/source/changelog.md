@@ -5,6 +5,19 @@ All notable changes to Ketu are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.4.0] - 2026-06-XX
+
+### Added 1.4.0
+
+- **`generate_harmonic_aspects(h)` — dynamic harmonic generator**: builds aspect specs on the fly for ANY integer harmonic `h` (2 ≤ h ≤ 64), using the full-circle 360° convention folded to 0–180° (`coef = k/h`). Returns a structured array that is a drop-in for `core.aspects`; pass it as the `dynamic_specs=` argument to `calculate_aspects`, `find_aspects_between_dates`, and `calculate_synastry`. The frozen 14-row `core.aspects` table and preset fingerprints are byte-identical (parallel code path).
+- **Chiron range expanded to 1900–2100**: `ketu/data/chiron_coeffs.npz` regenerated (2283 Chebyshev segments, `jd_start=2415020.5`, `jd_end=2488069.5`), max error 0.001214° over the new range. Pure-NumPy runtime preserved.
+
+### Changed 1.4.0
+
+- **Chiron orb 0° → 4°** (Pluto parity): `core.bodies['orb']` for Chiron is now 4°, so Chiron now forms scored aspects.
+- **Chiron out-of-range behaviour**: input outside 1900–2100 is now **silently clamped** to the nearest segment boundary (previously raised `ValueError`).
+- **Documentation recentred on the 180°-division default**: `concepts.md` aspect tables now show CLASSICAL (5) and TRADITIONAL (7) only; the full-circle minor harmonics (H5/H9/H10 / EXTENDED) remain available in code but are out of the summary tables.
+
 ## [1.3.0] - 2026-06-XX
 
 ### Added 1.3.0
