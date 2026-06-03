@@ -99,6 +99,105 @@ if is_retrograde(jd, 2):   # Mercury
     print("Mercury retrograde")
 ```
 
+### `is_ascending(jday, body)`
+
+Return `True` if the body's **ecliptic latitude** (β) is increasing (positive β-velocity). This is the β-trajectory helper, unchanged since v1.0. It is **distinct** from `is_ascending_declination` — see [Equatorial Declination (New in v1.5)](#equatorial-declination-new-in-v1-5) for the β-vs-δ pitfall.
+
+```python
+from ketu.calculations import is_ascending
+
+if is_ascending(jd, 1):   # Moon β rising
+    print("Moon ascending in ecliptic latitude")
+```
+
+### `declination(jdate, body)` — New in v1.5
+
+Return the equatorial declination δ of a body in degrees (north positive, south negative), range [−90, +90].
+
+Computed via the ecliptic-to-equatorial chain: `spherical_to_rectangular(λ, β, 1) → ecliptic_to_equatorial(ε) → rectangular_to_spherical` — numerically equivalent to Meeus eq. 13.4. Scalar input uses the cached `long`/`lat` functions. Array input is vectorized loop-free via `calc_planet_position_batch`.
+
+**Parameters:**
+- `jdate` (`float` or `numpy.ndarray`): Julian Day number (scalar or 1-D array)
+- `body` (`int`): body ID (0 = Sun … 13 = Chiron)
+
+**Returns:** `float` (scalar) or `numpy.ndarray` (array input), same shape as *jdate*
+
+```python
+from ketu.calculations import declination
+import numpy as np
+
+jd = 2451545.0  # J2000
+
+# Scalar
+moon_decl = declination(jd, 1)   # e.g. −23.03°
+
+# Vectorized
+jds = np.array([2451545.0, 2451600.0, 2451650.0])
+moon_decls = declination(jds, 1)  # shape (3,)
+```
+
+### `declination_velocity(jdate, body)` — New in v1.5
+
+Return the rate of change of equatorial declination dδ/dt in degrees/day (positive = northward, negative = southward).
+
+Computed via forward finite difference with step 0.01 day, mirroring the package-wide FD idiom used for `lat_velocity`.
+
+**Parameters:**
+- `jdate` (`float`): Julian Day number
+- `body` (`int`): body ID (0 = Sun … 13 = Chiron)
+
+**Returns:** `float`
+
+```python
+from ketu.calculations import declination_velocity
+
+jd = 2451545.0
+
+moon_vel = declination_velocity(jd, 1)   # e.g. +4.23 °/day
+```
+
+### `is_ascending_declination(jdate, body)` — New in v1.5
+
+Return `True` when dδ/dt > 0 — the Moon (or any body) is **montante** (moving northward in declination).
+
+**This is the biodynamic montant/descendant helper.** It is **not the same as `is_ascending`**, which tracks the ecliptic latitude β. See [Equatorial Declination (New in v1.5)](#equatorial-declination-new-in-v1-5) for the explicit β-vs-δ distinction.
+
+**Parameters:**
+- `jdate` (`float`): Julian Day number
+- `body` (`int`): body ID (0 = Sun … 13 = Chiron)
+
+**Returns:** `bool`
+
+```python
+from ketu.calculations import is_ascending_declination
+
+jd = 2451545.0
+
+if is_ascending_declination(jd, 1):   # Moon montante
+    print("Moon montante (northward in declination)")
+```
+
+### `is_out_of_bounds(jdate, body)` — New in v1.5
+
+Return `True` when |δ| > ε(jd) — the body's declination exceeds the instantaneous true obliquity of the ecliptic (out-of-bounds / hors limites).
+
+The Moon can go OOB during major lunar standstill periods (~18.6-year nodal cycle; most recently around 2024–2025, with |δ| up to ~28.7°).
+
+**Parameters:**
+- `jdate` (`float`): Julian Day number
+- `body` (`int`): body ID (0 = Sun … 13 = Chiron)
+
+**Returns:** `bool`
+
+```python
+from ketu.calculations import is_out_of_bounds
+
+jd = 2451545.0
+
+if is_out_of_bounds(jd, 1):   # Moon OOB?
+    print("Moon is out of bounds")
+```
+
 ### `body_name(body)`
 
 Return the string name for a body ID.
@@ -741,6 +840,53 @@ Print a formatted table of current in-orb aspects.
 ### `main()`
 
 Entry point for the interactive CLI (`ketu` command).
+
+---
+
+(equatorial-declination-new-in-v1-5)=
+## Equatorial Declination (`ketu.calculations`) — New in v1.5
+
+Equatorial declination (δ) measures how far north or south of the celestial equator a body lies. It is **distinct from ecliptic latitude** (β):
+
+| Quantity | Symbol | Reference plane | Ketu function |
+|----------|--------|-----------------|---------------|
+| Ecliptic latitude | β | Ecliptic plane | `lat`, `is_ascending` |
+| Equatorial declination | δ | Celestial equator | `declination`, `is_ascending_declination` |
+
+**β-vs-δ pitfall — "ascending Moon" is ambiguous:** `is_ascending` tracks the β-trajectory (ecliptic latitude rising); `is_ascending_declination` tracks the δ-trajectory (biodynamic montant/descendant). These two can disagree for the same body on the same date. Example: at 2025-03-07 (JD=2460742.0, Moon near a major standstill peak at δ≈+28.66°), `is_ascending_declination=True` (δ rising at +0.30°/day) while `is_ascending=False` (β descending).
+
+**The Moon's δ cycle** completes in ≈27.21 days (draconic/nodal month). Montante = northward (dδ/dt > 0); descendante = southward (dδ/dt < 0). This is the cycle used in biodynamic agriculture (Loc's aspect-centric framing).
+
+**Out-of-bounds (OOB):** the Moon's δ can exceed the obliquity ε during the **major lunar standstill** (~18.6-year nodal cycle). The threshold uses the instantaneous true obliquity ε(jd), not mean obliquity. During 2024–2025, the Moon reaches |δ| ≈ 28.7°.
+
+```python
+from ketu.calculations import (
+    declination,
+    declination_velocity,
+    is_ascending_declination,
+    is_out_of_bounds,
+)
+
+jd = 2451545.0  # J2000
+
+# δ in degrees (north positive, south negative)
+moon_decl = declination(jd, 1)
+print(f"Moon δ: {moon_decl:.4f}°")
+
+# dδ/dt in °/day
+moon_vel = declination_velocity(jd, 1)
+print(f"Moon dδ/dt: {moon_vel:.4f}°/day")
+
+# Biodynamic montant/descendant
+if is_ascending_declination(jd, 1):
+    print("Moon montante (northward)")
+else:
+    print("Moon descendante (southward)")
+
+# Out-of-bounds check
+if is_out_of_bounds(jd, 1):
+    print("Moon is out of bounds (|δ| > ε)")
+```
 
 ---
 
