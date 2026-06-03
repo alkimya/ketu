@@ -114,10 +114,10 @@ Full details archived to `.planning/milestones/v1.3-ROADMAP.md`.
   2. The byte-stable CLI fixture `tests/cli/fixtures/v1_1_reference_output.txt` is regenerated and manually audited: every new or changed Chiron aspect line is confirmed correct via `git diff` inspection before committing (not blindly accepted).
   3. Synastry test files (`test_modes_idempotent.py`, `test_orbs.py`) no longer group Chiron with the zero-orb points (Rahu/Ketu/Lilith); a new explicit test pins Chiron orb = 4° in synastry (`_BODY_ORBS_16` entry for Chiron is 4°).
 
-**Plans**: 1 plan
+**Plans**: 1 plan — ✅ COMPLETE 2026-06-03 (verifier PASSED 6/6)
 
 Plans:
-- [ ] 29-01-PLAN.md — Set Chiron orb=4 in core.py (single source), regenerate + audit CLI fixture, fix synastry docstrings + add Chiron orb=4 pinning test
+- [x] 29-01-PLAN.md — Set Chiron orb=4 in core.py (single source), regenerate + audit CLI fixture, fix synastry docstrings + add Chiron orb=4 pinning test (CHIR-06, CHIR-07, CHIR-08)
 
 #### Phase 30: Chiron Range 1900–2100
 
@@ -188,7 +188,7 @@ Plans:
 | 26.1 French Doc Translation (INSERTED)            | v1.3      | 8/8            | ✓ Complete | 2026-06-01 |
 | 27. Release 1.3.0                                 | v1.3      | 2/2            | ✓ Complete | 2026-06-01 |
 | **28. Dynamic Harmonic Generator + Detection**    | **v1.4**  | **3/3**        | ✓ Complete | 2026-06-03 |
-| **29. Chiron Orb 4°**                             | **v1.4**  | **0/TBD**      | ⬜ Pending  | —          |
+| **29. Chiron Orb 4°**                             | **v1.4**  | **1/1**        | ✓ Complete | 2026-06-03 |
 | **30. Chiron Range 1900–2100**                    | **v1.4**  | **0/TBD**      | ⬜ Pending  | —          |
 | **31. Documentation (en + fr)**                   | **v1.4**  | **0/TBD**      | ⬜ Pending  | —          |
 | **32. Release v1.4.0**                            | **v1.4**  | **0/TBD**      | ⬜ Pending  | —          |
@@ -199,4 +199,4 @@ Plans:
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
 *v1.2 phase details archived to `.planning/milestones/v1.2-ROADMAP.md`*
 *v1.3 phase details archived to `.planning/milestones/v1.3-ROADMAP.md`*
-*Roadmap last updated: 2026-06-02 — v1.4 (Dynamic Harmonics & Chiron Range) roadmapped: 5 phases (28-32), all 18 v1.4 requirements mapped (ASP/CHIR/DOC/REL), 100% coverage. Axis order BINDING: Phase 28 (dynamic harmonics) and Phase 29 (Chiron orb) are independent; Phase 30 (Chiron range) follows Phase 29; Phase 31 (docs) follows all feature phases; Phase 32 (release) follows Phase 31.*
+*Roadmap last updated: 2026-06-03 — Phase 29 (Chiron Orb 4°) complete (verifier PASSED 6/6): Chiron orb 0°→4° via single-source constant in core.py, propagating to get_orb/synastry/cycles/composite/CLI; CLI fixture audited (+2 Sun-Chiron / Moon-Chiron Semi-sextile lines); synastry docstrings corrected + Chiron orb=4 pinning test; 1531 tests / 100% coverage, frozen fingerprints byte-identical. v1.4 at 2/5 phases. Phase 30 (Chiron range 1900–2100) now unblocked — `.npz` regeneration with the orb finalized.*
