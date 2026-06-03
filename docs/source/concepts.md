@@ -303,6 +303,78 @@ print(is_day_chart(jd, lat, lon))
 
 See [Arabic Parts](arabic_parts.md) for how sect influences Fortune and Spirit formulas.
 
+(equatorial-declination-new-in-v1-5)=
+## Equatorial Declination — New in v1.5
+
+### Declination δ vs. Ecliptic Latitude β
+
+Ketu tracks two distinct north/south quantities for each body:
+
+- **Ecliptic latitude β** — angular distance above/below the ecliptic plane. Returned by `lat(jd, body)`. The function `is_ascending` tracks whether β is rising.
+- **Equatorial declination δ** — angular distance north/south of the celestial equator. Returned by `declination(jd, body)`. The function `is_ascending_declination` tracks whether δ is rising (montante/descendante).
+
+**These are different quantities and disagree on different days.** "Ascending Moon" is ambiguous without specifying which coordinate system:
+
+| Function | Tracks | Concept |
+|---|---|---|
+| `is_ascending(jd, 1)` | β rising (ecliptic latitude) | Traditional latitude motion |
+| `is_ascending_declination(jd, 1)` | δ rising (declination) | Biodynamic montant/descendant |
+
+**Proof of β-vs-δ independence:** at 2025-03-07 (JD=2460742.0), Moon near a major standstill peak (δ≈+28.66°), `is_ascending_declination=True` (dδ/dt=+0.30°/day) while `is_ascending=False` (β descending). They flip on different days.
+
+### Montant / Descendant (Biodynamic Framing)
+
+In biodynamics, the **montant/descendant** cycle refers to the trajectory of the Moon's own equatorial declination δ — not to zodiacal sign conventions or ecliptic latitude.
+
+- **Montante** (ascending in δ): dδ/dt > 0, Moon moving northward. `is_ascending_declination` returns `True`.
+- **Descendante** (descending in δ): dδ/dt < 0, Moon moving southward. `is_ascending_declination` returns `False`.
+
+The Moon's δ cycle period is approximately **27.21 days** (draconic/nodal month) — the time between two successive northward crossings of the celestial equator. This is close to, but distinct from, the 27.32-day tropical month.
+
+```python
+from ketu.calculations import (
+    declination,
+    declination_velocity,
+    is_ascending_declination,
+)
+
+jd = 2451545.0  # J2000
+
+delta = declination(jd, 1)
+vel   = declination_velocity(jd, 1)
+
+print(f"Moon δ: {delta:.4f}°")
+print(f"Moon dδ/dt: {vel:.4f}°/day")
+print("Montante" if is_ascending_declination(jd, 1) else "Descendante")
+```
+
+### Out-of-Bounds (OOB)
+
+A body is **out-of-bounds** (hors limites) when its declination exceeds the instantaneous obliquity of the ecliptic: |δ| > ε(jd).
+
+Under normal conditions no planet can exceed the obliquity — the Sun's declination defines the obliquity bounds (±ε ≈ ±23.4°). The Moon is the exception: because the lunar orbital plane is tilted ~5° relative to the ecliptic, the Moon can exceed the Sun's extreme declinations during the **major lunar standstill** (~18.6-year nodal cycle). During 2024–2025, the Moon reaches |δ| ≈ 28.7°.
+
+The OOB threshold uses the **instantaneous true obliquity** ε(jd) — not mean obliquity — because nutation shifts ε by up to ±17 arcseconds.
+
+```python
+from ketu.calculations import is_out_of_bounds
+
+jd_standstill = 2460742.0   # 2025-03-07, near major standstill peak
+
+print(f"Moon OOB: {is_out_of_bounds(jd_standstill, 1)}")   # True
+```
+
+### CHART_DTYPE — body_decl field (New in v1.5)
+
+`CHART_DTYPE` gains an additive field `body_decl` (`float64[14]`) holding the equatorial declination δ for each of the 14 bodies. This is an **additive dtype change**: the body count (14) is unchanged, but downstream code using positional access or `.view()` on `CHART_DTYPE` must adapt (Kala impact documented, not auto-migrated).
+
+```python
+from ketu.charts import compute_chart
+
+chart = compute_chart(jd, 48.8566, 2.3522)
+moon_decl = chart["body_decl"][1]   # Moon δ in degrees
+```
+
 ## Planetary Movements
 
 ### Retrogradation

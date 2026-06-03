@@ -5,6 +5,21 @@ All notable changes to Ketu are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - Unreleased
+
+### Added 1.5.0
+
+- **`declination(jdate, body)` — equatorial declination δ**: returns δ in degrees [−90, +90] (north positive, south negative). Scalar and vectorized (array `jdate` via `calc_planet_position_batch`, loop-free). Computed via the ecliptic-to-equatorial chain (`spherical_to_rectangular → ecliptic_to_equatorial → rectangular_to_spherical`), numerically equivalent to Meeus eq. 13.4 to machine precision.
+- **`declination_velocity(jdate, body)`**: dδ/dt in degrees/day (positive = northward). Forward finite difference, step 0.01 day — mirrors the `lat_velocity` FD idiom.
+- **`is_ascending_declination(jdate, body)`**: `True` when dδ/dt > 0 (Moon montante). Biodynamic montant/descendant helper. **Distinct from `is_ascending`** (β-trajectory) — the two can disagree for the same body on the same date.
+- **`is_out_of_bounds(jdate, body)`**: `True` when |δ| > ε(jd). OOB threshold uses the instantaneous true obliquity (not mean obliquity). The Moon can exceed ε during major lunar standstill (~18.6-year nodal cycle; peak ~2024–2025).
+- **`CHART_DTYPE` — `body_decl` field (additive)**: new `float64[14]` field holding equatorial declination δ for all 14 bodies. `compute_chart` and `calculate_composite` both populate it via the coordinates chain. Body count remains 14; this is an additive dtype change.
+
+### Notes 1.5.0
+
+- **`is_ascending` (β) unchanged**: the existing ecliptic-latitude-based `is_ascending` is byte-for-byte identical to v1.4. The new `is_ascending_declination` is an independent, parallel helper.
+- **Kala impact (additive, not breaking)**: `CHART_DTYPE` gains `body_decl` as an additive field. Code using named field access (`chart["body_lons"]`) is unaffected. Code using positional access or `.view()` on the raw dtype must adapt.
+
 ## [1.4.0] - 2026-06-03
 
 ### Added 1.4.0
