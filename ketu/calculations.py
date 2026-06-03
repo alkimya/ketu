@@ -17,8 +17,15 @@ from .core import bodies, aspects, signs
 from .ephemeris.time import utc_to_julian, julian_to_utc, local_to_utc
 from .ephemeris.planets import (
     calc_planet_position,
+    calc_planet_position_batch,
     get_planet_name,
     body_properties as _body_properties_uncached,
+)
+from .ephemeris.coordinates import (
+    spherical_to_rectangular,
+    ecliptic_to_equatorial,
+    rectangular_to_spherical,
+    true_obliquity,
 )
 
 
@@ -438,6 +445,155 @@ def is_ascending(jdate: float, body: int) -> bool:
     return bool(lat_velocity(jdate, body) > 0)
 
 
+def declination(jdate: Union[float, np.ndarray], body: int) -> Union[float, np.ndarray]:
+    """
+    Get equatorial declination (δ) of a body.
+
+    Computed via the ecliptic-to-equatorial coordinate chain:
+    ``spherical_to_rectangular(λ, β, 1) → ecliptic_to_equatorial(ε) →
+    rectangular_to_spherical``, taking element [1] (equatorial latitude = δ).
+    This is numerically equivalent to Meeus eq. 13.4 to machine precision.
+
+    Scalar input uses the cached ``long``/``lat`` functions. Array input is
+    vectorized loop-free via ``calc_planet_position_batch``.
+
+    Parameters
+    ----------
+    jdate : float or numpy.ndarray
+        Julian Date (Terrestrial Time). Scalar or 1-D array.
+    body : int
+        Body ID (0-13): 0=Sun, 1=Moon, 2=Mercury, …, 13=Chiron.
+
+    Returns
+    -------
+    float or numpy.ndarray
+        Declination in degrees (north positive, south negative). Range [−90, +90].
+        Same type/shape as *jdate*.
+
+    Examples
+    --------
+    >>> from ketu.calculations import declination, utc_to_julian
+    >>> from datetime import datetime, timezone
+    >>> jd = utc_to_julian(datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc))
+    >>> print(f"Moon declination: {declination(jd, 1):.4f}°")
+    Moon declination: 19.8956°
+    """
+    if np.ndim(jdate) == 0:
+        # Scalar path — use cached long/lat for consistency with the module
+        lam = long(float(jdate), body)
+        bet = lat(float(jdate), body)
+        x, y, z = spherical_to_rectangular(lam, bet, 1.0)
+        eps = true_obliquity(float(jdate))
+        xe, ye, ze = ecliptic_to_equatorial(x, y, z, eps)
+        _, decl, _ = rectangular_to_spherical(xe, ye, ze)
+        return decl
+    else:
+        # Array path — loop-free via batch calculator
+        jdate = np.asarray(jdate, dtype=float)
+        batch = calc_planet_position_batch(jdate, body)
+        lam = batch[:, 0]
+        bet = batch[:, 1]
+        x, y, z = spherical_to_rectangular(lam, bet, 1.0)
+        eps = true_obliquity(jdate)
+        xe, ye, ze = ecliptic_to_equatorial(x, y, z, eps)
+        _, decl, _ = rectangular_to_spherical(xe, ye, ze)
+        return decl
+
+
+def declination_velocity(jdate: float, body: int) -> float:
+    """
+    Get rate of change of equatorial declination (dδ/dt) for a body.
+
+    Computed via forward finite difference with step 0.01 day, mirroring
+    the package-wide FD idiom used for latitude velocity. No wraparound
+    correction is applied — δ is bounded in [−90, +90] and varies
+    monotonically through zero.
+
+    Parameters
+    ----------
+    jdate : float
+        Julian Date (Terrestrial Time).
+    body : int
+        Body ID (0-13): 0=Sun, 1=Moon, 2=Mercury, …, 13=Chiron.
+
+    Returns
+    -------
+    float
+        Declination speed in degrees/day. Positive = northward, negative = southward.
+
+    Examples
+    --------
+    >>> from ketu.calculations import declination_velocity, utc_to_julian
+    >>> from datetime import datetime, timezone
+    >>> jd = utc_to_julian(datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc))
+    >>> print(f"Moon decl velocity: {declination_velocity(jd, 1):.4f}°/day")
+    Moon decl velocity: -4.6051°/day
+    """
+    return (declination(jdate + 0.01, body) - declination(jdate, body)) / 0.01
+
+
+def is_ascending_declination(jdate: float, body: int) -> bool:
+    """
+    Check if a body's equatorial declination is rising (northward).
+
+    True when dδ/dt > 0 (montante). This is a distinct physical quantity
+    from the ecliptic-latitude-based ``is_ascending`` (β-rise) — the two
+    can disagree for the same body on the same date.
+
+    Parameters
+    ----------
+    jdate : float
+        Julian Date (Terrestrial Time).
+    body : int
+        Body ID (0-13): 0=Sun, 1=Moon, 2=Mercury, …, 13=Chiron.
+
+    Returns
+    -------
+    bool
+        True if declination is increasing (moving northward), False otherwise.
+
+    Examples
+    --------
+    >>> from ketu.calculations import is_ascending_declination, utc_to_julian
+    >>> from datetime import datetime, timezone
+    >>> jd = utc_to_julian(datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc))
+    >>> print(f"Moon declination ascending: {is_ascending_declination(jd, 1)}")
+    Moon declination ascending: False
+    """
+    return bool(declination_velocity(jdate, body) > 0)
+
+
+def is_out_of_bounds(jdate: float, body: int) -> bool:
+    """
+    Check if a body's declination exceeds the instantaneous obliquity (OOB).
+
+    Out-of-bounds occurs when |δ| > ε(jd), where ε is the true (instantaneous)
+    obliquity of the ecliptic. The Moon can exceed this during major lunar
+    standstill periods (e.g. around 2025, with |δ| up to ~28.7°).
+
+    Parameters
+    ----------
+    jdate : float
+        Julian Date (Terrestrial Time).
+    body : int
+        Body ID (0-13): 0=Sun, 1=Moon, 2=Mercury, …, 13=Chiron.
+
+    Returns
+    -------
+    bool
+        True if |δ| > true_obliquity(jdate), False otherwise.
+
+    Examples
+    --------
+    >>> from ketu.calculations import is_out_of_bounds, utc_to_julian
+    >>> from datetime import datetime, timezone
+    >>> jd = utc_to_julian(datetime(2025, 1, 15, 12, 0, tzinfo=timezone.utc))
+    >>> print(f"Moon out of bounds: {is_out_of_bounds(jd, 1)}")
+    Moon out of bounds: False
+    """
+    return bool(abs(declination(jdate, body)) > true_obliquity(jdate))
+
+
 def body_sign(b_long: float) -> Tuple[int, int, int, int]:
     """
     Convert longitude to zodiac sign position.
@@ -523,6 +679,10 @@ __all__ = [
     "dist_velocity_au",
     "is_retrograde",
     "is_ascending",
+    "declination",
+    "declination_velocity",
+    "is_ascending_declination",
+    "is_out_of_bounds",
     "body_sign",
     "positions",
 
