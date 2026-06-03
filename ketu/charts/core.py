@@ -47,7 +47,7 @@ import numpy as np
 
 #: Structured dtype for a fully-resolved natal chart.
 #:
-#: Fields (14 total, ordered as metadata -> bodies -> houses -> aspects):
+#: Fields (15 total, ordered as metadata -> bodies -> houses -> aspects):
 #:     - ``jd`` (f8): Julian Date, UT.
 #:     - ``lat`` (f8): Geographic latitude, degrees.
 #:     - ``lon`` (f8): Geographic longitude (east-positive), degrees.
@@ -56,6 +56,10 @@ import numpy as np
 #:     - ``body_lats`` (f8, (14,)): Ecliptic latitudes per body, degrees.
 #:     - ``body_speeds`` (f8, (14,)): Longitude speeds per body, deg/day.
 #:           Negative => retrograde.
+#:     - ``body_decl`` (f8, (14,)): Equatorial declination δ per body, degrees,
+#:           in [−90, +90]. North positive, south negative. Computed from each
+#:           body's ecliptic (λ, β) via the coordinates chain using instantaneous
+#:           obliquity ε(jd) (true_obliquity).
 #:     - ``cusps`` (f8, (12,)): 12 house cusps, degrees [0, 360).
 #:     - ``asc`` (f8): Ascendant, degrees [0, 360).
 #:     - ``mc`` (f8): Medium Coeli, degrees [0, 360).
@@ -84,6 +88,10 @@ import numpy as np
 #:
 #: Axis extended to 14 by the v1.3 D-08 ratchet (Chiron added). This is
 #: a breaking change for downstream consumers (Kala) indexing by position.
+#: The ``body_decl`` field was appended additively by v1.5 (lunar
+#: declination). The body COUNT stays 14; this is a dtype-version bump
+#: (new field), not an axis change. Downstream positional-offset /
+#: ``.view()`` consumers (Kala) must adapt — documented, not fixed here.
 CHART_DTYPE: np.dtype = np.dtype([
     ("jd",            "f8"),
     ("lat",           "f8"),
@@ -92,6 +100,7 @@ CHART_DTYPE: np.dtype = np.dtype([
     ("body_lons",     "f8", (14,)),
     ("body_lats",     "f8", (14,)),
     ("body_speeds",   "f8", (14,)),
+    ("body_decl",     "f8", (14,)),
     ("cusps",         "f8", (12,)),
     ("asc",           "f8"),
     ("mc",            "f8"),
