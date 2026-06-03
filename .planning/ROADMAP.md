@@ -87,7 +87,7 @@ Full details archived to `.planning/milestones/v1.4-ROADMAP.md`.
 
 ### 🚧 v1.5 Lunar Declination & Harmonics Debt (Phases 33-35) — ACTIVE
 
-- [ ] **Phase 33: Lunar Declination δ** — equatorial declination δ as a first-class vectorizable quantity, montant/descendant trajectory, OOB, and `body_decl` in `CHART_DTYPE`
+- [x] **Phase 33: Lunar Declination δ** (4/4 plans) — completed 2026-06-03 — equatorial declination δ as a first-class vectorizable quantity, montant/descendant trajectory, OOB, and `body_decl` in `CHART_DTYPE`
 - [ ] **Phase 34: Harmonics Debt (ASP-F1/F2/F3)** — formalize the `H{h}-{k}` naming contract, derive `find_aspect_timing`'s orb from a spec, and expose `--harmonics h7` on the CLI
 - [ ] **Phase 35: Release v1.5.0** — quality gates + version/CHANGELOG/UPGRADING + PyPI publish via OIDC (user-checkpoint-gated)
 
@@ -106,10 +106,10 @@ Full details archived to `.planning/milestones/v1.4-ROADMAP.md`.
 
 Plans:
 
-- [ ] 33-01-PLAN.md — Core declination functions (declination / declination_velocity / is_ascending_declination / is_out_of_bounds) + unit & Meeus-equivalence tests (DECL-01..06) [Wave 1]
-- [ ] 33-02-PLAN.md — body_decl in CHART_DTYPE + compute_chart wiring + dtype ratchet (DECL-07 chart half, DECL-08) [Wave 2]
-- [ ] 33-03-PLAN.md — Downstream propagation: composite explicit populate (zero-fill trap) + returns inheritance test + synastry no-op (DECL-07 downstream) [Wave 3]
-- [ ] 33-04-PLAN.md — Docs en + fr: 4 functions, montant/descendant + β-vs-δ + OOB framing, changelog, FR .po translated & recompiled (DECL-09) [Wave 4]
+- [x] 33-01-PLAN.md — Core declination functions (declination / declination_velocity / is_ascending_declination / is_out_of_bounds) + unit & Meeus-equivalence tests (DECL-01..06) [Wave 1]
+- [x] 33-02-PLAN.md — body_decl in CHART_DTYPE + compute_chart wiring + dtype ratchet (DECL-07 chart half, DECL-08) [Wave 2]
+- [x] 33-03-PLAN.md — Downstream propagation: composite explicit populate (zero-fill trap) + returns inheritance test + synastry no-op (DECL-07 downstream) [Wave 3]
+- [x] 33-04-PLAN.md — Docs en + fr: 4 functions, montant/descendant + β-vs-δ + OOB framing, changelog, FR .po translated & recompiled (DECL-09) [Wave 4]
 
 **Details:**
 Declination is computed via the direct Meeus eq. 13.4 formula (`sin δ = sin β·cos ε + cos β·sin ε·sin λ`), guarded by a regression test asserting equality with the existing rectangular `coordinates.py` chain (verified Δ = 0 to machine precision). δ-velocity mirrors the existing `lat_velocity` forward-finite-difference idiom (step 0.01 d) — no wraparound correction since δ ∈ [−90, +90] is bounded and monotone through zero. The montant/descendant helper `is_ascending_declination` is the equatorial analogue of `is_ascending` and must NOT collide with it (β and δ are distinct quantities, do not flip on the same days). OOB uses the instantaneous obliquity ε(jd) (`true_obliquity`), physically correct and free. `body_decl` is added as `("body_decl", "f8", (14,))` parallel to `body_lats`, a deliberate dtype-version bump with a ratchet test mirroring the prior `test_dtype.py` pattern; downstream positional-contract impact (Kala) documented. This is the largest new-surface v1.5 phase. See `.planning/research/DECLINATION.md`.
@@ -189,7 +189,7 @@ LAST phase, user-checkpoint-gated before tag/publish (the user reviews the whole
 | 30. Chiron Range 1900–2100                        | v1.4      | 2/2            | ✓ Complete  | 2026-06-03 |
 | 31. Documentation (en + fr)                       | v1.4      | 7/7            | ✓ Complete  | 2026-06-03 |
 | 32. Release v1.4.0                                | v1.4      | 2/2            | ✓ Complete  | 2026-06-03 |
-| **33. Lunar Declination δ**                       | **v1.5**  | **0/TBD**      | Not started | -          |
+| **33. Lunar Declination δ**                       | **v1.5**  | **4/4**        | ✓ Complete  | 2026-06-03 |
 | **34. Harmonics Debt (ASP-F1/F2/F3)**             | **v1.5**  | **0/4**        | Planned     | -          |
 | **35. Release v1.5.0**                            | **v1.5**  | **0/TBD**      | Not started | -          |
 
@@ -200,4 +200,4 @@ LAST phase, user-checkpoint-gated before tag/publish (the user reviews the whole
 *v1.2 phase details archived to `.planning/milestones/v1.2-ROADMAP.md`*
 *v1.3 phase details archived to `.planning/milestones/v1.3-ROADMAP.md`*
 *v1.4 phase details archived to `.planning/milestones/v1.4-ROADMAP.md`*
-*Roadmap last updated: 2026-06-03 — v1.5 Lunar Declination & Harmonics Debt ROADMAP CREATED. 3 phases (33-35), 21/21 v1.5 requirements mapped (9 DECL + 9 HARM + 3 REL), zero unmapped. Phases 33 (declination) and 34 (harmonics debt) are independent; Phase 35 (release) is last + user-checkpoint-gated. Next: `/gsd:plan-phase 33`.*
+*Roadmap last updated: 2026-06-03 — Phase 33 (Lunar Declination δ) COMPLETE (4/4 plans, verifier passed 5/5 must-haves; DECL-01..09 shipped — `declination` / `declination_velocity` / `is_ascending_declination` / `is_out_of_bounds` in `ketu.calculations`, `body_decl` in `CHART_DTYPE` populated in `compute_chart` + `calculate_composite`, inherited by Returns, DECL-08 ratchet, docs en + fr; 1584 tests / 100% coverage / mypy --strict clean; `is_ascending` β unchanged). Next: `/gsd:plan-phase 34` (Harmonics Debt) — plans already drafted at `.planning/phases/34-harmonics-debt/`. Phase 35 (release) is last + user-checkpoint-gated.*
