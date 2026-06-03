@@ -88,7 +88,7 @@ Full details archived to `.planning/milestones/v1.4-ROADMAP.md`.
 ### 🚧 v1.5 Lunar Declination & Harmonics Debt (Phases 33-35) — ACTIVE
 
 - [x] **Phase 33: Lunar Declination δ** (4/4 plans) — completed 2026-06-03 — equatorial declination δ as a first-class vectorizable quantity, montant/descendant trajectory, OOB, and `body_decl` in `CHART_DTYPE`
-- [ ] **Phase 34: Harmonics Debt (ASP-F1/F2/F3)** — formalize the `H{h}-{k}` naming contract, derive `find_aspect_timing`'s orb from a spec, and expose `--harmonics h7` on the CLI
+- [x] **Phase 34: Harmonics Debt (ASP-F1/F2/F3)** (4/4 plans) — completed 2026-06-03 — `H{h}-{k}` naming contract pinned as public API (TestNamingContractF2), `find_aspect_timing` gains `dyn_coef` orb derivation, CLI `--harmonics h7` via `HarmonicsSelection` NamedTuple (Quadrinovile bug fixed); `core.aspects` V1/V13 fingerprints byte-identical
 - [ ] **Phase 35: Release v1.5.0** — quality gates + version/CHANGELOG/UPGRADING + PyPI publish via OIDC (user-checkpoint-gated)
 
 #### Phase 33: Lunar Declination δ
@@ -190,7 +190,7 @@ LAST phase, user-checkpoint-gated before tag/publish (the user reviews the whole
 | 31. Documentation (en + fr)                       | v1.4      | 7/7            | ✓ Complete  | 2026-06-03 |
 | 32. Release v1.4.0                                | v1.4      | 2/2            | ✓ Complete  | 2026-06-03 |
 | **33. Lunar Declination δ**                       | **v1.5**  | **4/4**        | ✓ Complete  | 2026-06-03 |
-| **34. Harmonics Debt (ASP-F1/F2/F3)**             | **v1.5**  | **0/4**        | Planned     | -          |
+| **34. Harmonics Debt (ASP-F1/F2/F3)**             | **v1.5**  | **4/4**        | ✓ Complete  | 2026-06-03 |
 | **35. Release v1.5.0**                            | **v1.5**  | **0/TBD**      | Not started | -          |
 
 ---
@@ -200,4 +200,4 @@ LAST phase, user-checkpoint-gated before tag/publish (the user reviews the whole
 *v1.2 phase details archived to `.planning/milestones/v1.2-ROADMAP.md`*
 *v1.3 phase details archived to `.planning/milestones/v1.3-ROADMAP.md`*
 *v1.4 phase details archived to `.planning/milestones/v1.4-ROADMAP.md`*
-*Roadmap last updated: 2026-06-03 — Phase 33 (Lunar Declination δ) COMPLETE (4/4 plans, verifier passed 5/5 must-haves; DECL-01..09 shipped — `declination` / `declination_velocity` / `is_ascending_declination` / `is_out_of_bounds` in `ketu.calculations`, `body_decl` in `CHART_DTYPE` populated in `compute_chart` + `calculate_composite`, inherited by Returns, DECL-08 ratchet, docs en + fr; 1584 tests / 100% coverage / mypy --strict clean; `is_ascending` β unchanged). Next: `/gsd:plan-phase 34` (Harmonics Debt) — plans already drafted at `.planning/phases/34-harmonics-debt/`. Phase 35 (release) is last + user-checkpoint-gated.*
+*Roadmap last updated: 2026-06-03 — Phase 34 (Harmonics Debt) COMPLETE (4/4 plans, verifier passed 5/5 must-haves; HARM-01..09 shipped — `H{h}-{k}` naming contract pinned as public API (TestNamingContractF2 + frozen docstring), GENERATOR-vs-DETECTION two-channel docs, `find_aspect_timing` `dyn_coef` orb derivation (explicit-orb-wins precedence), CLI `--harmonics h7` via `HarmonicsSelection` NamedTuple with Tight grammar (Quadrinovile display bug fixed), new h7 byte-stability fixture + v1.1 fixture unchanged, docs en + fr; `core.aspects` V1/V13 sha256 fingerprints byte-identical, core.py untouched; 1623 tests / 100% coverage / mypy --strict clean). Phases 33 + 34 done → only Phase 35 (Release v1.5.0) remains, LAST + user-checkpoint-gated. Next: `/gsd:plan-phase 35`.*
