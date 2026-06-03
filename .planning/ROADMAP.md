@@ -6,6 +6,7 @@
 - ✅ **v1.1 Flexibility & Houses** — Phases 8-12 (shipped 2026-05-08, archived to `.planning/milestones/v1.1-ROADMAP.md`)
 - ✅ **v1.2 Astrologie relationnelle et prédictive** — Phases 13-20 (shipped 2026-05-28; `ketu==1.2.0` on PyPI, archived to `.planning/milestones/v1.2-ROADMAP.md`)
 - ✅ **v1.3 Chiron & Engine Hardening** — Phases 21-27 (+ inserted 26.1) (shipped 2026-06-01; `ketu==1.3.0` on PyPI — Chiron embedded as 14th body, engine hardened to 100% coverage, data-driven aspect engine, full French docs; archived to `.planning/milestones/v1.3-ROADMAP.md`)
+- ✅ **v1.4 Dynamic Harmonics & Chiron Range** — Phases 28-32 (shipped 2026-06-03; `ketu==1.4.0` on PyPI via OIDC — on-the-fly `generate_harmonic_aspects(h)` generator wired through the full detection chain with the frozen `core.aspects` table + preset fingerprints byte-identical, Chiron orb 0°→4° (Pluto parity), Chiron range widened to 1900–2100 (`.npz` regenerated, max|Δλ|=0.001214°), docs recentred on the 180°-division default (en+fr))
 
 ## Phases
 
@@ -70,7 +71,7 @@ Full details archived to `.planning/milestones/v1.3-ROADMAP.md`.
 
 </details>
 
-### 🚧 v1.4 Dynamic Harmonics & Chiron Range (Phases 28-32) — IN PROGRESS
+### ✅ v1.4 Dynamic Harmonics & Chiron Range (Phases 28-32) — SHIPPED 2026-06-03
 
 **Milestone Goal:** Make aspect harmonics open-ended — any integer harmonic (H17, etc.) usable as a first-class aspect across the whole detection chain via an on-the-fly generator, without disturbing the frozen `core.aspects` table or its preset fingerprints — then widen Chiron's validity range to 1900–2100, correct its orb to 4° (Pluto parity), recentre the documentation on the 180°-division default (H1/H2/H3/H6), and ship `ketu==1.4.0`.
 
@@ -169,12 +170,12 @@ Plans:
   2. `ketu==1.4.0` is live on PyPI via OIDC trusted publishing with a GitHub release attaching sdist + wheel; both `origin/main` AND the tag `v1.4.0` are pushed (RTD follows main, PyPI follows tag).
   3. A fresh-venv `pip install ketu==1.4.0` smoke confirms: `generate_harmonic_aspects(7)` returns the correct H7 angles; `core.bodies['orb']` for Chiron is 4°; `calc_planet_position(jd_1920, 13)` returns a finite Chiron longitude (1900–2100 range); `importlib.util.find_spec('swisseph')` is `None` (no pyswisseph at runtime).
 
-**Plans**: 2 plans (2 waves)
+**Plans**: 2 plans (2 waves) — ✅ COMPLETE 2026-06-03 (verifier PASSED 3/3)
 
 Plans:
 
-- [ ] 32-01-PLAN.md — Fix mypy --strict (synastry/api.py:392) + bump 1.4.0 (pyproject + __init__) + author root CHANGELOG [1.4.0] fresh + sync fr/CHANGELOG + date-stamp docs/source/changelog.md + UPGRADING v1.3 -> v1.4 + README What's New (REL-12) [Wave 1]
-- [ ] 32-02-PLAN.md — Full local pre-flight HARD GATES (mypy clean, .npz-in-wheel, four v1.4 smoke assertions) → BLOCKING human go/no-go → tag v1.4.0 + push tag + push origin/main + GitHub release (sdist+wheel) + post-publish fresh-venv smoke from PyPI (REL-13) [Wave 2]
+- [x] 32-01-PLAN.md — Fix mypy --strict (synastry/api.py:392) + bump 1.4.0 (pyproject + __init__) + author root CHANGELOG [1.4.0] fresh + sync fr/CHANGELOG + date-stamp docs/source/changelog.md + UPGRADING v1.3 -> v1.4 + README What's New (REL-12) [Wave 1]
+- [x] 32-02-PLAN.md — Full local pre-flight HARD GATES (mypy clean, .npz-in-wheel, four v1.4 smoke assertions) → BLOCKING human go/no-go → tag v1.4.0 + push tag + push origin/main + GitHub release (sdist+wheel) + post-publish fresh-venv smoke from PyPI (REL-13) [Wave 2]
 
 ## Progress
 
@@ -208,7 +209,7 @@ Plans:
 | **29. Chiron Orb 4°**                             | **v1.4**  | **1/1**        | ✓ Complete | 2026-06-03 |
 | **30. Chiron Range 1900–2100**                    | **v1.4**  | **2/2**        | ✓ Complete | 2026-06-03 |
 | **31. Documentation (en + fr)**                   | **v1.4**  | **7/7**        | ✓ Complete | 2026-06-03 |
-| **32. Release v1.4.0**                            | **v1.4**  | **0/2**        | ⬜ Pending  | —          |
+| **32. Release v1.4.0**                            | **v1.4**  | **2/2**        | ✓ Complete | 2026-06-03 |
 
 ---
 
@@ -216,4 +217,5 @@ Plans:
 *v1.1 phase details archived to `.planning/milestones/v1.1-ROADMAP.md`*
 *v1.2 phase details archived to `.planning/milestones/v1.2-ROADMAP.md`*
 *v1.3 phase details archived to `.planning/milestones/v1.3-ROADMAP.md`*
-*Roadmap last updated: 2026-06-03 — Phase 31 (Documentation en+fr) complete (verifier PASSED 4/4): 6 EN doc pages recentred on the 180°-division default (concepts.md EXTENDED out of tables → prose "available in code"; migration/relational stale-default claims fixed; api/chiron Chiron 1900–2100/0.001214°/clamping; changelog [1.4.0] + conf.py docs-build 1.4.0); `generate_harmonic_aspects(h)` documented with runnable example + ~2× full-circle orb note in both concepts.md and api.md; zero Kala references. Full FR gettext cycle: 7 catalogs (concepts/migration/relational_charts/api/chiron/changelog + architecture deviation) re-extracted, translated to 0 untranslated/0 fuzzy, 7 .mo recompiled; `make html` (en) + `make html-fr` both build at the 1-warning baseline (display_version theme warning, pre-existing). v1.4 at 4/5 phases. Phase 32 (Release v1.4.0) now unblocked — all docs reflect the final v1.4 API surface.*
+*Roadmap last updated: 2026-06-03 — Phase 32 (Release v1.4.0) complete (verifier PASSED 3/3): `ketu==1.4.0` live on PyPI via OIDC trusted publishing (pypi.org/project/ketu/1.4.0), GitHub release v1.4.0 with sdist+wheel, tag `v1.4.0` (ca9e24c) + origin/main both pushed (RTD rebuilds v1.4 docs), publish.yml SUCCESS. Version 1.4.0 in pyproject.toml + ketu/__init__.py; CHANGELOG/fr-CHANGELOG dated [1.4.0] - 2026-06-03; UPGRADING v1.3→v1.4 + README What's New added; mypy --strict clean (synastry/api.py:392 cast). Post-publish fresh-venv smoke FROM PyPI passed all four v1.4 assertions: generate_harmonic_aspects(7)=[51.4286,102.8571,154.2857], Chiron orb=4.0, calc_planet_position(2422324.5,13)=2.6085° (1900–2100 active), find_spec('swisseph')=None. MILESTONE v1.4 SHIPPED — all 5 phases (28-32) complete, 15/15 plans. Next: `/gsd:complete-milestone` to archive v1.4 and start v1.5.*
+*Roadmap previously updated: 2026-06-03 — Phase 31 (Documentation en+fr) complete (verifier PASSED 4/4): 6 EN doc pages recentred on the 180°-division default (concepts.md EXTENDED out of tables → prose "available in code"; migration/relational stale-default claims fixed; api/chiron Chiron 1900–2100/0.001214°/clamping; changelog [1.4.0] + conf.py docs-build 1.4.0); `generate_harmonic_aspects(h)` documented with runnable example + ~2× full-circle orb note in both concepts.md and api.md; zero Kala references. Full FR gettext cycle: 7 catalogs (concepts/migration/relational_charts/api/chiron/changelog + architecture deviation) re-extracted, translated to 0 untranslated/0 fuzzy, 7 .mo recompiled; `make html` (en) + `make html-fr` both build at the 1-warning baseline (display_version theme warning, pre-existing). v1.4 at 4/5 phases. Phase 32 (Release v1.4.0) now unblocked — all docs reflect the final v1.4 API surface.*
