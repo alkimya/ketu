@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Lunar Declination & Harmonics Debt
 status: in-progress
-last_updated: "2026-06-03T19:59:27Z"
+last_updated: "2026-06-03T20:09:47Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 3
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 0
-  completed_plans: 3
-  percent: 10
+  completed_plans: 4
+  percent: 33
 ---
 
 # Project State
@@ -24,16 +24,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-03 — v1.5 milestone started)
 
 ## Current Position
 
-Phase: 33 — Lunar Declination δ (in progress — Plan 03 complete)
-Plan: 04 (next)
-Status: Plan 03 complete. calculate_composite now explicitly assigns out["body_decl"] via coordinates chain on composite λ,β (Pitfall 4 closed). Returns body_decl inheritance proven at 0.0 diff. 1584 tests, 100% coverage, all gates green.
-Last activity: 2026-06-03 — Plan 03 executed (33-03-SUMMARY.md, commits 6b5af52/af70f4d/fb80084).
+Phase: 33 — Lunar Declination δ (COMPLETE — all 4 plans done)
+Plan: Phase 33 complete; Phase 34 next
+Status: Plan 04 complete. DECL-09 satisfied: 4 declination functions + β-vs-δ/montant/OOB documented in api.md+concepts.md+changelog.md; FR api.po/concepts.po/changelog.po fully translated, .mo recompiled, html-fr renders "déclinaison". Phase 33 fully delivered.
+Last activity: 2026-06-03 — Plan 04 executed (33-04-SUMMARY.md, commits 9b4b6e6/38ceb61).
 
-Progress: In progress (Plan 03/N done in Phase 33)
+Progress: Phase 33 complete (4/4 plans done)
 
 ## Next Step
 
-**`/gsd:execute-phase 33 --plan 04`** — execute Plan 04 of Phase 33 (documentation: body_decl visible in numpydoc, composite api.py docstring update, docs en+fr).
+**`/gsd:plan-phase 34`** (if not already planned) or **`/gsd:execute-phase 34 --plan 01`** — Phase 34 Harmonics Debt (ASP-F2 → ASP-F3 → ASP-F1). Plans already exist at `.planning/phases/34-harmonics-debt/`.
 
 **Phase map (v1.5):**
 
@@ -58,6 +58,7 @@ Full log in `.planning/PROJECT.md` Key Decisions table. v1.5 decisions locked at
 - CHART_DTYPE body_decl consistency boundary: body_decl matches declination() ARRAY path (both use calc_planet_position_batch); scalar declination() uses calc_planet_position (up to 0.025° diff on outer planets). Chart is internally self-consistent.
 - eps_b[..., np.newaxis] broadcast pattern for ε over the (14,) body axis — works for 0-d (scalar jd) and (S,) (array jd) cases.
 - [Phase 33]: Composite body_decl derived via coordinates chain on composite λ,β (NOT midpoint of parents' δ) — Open Question 1 resolved option (a)
+- [Phase 33]: Equatorial Declination section uses MyST anchor for cross-references between api.md sections
 
 ### Blockers/Concerns
 
@@ -76,10 +77,10 @@ None. See `.planning/research/DECLINATION.md` and `.planning/research/HARMONICS_
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 - v1.3: 30 plans / 8 phases (21-27 + 26.1) (2026-05-29 → 2026-06-01)
 - v1.4: 15 plans / 5 phases (28-32) (2026-06-02 → 2026-06-03)
-- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files)
+- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files); Plan 33-04 done (7 min, 2 tasks, 9 files) — Phase 33 COMPLETE
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Plan 03 of Phase 33 executed. calculate_composite now assigns body_decl via coordinates chain (Pitfall 4 zero-fill closed). Returns body_decl inheritance proven at 0.0 diff (same evaluator). 1584 tests, 100% coverage, all gates green. Commits: 6b5af52 (feat), af70f4d (test), fb80084 (test).
-Stopped at: Phase 33 Plan 03 complete.
-Resume file: None — proceed with `/gsd:execute-phase 33 --plan 04`.
+Last session: 2026-06-03 — Plan 04 of Phase 33 executed. DECL-09 docs en+fr complete: api.md (4 functions + Equatorial Declination section), concepts.md (β-vs-δ, montant/descendant, OOB), changelog.md (v1.5 entry). FR .po fully translated + .mo recompiled. Both builds clean. Commits: 9b4b6e6 (docs EN), 38ceb61 (docs FR).
+Stopped at: Phase 33 Plan 04 complete. Phase 33 FULLY DONE.
+Resume file: None — proceed with Phase 34 (Harmonics Debt).
