@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Dynamic Harmonics & Chiron Range
 status: in-progress
-last_updated: "2026-06-03T10:26:45Z"
+last_updated: "2026-06-03T10:41:14Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 15
-  completed_plans: 3
-  percent: 20
+  completed_plans: 4
+  percent: 27
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 ## Current Position
 
 Phase: 28-dynamic-harmonic-generator
-Plan: 28-03 complete — 28-02 in parallel (Wave 2 running)
+Plan: 28-02 complete — Wave 2 complete (both 28-02 and 28-03 done)
 Status: In progress
-Last activity: 2026-06-03 — Phase 28 Plans 01+03 complete (dynamic harmonic generator + synastry/cycles integration)
+Last activity: 2026-06-03 — Phase 28 Plans 01+02+03 complete (full dynamic harmonic integration: generator + calculator/timing + synastry/cycles)
 
-Progress: [███░░░░░░░░░░░] 20% — 3/15 plans complete (28-01, 28-03 done; 28-02 in progress)
+Progress: [████░░░░░░░░░░] 27% — 4/15 plans complete (28-01, 28-02, 28-03 done)
 
 ## v1.4 Roadmap Structure
 
@@ -77,6 +77,9 @@ Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 - [Phase 28-03]: `aspect_type=-2` sentinel for dynamic synastry rows; filtered-mode predicate changed to `!= -1` (keeps -2, drops -1).
 - [Phase 28-03]: Cycles full-circle expansion: generator emits folded [0,180]; mirror `360-theta` added for waning detection (not 0/180 poles). `dynamic_specs=None` path byte-identical via `effective_*` variables.
 - [Phase 28-03]: Empty list `dynamic_specs=[]` falls back silently to static candidate set (no crash, no extension).
+- [Phase 28-02]: `find_aspect_timing` orb param: explicit `orb=float` skips table lookup entirely (dynamic path); `orb=None` does table lookup with clear ValueError on miss (never IndexError). Simpler than coef param.
+- [Phase 28-02]: Two unreachable defensive fallback branches in `find_aspects_between_dates` name resolution marked `pragma: no cover` — `find_all_aspects` only returns angles from the search list, so lookups always succeed for well-formed calls.
+- [Phase 28-02]: `_normalize_dynamic_specs` centralises None/single/list normalization — imported/reused by all calculator consumers (not reimplemented per-function).
 
 ### Roadmap Evolution
 
@@ -94,6 +97,6 @@ None at roadmap time.
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Phase 28-01 + 28-03 complete. Wave 2 (28-02 + 28-03) ran in parallel. Plan 28-03: `dynamic_specs=` wired into `calculate_synastry` (aspect_type=-2 rows) and `generate_cycle_series`/`generate_multi_cycle_series` (extended nearest-aspect candidate set). 14 new tests in `tests/test_dynamic_synastry_cycles.py`. 1528 tests green, 100% coverage on modified files, numpydoc and doctest gates pass.
-Stopped at: Completed 28-03-PLAN.md.
-Resume file: None — 28-02 still in parallel; after 28-02 complete, Phase 28 is done.
+Last session: 2026-06-03 — Phase 28 complete. Plans 28-01, 28-02, 28-03 all done. Plan 28-02: `dynamic_specs=` threaded into `calculate_aspects` (scalar/vectorized/batch) + `find_aspects_between_dates`; `i_asp=-2` sentinel; `orb=Optional[float]` param on `find_aspect_timing` closes IndexError trap; `_normalize_dynamic_specs` helper; 35 new tests. 1530 tests green, 100% coverage, doctests pass.
+Stopped at: Completed 28-02-PLAN.md. Phase 28 fully closed.
+Resume file: None — Phase 28 done; proceed with Phase 29 (Chiron Orb 4°) or Phase 31 (Documentation) as independent next step.
