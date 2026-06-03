@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.4
 milestone_name: Dynamic Harmonics & Chiron Range
 status: in-progress
-last_updated: "2026-06-03T14:00:00Z"
+last_updated: "2026-06-03T14:10:00Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 5
   completed_phases: 3
-  total_plans: 7
-  completed_plans: 7
-  percent: 60
+  total_plans: 13
+  completed_plans: 8
+  percent: 62
 ---
 
 # Project State
@@ -24,12 +24,12 @@ See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 
 ## Current Position
 
-Phase: 30-chiron-range-1900-2100 — COMPLETE (2/2 plans done)
-Plan: 2/2 plans done; Phase 30 complete
-Status: Phase 30 fully executed; .npz regenerated 1900-2100 (2283 segs, gate PASS); regression + bounds tests green; 1537 tests, 100% coverage
-Last activity: 2026-06-03 — Phase 30-02 COMPLETE; Chiron .npz 1900-2100 (2283 segs, max|Δλ|=0.001214°), regression re-pinned 9 refs, bounds clamp locked
+Phase: 31-documentation-en-fr — IN PROGRESS (1/6 plans done, Wave 1 parallel)
+Plan: 1/6 done (31-01 concepts.md complete); sibling plans 31-02..31-06 in parallel
+Status: 31-01 complete; concepts.md recentred on 180°-division default; generate_harmonic_aspects documented; Chiron range 1900-2100 noted
+Last activity: 2026-06-03 — Phase 31-01 COMPLETE; concepts.md tables trimmed (H5/H9/H10 prose note, 14→7 coefficient table), generate_harmonic_aspects subsection added, Chiron 1900-2100 note updated
 
-Progress: [████████░░░░░░] 60% — Phase 30 of 5 complete (7/7 plans total through Phase 30)
+Progress: [████████░░░░░░] 62% — Phase 30 complete; Phase 31 in progress (8/13 plans)
 
 ## v1.4 Roadmap Structure
 
