@@ -40,8 +40,8 @@ def test_load_chiron_data_shapes() -> None:
 
     Notes
     -----
-    Confirms .npz wiring: 1142 segments, degree 10 (11 coefficients per seg),
-    seg_len = 32.0 days, and the three coefficient arrays have shape (1142, 11).
+    Confirms .npz wiring: 2283 segments, degree 10 (11 coefficients per seg),
+    seg_len = 32.0 days, and the three coefficient arrays have shape (2283, 11).
     """
     data = _load_chiron_data()
 
@@ -52,10 +52,10 @@ def test_load_chiron_data_shapes() -> None:
     assert "seg_len" in data
     assert "degree" in data
 
-    assert data["lon_coeffs"].shape == (1142, 11)
-    assert data["lat_coeffs"].shape == (1142, 11)
-    assert data["dist_coeffs"].shape == (1142, 11)
-    assert data["seg_starts"].shape == (1142,)
+    assert data["lon_coeffs"].shape == (2283, 11)
+    assert data["lat_coeffs"].shape == (2283, 11)
+    assert data["dist_coeffs"].shape == (2283, 11)
+    assert data["seg_starts"].shape == (2283,)
 
     assert float(data["seg_len"]) == 32.0
     assert int(data["degree"]) == 10
@@ -105,7 +105,7 @@ def test_chiron_scalar_dlon_wrap_corrections() -> None:
 
     Notes
     -----
-    In natural 1950-2050 data, Chiron moves at most ~0.019°/day, so the
+    In natural 1900-2100 data, Chiron moves at most ~0.019°/day, so the
     ``if dlon > 180`` or ``if dlon < -180`` branches are only triggered when
     the raw longitude straddles 0°/360° within a 0.01-day window.
 
@@ -220,7 +220,7 @@ def test_chiron_vec_matches_scalar() -> None:
 
 
 def test_clamp_below_range() -> None:
-    """_eval_chiron_qty with JD before 1950 clamps si to 0 — must not raise.
+    """_eval_chiron_qty with JD before 1900 clamps si to 0 — must not raise.
 
     Notes
     -----
@@ -231,7 +231,7 @@ def test_clamp_below_range() -> None:
     seg_starts: np.ndarray = data["seg_starts"]
     seg_len = float(data["seg_len"])
 
-    # JD well before 1950 (1000 days before first segment)
+    # JD well before 1900 (1000 days before first segment)
     jd_early = float(seg_starts[0]) - 1000.0
 
     # Should not raise, should return a finite float
@@ -253,7 +253,7 @@ def test_clamp_below_range() -> None:
 
 
 def test_clamp_above_range() -> None:
-    """_eval_chiron_qty with JD after 2050 clamps si to n_segs-1 — must not raise.
+    """_eval_chiron_qty with JD after 2100 clamps si to n_segs-1 — must not raise.
 
     Notes
     -----
@@ -265,7 +265,7 @@ def test_clamp_above_range() -> None:
     seg_starts: np.ndarray = data["seg_starts"]
     seg_len = float(data["seg_len"])
 
-    # JD well after 2050 (1000 days after last segment + its length)
+    # JD well after 2100 (1000 days after last segment + its length)
     jd_late = float(seg_starts[-1]) + seg_len + 1000.0
 
     # Should not raise, should return a finite float

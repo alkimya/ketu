@@ -31,8 +31,8 @@ def _load_chiron_data() -> dict[str, np.ndarray]:
     -------
     dict of {str: np.ndarray}
         Dictionary mapping array names to arrays.  Keys: ``lon_coeffs``,
-        ``lat_coeffs``, ``dist_coeffs`` (shape ``(1142, 11)``), ``seg_starts``
-        (shape ``(1142,)``), ``seg_len`` (scalar float64), ``degree`` (scalar
+        ``lat_coeffs``, ``dist_coeffs`` (shape ``(2283, 11)``), ``seg_starts``
+        (shape ``(2283,)``), ``seg_len`` (scalar float64), ``degree`` (scalar
         int32), ``jd_start``, ``jd_end``.
 
     Notes
@@ -44,7 +44,7 @@ def _load_chiron_data() -> dict[str, np.ndarray]:
     --------
     >>> data = _load_chiron_data()
     >>> data["lon_coeffs"].shape
-    (1142, 11)
+    (2283, 11)
     """
     ref = files("ketu.data").joinpath("chiron_coeffs.npz")
     with ref.open("rb") as fh:
@@ -72,7 +72,7 @@ def _eval_chiron_qty(
     seg_len : float
         Nominal length of each segment in days (32.0).
     jd_end : float
-        JD of the last valid date (2469807.5 for the 1950-2050 range).  Used
+        JD of the last valid date (2488069.5 for the 1900-2100 range).  Used
         to compute the actual length of the last (possibly truncated) segment.
 
     Returns
@@ -82,7 +82,7 @@ def _eval_chiron_qty(
 
     Notes
     -----
-    Out-of-range JDs (before 1950 or after 2050) are clamped to the nearest
+    Out-of-range JDs (before 1900 or after 2100) are clamped to the nearest
     segment boundary — the function never raises on out-of-range input.
 
     The normalised ``t`` coordinate is also clipped to ``[-1, 1]`` to guard
