@@ -7,24 +7,24 @@ Ce script est **exécuté une seule fois** au moment du build, avec l'extra
 Il NE DOIT PAS être importé par le package ``ketu/`` et NE SERA PAS collecté
 par pytest (``tools/`` est hors de ``testpaths=["tests"]``).
 
-Paramètres verrouillés (23-DECISION.md) :
-  - Plage     : 1950-01-01 .. 2050-01-01 UTC
+Paramètres verrouillés (23-DECISION.md, plage étendue Phase 30-02) :
+  - Plage     : 1900-01-01 .. 2100-01-01 UTC
   - seg_len   : 32 jours
   - degree    : 10  (11 coefficients/segment)
-  - n_segs    : 1142  (ceil(36525 / 32))
+  - n_segs    : 2283  (ceil(73049 / 32))
   - Quantités : 3 — lon (déroulée), lat, dist
   - Oracle    : swe.calc_ut(jd, swe.CHIRON, swe.FLG_SWIEPH | swe.FLG_SPEED)
   - retflag 260 (Moshier fallback) ACCEPTABLE (seas_18.se1 seul sans sepl_18.se1)
 
 Layout .npz (``np.savez_compressed``) :
-  - lon_coeffs  : shape (1142, 11), float64
-  - lat_coeffs  : shape (1142, 11), float64
-  - dist_coeffs : shape (1142, 11), float64
-  - seg_starts  : shape (1142,),    float64  (JD début de chaque segment)
+  - lon_coeffs  : shape (2283, 11), float64
+  - lat_coeffs  : shape (2283, 11), float64
+  - dist_coeffs : shape (2283, 11), float64
+  - seg_starts  : shape (2283,),    float64  (JD début de chaque segment)
   - seg_len     : scalaire float64  (32.0)
   - degree      : scalaire int32    (10)
-  - jd_start    : scalaire float64  (2433282.5)
-  - jd_end      : scalaire float64  (2469807.5)
+  - jd_start    : scalaire float64  (2415020.5)
+  - jd_end      : scalaire float64  (2488069.5)
 
 Usage::
 
@@ -56,16 +56,19 @@ _SEG_LEN: float = 32.0   # jours juliens par segment
 _DEGREE: int = 10         # degré du polynôme de Chebyshev (11 coefficients)
 _N_FIT: int = _DEGREE + 8  # noeuds d'ajustement (overdéterminé)
 
-# JDs de référence pour --dump-refs (plan 24-04) :
-# 1950-01-01, 1970-01-01, 1990-01-01, J2000.0, 2010-01-01, 2030-01-01, 2050-01-01
+# JDs de référence pour --dump-refs (plan 24-04, étendu Phase 30-02) :
+# 1920-01-01 (aile pré-1950), 1950-01-01, 1970-01-01, 1990-01-01, J2000.0,
+# 2010-01-01, 2030-01-01, 2050-01-01, 2080-01-01 (aile post-2050)
 _REF_JDS: list[float] = [
-    2433282.5,
-    2440587.5,
-    2447892.5,
-    2451545.0,
-    2455197.5,
-    2462501.5,
-    2469807.5,
+    2422324.5,  # 1920-01-01 (aile pré-1950)
+    2433282.5,  # 1950-01-01
+    2440587.5,  # 1970-01-01
+    2447892.5,  # 1990-01-01
+    2451545.0,  # J2000.0
+    2455197.5,  # 2010-01-01
+    2462501.5,  # 2030-01-01
+    2469807.5,  # 2050-01-01
+    2480764.5,  # 2080-01-01 (aile post-2050)
 ]
 
 _DEFAULT_OUTPUT = os.path.join(
@@ -92,9 +95,9 @@ def setup_oracle(ephe_path: str) -> tuple[float, float, int]:
     Retourne
     --------
     jd0 : float
-        JD pour 1950-01-01 00:00 UT (2433282.5).
+        JD pour 1900-01-01 00:00 UT (2415020.5).
     jd1 : float
-        JD pour 2050-01-01 00:00 UT (2469807.5).
+        JD pour 2100-01-01 00:00 UT (2488069.5).
     retflag : int
         Indicateur de retour de pyswisseph (260 = Moshier+SPEED, acceptable).
 
@@ -102,13 +105,13 @@ def setup_oracle(ephe_path: str) -> tuple[float, float, int]:
     -----
     ``retflag == 260`` (MOSEPH+SPEED) est attendu et acceptable quand seul
     ``seas_18.se1`` est disponible (sans ``sepl_18.se1``). La différence vs
-    SWIEPH est ≤ 0.000067° sur 1950-2050, négligeable face à la cible 0.01°.
+    SWIEPH est ≤ 0.000067° sur 1900-2100, négligeable face à la cible 0.01°.
     """
     import swisseph as swe  # type: ignore  # build-only
 
     swe.set_ephe_path(ephe_path)
-    jd0 = swe.julday(1950, 1, 1, 0.0)
-    jd1 = swe.julday(2050, 1, 1, 0.0)
+    jd0 = swe.julday(1900, 1, 1, 0.0)
+    jd1 = swe.julday(2100, 1, 1, 0.0)
 
     # Vérification rapide à J2000.0
     jd_test = 2451545.0
@@ -135,8 +138,8 @@ def setup_oracle(ephe_path: str) -> tuple[float, float, int]:
     print(f"  ephe_path  : {ephe_path}")
     print(f"  retflag    : {retflag}  ({flag_desc})")
     print(f"  swe.CHIRON : {swe.CHIRON}")
-    print(f"  jd0        : {jd0:.4f}  (1950-01-01)")
-    print(f"  jd1        : {jd1:.4f}  (2050-01-01)")
+    print(f"  jd0        : {jd0:.4f}  (1900-01-01)")
+    print(f"  jd1        : {jd1:.4f}  (2100-01-01)")
     total_days = jd1 - jd0
     n_segs = math.ceil(total_days / _SEG_LEN)
     print(f"  total_days : {total_days:.1f}")
@@ -293,14 +296,14 @@ def generate_all_coefficients(
     jd1: float,
 ) -> tuple[np.ndarray, np.ndarray, np.ndarray, np.ndarray]:
     """
-    Génère les coefficients Chebyshev pour lon, lat et dist sur 1950-2050.
+    Génère les coefficients Chebyshev pour lon, lat et dist sur 1900-2100.
 
     Paramètres
     ----------
     jd0 : float
-        JD de début (1950-01-01 00:00 UT).
+        JD de début (1900-01-01 00:00 UT).
     jd1 : float
-        JD de fin   (2050-01-01 00:00 UT).
+        JD de fin   (2100-01-01 00:00 UT).
 
     Retourne
     --------
@@ -461,21 +464,23 @@ def validate_coefficients(
 
 def dump_reference_longitudes() -> None:
     """
-    Imprime les 7 longitudes de référence Chiron pour les JDs pin (plan 24-04).
+    Imprime les 9 longitudes de référence Chiron pour les JDs pin (plan 24-04, étendu Phase 30-02).
 
-    Appelle l'oracle pyswisseph pour chacun des 7 JDs verrouillés et imprime
+    Appelle l'oracle pyswisseph pour chacun des 9 JDs verrouillés et imprime
     une liste Python de tuples (jd, lon) prête à être copiée dans le fichier
     de test de régression.
 
     Notes
     -----
-    Les dates correspondent à : 1950-01-01, 1970-01-01, 1990-01-01, J2000.0,
-    2010-01-01, 2030-01-01, 2050-01-01.
+    Les dates correspondent à : 1920-01-01 (aile pré-1950), 1950-01-01,
+    1970-01-01, 1990-01-01, J2000.0, 2010-01-01, 2030-01-01, 2050-01-01,
+    2080-01-01 (aile post-2050).
     """
     import swisseph as swe  # type: ignore  # build-only
 
     flags = swe.FLG_SWIEPH | swe.FLG_SPEED
     labels = [
+        "1920-01-01",
         "1950-01-01",
         "1970-01-01",
         "1990-01-01",
@@ -483,6 +488,7 @@ def dump_reference_longitudes() -> None:
         "2010-01-01",
         "2030-01-01",
         "2050-01-01",
+        "2080-01-01",
     ]
     print("# Longitudes de référence Chiron (oracle pyswisseph + seas_18.se1)")
     print("# Copiez cette liste dans tests/ephemeris/test_chiron_regression.py")
@@ -591,7 +597,7 @@ def main() -> None:
         "--dump-refs",
         action="store_true",
         help=(
-            "Imprime les 7 longitudes de référence Chiron (JDs pin pour plan 24-04) "
+            "Imprime les 9 longitudes de référence Chiron (JDs pin pour plan 24-04/30-02) "
             "et quitte sans générer le .npz."
         ),
     )
