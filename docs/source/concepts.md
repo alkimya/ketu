@@ -69,12 +69,11 @@ Ketu calculates the positions of 14 celestial bodies (body IDs 0–13):
 
 ### Harmonic Theory
 
-Aspects lean on the geometry of the zodiac circle. A **harmonic** divides a base angle into *n* equal parts, and the resulting fractions act as landmarks for the main kinds of planetary encounters. Ketu uses two base angles:
+Aspects lean on the geometry of the zodiac circle. A **harmonic** divides a base angle into *n* equal parts, and the resulting fractions act as landmarks for the main kinds of planetary encounters.
 
-- **Half-circle harmonics** divide 180° (the angle between conjunction and opposition, i.e. the shortest separation): harmonics **1, 2, 3, 6**. These yield the classical Ptolemaic aspects plus the semi-sextile and quincunx.
-- **Full-circle harmonics** divide the whole 360° zodiac: harmonics **5, 9, 10**. These yield the minor "harmonic" aspects (quintiles, noviles, deciles).
+The default framing uses the **half-circle base** (180°, the distance between conjunction and opposition): harmonics **1, 2, 3, 6** yield the 7 classical-to-Ptolemaic aspects (Conjunction, Semi-sextile, Sextile, Square, Trine, Quincunx, Opposition). This is the TRADITIONAL preset, the library default.
 
-This is why the **Division** column below switches between `180°/n` and `360°/n` depending on the harmonic.
+**Full-circle harmonics** (5, 9, 10 — quintiles, noviles, deciles) use a 360° base and are available as opt-in presets; they are not part of the default set.
 
 #### Harmonic 1 (180°/1 = 180°)
 
@@ -95,21 +94,7 @@ This is why the **Division** column below switches between `180°/n` and `360°/
 - Semi-sextile (30°): 1/6 of semi-circle
 - Quincunx (150°): 5/6 of semi-circle
 
-#### Harmonic 5 (360°/5 = 72°)
-
-- Quintile (72°): 1/5 of circle
-- Biquintile (144°): 2/5 of circle
-
-#### Harmonic 9 (360°/9 = 40°)
-
-- Novile (40°): 1/9 of circle
-- Binovile (80°): 2/9 of circle
-- Quadrinovile (160°): 4/9 of circle
-
-#### Harmonic 10 (360°/10 = 36°)
-
-- Decile (36°): 1/10 of circle (semi-quintile)
-- Tredecile (108°): 3/10 of circle (tri-decile)
+The full-circle minor harmonics — **H5** (quintiles), **H9** (noviles), **H10** (deciles) — are **available in code** but are not part of the default framing. They are opt-in via the `EXTENDED` preset or `aspects_for_harmonics([5, 9, 10])` (see [Configurable Aspect Sets](#configurable-aspect-sets-new-in-v11-updated-in-v13) below).
 
 ### Summary Table
 
@@ -118,12 +103,9 @@ Harmonic | Division | Aspects
 1        | 180°/1   | Conjunction (0°), Opposition (180°)
 2        | 180°/2   | Square (90°)
 3        | 180°/3   | Sextile (60°), Trine (120°)
-5        | 360°/5   | Quintile (72°), Biquintile (144°)
 6        | 180°/6   | Semi-sextile (30°), Quincunx (150°)
-9        | 360°/9   | Novile (40°), Binovile (80°), Quadrinovile (160°)
-10       | 360°/10  | Decile (36°), Tredecile (108°)
 
-Ketu supports all 14 aspects across harmonics 1, 2, 3, 5, 6, 9, and 10.
+The table above lists the 7 default half-circle aspects (the TRADITIONAL preset). The full-circle minor aspects (H5/H9/H10) are available in code; see the note above and [Configurable Aspect Sets](#configurable-aspect-sets-new-in-v11-updated-in-v13).
 
 **Default aspect set (v1.3+):** the library default is the **7 half-circle aspects**
 (harmonics 1, 2, 3, 6 — TRADITIONAL preset): Conjunction, Semi-sextile, Sextile, Square,
@@ -201,24 +183,19 @@ Rahu, Lilith            | 0°
 
 ### Aspect Types and Harmonic Coefficients
 
-Ketu calculates 14 aspects across harmonics 1, 2, 3, 5, 6, 9, and 10:
+The 7 default half-circle aspects (TRADITIONAL preset, harmonics 1, 2, 3, 6):
 
 Aspect         | Angle | Symbol | Harmonic | Coefficient
 ---------------|-------|--------|----------|------------
 Conjunction    | 0°    | ☌      | 1        | 1
 Semi-sextile   | 30°   | ⚺      | 6        | 1/6
-Decile         | 36°   |        | 10       | 1/10
-Novile         | 40°   |        | 9        | 1/9
 Sextile        | 60°   | ⚹      | 3        | 1/3
-Quintile       | 72°   |        | 5        | 1/5
-Binovile       | 80°   |        | 9        | 2/9
 Square         | 90°   | □      | 2        | 1/2
-Tredecile      | 108°  |        | 10       | 3/10
 Trine          | 120°  | △      | 3        | 2/3
-Biquintile     | 144°  |        | 5        | 2/5
 Quincunx       | 150°  | ⚻      | 6        | 5/6
-Quadrinovile   | 160°  |        | 9        | 4/9
 Opposition     | 180°  | ☍      | 1        | 1
+
+The 7 full-circle minor aspects (H5/H9/H10) remain available via `EXTENDED` / `aspects_for_harmonics([5, 9, 10])` and are listed in the full 14-aspect table in the [API reference](api.md).
 
 ### Calculation Examples
 
