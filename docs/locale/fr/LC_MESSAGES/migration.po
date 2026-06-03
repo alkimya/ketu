@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-30 00:44+0200\n"
+"POT-Creation-Date: 2026-06-03 16:13+0200\n"
 "PO-Revision-Date: 2026-02-12 23:00+0100\n"
 "Last-Translator: Claude Code <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -40,8 +40,8 @@ msgid ""
 "Breaking Change: CHART_DTYPE body axis expanded from 13 to 14 bodies "
 "(D-08)"
 msgstr ""
-"Changement incompatible : l'axe des corps de CHART_DTYPE passe de 13 à "
-"14 corps (D-08)"
+"Changement incompatible : l'axe des corps de CHART_DTYPE passe de 13 à 14"
+" corps (D-08)"
 
 #: ../../source/migration.md:11
 msgid ""
@@ -157,11 +157,13 @@ msgstr ""
 
 #: ../../source/migration.md:58
 msgid ""
-"Valid date range: 1950–2050. Attempting to compute Chiron outside this "
-"range raises a `ValueError`."
+"Valid date range: 1900–2100 (expanded in v1.4). Out-of-range input is "
+"silently clamped to the nearest segment boundary — no `ValueError` is "
+"raised."
 msgstr ""
-"Plage de dates valide : 1950–2050. Tenter de calculer Chiron hors de "
-"cette plage lève une `ValueError`."
+"Plage de dates valide : 1900–2100 (étendue en v1.4). Toute entrée hors "
+"plage est silencieusement clampée à la limite de segment la plus proche — "
+"aucune `ValueError` n'est levée."
 
 #: ../../source/migration.md:62
 msgid "Upgrading from v1.1 to v1.2"
@@ -227,11 +229,16 @@ msgstr "Nouveau : Ensembles d'Aspects Configurables"
 
 #: ../../source/migration.md:131
 msgid ""
-"`calculate_aspects` now accepts an optional `aspects` parameter. Without "
-"it, behavior is unchanged (EXTENDED = all 14 aspects)."
+"`calculate_aspects` now accepts an optional `aspects` parameter. When "
+"introduced in v1.1 the default was `EXTENDED` (all 14 aspects). **As of "
+"v1.3 the library default is `TRADITIONAL`** (7 half-circle aspects); see "
+"[Aspects](concepts.md) for the preset table."
 msgstr ""
 "`calculate_aspects` accepte désormais un paramètre optionnel `aspects`. "
-"Sans lui, le comportement est inchangé (EXTENDED = 14 aspects au total)."
+"Lors de son introduction en v1.1, la valeur par défaut était `EXTENDED` "
+"(les 14 aspects). **À partir de v1.3, la valeur par défaut de la "
+"bibliothèque est `TRADITIONAL`** (7 aspects demi-cercle) ; voir "
+"[Aspects](concepts.md) pour le tableau des presets."
 
 #: ../../source/migration.md:143
 msgid "New: House Systems"
@@ -239,7 +246,9 @@ msgstr "Nouveau : Systèmes de Maisons"
 
 #: ../../source/migration.md:145
 msgid "`ketu.houses` is a new subpackage — no existing code is broken."
-msgstr "`ketu.houses` est un nouveau sous-paquet — aucun code existant n'est cassé."
+msgstr ""
+"`ketu.houses` est un nouveau sous-paquet — aucun code existant n'est "
+"cassé."
 
 #: ../../source/migration.md:158
 msgid "Import Path Corrections (if upgrading from pre-1.0)"
@@ -252,8 +261,8 @@ msgid ""
 "submodule imports:"
 msgstr ""
 "Si vous utilisiez l'ancien style `import ketu; ketu.long(...)` (qui n'a "
-"jamais été officiellement supporté comme API publique), passez aux imports "
-"de sous-modules corrects :"
+"jamais été officiellement supporté comme API publique), passez aux "
+"imports de sous-modules corrects :"
 
 #: ../../source/migration.md:174
 msgid "Upgrading from v0.4.0 to v1.0.0"
@@ -479,7 +488,9 @@ msgstr "Si vous rencontrez des problèmes :"
 
 #: ../../source/migration.md:291
 msgid "Review the [Changelog](changelog.md) for complete list of changes"
-msgstr "Consultez le [Changelog](changelog.md) pour la liste complète des changements"
+msgstr ""
+"Consultez le [Changelog](changelog.md) pour la liste complète des "
+"changements"
 
 #: ../../source/migration.md:292
 msgid "Open an [issue](https://github.com/alkimya/ketu/issues)"
@@ -805,4 +816,24 @@ msgstr "Ouvrez une [issue](https://github.com/alkimya/ketu/issues)"
 #~ msgstr ""
 #~ "Consultez [UPGRADING.md](../../UPGRADING.md) pour un"
 #~ " guide de migration détaillé"
+
+#~ msgid ""
+#~ "Valid date range: 1950–2050. Attempting "
+#~ "to compute Chiron outside this range "
+#~ "raises a `ValueError`."
+#~ msgstr ""
+#~ "Plage de dates valide : 1950–2050. "
+#~ "Tenter de calculer Chiron hors de "
+#~ "cette plage lève une `ValueError`."
+
+#~ msgid ""
+#~ "`calculate_aspects` now accepts an optional"
+#~ " `aspects` parameter. Without it, behavior"
+#~ " is unchanged (EXTENDED = all 14 "
+#~ "aspects)."
+#~ msgstr ""
+#~ "`calculate_aspects` accepte désormais un "
+#~ "paramètre optionnel `aspects`. Sans lui, "
+#~ "le comportement est inchangé (EXTENDED ="
+#~ " 14 aspects au total)."
 

@@ -94,7 +94,7 @@ The default framing uses the **half-circle base** (180°, the distance between c
 - Semi-sextile (30°): 1/6 of semi-circle
 - Quincunx (150°): 5/6 of semi-circle
 
-The full-circle minor harmonics — **H5** (quintiles), **H9** (noviles), **H10** (deciles) — are **available in code** but are not part of the default framing. They are opt-in via the `EXTENDED` preset or `aspects_for_harmonics([5, 9, 10])` (see [Configurable Aspect Sets](#configurable-aspect-sets-new-in-v11-updated-in-v13) below).
+The full-circle minor harmonics — **H5** (quintiles), **H9** (noviles), **H10** (deciles) — are **available in code** but are not part of the default framing. They are opt-in via the `EXTENDED` preset or `aspects_for_harmonics([5, 9, 10])` (see [Configurable Aspect Sets](#configurable-aspect-sets-new-in-v1-1-updated-in-v1-3) below).
 
 ### Summary Table
 
@@ -105,13 +105,14 @@ Harmonic | Division | Aspects
 3        | 180°/3   | Sextile (60°), Trine (120°)
 6        | 180°/6   | Semi-sextile (30°), Quincunx (150°)
 
-The table above lists the 7 default half-circle aspects (the TRADITIONAL preset). The full-circle minor aspects (H5/H9/H10) are available in code; see the note above and [Configurable Aspect Sets](#configurable-aspect-sets-new-in-v11-updated-in-v13).
+The table above lists the 7 default half-circle aspects (the TRADITIONAL preset). The full-circle minor aspects (H5/H9/H10) are available in code; see the note above and [Configurable Aspect Sets](#configurable-aspect-sets-new-in-v1-1-updated-in-v1-3).
 
 **Default aspect set (v1.3+):** the library default is the **7 half-circle aspects**
 (harmonics 1, 2, 3, 6 — TRADITIONAL preset): Conjunction, Semi-sextile, Sextile, Square,
 Trine, Quincunx, Opposition. The full-circle minor harmonics (H5/H9/H10) are **opt-in**
 and not included in the default.
 
+(configurable-aspect-sets-new-in-v1-1-updated-in-v1-3)=
 ### Configurable Aspect Sets (New in v1.1, updated in v1.3)
 
 Rather than always computing all 14 aspects, you can select a preset or pass a custom mask:

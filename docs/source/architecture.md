@@ -47,7 +47,7 @@ ketu/
 │
 ├── data/                # Embedded coefficient data (New in v1.3)
 │   └── chiron_coeffs.npz   # Chebyshev polynomial coefficients for Chiron,
-│                           #   1950–2050, seg=32 days, degree=10
+│                           #   1900–2100, seg=32 days, degree=10
 │
 └── ephemeris/           # Low-level astronomical calculations (pure NumPy)
     ├── __init__.py      # Ephemeris package API
@@ -192,7 +192,7 @@ New in v1.3. Private helpers — not part of the public API:
 - `_chiron_scalar(jd)` — evaluates Chebyshev polynomial for a single JD
 - `_chiron_vec(jd_array)` — vectorised batch evaluation
 
-Coefficients: 1142 segments, 32-day width, degree 10, three quantities (lon, lat, dist). Max error: 0.005695° over 1950–2050.
+Coefficients: 2283 segments, 32-day width, degree 10, three quantities (lon, lat, dist). Max error: 0.001214° over 1900–2100.
 
 ## Design Principles
 
@@ -268,7 +268,7 @@ Returns: scalar CHART_DTYPE array
 - Full chart computation
 - Aspect detection
 - Time conversions
-- Chiron accuracy pins (7 reference longitudes 1950–2050)
+- Chiron accuracy pins (reference longitudes spanning 1900–2100)
 
 ### Quality Gates (CI)
 

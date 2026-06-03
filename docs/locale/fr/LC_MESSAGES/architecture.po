@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-30 00:44+0200\n"
+"POT-Creation-Date: 2026-06-03 16:23+0200\n"
 "PO-Revision-Date: 2026-02-12 22:00+0100\n"
 "Last-Translator: Claude <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -50,9 +50,9 @@ msgid ""
 "isolation."
 msgstr ""
 "`pyswisseph` est utilisé **uniquement** dans l'outil de build hors-ligne "
-"(`tools/gen_chiron_coeffs.py`) pour générer les Coefficients de Chebyshev "
-"de Chiron. Il n'est jamais importé au runtime, ce qui maintient l'isolation "
-"AGPL."
+"(`tools/gen_chiron_coeffs.py`) pour générer les Coefficients de Chebyshev"
+" de Chiron. Il n'est jamais importé au runtime, ce qui maintient "
+"l'isolation AGPL."
 
 #: ../../source/architecture.md:74
 msgid "Core Components"
@@ -71,16 +71,16 @@ msgid ""
 "**`bodies`**: 14-element structured array (`name`, `id`, `orb`, `speed`)."
 " Index 13 = Chiron (New in v1.3)."
 msgstr ""
-"**`bodies`** : tableau structuré à 14 éléments (`name`, `id`, `orb`, `speed`). "
-"Index 13 = Chiron (Nouveau en v1.3)."
+"**`bodies`** : tableau structuré à 14 éléments (`name`, `id`, `orb`, "
+"`speed`). Index 13 = Chiron (Nouveau en v1.3)."
 
 #: ../../source/architecture.md:81
 msgid ""
 "**`aspects`**: 14-element array (`name`, `value`, `coef`) for all "
 "supported aspect angles."
 msgstr ""
-"**`aspects`** : tableau à 14 éléments (`name`, `value`, `coef`) pour tous "
-"les angles d'aspects supportés."
+"**`aspects`** : tableau à 14 éléments (`name`, `value`, `coef`) pour tous"
+" les angles d'aspects supportés."
 
 #: ../../source/architecture.md:82
 msgid "**`signs`**: list of 12 zodiac sign names."
@@ -124,7 +124,9 @@ msgstr "Détection d'aspects configurable (Nouveau en v1.1) :"
 
 #: ../../source/architecture.md:98
 msgid "`CLASSICAL / TRADITIONAL / EXTENDED` — boolean masks for preset sets"
-msgstr "`CLASSICAL / TRADITIONAL / EXTENDED` — masques booléens pour les ensembles prédéfinis"
+msgstr ""
+"`CLASSICAL / TRADITIONAL / EXTENDED` — masques booléens pour les "
+"ensembles prédéfinis"
 
 #: ../../source/architecture.md:99
 msgid ""
@@ -195,8 +197,8 @@ msgid ""
 "`CHART_DTYPE` — unified structured array: 14 body positions, 12 cusps, "
 "angles, 14×14 aspect matrix"
 msgstr ""
-"`CHART_DTYPE` — tableau structuré unifié : 14 positions de corps, 12 cuspides, "
-"angles, matrice d'aspects 14×14"
+"`CHART_DTYPE` — tableau structuré unifié : 14 positions de corps, 12 "
+"cuspides, angles, matrice d'aspects 14×14"
 
 #: ../../source/architecture.md:121
 msgid "Relational Charts (`ketu/synastry/`, `ketu/composite/`)"
@@ -220,7 +222,9 @@ msgstr "`calculate_composite(chart_a, chart_b, system)` → `CHART_DTYPE`"
 
 #: ../../source/architecture.md:127
 msgid "`circular_midpoint(lon_a, lon_b)` — shortest-arc midpoint utility"
-msgstr "`circular_midpoint(lon_a, lon_b)` — utilitaire de point médian par arc minimal"
+msgstr ""
+"`circular_midpoint(lon_a, lon_b)` — utilitaire de point médian par arc "
+"minimal"
 
 #: ../../source/architecture.md:129
 msgid "Predictive Charts (`ketu/returns/`)"
@@ -243,8 +247,8 @@ msgid ""
 "`lunar_return(natal_jd, …, target_jd)` — next Moon return after target "
 "date"
 msgstr ""
-"`lunar_return(natal_jd, …, target_jd)` — prochain retour de la Lune après "
-"la date cible"
+"`lunar_return(natal_jd, …, target_jd)` — prochain retour de la Lune après"
+" la date cible"
 
 #: ../../source/architecture.md:135
 msgid "Both return `CHART_DTYPE` for the return chart"
@@ -268,7 +272,9 @@ msgstr "Registre `PARTS` : `fortune`, `spirit`, `marriage`"
 
 #: ../../source/architecture.md:143
 msgid "`calculate_part(part_name, chart)` — sect-aware for Fortune/Spirit"
-msgstr "`calculate_part(part_name, chart)` — sensible à la secte pour Fortune/Spirit"
+msgstr ""
+"`calculate_part(part_name, chart)` — sensible à la secte pour "
+"Fortune/Spirit"
 
 #: ../../source/architecture.md:144
 msgid "`calculate_all_parts(chart, parts=None)` → `dict[str, float]`"
@@ -276,7 +282,9 @@ msgstr "`calculate_all_parts(chart, parts=None)` → `dict[str, float]`"
 
 #: ../../source/architecture.md:145
 msgid "Custom parts via `register(name, day_formula, night_formula, description)`"
-msgstr "Parts personnalisées via `register(name, day_formula, night_formula, description)`"
+msgstr ""
+"Parts personnalisées via `register(name, day_formula, night_formula, "
+"description)`"
 
 #: ../../source/architecture.md:147
 msgid "Ephemeris Package"
@@ -319,8 +327,8 @@ msgid ""
 "`_elements.py`: `ORBITAL_ELEMENTS` + Lilith constants (extracted in v1.2 "
 "to eliminate circular import risk)"
 msgstr ""
-"`_elements.py` : `ORBITAL_ELEMENTS` + constantes Lilith (extraites en v1.2 "
-"pour éliminer le risque d'import circulaire)"
+"`_elements.py` : `ORBITAL_ELEMENTS` + constantes Lilith (extraites en "
+"v1.2 pour éliminer le risque d'import circulaire)"
 
 #: ../../source/architecture.md:163
 msgid "`_perturbations.py`: `apply_perturbations` strategy"
@@ -360,7 +368,9 @@ msgstr "Coordonnées rectangulaires ↔ sphériques"
 
 #: ../../source/architecture.md:176
 msgid "Nutation + aberration corrections (applied inside body-vec functions)"
-msgstr "Corrections de nutation + aberration (appliquées dans les fonctions body-vec)"
+msgstr ""
+"Corrections de nutation + aberration (appliquées dans les fonctions body-"
+"vec)"
 
 #: ../../source/architecture.md:178
 msgid "Planetary Calculations (`ephemeris/planets.py`)"
@@ -375,12 +385,14 @@ msgid ""
 "`BODY_STRATEGIES` — dict mapping body_id → computation function; Chiron "
 "strategy added at index 13 (v1.3)"
 msgstr ""
-"`BODY_STRATEGIES` — dictionnaire associant body_id → fonction de calcul ; "
-"stratégie Chiron ajoutée à l'index 13 (v1.3)"
+"`BODY_STRATEGIES` — dictionnaire associant body_id → fonction de calcul ;"
+" stratégie Chiron ajoutée à l'index 13 (v1.3)"
 
 #: ../../source/architecture.md:183
 msgid "`calc_planet_position(jday, body)` — dispatches via strategy dict"
-msgstr "`calc_planet_position(jday, body)` — dispatch via le dictionnaire de stratégies"
+msgstr ""
+"`calc_planet_position(jday, body)` — dispatch via le dictionnaire de "
+"stratégies"
 
 #: ../../source/architecture.md:184
 msgid ""
@@ -395,8 +407,8 @@ msgid ""
 "`body_properties(jd, body)` — full 6-component vector (lon, lat, dist, "
 "velocities), LRU-cached"
 msgstr ""
-"`body_properties(jd, body)` — vecteur complet à 6 composantes (lon, lat, dist, "
-"vitesses), mis en Cache LRU"
+"`body_properties(jd, body)` — vecteur complet à 6 composantes (lon, lat, "
+"dist, vitesses), mis en Cache LRU"
 
 #: ../../source/architecture.md:187
 msgid "Chiron Evaluator (`ephemeris/chiron.py`)"
@@ -416,7 +428,9 @@ msgstr ""
 
 #: ../../source/architecture.md:192
 msgid "`_chiron_scalar(jd)` — evaluates Chebyshev polynomial for a single JD"
-msgstr "`_chiron_scalar(jd)` — évalue le polynôme de Chebyshev pour un Jour Julien unique"
+msgstr ""
+"`_chiron_scalar(jd)` — évalue le polynôme de Chebyshev pour un Jour "
+"Julien unique"
 
 #: ../../source/architecture.md:193
 msgid "`_chiron_vec(jd_array)` — vectorised batch evaluation"
@@ -424,11 +438,11 @@ msgstr "`_chiron_vec(jd_array)` — évaluation batch vectorisée"
 
 #: ../../source/architecture.md:195
 msgid ""
-"Coefficients: 1142 segments, 32-day width, degree 10, three quantities "
-"(lon, lat, dist). Max error: 0.005695° over 1950–2050."
+"Coefficients: 2283 segments, 32-day width, degree 10, three quantities "
+"(lon, lat, dist). Max error: 0.001214° over 1900–2100."
 msgstr ""
-"Coefficients : 1142 segments, largeur 32 jours, degré 10, trois quantités "
-"(lon, lat, dist). Erreur max : 0.005695° sur 1950–2050."
+"Coefficients : 2283 segments, largeur 32 jours, degré 10, trois quantités"
+" (lon, lat, dist). Erreur max : 0,001214° sur 1900–2100."
 
 #: ../../source/architecture.md:197
 msgid "Design Principles"
@@ -443,7 +457,8 @@ msgid ""
 "`ephemeris/`: pure astronomical calculations (no astrological "
 "interpretation)"
 msgstr ""
-"`ephemeris/` : calculs astronomiques purs (sans interprétation astrologique)"
+"`ephemeris/` : calculs astronomiques purs (sans interprétation "
+"astrologique)"
 
 #: ../../source/architecture.md:202
 msgid "`calculations.py`: astrological interpretation layer"
@@ -479,8 +494,8 @@ msgid ""
 "cache is the only shared state (clearable via "
 "`body_properties.cache_clear()`)."
 msgstr ""
-"Toutes les fonctions sont pures — mêmes entrées produisent toujours mêmes "
-"sorties. Le Cache LRU est le seul état partagé (effaçable via "
+"Toutes les fonctions sont pures — mêmes entrées produisent toujours mêmes"
+" sorties. Le Cache LRU est le seul état partagé (effaçable via "
 "`body_properties.cache_clear()`)."
 
 #: ../../source/architecture.md:214
@@ -492,8 +507,8 @@ msgid ""
 "Only NumPy is imported at runtime. pyswisseph is a test/build-only "
 "dependency (AGPL isolation)."
 msgstr ""
-"Seul NumPy est importé au runtime. pyswisseph est une dépendance test/build "
-"uniquement (isolation AGPL)."
+"Seul NumPy est importé au runtime. pyswisseph est une dépendance "
+"test/build uniquement (isolation AGPL)."
 
 #: ../../source/architecture.md:218
 msgid "100% Test Coverage"
@@ -556,8 +571,8 @@ msgid "Time conversions"
 msgstr "Conversions de temps"
 
 #: ../../source/architecture.md:271
-msgid "Chiron accuracy pins (7 reference longitudes 1950–2050)"
-msgstr "Épingles de précision Chiron (7 longitudes de référence 1950–2050)"
+msgid "Chiron accuracy pins (reference longitudes spanning 1900–2100)"
+msgstr "Épingles de précision Chiron (longitudes de référence couvrant 1900–2100)"
 
 #: ../../source/architecture.md:273
 msgid "Quality Gates (CI)"
@@ -572,8 +587,8 @@ msgid ""
 "**Coverage**: 100% (`fail_under=100`, zero pragma, `exclude_lines` for "
 "proven dead branches)"
 msgstr ""
-"**Couverture** : 100% (`fail_under=100`, zéro pragma, `exclude_lines` pour "
-"les branches mortes prouvées)"
+"**Couverture** : 100% (`fail_under=100`, zéro pragma, `exclude_lines` "
+"pour les branches mortes prouvées)"
 
 #: ../../source/architecture.md:277
 msgid "**mypy strict**: zero errors across all subpackages"
@@ -588,8 +603,8 @@ msgid ""
 "**doctests**: 56+ inline examples verified via `pytest --doctest-modules "
 "ketu/`"
 msgstr ""
-"**doctests** : 56+ exemples inline vérifiés via `pytest --doctest-modules "
-"ketu/`"
+"**doctests** : 56+ exemples inline vérifiés via `pytest --doctest-modules"
+" ketu/`"
 
 #~ msgid "Chart Visualization (chart.py)"
 #~ msgstr "### Calculs (calculations.py)"
