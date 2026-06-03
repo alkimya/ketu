@@ -9,8 +9,8 @@ progress:
   total_phases: 5
   completed_phases: 0
   total_plans: 15
-  completed_plans: 1
-  percent: 7
+  completed_plans: 3
+  percent: 20
 ---
 
 # Project State
@@ -25,11 +25,11 @@ See: `.planning/PROJECT.md` (updated 2026-06-02 — milestone v1.4 started)
 ## Current Position
 
 Phase: 28-dynamic-harmonic-generator
-Plan: 28-01 complete — ready for 28-02
+Plan: 28-03 complete — 28-02 in parallel (Wave 2 running)
 Status: In progress
-Last activity: 2026-06-03 — Phase 28 Plan 01 complete (dynamic harmonic generator)
+Last activity: 2026-06-03 — Phase 28 Plans 01+03 complete (dynamic harmonic generator + synastry/cycles integration)
 
-Progress: [█░░░░░░░░░░░░░] 7% — 1/15 plans complete (28-01 done)
+Progress: [███░░░░░░░░░░░] 20% — 3/15 plans complete (28-01, 28-03 done; 28-02 in progress)
 
 ## v1.4 Roadmap Structure
 
@@ -74,6 +74,9 @@ Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 - [Phase 28-01]: `DynamicAspectSpec = Optional[Union[NDArray, List[NDArray]]]` — type alias for `dynamic_specs=` parameter across all consumers (calculator, synastry, cycles). Plans 02/03 import from `ketu.aspects.harmonics`.
 - [Phase 28-01]: `HARMONIC_DTYPE` mirrors `core.aspects.dtype` exactly (5 fields S16/f4/f4/i4/U4). Consumers need no dtype conversion. H-names stored as bytes (S16 field).
 - [Phase 28-01]: `_fold_to_0_180` is the canonical fold; all consumers must import from `ketu.aspects.harmonics`, not reimplement.
+- [Phase 28-03]: `aspect_type=-2` sentinel for dynamic synastry rows; filtered-mode predicate changed to `!= -1` (keeps -2, drops -1).
+- [Phase 28-03]: Cycles full-circle expansion: generator emits folded [0,180]; mirror `360-theta` added for waning detection (not 0/180 poles). `dynamic_specs=None` path byte-identical via `effective_*` variables.
+- [Phase 28-03]: Empty list `dynamic_specs=[]` falls back silently to static candidate set (no crash, no extension).
 
 ### Roadmap Evolution
 
@@ -91,6 +94,6 @@ None at roadmap time.
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Phase 28-01 complete. `generate_harmonic_aspects(h)` module shipped: `ketu/aspects/harmonics.py` + 96-test suite + public exports in `ketu/aspects/__init__.py`. 1495 tests green, 100% coverage, numpydoc and doctest gates pass.
-Stopped at: Completed 28-01-PLAN.md.
-Resume file: None — continue with 28-02-PLAN.md (calculator/synastry `dynamic_specs=` integration).
+Last session: 2026-06-03 — Phase 28-01 + 28-03 complete. Wave 2 (28-02 + 28-03) ran in parallel. Plan 28-03: `dynamic_specs=` wired into `calculate_synastry` (aspect_type=-2 rows) and `generate_cycle_series`/`generate_multi_cycle_series` (extended nearest-aspect candidate set). 14 new tests in `tests/test_dynamic_synastry_cycles.py`. 1528 tests green, 100% coverage on modified files, numpydoc and doctest gates pass.
+Stopped at: Completed 28-03-PLAN.md.
+Resume file: None — 28-02 still in parallel; after 28-02 complete, Phase 28 is done.
