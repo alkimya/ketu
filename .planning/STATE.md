@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Lunar Declination & Harmonics Debt
 status: in-progress
-last_updated: "2026-06-03T20:45:51Z"
+last_updated: "2026-06-03T21:00:00Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 3
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 8
-  completed_plans: 7
-  percent: 56
+  completed_plans: 8
+  percent: 67
 ---
 
 # Project State
