@@ -81,6 +81,7 @@ Full log in PROJECT.md Key Decisions table. Key v1.3 → v1.4 carry-forwards:
 - [Phase 28-02]: Two unreachable defensive fallback branches in `find_aspects_between_dates` name resolution marked `pragma: no cover` — `find_all_aspects` only returns angles from the search list, so lookups always succeed for well-formed calls.
 - [Phase 28-02]: `_normalize_dynamic_specs` centralises None/single/list normalization — imported/reused by all calculator consumers (not reimplemented per-function).
 - [Phase 29-01]: Chiron natal orb=4° (Pluto parity); single literal in `core.bodies['orb'][13]`; `_BODY_ORBS_16` rebuilds from it at import — no second source patched. CLI fixture audited: exactly 2 added lines (Sun-Chiron + Moon-Chiron Semi-sextile), 0 removed. orbs.py docstring already correct (no Chiron in zero-orb group).
+- [Phase 30-01]: Chiron range 1900-2100 spike: max|delta-lon|=0.001214 deg, params seg=32d/degree=10, gate PASS < 0.01 deg; new .npz = 2283 segs, jd_start=2415020.5, jd_end=2488069.5. Dense 1900-1910 edge: segs 0-10 max 0.000013 deg (worst 1900 seg 0.000005 deg). Worst case 1926-04-18 (seg 300, JD 2424624.04). Ephemeral spike thrown away (spike-only). Plan 30-02 regenerates with degree=10.
 
 ### Roadmap Evolution
 

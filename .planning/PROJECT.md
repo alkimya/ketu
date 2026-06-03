@@ -195,6 +195,7 @@ v1.3 embedded Chiron as the 14th body (Chebyshev-by-segment coefficients in an e
 | v1.3 stays `1.3.0` despite breaking the 13→14 body freeze | Ketu is the source-of-truth library; Kala adapts to Ketu, not vice-versa. Public Ketu API stays additive; the broken contract is the internal Ketu↔Kala positional array | — Pending (v1.3) |
 | Chiron via embedded Chebyshev coeffs, NOT swisseph runtime | Preserves pure-NumPy runtime + AGPL isolation; offline pyswisseph generator is build-only → `.npz` in package, eval is 100% NumPy | — Pending (v1.3) |
 | Refactor ephemeris BEFORE adding Chiron | Chiron adds a branch to the fragile `calc_planet_position` if-elif; refactoring first makes Chiron a clean strategy, not aggravated debt | — Pending (v1.3) |
+| [Phase 30-01] Chiron range 1900–2100 spike: degree=10, seg=32d, max delta-lon=0.001214 deg (gate < 0.01 deg) | Perihelion ~1895–96 just below 1900 bound; dense 1900–1910 edge sampling confirms uniform-param fit holds (segs 0–10 max 0.000013 deg); worst case at 1926-04-18 (seg 300) | degree kept at 10 (v1.4) |
 
 ## Evolution
 
