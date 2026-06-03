@@ -55,7 +55,7 @@ chiron_lon = long(jd, 13)   # Chiron longitude
 chiron_lat = lat(jd, 13)    # Chiron latitude
 ```
 
-Valid date range: 1950–2050. Attempting to compute Chiron outside this range raises a `ValueError`.
+Valid date range: 1900–2100 (expanded in v1.4). Out-of-range input is silently clamped to the nearest segment boundary — no `ValueError` is raised.
 
 ---
 
