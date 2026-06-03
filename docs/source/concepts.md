@@ -193,6 +193,36 @@ The returned array is a drop-in for `core.aspects` (same dtype) and is passed as
 > for the same body pair. This is **accepted behaviour**: the two conventions coexist without
 > unification (see the v1.4 release notes).
 
+(synthetic-harmonic-naming)=
+### Synthetic harmonic naming (H{h}-{k})
+
+Ketu uses two distinct channels for harmonic aspects, and they follow different naming rules.
+
+**GENERATOR channel** — `generate_harmonic_aspects(h)` always emits `H{h}-{k}` names
+(k = 1..h//2), uniform and mechanical, with no traditional-name substitution.
+The emitted `name` bytes are always `b'H{h}-{k}'` (S16 dtype), frozen across v1.5+
+minor and patch releases.
+
+**DETECTION channel** — when `calculate_aspects` or `find_aspects_between_dates` detects
+an angle that collides with a canonical table aspect, they report the canonical table name
+with static-first priority.  For example, a 120° hit is reported as `Trine` (i_asp=9),
+not `H3-1` (i_asp=-2).  The `H{h}-{k}` label only appears in result rows for
+genuinely off-table angles (i_asp=-2 sentinel).
+
+**Traditional-name reference table** (documentation only — never emitted by the generator):
+
+Synthetic name | Traditional name
+---------------|------------------
+H5-1           | Quintile
+H5-2           | Biquintile
+H7-1           | Septile
+H9-1           | Novile
+H9-2           | Binovile
+H9-4           | Quadnovile
+
+These traditional names are provided here as a human reference only.  They never appear
+in the structured-array `name` bytes emitted by `generate_harmonic_aspects`.
+
 ## Orbs
 
 ### Orb Principle

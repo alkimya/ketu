@@ -345,6 +345,13 @@ result = calculate_aspects(jd, dynamic_specs=generate_harmonic_aspects(7))
 ```
 
 > **Note on orbs:** Dynamic harmonic orbs use `coef = k / h` (full-circle convention). For high harmonics this yields orbs roughly half the size of the equivalent half-circle aspect — accepted behaviour; the two conventions coexist without unification (see the v1.4 release notes).
+>
+> **Naming contract (v1.5+):** The emitted `name` bytes are **always** `b'H{h}-{k}'`
+> (S16 dtype), for k = 1..h//2 in ascending order. This `(h, k) → (name, angle, coef)`
+> mapping is **frozen** across v1.5+ minor and patch releases — no traditional-name
+> substitution is ever performed by the generator. See
+> {ref}`synthetic-harmonic-naming` in Concepts for the full GENERATOR vs. DETECTION
+> channel explanation and the traditional-name reference table.
 
 ### `core.aspects` columns: `harmonic` and `symbol`
 
