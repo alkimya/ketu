@@ -1,0 +1,31 @@
+
+
+------------- Bodies Positions -------------
+Sun       : Capricorn      10º22'22"
+Moon      : Scorpio        12º48'56"
+Mercury   : Capricorn       1º53'44"
+Venus     : Sagittarius     1º34' 7"
+Mars      : Aquarius       27º57'30"
+Jupiter   : Aries          25º16'54"
+Saturn    : Taurus         10º25'42", R
+Uranus    : Aquarius       14º47'59"
+Neptune   : Aquarius        3º11' 8"
+Pluto     : Sagittarius    11º26'56"
+Rahu      : Leo             5º 7'41", R
+Ketu      : Aquarius        5º 7' 3", R
+Lilith    : Sagittarius    23º27'41"
+Chiron    : Sagittarius    11º36'45"
+
+
+------------- Bodies Aspects -------------
+Sun     - Jupiter     : H7-2         -3º56'53"
+Sun     - Rahu        : H7-3         -1º 2'27"
+Moon    - Mars        : H7-2         -3º42'51"
+Uranus  - Lilith      : H7-1          0º 5'24"
+Neptune - Pluto       : H7-1         -1º41'30"
+Neptune - Chiron      : H7-1         -1º51'19"
+
+------------- Aspect Timing Example -------------
+Sun Trine Moon at 1999-12-18 10:24:22+00:00
+Sun Sextile Moon at 2000-01-12 01:41:15+00:00
+Sun Square Moon at 2000-01-14 13:11:43+00:00
