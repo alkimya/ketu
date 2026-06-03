@@ -10,6 +10,7 @@ from datetime import datetime
 from typing import Union, List, Optional, Tuple
 import numpy as np
 
+from ketu.aspects.harmonics import DynamicAspectSpec
 from ketu.core import bodies
 from ketu.calculations import long, long_velocity, utc_to_julian, distance
 from ketu.ephemeris.planets import calc_planet_position_batch
@@ -139,6 +140,7 @@ def generate_cycle_series(
     include_aspects: bool = True,
     use_cache: bool = True,
     cache: Optional["EphemerisCache"] = None,
+    dynamic_specs: DynamicAspectSpec = None,
 ) -> np.ndarray:
     """
     Generate cycle state series for a planetary pair.
@@ -160,6 +162,17 @@ def generate_cycle_series(
         Use EphemerisCache for faster lookups (default: True).
     cache : EphemerisCache, optional
         Optional EphemerisCache instance (uses default if None).
+    dynamic_specs : DynamicAspectSpec, optional
+        Dynamic aspect specs from
+        :func:`ketu.aspects.harmonics.generate_harmonic_aspects` (or a list
+        of such arrays). When provided, dynamic angles are added to the
+        nearest-aspect candidate set (MAJOR_ASPECTS extended with the dynamic
+        angles and their full-circle mirrors). ``nearest_aspect``, ``in_aspect``,
+        and ``aspect_orb`` fields reflect the extended candidate set. The
+        generator emits folded angles in ``[0°, 180°]``; for each dynamic angle
+        ``θ`` the waning mirror ``360° - θ`` is also added (when ``θ != 0°/180°``)
+        so both sides of the cycle are detectable. When ``None`` (default), output
+        is byte-identical to the no-argument call (purely additive change).
 
     Returns
     -------
@@ -279,39 +292,85 @@ def generate_cycle_series(
     
     # 4. Aspect Proximity (Vectorized Complex)
     if include_aspects:
-        # Calculate angular distance to each aspect in radians
-        # angle(z_ratio / z_aspect) gives signed distance in (-π, π]
-        # MAJOR_ASPECTS_Z is broadcasted
-        dist_matrix_rad = np.angle(z_ratios[:, np.newaxis] / MAJOR_ASPECTS_Z[np.newaxis, :])
-        dist_matrix_deg = np.rad2deg(dist_matrix_rad)
-        
-        # Find index of aspect with minimum absolute distance
-        nearest_indices = np.argmin(np.abs(dist_matrix_deg), axis=1)
-        
-        # Select the values
-        nearest_aspects = MAJOR_ASPECTS[nearest_indices]
-        result['nearest_aspect'] = np.where(nearest_aspects == 360, 0, nearest_aspects)
-        
-        # Signed distances corresponding to nearest aspects
-        # Flattening index approach for performance
-        n_samples = len(z_ratios)
-        flat_indices = nearest_indices + np.arange(n_samples) * len(MAJOR_ASPECTS)
-        result['aspect_distance'] = dist_matrix_deg.ravel()[flat_indices]
-        
-        # 5. Calculate Orbs Vectorized
-        orb1 = float(bodies["orb"][body1_id])
-        orb2 = float(bodies["orb"][body2_id])
-        avg_orb = (orb1 + orb2) / 2
-        
-        # Coefficients based on MAJOR_ASPECTS indices
+        # Coefficients for MAJOR_ASPECTS:
         # [0, 60, 90, 120, 180, 240, 270, 300, 360]
         #  C   S   Sq  As   Op   Wn   Wn   S    C
         #  1  .5  .75 .75   1   .75  .75  .5    1
         COEFFS = np.array([1.0, 0.5, 0.75, 0.75, 1.0, 0.75, 0.75, 0.5, 1.0], dtype=np.float32)
-        orb_coeffs = COEFFS[nearest_indices]
-        
+
+        # Build the EFFECTIVE aspect candidate set (MAJOR_ASPECTS + optional dynamic angles).
+        if dynamic_specs is None:
+            # None path: byte-identical to before (Pitfall 7 — no recomputation).
+            effective_aspects = MAJOR_ASPECTS
+            effective_aspects_z = MAJOR_ASPECTS_Z
+            effective_coeffs = COEFFS
+        else:
+            # Normalize list-of-arrays to a single array.
+            if isinstance(dynamic_specs, list):
+                dyn_arr = np.concatenate(dynamic_specs) if dynamic_specs else None
+            else:
+                dyn_arr = dynamic_specs
+
+            if dyn_arr is not None and len(dyn_arr) > 0:
+                # Build full-circle dynamic angles: generator emits folded [0,180];
+                # for cycles we need both sides (waxing and waning detection).
+                dyn_angles_list = []
+                dyn_coeffs_list = []
+                for row in dyn_arr:
+                    theta = float(row["angle"])
+                    coef = float(row["coef"])
+                    dyn_angles_list.append(theta)
+                    dyn_coeffs_list.append(coef)
+                    # Mirror: 360 - theta (skip if theta == 0 or 180, i.e. poles)
+                    if abs(theta) > 0.01 and abs(theta - 180.0) > 0.01:
+                        dyn_angles_list.append(360.0 - theta)
+                        dyn_coeffs_list.append(coef)
+
+                dyn_angles_fc = np.array(dyn_angles_list, dtype=np.float32)
+                dyn_coeffs_fc = np.array(dyn_coeffs_list, dtype=np.float32)
+
+                effective_aspects = np.concatenate(
+                    [MAJOR_ASPECTS, dyn_angles_fc]
+                ).astype(np.float32)
+                effective_coeffs = np.concatenate(
+                    [COEFFS, dyn_coeffs_fc]
+                ).astype(np.float32)
+                effective_aspects_z = degrees_to_complex(effective_aspects)
+            else:
+                # Empty dynamic_specs — fall back to static.
+                effective_aspects = MAJOR_ASPECTS
+                effective_aspects_z = MAJOR_ASPECTS_Z
+                effective_coeffs = COEFFS
+
+        # Calculate angular distance to each aspect in radians
+        # angle(z_ratio / z_aspect) gives signed distance in (-π, π]
+        dist_matrix_rad = np.angle(
+            z_ratios[:, np.newaxis] / effective_aspects_z[np.newaxis, :]
+        )
+        dist_matrix_deg = np.rad2deg(dist_matrix_rad)
+
+        # Find index of aspect with minimum absolute distance
+        nearest_indices = np.argmin(np.abs(dist_matrix_deg), axis=1)
+
+        # Select the values
+        nearest_aspects = effective_aspects[nearest_indices]
+        result['nearest_aspect'] = np.where(nearest_aspects == 360, 0, nearest_aspects)
+
+        # Signed distances corresponding to nearest aspects
+        # Flattening index approach for performance
+        n_samples = len(z_ratios)
+        flat_indices = nearest_indices + np.arange(n_samples) * len(effective_aspects)
+        result['aspect_distance'] = dist_matrix_deg.ravel()[flat_indices]
+
+        # 5. Calculate Orbs Vectorized
+        orb1 = float(bodies["orb"][body1_id])
+        orb2 = float(bodies["orb"][body2_id])
+        avg_orb = (orb1 + orb2) / 2
+
+        orb_coeffs = effective_coeffs[nearest_indices]
+
         current_orbs = avg_orb * orb_coeffs
-        
+
         # Check in_aspect
         in_aspect = np.abs(result['aspect_distance']) <= current_orbs
         result['in_aspect'] = in_aspect
@@ -326,6 +385,7 @@ def generate_multi_cycle_series(
     include_aspects: bool = True,
     use_cache: bool = True,
     cache: Optional["EphemerisCache"] = None,
+    dynamic_specs: DynamicAspectSpec = None,
 ) -> dict:
     """
     Generate cycle series for multiple planetary pairs.
@@ -342,6 +402,11 @@ def generate_multi_cycle_series(
         Use EphemerisCache for faster lookups (default: True).
     cache : EphemerisCache, optional
         Optional EphemerisCache instance (uses default if None).
+    dynamic_specs : DynamicAspectSpec, optional
+        Dynamic aspect specs forwarded to each
+        :func:`generate_cycle_series` call. See
+        :func:`generate_cycle_series` for details.  Default ``None``
+        disables dynamic detection for all pairs.
 
     Returns
     -------
@@ -376,10 +441,11 @@ def generate_multi_cycle_series(
 
         pair_name = f"{name1}-{name2}"
 
-        # Generate cycle series
+        # Generate cycle series, forwarding dynamic_specs.
         result[pair_name] = generate_cycle_series(
             body1, body2, timestamps, include_aspects,
-            use_cache=use_cache, cache=cache
+            use_cache=use_cache, cache=cache,
+            dynamic_specs=dynamic_specs,
         )
 
     return result

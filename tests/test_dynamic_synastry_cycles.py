@@ -339,3 +339,30 @@ class TestCycleDynamicSpecs:
         explicit = generate_cycle_series("Sun", "Mars", ts, dynamic_specs=None)
         np.testing.assert_array_equal(base["nearest_aspect"], explicit["nearest_aspect"])
         np.testing.assert_array_equal(base["in_aspect"], explicit["in_aspect"])
+
+    def test_cycles_empty_list_falls_back_to_static(self):
+        """
+        dynamic_specs=[] (empty list) falls back to static candidate set,
+        producing the same result as dynamic_specs=None.
+        """
+        ts = [datetime(2025, 6, 1) + timedelta(days=i) for i in range(30)]
+        base = generate_cycle_series("Sun", "Mars", ts, dynamic_specs=None)
+        empty = generate_cycle_series("Sun", "Mars", ts, dynamic_specs=[])
+        np.testing.assert_array_equal(base["nearest_aspect"], empty["nearest_aspect"])
+        np.testing.assert_array_equal(base["in_aspect"], empty["in_aspect"])
+
+    def test_cycles_single_element_list_of_specs(self):
+        """
+        dynamic_specs=[specs] (list of one array) is equivalent to passing
+        the array directly — the list normalisation path is covered.
+        """
+        ts = [datetime(2025, 1, 1) + timedelta(days=i) for i in range(30)]
+        specs = generate_harmonic_aspects(7)
+        result_direct = generate_cycle_series("Sun", "Moon", ts, dynamic_specs=specs)
+        result_list = generate_cycle_series("Sun", "Moon", ts, dynamic_specs=[specs])
+        np.testing.assert_array_equal(
+            result_direct["nearest_aspect"], result_list["nearest_aspect"]
+        )
+        np.testing.assert_array_equal(
+            result_direct["in_aspect"], result_list["in_aspect"]
+        )
