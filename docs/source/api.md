@@ -751,8 +751,8 @@ Chiron is the 14th body added in v1.3. There is no separate Chiron module in the
 **Key facts:**
 
 - `ketu.bodies["name"][13] == b"Chiron"`
-- Valid date range: 1950–2050 (Chebyshev polynomial coefficients embedded in `ketu/data/chiron_coeffs.npz`)
-- Accuracy: max error 0.005695° (sub-arcminute) over the 1950–2050 range
+- Valid date range: 1900–2100 (expanded in v1.4; 2283 Chebyshev segments embedded in `ketu/data/chiron_coeffs.npz`). Out-of-range input is silently clamped to the nearest segment boundary.
+- Accuracy: max error 0.001214° (sub-arcminute) over the 1900–2100 range
 - `CHART_DTYPE` body arrays are 14-wide; index 13 always refers to Chiron
 
 **Breaking change (v1.2 → v1.3):** The `CHART_DTYPE` body axis expanded from 13 to 14 bodies (D-08). Code that accessed bodies by fixed count or hardcoded index 12 as the last body must be updated. See [Migration](migration.md) for details.
