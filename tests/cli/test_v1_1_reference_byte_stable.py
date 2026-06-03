@@ -212,3 +212,159 @@ class TestV1_1ReferenceByteStable:
             "Fixture contains U+00B0 `°` degree-sign characters; "
             "the v1.x convention is U+00BA `º` MASCULINE ORDINAL INDICATOR"
         )
+
+
+FIXTURE_H7 = Path(__file__).parent / "fixtures" / "harmonics_h7_reference_output.txt"
+REFERENCE_ARGV_H7 = [
+    sys.executable,
+    "-m",
+    "ketu",
+    "--harmonics",
+    "h7",
+    "aspects",
+    "--date",
+    REFERENCE_DATE,
+]
+
+
+class TestHarmonicsH7ByteStable:
+    """CLI-03 sibling: --harmonics h7 stdout is byte-identical to the h7 fixture.
+
+    Pins the septile-family harmonic output as a self-stable forward contract.
+    The ``--harmonics h7`` surface (Tight-grammar form, F1 deliverable) was
+    introduced in v1.5 (HARM-06/08). This class:
+
+    - Verifies the fixture file is committed and non-empty.
+    - Asserts stdout is byte-for-byte identical to the pinned fixture.
+    - Confirms the resolved-config header appears on stderr (not stdout).
+    - Confirms stderr contains only ``#``-prefixed lines (no leaks).
+    - Asserts synthetic ``H7-k`` names are present, ``Quadrinovile`` absent.
+    - Asserts the classical "Aspect Timing Example" trailing block is present.
+
+    The existing ``TestV1_1ReferenceByteStable`` class and its fixture are
+    UNCHANGED — this class is purely additive.
+    """
+
+    def test_fixture_exists_and_nonempty(self) -> None:
+        """Sanity: the h7 fixture file is committed and has content."""
+        assert FIXTURE_H7.exists(), f"Fixture missing: {FIXTURE_H7}"
+        assert FIXTURE_H7.stat().st_size > 200, (
+            f"Fixture suspiciously small: {FIXTURE_H7.stat().st_size} bytes"
+        )
+
+    def test_h7_byte_identical_to_fixture(self) -> None:
+        """Run ``python -m ketu --harmonics h7 aspects --date 2000-01-01T12:00:00Z``
+        and assert stdout matches the pinned h7 fixture byte-for-byte.
+        """
+        expected = FIXTURE_H7.read_bytes()
+
+        result = subprocess.run(
+            REFERENCE_ARGV_H7,
+            capture_output=True,
+            check=False,
+            timeout=60,
+        )
+
+        if result.returncode != 0:
+            pytest.fail(
+                f"`python -m ketu --harmonics h7 aspects --date {REFERENCE_DATE}` "
+                f"exited with code {result.returncode}.\n"
+                f"stderr: {result.stderr.decode(errors='replace')!r}"
+            )
+
+        if result.stdout != expected:
+            actual = result.stdout
+            actual_text = actual.decode(errors="replace")
+            expected_text = expected.decode(errors="replace")
+            diff = "\n".join(
+                difflib.unified_diff(
+                    expected_text.splitlines(),
+                    actual_text.splitlines(),
+                    fromfile="harmonics_h7_reference_output.txt (expected)",
+                    tofile="current --harmonics h7 stdout (actual)",
+                    lineterm="",
+                )
+            )
+            pytest.fail(
+                "CLI-03-h7 self-stable forward contract: --harmonics h7 stdout "
+                "drifted from the pinned h7 fixture.\n\n"
+                "Common causes of drift:\n"
+                "  - emit_resolved_config leaked '# ' lines to stdout\n"
+                "  - 'Aspect Timing Example' trailing block missing or reformatted\n"
+                "  - Dynamic aspect name changed (H7-k naming contract frozen)\n"
+                "  - Degree-symbol flipped: U+00BA `º` vs U+00B0 `°`\n"
+                "  - Orb/angle formatting changed\n\n"
+                "If the drift is INTENTIONAL, regenerate the fixture:\n"
+                f"  python -m ketu --harmonics h7 aspects --date {REFERENCE_DATE} "
+                f"> {FIXTURE_H7}\n"
+                "and audit+document the change in the release notes.\n\n"
+                f"Unified diff:\n{diff}"
+            )
+
+    def test_h7_stderr_contains_h7_header(self) -> None:
+        """The resolved-config header ``# Aspect set: h7`` must appear on stderr."""
+        result = subprocess.run(
+            REFERENCE_ARGV_H7,
+            capture_output=True,
+            check=False,
+            timeout=60,
+        )
+        assert result.returncode == 0, (
+            f"CLI exited non-zero (rc={result.returncode}); "
+            f"stderr={result.stderr!r}"
+        )
+        stderr = result.stderr.decode()
+        assert "# Aspect set: h7" in stderr, (
+            f"Expected '# Aspect set: h7' on stderr; got stderr={stderr[:500]!r}"
+        )
+
+    def test_h7_stderr_structurally_clean(self) -> None:
+        """Every non-empty stderr line must start with ``#`` (no leaks to stderr)."""
+        result = subprocess.run(
+            REFERENCE_ARGV_H7,
+            capture_output=True,
+            check=False,
+            timeout=60,
+        )
+        assert result.returncode == 0, (
+            f"CLI exited non-zero (rc={result.returncode}); "
+            f"stderr={result.stderr!r}"
+        )
+        stderr_text = result.stderr.decode()
+        for line in stderr_text.splitlines():
+            stripped = line.strip()
+            if not stripped:
+                continue
+            assert stripped.startswith("#"), (
+                f"Non-comment line leaked to stderr: {line!r}\n"
+                f"Full stderr:\n{stderr_text}"
+            )
+
+    def test_h7_shows_synthetic_names_not_quadrinovile(self) -> None:
+        """Stdout must contain ``H7-`` synthetic names and never ``Quadrinovile``."""
+        result = subprocess.run(
+            REFERENCE_ARGV_H7,
+            capture_output=True,
+            check=False,
+            timeout=60,
+        )
+        assert result.returncode == 0
+        assert b"H7-" in result.stdout, (
+            "No H7-k synthetic name found in stdout; expected septile aspects"
+        )
+        assert b"Quadrinovile" not in result.stdout, (
+            "Pre-fix bug: 'Quadrinovile' found in stdout instead of H7-k names"
+        )
+
+    def test_h7_timing_example_block_present(self) -> None:
+        """The classical 'Aspect Timing Example' trailing block must always be present."""
+        result = subprocess.run(
+            REFERENCE_ARGV_H7,
+            capture_output=True,
+            check=False,
+            timeout=60,
+        )
+        assert result.returncode == 0
+        assert b"Aspect Timing Example" in result.stdout, (
+            "The classical 'Aspect Timing Example' block is missing from stdout"
+        )
