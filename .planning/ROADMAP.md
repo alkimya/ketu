@@ -114,7 +114,10 @@ Full details archived to `.planning/milestones/v1.3-ROADMAP.md`.
   2. The byte-stable CLI fixture `tests/cli/fixtures/v1_1_reference_output.txt` is regenerated and manually audited: every new or changed Chiron aspect line is confirmed correct via `git diff` inspection before committing (not blindly accepted).
   3. Synastry test files (`test_modes_idempotent.py`, `test_orbs.py`) no longer group Chiron with the zero-orb points (Rahu/Ketu/Lilith); a new explicit test pins Chiron orb = 4° in synastry (`_BODY_ORBS_16` entry for Chiron is 4°).
 
-**Plans**: TBD
+**Plans**: 1 plan
+
+Plans:
+- [ ] 29-01-PLAN.md — Set Chiron orb=4 in core.py (single source), regenerate + audit CLI fixture, fix synastry docstrings + add Chiron orb=4 pinning test
 
 #### Phase 30: Chiron Range 1900–2100
 
