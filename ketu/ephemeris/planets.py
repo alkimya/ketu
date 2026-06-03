@@ -9,9 +9,8 @@ import numpy as np
 from typing import Callable, Dict, NamedTuple, Optional
 from functools import lru_cache
 
-from .time import utc_to_julian, terrestrial_to_universal
+from ..core import bodies
 from .orbital import (
-    ORBITAL_ELEMENTS,
     _LILITH_MEAN_RATE_DEG_PER_DAY,
     get_body_position,
     get_moon_position,
@@ -23,11 +22,7 @@ from .orbital import (
 from .chiron import _chiron_scalar, _chiron_vec
 from .coordinates import (
     heliocentric_to_geocentric,
-    ecliptic_to_equatorial,
     rectangular_to_spherical,
-    spherical_to_rectangular,
-    mean_obliquity,
-    true_obliquity,
     aberration_correction,
 )
 
@@ -516,7 +511,13 @@ def find_exact_aspect(
     return (jd_left + jd_right) / 2
 
 
-def find_all_aspects(jd_start: float, jd_end: float, body1_id: int, body2_id: int, aspects: list = []) -> list:
+def find_all_aspects(
+    jd_start: float,
+    jd_end: float,
+    body1_id: int,
+    body2_id: int,
+    aspects: Optional[list] = None,
+) -> list:
     """
     Find all aspects between two bodies in time range.
 
@@ -538,7 +539,7 @@ def find_all_aspects(jd_start: float, jd_end: float, body1_id: int, body2_id: in
     list of tuple
         List of tuples (jd, aspect_angle).
     """
-    if aspects == []:
+    if not aspects:
         aspects = [0, 30, 60, 90, 120, 150, 180]  # Major aspects
 
     results = []
@@ -579,28 +580,11 @@ def calculate_speed_ratio(jd: float, body_id: int) -> float:
     pos = calc_planet_position(jd, body_id)
     current_speed = pos[3]  # Longitude speed
 
-    # Average speeds for bodies (degrees per day)
-    avg_speeds = {
-        0: 0.985647,  # Sun
-        1: 13.176389,  # Moon
-        2: 1.383333,  # Mercury
-        3: 1.2,  # Venus
-        4: 0.524167,  # Mars
-        5: 0.083056,  # Jupiter
-        6: 0.033611,  # Saturn
-        7: 0.011667,  # Uranus
-        8: 0.006944,  # Neptune
-        9: 0.004167,  # Pluto
-        10: -0.052954,  # Mean Node
-        11: -0.052954,  # True Node
-        12: round(_LILITH_MEAN_RATE_DEG_PER_DAY, 6),  # Lilith (matches orbital.py rate)
-        13: 0.01946,  # Chiron mean motion ≈ 360 / (50.7yr * 365.25) °/day
-    }
-
-    avg_speed = avg_speeds.get(body_id, 1.0)
-
-    if avg_speed == 0:
-        return 1.0
+    # Average daily motion is the single source of truth in core.bodies["speed"];
+    # avoid duplicating per-body constants here (they drifted out of sync historically).
+    # body_id is already validated above by calc_planet_position (raises for 0-13 range),
+    # and no body has a zero average speed, so the division is always well-defined.
+    avg_speed = float(bodies["speed"][body_id])
 
     return current_speed / avg_speed
 

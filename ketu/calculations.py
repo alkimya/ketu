@@ -14,7 +14,7 @@ import numpy as np
 from .core import bodies, aspects, signs
 
 # Import ephemeris calculation functions
-from .ephemeris.time import utc_to_julian, julian_to_utc, local_to_utc
+from .ephemeris.time import utc_to_julian, coerce_to_jd, julian_to_utc, local_to_utc
 from .ephemeris.planets import (
     calc_planet_position,
     calc_planet_position_batch,
@@ -171,15 +171,7 @@ def body_name(body: int) -> str:
     >>> body_name(10)
     'Rahu'
     """
-    name = get_planet_name(body)
-    # Convert to match original format
-    if name == "mean Node":
-        return "Rahu"
-    elif name == "true Node":
-        return "North Node"
-    elif name == "mean Apogee":
-        return "Lilith"
-    return name
+    return get_planet_name(body)
 
 
 def body_id(b_name: str) -> int:
@@ -688,6 +680,7 @@ __all__ = [
 
     # Time functions (re-exported from ephemeris)
     "utc_to_julian",
+    "coerce_to_jd",
     "julian_to_utc",
     "local_to_utc",
 ]

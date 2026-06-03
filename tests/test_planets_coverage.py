@@ -387,9 +387,12 @@ class TestCalculateSpeedRatio:
         rahu_ratio = calculate_speed_ratio(jd, 10)
         ketu_ratio = calculate_speed_ratio(jd, 11)
 
-        # Both nodes have constant speed = avg_speed, so ratio ~ 1.0
-        assert 0.9 < abs(rahu_ratio) < 1.1, f"Rahu ratio {rahu_ratio} unexpected"
-        assert 0.9 < abs(ketu_ratio) < 1.1, f"Ketu ratio {ketu_ratio} unexpected"
+        # The nodes regress at a constant rate equal to core.bodies["speed"], so the
+        # ratio must be ~1.0. A tight bound here guards against the historical bug where
+        # core.bodies["speed"] held -0.013 (≈4× too slow) instead of -0.052954, which
+        # would have made this ratio ≈4.07.
+        assert abs(rahu_ratio - 1.0) < 0.05, f"Rahu ratio {rahu_ratio} unexpected"
+        assert abs(ketu_ratio - 1.0) < 0.05, f"Ketu ratio {ketu_ratio} unexpected"
 
     def test_speed_ratio_lilith(self):
         """Lilith has constant speed, ratio should be ~1.0."""
