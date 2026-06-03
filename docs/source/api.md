@@ -411,6 +411,46 @@ for row in classical:
 
 Return the maximum allowed orb in degrees for an aspect pair.
 
+### `find_aspect_timing(jdate, body1, body2, aspect_value, orb=None, dyn_coef=None)` — Updated in v1.5
+
+Find the window (begin, exact, end) for an aspect between two bodies near a reference date.
+
+**Parameters:**
+
+- `jdate` (`float`): reference Julian Day
+- `body1`, `body2` (`int`): body IDs (0 = Sun … 13 = Chiron)
+- `aspect_value` (`float`): aspect angle in degrees
+- `orb` (`float`, optional): explicit orb in degrees — escape hatch, skips all internal resolution. **When both `orb` and `dyn_coef` are given, explicit `orb` wins silently** (no error is raised).
+- `dyn_coef` (`float`, optional): dynamic-orb coefficient — **new in v1.5 (HARM-04)**. When `orb` is `None` and `dyn_coef` is not `None`, the orb is derived as `(bodies['orb'][body1] + bodies['orb'][body2]) / 2 * dyn_coef`, mirroring the formula used by `calculate_aspects`. Pass the `coef` field from a `generate_harmonic_aspects` row directly — no pre-computation required.
+
+**Orb resolution — three branches, checked in this order:**
+
+1. `orb is not None` → explicit orb wins immediately (even if `dyn_coef` is also given).
+2. `dyn_coef is not None` → orb derived as `(orb_b1 + orb_b2) / 2 * dyn_coef`.
+3. Both `None` → static table lookup via `get_orb(body1, body2, asp_idx)`. Raises `ValueError` if `aspect_value` is not in the table.
+
+**Returns:** `tuple[float, float, float]` — `(begin_jd, exact_jd, end_jd)`
+
+**Raises:** `ValueError` when both `orb` and `dyn_coef` are `None` and `aspect_value` is not in the static aspect table.
+
+```python
+from ketu.aspects.calculator import find_aspect_timing
+from ketu.aspects import generate_harmonic_aspects
+
+jd = 2451545.0  # J2000
+
+# Static path — trine (120°) found in the table, orb derived automatically:
+begin, exact, end = find_aspect_timing(jd, 0, 1, 120.0)
+
+# Dynamic path — H7-1 Sun-Moon timing via dyn_coef (no pre-computation):
+begin, exact, end = find_aspect_timing(jd, 0, 1, 51.4286, dyn_coef=1/7)
+
+# Explicit orb escape hatch (unchanged behaviour):
+specs = generate_harmonic_aspects(7)
+explicit_orb = (specs["coef"][0]) * 3.0   # custom orb
+begin, exact, end = find_aspect_timing(jd, 0, 1, 51.4286, orb=explicit_orb)
+```
+
 ---
 
 ## Houses (`ketu.houses`)
