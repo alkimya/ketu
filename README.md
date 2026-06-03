@@ -2,98 +2,15 @@
 
 [![PyPI version](https://badge.fury.io/py/ketu.svg)](https://badge.fury.io/py/ketu)
 [![Python Versions](https://img.shields.io/pypi/pyversions/ketu.svg)](https://pypi.org/project/ketu/)
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen.svg)](pyproject.toml)
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 
 **Ketu** is a pure NumPy library for astronomical calculations focused on planetary positions, aspects, and cycle analysis. With no dependencies beyond NumPy, Ketu provides fast, accurate calculations suitable for astrology, biodynamic calendars, and machine learning applications.
 
 This library was originally designed to generate biodynamic calendars and time series based on astrological aspects. It can be used as a basis for building astrology software.
 
-![Terminal screen](https://github.com/alkimya/ketu/blob/main/res/screen.png)
-
-## What's New in v1.4.0
-
-Ketu v1.4.0 introduces a dynamic harmonic aspect generator and expands the Chiron
-ephemeris to 1900–2100. There are two behavioural changes: Chiron now forms scored
-aspects (orb raised from 0° to 4°) and out-of-range Chiron inputs are silently clamped
-instead of raising `ValueError`. See [UPGRADING.md](UPGRADING.md) for migration recipes
-and [CHANGELOG.md](CHANGELOG.md) for the full list of changes.
-
-- **Dynamic harmonic generator** — `ketu.aspects.generate_harmonic_aspects(h)` builds
-  aspect specs on the fly for any integer harmonic 2 ≤ h ≤ 64 (full-circle 360°
-  folded to 0–180°, `coef = k/h`). Pass the result as `dynamic_specs=` to
-  `calculate_aspects`, `find_aspects_between_dates`, or `calculate_synastry`. The
-  frozen 14-row `core.aspects` table and preset fingerprints are byte-identical.
-- **Chiron range 1900–2100** — `ketu/data/chiron_coeffs.npz` regenerated (2283
-  Chebyshev segments, max error 0.001214°, ~578 KB). `calc_planet_position(jd, 13)`
-  now resolves any JD in the expanded range with no code changes required.
-- **Chiron orb 4°** — `core.bodies['orb']` for Chiron is now 4° (Pluto parity).
-  Chiron forms scored aspects in all detection functions. Downstream code that assumed
-  zero Chiron aspects must adapt (see UPGRADING.md → "v1.3 -> v1.4").
-
----
-
-## What's New in v1.3.0
-
-Ketu v1.3.0 adds Chiron as the 14th body and makes the aspect engine
-data-driven. The public API is additive; the one breaking change is the
-internal positional-array contract (the bodies axis goes 13 → 14) and the
-aspect default/coefficient/preset surface. See [UPGRADING.md](UPGRADING.md)
-for migration recipes and [CHANGELOG.md](CHANGELOG.md) for the full list.
-
-- **Chiron** — the 14th body (`body_id = 13`), evaluated from embedded
-  Chebyshev-by-segment coefficients in **pure NumPy** (no `pyswisseph`,
-  no SciPy, no new runtime dependency). `ketu.calc_planet_position(jd, 13)`
-  returns Chiron's longitude within ~0.006° of Swiss Ephemeris across
-  1950–2050. Chiron participates in `compute_chart`, aspect detection,
-  and the cycle machinery like any other body.
-- **Data-driven aspect engine** — aspects now live in a single declarative
-  table (`name, angle, coef, harmonic, symbol`); the detection logic
-  iterates over it with no per-aspect hardcoding. Compose a set from
-  harmonics with `aspects_for_harmonics([1, 2, 3, 6])`, or use the
-  `CLASSICAL` / `TRADITIONAL` / `EXTENDED` presets.
-- **New default aspect set (breaking)** — the library default is now the
-  7 half-circle harmonics (H1/H2/H3/H6: Conjunction, Semi-sextile, Sextile,
-  Square, Trine, Quincunx, Opposition). The full-circle minors
-  (quintile, novile, decile, and friends — H5/H9/H10) are opt-in. The CLI
-  stays pinned to the classical 5 for byte-stable output.
-- **Full French documentation** — every Sphinx page is now fully
-  translated to French through the gettext pipeline.
-
-## What's New in v1.2.0
-
-Ketu v1.2.0 is a non-breaking feature release — all v1.1 code works
-unchanged. See [UPGRADING.md](UPGRADING.md) for opt-in migration recipes
-and [CHANGELOG.md](CHANGELOG.md) for the full list of changes.
-
-- **Synastry** — `ketu.synastry.calculate_synastry(chart_a, chart_b)`
-  returns a `SYNASTRY_DTYPE` cross-product of inter-chart aspects (15
-  bodies × 15 bodies = 225 pairs; `filtered` and `dense` modes).
-  Astrodienst-style orbs (0.5× tightening). CLI `ketu synastry`;
-  `ketu --list-orbs`.
-- **Composite charts** — `ketu.composite.calculate_composite(chart_a,
-  chart_b)` returns a `CHART_DTYPE` midpoint composite. Helper
-  `circular_midpoint(lon_a, lon_b)` with pinned regression
-  `mid(359°, 1°) == 0°`.
-- **Solar and Lunar Returns** — `ketu.returns.solar_return(...,
-  target_year=<int>)` and `ketu.returns.lunar_return(...,
-  target_jd=<float>)` with arc-second convergence and optional
-  relocation (`return_lat`/`return_lon`). API asymmetry: solar takes
-  an integer year, lunar takes a Julian Date.
-- **Arabic Parts** — `ketu.parts.calculate_part(name, chart)` with
-  sect-aware dispatch (Fortune / Spirit) and fixed Marriage formula;
-  `calculate_all_parts(chart)` dict; `ketu --list-parts`.
-- **Three new house systems** — Whole Sign (`"whole_sign"`), Equal
-  (`"equal"`), Regiomontanus (`"regiomontanus"`) registered in
-  `ketu.houses.SYSTEMS`. `ketu --list-house-systems` now returns
-  six entries.
-- **CI doc gates hardened** — `interrogate ≥95%` and `numpydoc
-  validate` are both fully blocking; `make doc-gates` runs them
-  locally. 214 pre-existing GL01 violations fixed.
-- **GitHub Actions workflow refresh** — Node.js 24 actions
-  (`checkout@v5`, `setup-python@v6`, `upload-artifact@v5`); all
-  Node 20 deprecation warnings eliminated.
-
-For the full list of changes see [CHANGELOG.md](CHANGELOG.md).
+For the full version history and per-release changes, see [CHANGELOG.md](CHANGELOG.md);
+for migration recipes between minor versions, see [UPGRADING.md](UPGRADING.md).
 
 ## Features
 
