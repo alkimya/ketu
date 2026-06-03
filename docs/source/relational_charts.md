@@ -15,7 +15,7 @@ compute_chart(jd, lat, lon, system="placidus", aspects=None, polar_fallback="rai
 - `jd` — Julian Day (float, UTC)
 - `lat` / `lon` — geographic latitude and longitude in degrees
 - `system` — house system (default `"placidus"`)
-- `aspects` — aspect set spec (`None` uses the default classical set)
+- `aspects` — aspect set spec (`None` uses the library default — **TRADITIONAL**, the 7 half-circle aspects, v1.3+)
 - `polar_fallback` — high-latitude fallback behaviour (see [House Systems](houses.md))
 
 **Example — two charts**
@@ -78,7 +78,7 @@ calculate_synastry(chart_a, chart_b, aspects="classical", orbs="synastry", mode=
 **Parameters**
 
 - `chart_a`, `chart_b` — `CHART_DTYPE` structured arrays from `compute_chart`
-- `aspects` — aspect set: `"classical"` (default), `"traditional"`, `"extended"`, or a list/mask
+- `aspects` — aspect set: `"classical"`, `"traditional"`, `"extended"`, or a list/mask. `calculate_synastry`'s own default is `"classical"` (5 major aspects), **pinned for backward-compatible byte stability** — this is distinct from the library-wide default of `calculate_aspects`, which is **TRADITIONAL** (7 half-circle aspects, v1.3+).
 - `orbs` — orb set: `"synastry"` applies the standard synastry orb reduction factor
 - `mode` — `"filtered"` returns only active aspects; `"all"` returns every body pair
 
