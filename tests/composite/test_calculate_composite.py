@@ -12,6 +12,8 @@ Covers:
 - ``is_day_chart`` callable on composite metadata without raising
   (Q3 ratchet from 17-RESEARCH).
 - Default ``system=`` value matches the COMP-01 spec.
+- DECL-07 composite: body_decl populated, non-zero off-equator,
+  self-consistent with the coordinates chain (v1.5).
 """
 from __future__ import annotations
 
@@ -20,6 +22,12 @@ import pytest
 
 from ketu.charts import compute_chart, is_day_chart
 from ketu.composite import calculate_composite, circular_midpoint
+from ketu.ephemeris.coordinates import (
+    ecliptic_to_equatorial,
+    rectangular_to_spherical,
+    spherical_to_rectangular,
+    true_obliquity,
+)
 
 
 # Indices in the canonical 14-body axis (D-08 ratchet v1.3 — see
@@ -238,3 +246,74 @@ class TestIsDayChartCallable:
         # are acceptable. The key invariant is "callable without raising
         # and returns something castable to bool".
         assert bool(result) in (True, False)
+
+
+class TestCompositeDeclination:
+    """DECL-07 composite: body_decl populated, non-zero off-equator, self-consistent.
+
+    Plan 33-03. Open Question 1 resolved: body_decl is derived via the
+    coordinates chain (ecliptic λ,β → equatorial δ) on the composite's own
+    body_lons/body_lats — NOT a midpoint of the parents' declinations. This
+    is the self-consistent derivation (parallel to how body_lats is the
+    midpoint of ecliptic latitudes).
+
+    The anti-regression test (test_body_decl_is_not_all_zero) is the key
+    guard for Pitfall 4 (silent zero-fill): a composite test that passes
+    while body_decl is all zeros is the failure mode to prevent.
+    """
+
+    def test_body_decl_shape(self, chart_a_paris, chart_b_nyc) -> None:
+        """body_decl has shape (14,) — one declination per body."""
+        composite = calculate_composite(chart_a_paris, chart_b_nyc)
+        decl = np.asarray(composite["body_decl"])
+        assert decl.shape == (14,), f"expected shape (14,), got {decl.shape}"
+
+    def test_body_decl_is_not_all_zero(self, chart_a_paris, chart_b_nyc) -> None:
+        """Anti-regression for Pitfall 4 (silent zero-fill trap).
+
+        If ``out['body_decl']`` is never explicitly assigned in
+        :func:`calculate_composite`, it stays 0.0 for every body
+        (``np.zeros((), CHART_DTYPE)`` default). This test catches that
+        regression: at least one body must have |δ| > 0.01°, which is
+        always true for any off-equator date pair.
+        """
+        composite = calculate_composite(chart_a_paris, chart_b_nyc)
+        decl = np.asarray(composite["body_decl"])
+        assert np.any(np.abs(decl) > 0.01), (
+            "body_decl is all-zero — zero-fill trap not closed in "
+            "calculate_composite (DECL-07 regression)"
+        )
+
+    def test_body_decl_in_valid_range(self, chart_a_paris, chart_b_nyc) -> None:
+        """All declinations are in the valid range [−90, +90]°."""
+        composite = calculate_composite(chart_a_paris, chart_b_nyc)
+        decl = np.asarray(composite["body_decl"])
+        assert np.all(decl >= -90.0) and np.all(decl <= 90.0), (
+            f"body_decl out of range [-90, 90]: min={decl.min():.3f}, "
+            f"max={decl.max():.3f}"
+        )
+
+    def test_body_decl_matches_chain_rederviation(
+        self, chart_a_paris, chart_b_nyc
+    ) -> None:
+        """body_decl matches coordinates chain re-derived inline to < 1e-9°.
+
+        Proves self-consistency: calculate_composite assigns body_decl via
+        the same ecliptic->equatorial chain, so re-running it here on the
+        composite's own body_lons/body_lats must give 0.0 absolute difference.
+        This confirms the implementation is NOT a midpoint of the parents'
+        declinations (which would give a different numerical result).
+        """
+        composite = calculate_composite(chart_a_paris, chart_b_nyc)
+        lons = np.asarray(composite["body_lons"], dtype=np.float64)
+        lats = np.asarray(composite["body_lats"], dtype=np.float64)
+        eps = true_obliquity(float(composite["jd"]))
+        x, y, z = spherical_to_rectangular(lons, lats, 1.0)
+        xe, ye, ze = ecliptic_to_equatorial(x, y, z, eps)
+        _, decl_chain, _ = rectangular_to_spherical(xe, ye, ze)
+        decl_composite = np.asarray(composite["body_decl"])
+        max_diff = float(np.max(np.abs(decl_composite - decl_chain)))
+        assert max_diff < 1e-9, (
+            f"body_decl not self-consistent with chain re-derivation: "
+            f"max diff = {max_diff:.2e}° (expected < 1e-9°)"
+        )
