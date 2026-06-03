@@ -51,7 +51,7 @@ See [Migration Guide](migration.md) for upgrade instructions.
 
 ### Added 1.1.0
 
-- **`ketu.aspects` — Configurable aspect sets**: `CLASSICAL` (5 aspects), `TRADITIONAL` (7), `EXTENDED` (14 — default). `AspectSetSpec = Union[str, list, ndarray, None]`, `resolve_aspect_set`. `calculate_aspects(jdate, l_bodies, aspects=None)` now accepts an aspect-set spec.
+- **`ketu.aspects` — Configurable aspect sets**: `CLASSICAL` (5 aspects), `TRADITIONAL` (7), `EXTENDED` (14 — default at v1.1, changed to `TRADITIONAL` in v1.3). `AspectSetSpec = Union[str, list, ndarray, None]`, `resolve_aspect_set`. `calculate_aspects(jdate, l_bodies, aspects=None)` now accepts an aspect-set spec.
 - **`ketu.houses` — House system calculations**: `calculate_houses(jd, lat, lon, system, polar_fallback)`, `house_of(planet_lon, cusps)`, `HOUSES_DTYPE`, `SYSTEMS`, `HighLatitudeError`, `register`. Initial systems: `placidus`, `koch`, `porphyry`.
 - **`HOUSES_DTYPE`**: Structured array with fields `jd`, `lat`, `lon`, `system`, `cusps[12]`, `asc`, `mc`, `armc`, `vertex`.
 
