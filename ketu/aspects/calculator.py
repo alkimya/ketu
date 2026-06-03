@@ -571,6 +571,7 @@ def find_aspect_timing(
     body2: int,
     aspect_value: float,
     orb: Optional[float] = None,
+    dyn_coef: Optional[float] = None,
 ) -> Tuple[float, float, float]:
     """
     Find beginning, exact, and end times for an aspect.
@@ -586,16 +587,26 @@ def find_aspect_timing(
     aspect_value : float
         Aspect angle in degrees.
     orb : float, optional
-        Explicit orb in degrees.  When provided, the ``_CORE_ASPECTS`` table
-        lookup is skipped entirely — this is the **dynamic path** for
-        off-table angles (e.g. ``51.4286`` for H7-1).  Pass the orb derived
-        from your ``dynamic_specs`` row, e.g.
-        ``(bodies['orb'][b1] + bodies['orb'][b2]) / 2 * dyn_coef``.
+        Explicit orb in degrees.  When provided, orb resolution
+        short-circuits immediately — **this escape hatch wins even when
+        ``dyn_coef`` is also given** (HARM-05 locked precedence: explicit
+        ``orb`` wins silently, no :exc:`ValueError` is raised).  Use this for
+        one-off calls where you have already computed the orb.
+    dyn_coef : float, optional
+        Dynamic-orb coefficient.  When ``orb`` is ``None`` and
+        ``dyn_coef`` is not ``None``, the orb is derived as
+        ``(bodies['orb'][body1] + bodies['orb'][body2]) / 2 * dyn_coef``,
+        mirroring the formula used by ``calculate_aspects`` (lines 215-216).
+        This removes the need for callers to pre-compute the orb for
+        off-table harmonic angles — pass the ``coef`` field from a
+        ``generate_harmonic_aspects`` row directly.  When both ``orb`` and
+        ``dyn_coef`` are given, **explicit ``orb`` wins silently** (HARM-05).
 
-        When ``orb`` is ``None`` (default), the orb is resolved from the
-        ``_CORE_ASPECTS`` table using ``get_orb(body1, body2, asp_idx)``.
-        If ``aspect_value`` is not found in the table a clear
-        :exc:`ValueError` is raised (never :exc:`IndexError`).
+        When both ``orb`` and ``dyn_coef`` are ``None`` (default static path),
+        the orb is resolved from the ``_CORE_ASPECTS`` table via
+        ``get_orb(body1, body2, asp_idx)``.  If ``aspect_value`` is not found
+        in the table a clear :exc:`ValueError` is raised (never
+        :exc:`IndexError`).
 
     Returns
     -------
@@ -605,15 +616,35 @@ def find_aspect_timing(
     Raises
     ------
     ValueError
-        If ``orb`` is ``None`` and ``aspect_value`` is not found in the
-        ``_CORE_ASPECTS`` table.
+        If both ``orb`` and ``dyn_coef`` are ``None`` and ``aspect_value``
+        is not found in the ``_CORE_ASPECTS`` table.
+
+    Examples
+    --------
+    >>> from ketu.aspects.calculator import find_aspect_timing
+    >>> jd = 2451545.0
+    >>> # Dynamic orb derived from coefficient — no pre-computation needed (HARM-04):
+    >>> result = find_aspect_timing(jd, 0, 1, 51.4286, dyn_coef=1/7)
+    >>> len(result) == 3
+    True
     """
-    if orb is None:
-        # Static path — look up the aspect in the frozen table.
+    if orb is not None:
+        # Explicit orb wins silently — escape hatch short-circuits, even when
+        # dyn_coef is also provided (HARM-05 locked precedence: explicit orb
+        # wins, NOT raise).
+        pass
+    elif dyn_coef is not None:
+        # Dynamic path — derive orb from the coefficient.  Mirrors the formula
+        # in calculate_aspects (calculator.py:215-216):
+        #   (orb_b1 + orb_b2) / 2 * dyn_coef
+        orb = (
+            float(bodies["orb"][body1]) + float(bodies["orb"][body2])
+        ) / 2 * dyn_coef
+    else:
+        # Static path — frozen-table lookup (UNCHANGED behaviour).
         asp_idx = np.where(_CORE_ASPECTS["angle"] == aspect_value)[0]
         if len(asp_idx) == 0:
             raise ValueError(f"unknown aspect value: {aspect_value}")
-        # Calculate orb from the table.
         orb = get_orb(body1, body2, int(asp_idx[0]))
 
     # Search backward for beginning
