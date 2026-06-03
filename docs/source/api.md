@@ -888,6 +888,32 @@ Print a formatted table of current in-orb aspects.
 
 Entry point for the interactive CLI (`ketu` command).
 
+### `parse_harmonics_spec(value)` and `HarmonicsSelection` — Updated in v1.5
+
+`parse_harmonics_spec` is the argparse `type=` validator wired to the `--harmonics`
+CLI argument. It returns a `HarmonicsSelection` NamedTuple `(mask, dynamic_specs)`.
+
+**`HarmonicsSelection` fields:**
+
+- `mask` (`np.ndarray[bool_]`, shape `(14,)`): length-14 boolean mask into `ketu.core.aspects`.
+  All-False for `h<N>` tokens (only dynamic specs are used); populated for preset / index-list inputs.
+- `dynamic_specs` (`DynamicAspectSpec | None`): structured array from
+  `generate_harmonic_aspects` for `h<N>` tokens; `None` for preset and comma-separated-index inputs.
+
+**Accepted spec forms:**
+
+| Spec form | Returns | Notes |
+|---|---|---|
+| `"classical"` / `"traditional"` / `"extended"` / `"all"` | `HarmonicsSelection(mask=<preset>, dynamic_specs=None)` | `"all"` aliases `"extended"` |
+| `"0,4,7,9,13"` | `HarmonicsSelection(mask=<computed>, dynamic_specs=None)` | Comma-separated indices into `core.aspects` |
+| `"h7"` / `"H7"` | `HarmonicsSelection(mask=zeros(14), dynamic_specs=<array>)` | **New in v1.5** — arbitrary harmonic token `h<N>` |
+| `"h7,h11"` / `"traditional,h7"` | **Rejected** (HARMF-01, deferred) | Multi-harmonic mixing not yet supported |
+
+The `h<N>` form (case-insensitive, `N` in `[2, 64]`) selects only the `H{N}-{k}` dynamic
+aspects via the `dynamic_specs=` channel. Preset / index-list inputs yield `dynamic_specs=None`.
+See {ref}`harmonics-h7-cli-new-in-v1-5` in Concepts for the CLI usage, Tight-grammar
+boundary, and a worked example.
+
 ---
 
 (equatorial-declination-new-in-v1-5)=
