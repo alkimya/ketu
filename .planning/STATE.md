@@ -3,12 +3,12 @@ gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Lunar Declination & Harmonics Debt
 status: in-progress
-last_updated: "2026-06-03T20:09:47Z"
+last_updated: "2026-06-03T22:15:00Z"
 last_activity: 2026-06-03
 progress:
   total_phases: 3
   completed_phases: 1
-  total_plans: 0
+  total_plans: 8
   completed_plans: 4
   percent: 33
 ---
@@ -26,8 +26,8 @@ See: `.planning/PROJECT.md` (updated 2026-06-03 — v1.5 milestone started)
 
 Phase: 33 — Lunar Declination δ (COMPLETE — all 4 plans done)
 Plan: Phase 33 complete; Phase 34 next
-Status: Plan 04 complete. DECL-09 satisfied: 4 declination functions + β-vs-δ/montant/OOB documented in api.md+concepts.md+changelog.md; FR api.po/concepts.po/changelog.po fully translated, .mo recompiled, html-fr renders "déclinaison". Phase 33 fully delivered.
-Last activity: 2026-06-03 — Plan 04 executed (33-04-SUMMARY.md, commits 9b4b6e6/38ceb61).
+Status: Phase 33 COMPLETE and VERIFIED (gsd-verifier PASSED 5/5 must-haves, 33-VERIFICATION.md status=passed). All 9 DECL requirements shipped: declination/declination_velocity/is_ascending_declination/is_out_of_bounds in ketu.calculations (+ `__all__`), body_decl in CHART_DTYPE populated in compute_chart AND calculate_composite (no zero-fill), inherited by Returns, DECL-08 ratchet across 5 test locations, docs en+fr (api/concepts/changelog + translated .po/.mo). 1584 tests, 100% coverage, mypy --strict clean. is_ascending (β) byte-for-byte unchanged.
+Last activity: 2026-06-03 — Phase 33 executed (4 waves, commits 6183bad..ee4736b) + verified (33-VERIFICATION.md passed); ROADMAP.md + STATE.md updated.
 
 Progress: Phase 33 complete (4/4 plans done)
 
