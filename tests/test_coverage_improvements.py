@@ -9,7 +9,7 @@ Covers:
 - ketu/aspects/core.py: multiple branches (68-69, 185, 336, 380, 409, 428)
 - ketu/aspects/timelines.py: ZoneInfo path, datetime no-tzinfo, int/float aspects (431, 443, 452, 472, 497-499)
 - ketu/aspects/windows.py: None jd_exact, None boundaries, float start_date (343, 350, 449, 458, 466)
-- ketu/calculations.py: true Node / mean Apogee aliases (170, 172, 174)
+- ketu/calculations.py: body_name passthrough over get_planet_name (all 14 bodies)
 - ketu/cycles/calculator.py: CACHE_AVAILABLE=False (26-29), float timestamps (222)
 - ketu/ephemeris/time.py: Julian calendar branch (88), gst<0 branch (369)
 - ketu/ephemeris/orbital.py: normalize_angle negative input (227)
@@ -457,32 +457,31 @@ class TestAspectsWindowsGaps:
         assert len(result.moments) == 0
 
 
-class TestCalculationsBodyNameGaps:
-    """Cover ketu/calculations.py lines 170, 172, 174."""
+class TestCalculationsBodyName:
+    """body_name is a thin passthrough over get_planet_name for all 14 bodies."""
 
-    def test_body_name_true_node_alias(self):
-        """Line 172: body_name returns 'North Node' when get_planet_name returns 'true Node'."""
-        import ketu.calculations as calc_mod
+    def test_body_name_covers_all_bodies(self):
+        """body_name returns the canonical Ketu name for every body id 0-13."""
+        from ketu.calculations import body_name
 
-        with patch.object(calc_mod, "get_planet_name", return_value="true Node"):
-            result = calc_mod.body_name(11)
-        assert result == "North Node"
-
-    def test_body_name_mean_apogee_alias(self):
-        """Line 174: body_name returns 'Lilith' when get_planet_name returns 'mean Apogee'."""
-        import ketu.calculations as calc_mod
-
-        with patch.object(calc_mod, "get_planet_name", return_value="mean Apogee"):
-            result = calc_mod.body_name(12)
-        assert result == "Lilith"
-
-    def test_body_name_mean_node_alias(self):
-        """Line 170: body_name returns 'Rahu' when get_planet_name returns 'mean Node'."""
-        import ketu.calculations as calc_mod
-
-        with patch.object(calc_mod, "get_planet_name", return_value="mean Node"):
-            result = calc_mod.body_name(10)
-        assert result == "Rahu"
+        expected = {
+            0: "Sun",
+            1: "Moon",
+            2: "Mercury",
+            3: "Venus",
+            4: "Mars",
+            5: "Jupiter",
+            6: "Saturn",
+            7: "Uranus",
+            8: "Neptune",
+            9: "Pluto",
+            10: "Rahu",
+            11: "Ketu",
+            12: "Lilith",
+            13: "Chiron",
+        }
+        for body_id, name in expected.items():
+            assert body_name(body_id) == name, f"body {body_id}"
 
 
 class TestEphemerisTimeGaps:
@@ -642,44 +641,6 @@ class TestPlanetsGaps:
         assert result is not None
         assert isinstance(result, float)
         assert jd_start <= result <= jd_end
-
-    def test_calculate_speed_ratio_zero_avg_speed(self):
-        """Line 448: avg_speed==0 guard returns 1.0.
-
-        The avg_speeds dict in calculate_speed_ratio never contains 0 naturally.
-        We patch calc_planet_position to return a position, then inject avg_speed=0
-        by patching the function to call the real code with a synthetic avg_speeds dict.
-        """
-        import ketu.ephemeris.planets as planets_mod
-
-        # The real function's avg_speeds dict only returns 1.0 for unknown body_ids.
-        # To reach avg_speed==0, we inject a body_id that maps to 0 in avg_speeds.
-        # We override the entire function body via a targeted patch of the local dict.
-
-        original_calc = planets_mod.calc_planet_position
-
-        with patch.object(planets_mod, "calc_planet_position") as mock_pos:
-            # Return a fake position with speed=2.0
-            mock_pos.return_value = np.array([100.0, 0.0, 1.0, 2.0, 0.0, 0.0])
-
-            # Patch avg_speeds dict by replacing the function temporarily
-            original_fn = planets_mod.calculate_speed_ratio
-
-            def patched_calculate_speed_ratio(jd: float, body_id: int) -> float:
-                pos = planets_mod.calc_planet_position(jd, body_id)
-                current_speed = pos[3]
-                avg_speeds: dict = {body_id: 0}  # Force avg_speed=0 for this body_id
-                avg_speed = avg_speeds.get(body_id, 1.0)
-                if avg_speed == 0:
-                    return 1.0
-                return current_speed / avg_speed
-
-            planets_mod.calculate_speed_ratio = patched_calculate_speed_ratio
-            try:
-                result = planets_mod.calculate_speed_ratio(self.JD, 5)
-                assert result == 1.0
-            finally:
-                planets_mod.calculate_speed_ratio = original_fn
 
 
 class TestHousePolarMaskGaps:
