@@ -52,6 +52,7 @@ from typing import Literal, Tuple
 
 import numpy as np
 
+from ketu.aspects.harmonics import DynamicAspectSpec
 from ketu.aspects.presets import AspectSetSpec, resolve_aspect_set
 from ketu.calculations import distance
 from ketu.core import aspects as _ASPECTS
@@ -110,6 +111,7 @@ def calculate_synastry(
     aspects: AspectSetSpec = "classical",
     orbs: OrbSetSpec = "synastry",
     mode: Literal["dense", "filtered"] = "filtered",
+    dynamic_specs: DynamicAspectSpec = None,
 ) -> np.ndarray:
     """
     Compute inter-chart aspects between two natal charts.
@@ -152,6 +154,15 @@ def calculate_synastry(
     mode : {"dense", "filtered"}, optional
         Output shape. ``"filtered"`` (default) returns only aspected
         rows; ``"dense"`` returns all 256 ordered pairs.
+    dynamic_specs : DynamicAspectSpec, optional
+        Dynamic aspect specs from :func:`ketu.aspects.harmonics.generate_harmonic_aspects`
+        (or a list of such arrays). When provided, a second detection loop runs
+        AFTER the static loop (static-first / dynamic-second, first-aspect-wins via
+        the shared ``matched`` mask). Dynamic rows carry ``aspect_type = -2``
+        (distinct from ``-1`` = no-aspect). Orb formula mirrors the static loop:
+        ``(_BODY_ORBS_16[i] + _BODY_ORBS_16[j]) / 2 * dyn_coef * factor`` where
+        ``dyn_coef = row["coef"]`` from the spec. Default ``None`` disables dynamic
+        detection and the output is byte-identical to the no-arg call.
 
     Returns
     -------
@@ -178,6 +189,8 @@ def calculate_synastry(
         parameter.
     ketu.aspects.calculate_aspects_vectorized : Intra-chart aspect engine
         (single-chart counterpart).
+    ketu.aspects.harmonics.generate_harmonic_aspects : Generator for the
+        ``dynamic_specs=`` parameter.
 
     Notes
     -----
@@ -217,6 +230,11 @@ def calculate_synastry(
     ``aspect_type=-1``, ``orb=NaN``, ``orb_limit=NaN``,
     ``applying=False``.
 
+    **Filtered-mode predicate (with dynamic_specs).** Filtered mode keeps
+    ``aspect_type != -1``, i.e. both static rows (``aspect_type >= 0``) and
+    dynamic rows (``aspect_type == -2``). Non-aspected rows (``aspect_type == -1``)
+    are still excluded.
+
     **Applying convention.** Velocity-based using
     :data:`ketu.charts.CHART_DTYPE` ``body_speeds``: the relative
     longitude motion is ``speed_a - speed_b`` and the aspect is
@@ -245,6 +263,10 @@ def calculate_synastry(
     mask = resolve_aspect_set(aspects)                 # length-14 bool
     factor = resolve_orb_set(orbs)                     # float scalar
     selected_indices = np.where(mask)[0]               # canonical aspect indices
+
+    # Normalize dynamic_specs: None stays None; list -> single concatenated array.
+    if isinstance(dynamic_specs, list):
+        dynamic_specs = np.concatenate(dynamic_specs) if dynamic_specs else None
 
     # 2. Extend both charts from 14 -> 16 body axis (add ASC, MC).
     lons_a, speeds_a = _extend_body_data(chart_a)      # (16,)
@@ -328,11 +350,46 @@ def calculate_synastry(
         out["orb_limit"][in_orb] = orbs_pair[in_orb].astype(np.float32)
         matched |= in_orb
 
-    # 6. Mode dispatch.
+    # 6. Dynamic aspect detection — runs AFTER all static aspects so that
+    #    static-first / first-aspect-wins is preserved via the shared ``matched``
+    #    mask. Only executed when ``dynamic_specs`` is not None.
+    if dynamic_specs is not None:
+        for dyn_row in dynamic_specs:
+            dyn_ang = float(dyn_row["angle"])
+            dyn_coef = float(dyn_row["coef"])
+
+            # Per-pair orb: same formula as static, dyn_coef from spec (ASP-07).
+            orbs_pair = (
+                (_BODY_ORBS_16[i_flat] + _BODY_ORBS_16[j_flat]) / 2.0
+                * dyn_coef
+                * factor
+            )
+
+            # The generator never emits 0°/360°, so NO conjunction special-case.
+            # Always use the non-conjunction branch.
+            in_orb = (np.abs(dist - dyn_ang) <= orbs_pair) & (~matched)
+            delta = dyn_ang - dist
+
+            if not np.any(in_orb):
+                continue
+
+            rel_speed = speed_a - speed_b
+            applying = (np.sign(delta) * rel_speed) > 0
+
+            # aspect_type = -2 sentinel for dynamic rows (i1: fits int8 range).
+            out["aspect_type"][in_orb] = np.int8(-2)
+            out["orb"][in_orb] = delta[in_orb].astype(np.float32)
+            out["applying"][in_orb] = applying[in_orb]
+            out["orb_limit"][in_orb] = orbs_pair[in_orb].astype(np.float32)
+            matched |= in_orb
+
+    # 7. Mode dispatch.
     if mode == "dense":
         return out
     if mode == "filtered":
-        return out[out["aspect_type"] >= 0]
+        # Keep aspect_type != -1: both static rows (>= 0) and dynamic rows (== -2).
+        # Non-aspected rows (aspect_type == -1) are still excluded.
+        return out[out["aspect_type"] != -1]
     raise ValueError(
         f"unknown mode {mode!r}; expected 'dense' or 'filtered'"
     )
