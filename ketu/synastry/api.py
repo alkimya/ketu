@@ -48,7 +48,7 @@ success criterion #5.
 """
 from __future__ import annotations
 
-from typing import Literal, Tuple
+from typing import Literal, Tuple, cast
 
 import numpy as np
 
@@ -389,7 +389,7 @@ def calculate_synastry(
     if mode == "filtered":
         # Keep aspect_type != -1: both static rows (>= 0) and dynamic rows (== -2).
         # Non-aspected rows (aspect_type == -1) are still excluded.
-        return out[out["aspect_type"] != -1]
+        return cast(np.ndarray, out[out["aspect_type"] != -1])
     raise ValueError(
         f"unknown mode {mode!r}; expected 'dense' or 'filtered'"
     )
