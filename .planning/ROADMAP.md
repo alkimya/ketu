@@ -125,11 +125,14 @@ Declination is computed via the direct Meeus eq. 13.4 formula (`sin δ = sin β�
   3. `find_aspect_timing` accepts a new `dyn_coef: Optional[float] = None` parameter and derives the orb itself as `(bodies['orb'][b1] + bodies['orb'][b2]) / 2 * dyn_coef`; the static path (`orb=None` → `get_orb` table lookup) and the explicit `orb=<float>` escape hatch both stay backward-compatible and byte-identical, with the precedence when both `orb` and `dyn_coef` are given defined and tested. (HARM-04, HARM-05)
   4. A user can run `--harmonics h7` (h-prefixed, case-insensitive, disambiguated from the rejected bare integer and from preset/index syntax) and get the harmonic's h//2 aspects via `dynamic_specs=`; `parse_harmonics_spec` returns a typed shape (mask + dynamic_specs, e.g. a `NamedTuple`) clean under mypy `--strict`. The grammar is Tight — `h7` alone or the existing comma index list; `traditional,h7` and `h7,h11` are explicitly deferred. (HARM-06, HARM-07)
   5. The existing v1.1 CLI byte-stability fixture stays UNCHANGED (verified, not re-pinned); a NEW byte-stability fixture for `--harmonics h7` is freshly generated and manually audited; the resolved-config stderr header labels the arbitrary-harmonic selection clearly; and the `--harmonics h7` CLI surface (syntax, semantics, the Tight-grammar boundary) is documented en + fr. (HARM-08, HARM-09)
-**Plans**: TBD (refined during plan-phase)
+**Plans**: 4 plans in 3 waves (F2 → F3 → F1; Wave 2 = F3 ∥ F1-engine, Wave 3 = F1-fixture+docs)
 
 Plans:
 
-- [ ] 34-01: TBD (plan-phase derives the wave breakdown, F2 → F3 → F1 order)
+- [ ] 34-01-naming-contract-f2-PLAN.md — F2 (HARM-01..03): pin the `H{h}-{k}` naming contract (TestNamingContractF2), promote it to the generator docstring, document the GENERATOR-vs-DETECTION two-channel distinction + traditional-name table (en + fr). No code change.
+- [ ] 34-02-find-aspect-timing-f3-PLAN.md — F3 (HARM-04..05): add `dyn_coef` to `find_aspect_timing` (explicit-orb-first 3-branch, silent precedence), TestFindAspectTimingF3, docs en + fr.
+- [ ] 34-03-cli-h7-engine-f1-PLAN.md — F1 engine (HARM-06..07): `HarmonicsSelection` NamedTuple + `^h(\d+)$` branch, `print_aspects` dynamic_specs (Quadrinovile bug fix), `cmd_aspects`/`emit_resolved_config`/parser wiring, all broken assertions updated + TestHarmonicTokenF1 + h7 integration.
+- [ ] 34-04-h7-byte-stability-docs-f1-PLAN.md — F1 fixture+docs (HARM-08..09): generate + manually audit + pin the `--harmonics h7` byte-stability fixture (ketu ritual), TestHarmonicsH7ByteStable sibling class (v1.1 fixture UNCHANGED), `--harmonics h7` CLI docs en + fr.
 
 **Details:**
 Internal implementation order is F2 → F3 → F1: HARM-01..03 (naming contract) first because the CLI surface (F1) depends on the naming contract being stable; then HARM-04..05 (`find_aspect_timing` orb derivation); then HARM-06..09 (CLI `--harmonics h7`). The `H{h}-{k}` contract is frozen across v1.5+ minor/patch releases (the `(h, k) → name/angle/coef` mapping never changes; adding new `h` support never alters existing rows). `find_aspect_timing` gets `dyn_coef: Optional[float] = None` (Option (a) from research — `Optional[float]` is clean under `--strict`, no `np.void` single-row typing); explicit `orb` is checked first, so the escape hatch short-circuits regardless of `dyn_coef`; precedence when both given is defined and tested. CLI grammar is Tight (`h7` via `^h(\d+)$` applied after the preset + comma branches, before the bare-int trap; range validation left to `generate_harmonic_aspects`); `parse_harmonics_spec` returns a `HarmonicsSelection` NamedTuple `(mask, dynamic_specs)` reusing the existing `DynamicAspectSpec` type. The v1.1 fixture must stay byte-identical (wrapper change is internal); a new `--harmonics h7` fixture is generated and manually audited per the ketu ritual. `core.aspects` V1/V13 sha256 fingerprints stay byte-identical throughout. See `.planning/research/HARMONICS_DEBT.md`.
@@ -187,7 +190,7 @@ LAST phase, user-checkpoint-gated before tag/publish (the user reviews the whole
 | 31. Documentation (en + fr)                       | v1.4      | 7/7            | ✓ Complete  | 2026-06-03 |
 | 32. Release v1.4.0                                | v1.4      | 2/2            | ✓ Complete  | 2026-06-03 |
 | **33. Lunar Declination δ**                       | **v1.5**  | **0/TBD**      | Not started | -          |
-| **34. Harmonics Debt (ASP-F1/F2/F3)**             | **v1.5**  | **0/TBD**      | Not started | -          |
+| **34. Harmonics Debt (ASP-F1/F2/F3)**             | **v1.5**  | **0/4**        | Planned     | -          |
 | **35. Release v1.5.0**                            | **v1.5**  | **0/TBD**      | Not started | -          |
 
 ---
