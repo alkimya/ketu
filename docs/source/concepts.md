@@ -63,7 +63,7 @@ Ketu calculates the positions of 14 celestial bodies (body IDs 0–13):
 
 ### Centaur Body (New in v1.3)
 
-- **Chiron** ⚷ (body_id=13): Centaur body between Saturn and Uranus. Computed via embedded Chebyshev polynomial coefficients; valid range 1950–2050. See [Chiron](chiron.md) for details.
+- **Chiron** ⚷ (body_id=13): Centaur body between Saturn and Uranus. Computed via embedded Chebyshev polynomial coefficients; valid range **1900–2100** (expanded in v1.4). Out-of-range input is silently clamped to the nearest segment boundary. See [Chiron](chiron.md) for details.
 
 ## Aspects
 
@@ -158,6 +158,38 @@ all14 = aspects_for_harmonics([1, 2, 3, 5, 6, 9, 10])
 `aspects_for_harmonics` returns a frozen `numpy.bool_` mask of length 14, which can be
 passed directly as the `aspects=` argument to any Ketu function. Valid harmonics:
 `{1, 2, 3, 5, 6, 9, 10}`.
+
+### Dynamic Harmonic Generator (generate_harmonic_aspects)
+
+`generate_harmonic_aspects(h)` builds aspect specs on the fly for **any** integer harmonic
+`h` (2 ≤ h ≤ 64), not just the named-preset harmonics. It uses the full-circle 360°
+convention folded to 0–180°, and the returned array has the same dtype as `core.aspects`,
+making it a drop-in for every consumer.
+
+```python
+from ketu.aspects import generate_harmonic_aspects
+
+# Harmonic 7: 3 unique folded angles (septile family)
+specs = generate_harmonic_aspects(7)
+print(len(specs))          # 3
+print(specs['name'])       # [b'H7-1', b'H7-2', b'H7-3']
+print(specs['angle'])      # [51.43, 102.86, 154.29]
+print(specs['coef'])       # [0.1429, 0.2857, 0.4286]
+
+# Pass to calculate_aspects via dynamic_specs:
+from ketu.aspects import calculate_aspects
+result = calculate_aspects(jd, dynamic_specs=generate_harmonic_aspects(7))
+```
+
+The returned array is a drop-in for `core.aspects` (same dtype) and is passed as the
+`dynamic_specs=` argument to `calculate_aspects`, `find_aspects_between_dates`, and
+`calculate_synastry`.
+
+> **Note on orbs:** Dynamic harmonic orbs use `coef = k / h` (full-circle convention). For
+> high harmonics this yields orbs roughly half the size of the equivalent half-circle aspect
+> — e.g. a septile (H7-1, coef ≈ 0.143) gives a smaller orb than a sextile (coef ≈ 0.333)
+> for the same body pair. This is **accepted behaviour**: the two conventions coexist without
+> unification (see the v1.4 release notes).
 
 ## Orbs
 
