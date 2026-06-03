@@ -146,7 +146,17 @@ Plans:
   3. `generate_harmonic_aspects(h)` is documented in the API and/or concepts pages with a runnable example, the accepted ~2× smaller full-circle orb note, Chiron 1900–2100 range, and Chiron orb 4°; no reference to Kala appears anywhere in the Ketu docs.
   4. Every French gettext catalog whose source strings changed (due to any of the above edits) is re-extracted, translated (zero new English-fallback `msgstr`), and recompiled to `.mo`; `make html` (en) and `make html-fr` build clean at the established 1-warning baseline (no new warnings introduced).
 
-**Plans**: TBD
+**Plans**: 7 plans
+
+Plans:
+
+- [ ] 31-01-PLAN.md — concepts.md: recentre on 180°-division default (EXTENDED out of tables, generate_harmonic_aspects subsection, Chiron range note) [Wave 1]
+- [ ] 31-02-PLAN.md — migration.md: fix stale EXTENDED-default claim + Chiron range/clamping [Wave 1]
+- [ ] 31-03-PLAN.md — relational_charts.md: fix stale classical-default claims (library TRADITIONAL vs synastry classical) [Wave 1]
+- [ ] 31-04-PLAN.md — api.md: add generate_harmonic_aspects subsection + correct Chiron range/accuracy [Wave 1]
+- [ ] 31-05-PLAN.md — chiron.md: range 1900–2100, accuracy 0.001214°, clamping (not ValueError) [Wave 1]
+- [ ] 31-06-PLAN.md — changelog.md [1.4.0] section + v1.1 annotation + conf.py docs-build version 1.4.0 [Wave 1]
+- [ ] 31-07-PLAN.md — French gettext cycle (6 .po/.mo) + final en+fr build verification at 1-warning baseline [Wave 2]
 
 #### Phase 32: Release v1.4.0
 
