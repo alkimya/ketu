@@ -4,7 +4,7 @@ Pins ``calculate_synastry(a, b, mode='dense')[mask] == calculate_synastry(a, b, 
 modulo row order across multiple chart pairs (parametrised). Also pins
 the self-synastry diagonal-conjunction sanity (a chart synastry'd with
 itself shows all 16 self-pair conjunctions at exact orb), including the
-zero-orb-body edge case for Rahu / Ketu / Lilith / Chiron.
+zero-orb-body edge case for Rahu / Ketu / Lilith.
 
 Fixtures live in :mod:`tests.synastry.conftest` (auto-discovered).
 """
@@ -109,7 +109,7 @@ def test_self_synastry_dense_diagonal_is_conjunction(
 ) -> None:
     """``calculate_synastry(a, a, mode='dense')`` shows all 16 self-pair conjunctions at exact orb.
 
-    Rahu / Ketu / Lilith / Chiron have zero natal orbs (in
+    Rahu / Ketu / Lilith have zero natal orbs (in
     :data:`ketu.core.bodies`), so the synastry orb tolerance for these
     self-pairs is ``0``. The conjunction is detected because the
     in-orb test uses ``dist <= orbs_pair`` (non-strict), and self-synastry

@@ -106,6 +106,16 @@ def test_synastry_orb_limit_lilith_lilith_zero_orb() -> None:
     assert synastry_orb_limit(12, 12, 0) == 0.0
 
 
+def test_synastry_orb_limit_chiron_chiron_parity_pluto() -> None:
+    """Chiron-Chiron conjunction == 2.0 deg (orb=4 x factor=0.5, Pluto parity).
+
+    Pins Chiron natal orb = 4 deg in synastry (``_BODY_ORBS_16[13] == 4.0``).
+    Chiron (id=13) is no longer in the zero-orb group (Rahu/Ketu/Lilith).
+    """
+    # Chiron-Chiron: (4+4)/2 * coef_conj(1) * factor(0.5) = 4 * 1 * 0.5 = 2.0
+    assert synastry_orb_limit(13, 13, 0) == pytest.approx(2.0, abs=1e-5)
+
+
 def test_synastry_orb_limit_asc_sun_conjunction() -> None:
     """ASC-Sun conjunction: (8+12)/2 * 1 * 0.5 == 5.0 (matches astro.com 4-5 deg practice)."""
     # ASC is index 14 in the 16-body axis (v1.3: Chiron at 13 shifts ASC to 14)
