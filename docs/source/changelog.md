@@ -14,11 +14,22 @@ and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **`is_ascending_declination(jdate, body)`**: `True` when dδ/dt > 0 (Moon montante). Biodynamic montant/descendant helper. **Distinct from `is_ascending`** (β-trajectory) — the two can disagree for the same body on the same date.
 - **`is_out_of_bounds(jdate, body)`**: `True` when |δ| > ε(jd). OOB threshold uses the instantaneous true obliquity (not mean obliquity). The Moon can exceed ε during major lunar standstill (~18.6-year nodal cycle; peak ~2024–2025).
 - **`CHART_DTYPE` — `body_decl` field (additive)**: new `float64[14]` field holding equatorial declination δ for all 14 bodies. `compute_chart` and `calculate_composite` both populate it via the coordinates chain. Body count remains 14; this is an additive dtype change.
+- **`--harmonics h<N>` CLI surface for dynamic harmonics**: the `aspects` command accepts `--harmonics h7` (and any `h2`–`h64`) to detect dynamic harmonic aspects alongside the static set, via the `dynamic_specs=` engine path.
+
+### Changed 1.5.0
+
+- **`H{h}-{k}` dynamic-aspect naming promoted to a public API contract**: dynamic harmonic rows are named `H{h}-{k}` (harmonic `h`, multiple `k`), pinned by tests and documented as stable.
+- **`find_aspect_timing` gains a `dyn_coef=` parameter**: the orb for a dynamic aspect is derived from `(orb[b1] + orb[b2]) / 2 × dyn_coef`, matching the detection path.
+
+### Fixed 1.5.0
+
+- **Lunar node mean speed corrected (−0.013 → −0.052954 °/day)**: `core.bodies['speed']` for Rahu and Ketu held a value ~4× too slow. The true nodal regression is 360° over ~18.6 years (≈ −0.052991 °/day); the engine already produced −0.052954 °/day for the nodes, so the table is now consistent with the computed motion. `calculate_speed_ratio` now sources its average speeds from `core.bodies['speed']` (single source of truth).
+- **`calculate_aspects_batch` duplicate-pair rows eliminated**: with overlapping orbs (e.g. the EXTENDED set) the batch path could emit more than one row for the same `(body1, body2)` pair on a single date. Both `calculate_aspects_vectorized` and `calculate_aspects_batch` now share a single detection core, enforcing "exactly one row per pair" (static-first / dynamic-second, first-match-wins) identically.
 
 ### Notes 1.5.0
 
 - **`is_ascending` (β) unchanged**: the existing ecliptic-latitude-based `is_ascending` is byte-for-byte identical to v1.4. The new `is_ascending_declination` is an independent, parallel helper.
-- **Kala impact (additive, not breaking)**: `CHART_DTYPE` gains `body_decl` as an additive field. Code using named field access (`chart["body_lons"]`) is unaffected. Code using positional access or `.view()` on the raw dtype must adapt.
+- **Kala impact (additive, not breaking for named access)**: `CHART_DTYPE` gains `body_decl` as an additive field. Code using named field access (`chart["body_lons"]`) is unaffected. Code using positional access or `.view()` on the raw dtype must adapt. The node-speed fix changes `core.bodies['speed'][10]` / `[11]`.
 
 ## [1.4.0] - 2026-06-03
 

@@ -7,6 +7,66 @@ All notable changes to Ketu are documented here.
 This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.5.0] - Unreleased
+
+### Added
+
+- **`declination(jdate, body)` — equatorial declination δ**: returns δ in degrees
+  [−90, +90] (north positive, south negative). Scalar and vectorized (array `jdate`
+  via `calc_planet_position_batch`, loop-free). Computed via the ecliptic-to-equatorial
+  chain (`spherical_to_rectangular → ecliptic_to_equatorial → rectangular_to_spherical`),
+  numerically equivalent to Meeus eq. 13.4 to machine precision. (Phase 33)
+- **`declination_velocity(jdate, body)`**: dδ/dt in degrees/day (positive = northward).
+  Forward finite difference, step 0.01 day — mirrors the `lat_velocity` FD idiom. (Phase 33)
+- **`is_ascending_declination(jdate, body)`**: `True` when dδ/dt > 0 (Moon montante).
+  Biodynamic montant/descendant helper. **Distinct from `is_ascending`** (β-trajectory) —
+  the two can disagree for the same body on the same date. (Phase 33)
+- **`is_out_of_bounds(jdate, body)`**: `True` when |δ| > ε(jd). OOB threshold uses the
+  instantaneous true obliquity (not mean obliquity). The Moon can exceed ε during major
+  lunar standstill (~18.6-year nodal cycle; peak ~2024–2025). (Phase 33)
+- **`CHART_DTYPE` — `body_decl` field (additive)**: new `float64[14]` field holding
+  equatorial declination δ for all 14 bodies. `compute_chart` and `calculate_composite`
+  both populate it via the coordinates chain. Body count remains 14; this is an additive
+  dtype change. (Phase 33)
+- **`--harmonics h<N>` CLI surface for dynamic harmonics**: the `aspects` command accepts
+  `--harmonics h7` (and any `h2`–`h64`) to detect dynamic harmonic aspects alongside the
+  static set, via the `dynamic_specs=` engine path. (Phase 34)
+
+### Changed
+
+- **`H{h}-{k}` dynamic-aspect naming promoted to a public API contract**: dynamic
+  harmonic rows are named `H{h}-{k}` (harmonic `h`, multiple `k`), pinned by tests and
+  documented as stable. (Phase 34)
+- **`find_aspect_timing` gains a `dyn_coef=` parameter**: the orb for a dynamic aspect
+  is derived from `(orb[b1] + orb[b2]) / 2 × dyn_coef`, matching the detection path. (Phase 34)
+
+### Fixed
+
+- **Lunar node mean speed corrected (−0.013 → −0.052954 °/day)**: `core.bodies['speed']`
+  for Rahu and Ketu held a value ~4× too slow. The true nodal regression is 360° over
+  ~18.6 years (≈ −0.052991 °/day); the engine already produced −0.052954 °/day for the
+  nodes, so the table is now consistent with the computed motion. This sharpens the
+  adaptive step size used by `find_aspect_window` / `find_transits_to_position` for any
+  aspect involving the nodes. `calculate_speed_ratio` now sources its average speeds from
+  `core.bodies['speed']` (single source of truth) instead of a duplicated table.
+- **`calculate_aspects_batch` duplicate-pair rows eliminated**: with overlapping orbs
+  (e.g. the EXTENDED set) the batch path could emit more than one row for the same
+  `(body1, body2)` pair on a single date, violating the documented "exactly one row per
+  pair" contract. Both `calculate_aspects_vectorized` and `calculate_aspects_batch` now
+  share a single detection core (`_detect_aspects_for_date`), enforcing static-first /
+  dynamic-second, first-match-wins per pair identically.
+
+### Notes
+
+- **`is_ascending` (β) unchanged**: the existing ecliptic-latitude-based `is_ascending`
+  is byte-for-byte identical to v1.4. The new `is_ascending_declination` is an
+  independent, parallel helper.
+- **Kala impact (additive, not breaking for named access)**: `CHART_DTYPE` gains
+  `body_decl` as an additive field. Code using named field access (`chart["body_lons"]`)
+  is unaffected. Code using positional access or `.view()` on the raw dtype must adapt.
+  The node-speed fix changes `core.bodies['speed'][10]` / `[11]`; downstream code reading
+  that field sees the corrected value.
+
 ## [1.4.0] - 2026-06-03
 
 ### Added
