@@ -7,6 +7,41 @@ All notable changes to Ketu are documented here.
 This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.6.0] - 2026-06-04
+
+### Added
+
+- **`ketu.declination` subpackage — declination aspects (parallels &
+  contra-parallels)**: a NEW additive subpackage detecting parallel (`P`)
+  and contra-parallel (`CP`) aspects on the equatorial declination axis (δ),
+  independent of ecliptic longitude. (Phase 36)
+- **`find_declination_aspects(body_decl)`**: scalar/single-chart detector.
+  Takes the `(14,)` signed-δ `chart["body_decl"]` array; returns a
+  `DECLA_ASPECT_DTYPE` structured array (upper-triangle pairs, sorted,
+  deduplicated); `np.empty(0, …)` when none detected (never `None`).
+- **`declination_aspect_masks(body_decl)`**: vectorized batch path. Accepts
+  `(S, 14)` or `(14,)` (promoted via `np.atleast_2d`); returns a
+  `DeclinationAspectMasks` NamedTuple of `(S, 91)` masks + `(91,)`
+  index/orb vectors. Pure broadcasting, no Python body loop.
+- **`DeclinationAspectMasks` NamedTuple** (6 fields: `parallel`, `contra`,
+  `gap`, `idx_i`, `idx_j`, `orb_pairs`).
+- **`DECLA_ASPECT_DTYPE`** (5 fields: `body1`, `body2`, `kind` ∈ {"P","CP"},
+  `gap`, `orb`).
+- **`DECLA_COEF = 1/12` and `MIN_DECL_ORB = 0.5°`**: the body-derived orb
+  formula `max((orb_b1 + orb_b2)/2 × DECLA_COEF, MIN_DECL_ORB)` → Sun/Moon
+  = 1.0°, zero-orb bodies (Rahu/Ketu/Lilith) floored to 0.5°.
+
+### Notes
+
+- **`CHART_DTYPE` unchanged — additive subpackage**: `ketu.declination` is a
+  purely additive companion to the v1.5 declination δ infrastructure. The
+  `body_decl` field (shape `(14,)`) shipped in v1.5 is the sole input;
+  `CHART_DTYPE` is byte-identical to v1.5 (no ratchet break). The new names
+  are reachable via `ketu.declination.*` only — `ketu.__all__` is unchanged.
+- **Parallel ≠ longitude conjunction**: declination aspects are independent
+  of ecliptic-longitude aspects. The frozen 14-row `core.aspects` table is
+  byte-identical to v1.5.
+
 ## [1.5.0] - 2026-06-04
 
 ### Added
