@@ -329,6 +329,8 @@ ketu/
   `is_ascending_declination`, `is_out_of_bounds`)
 - [x] Dynamic harmonic CLI (`--harmonics h7`) + `H{h}-{k}` naming contract +
   `find_aspect_timing(dyn_coef=)`
+- [x] Declination aspects — parallels & contra-parallels on the δ axis
+  (`ketu.declination`: `find_declination_aspects`, `declination_aspect_masks`)
 
 ## Contribution
 

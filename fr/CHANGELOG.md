@@ -9,6 +9,42 @@
 
 ---
 
+## [1.6.0] - 2026-06-04
+
+### Ajouts
+
+- **Sous-paquet `ketu.declination` — aspects de déclinaison (parallèles &
+  contre-parallèles)** : un NOUVEAU sous-paquet additif détectant les aspects
+  parallèles (`P`) et contre-parallèles (`CP`) sur l'axe de déclinaison
+  équatoriale (δ), indépendant de la longitude écliptique. (Phase 36)
+- **`find_declination_aspects(body_decl)`** : détecteur scalaire/graphe unique.
+  Prend le tableau signé-δ `chart["body_decl"]` de forme `(14,)` ; retourne un
+  tableau structuré `DECLA_ASPECT_DTYPE` (paires triangle supérieur, triées,
+  dédupliquées) ; `np.empty(0, …)` quand aucun aspect détecté (jamais `None`).
+- **`declination_aspect_masks(body_decl)`** : chemin vectorisé en lot. Accepte
+  `(S, 14)` ou `(14,)` (promu via `np.atleast_2d`) ; retourne un NamedTuple
+  `DeclinationAspectMasks` de masques `(S, 91)` + vecteurs index/orbe `(91,)`.
+  Diffusion pure, aucune boucle Python sur les corps.
+- **NamedTuple `DeclinationAspectMasks`** (6 champs : `parallel`, `contra`,
+  `gap`, `idx_i`, `idx_j`, `orb_pairs`).
+- **`DECLA_ASPECT_DTYPE`** (5 champs : `body1`, `body2`, `kind` ∈ {"P","CP"},
+  `gap`, `orb`).
+- **`DECLA_COEF = 1/12` et `MIN_DECL_ORB = 0,5°`** : la formule d'orbe dérivée
+  des corps `max((orb_b1 + orb_b2)/2 × DECLA_COEF, MIN_DECL_ORB)` → Soleil/Lune
+  = 1,0°, corps à orbe zéro (Rahu/Ketu/Lilith) plancher à 0,5°.
+
+### Notes
+
+- **`CHART_DTYPE` inchangé — sous-paquet additif** : `ketu.declination` est un
+  complément purement additif à l'infrastructure de déclinaison δ de la v1.5.
+  Le champ `body_decl` (forme `(14,)`) livré en v1.5 est l'entrée unique ;
+  `CHART_DTYPE` est octet-identique à la v1.5 (aucune rupture du ratchet). Les
+  nouveaux noms sont accessibles uniquement via `ketu.declination.*` —
+  `ketu.__all__` est inchangé.
+- **Parallèle ≠ conjonction de longitude** : les aspects de déclinaison sont
+  indépendants des aspects de longitude écliptique. La table `core.aspects`
+  figée à 14 lignes est octet-identique à la v1.5.
+
 ## [1.5.0] - 2026-06-04
 
 ### Ajouts

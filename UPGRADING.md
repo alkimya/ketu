@@ -3,6 +3,45 @@
 This guide collects migration notes between Ketu releases. Sections are
 ordered newest-first.
 
+## v1.5 -> v1.6
+
+v1.6 is **purely additive** — no field is removed or reordered, no existing API changes
+behaviour.
+
+### New `ketu.declination` subpackage — additive, no migration needed
+
+A new subpackage detecting parallels (`P`) / contra-parallels (`CP`) on the
+declination axis. Entry points:
+
+```python
+from ketu.declination import (
+    find_declination_aspects,
+    declination_aspect_masks,
+    DeclinationAspectMasks,
+    DECLA_ASPECT_DTYPE,
+    DECLA_COEF,
+    MIN_DECL_ORB,
+)
+```
+
+These names are reachable via `ketu.declination.*` **ONLY** — `ketu.__all__` is
+unchanged.
+
+### CHART_DTYPE is UNCHANGED — no ratchet break
+
+The detector consumes the v1.5 `body_decl` field (shape `(14,)`);
+`CHART_DTYPE` is byte-identical to v1.5. Any code or ratchet test pinning the
+`CHART_DTYPE` sha256 fingerprint needs **NO change** for v1.6 (contrast v1.4 → v1.5,
+which DID change the dtype). The frozen 14-row `core.aspects` table is byte-identical.
+
+### Kala guidance
+
+No migration required; the new detector is opt-in. Compose `is_out_of_bounds`
+(v1.5) with the aspect output if "both OOB" annotation is desired (interpretive,
+not a detection flag).
+
+---
+
 ## v1.4 -> v1.5
 
 ### CHART_DTYPE gains body_decl — additive dtype change
