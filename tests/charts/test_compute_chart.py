@@ -22,6 +22,7 @@ itself (D-06).
 from __future__ import annotations
 
 import sys
+import warnings
 from typing import Any
 
 import numpy as np
@@ -271,3 +272,29 @@ def test_compute_chart_no_runtime_swisseph_import() -> None:
                 f"{mod_name} unexpectedly exposes swisseph-related "
                 f"names: {names}"
             )
+
+
+# ---------------------------------------------------------------------------
+# RuntimeWarning ratchet — observable-level guard for the heliocentric
+# latitude div/0 (z/r when r→0 for the Sun). The source-level guard lives in
+# tests/test_coverage_improvements.py
+# (test_vectorized_path_r_zero_no_warning_no_nan_bounded, QAL-11
+# np.maximum(r, 1e-10) floor); this is the integration counterpart asserting
+# no RuntimeWarning ever reaches a `compute_chart` caller's REPL.
+# ---------------------------------------------------------------------------
+
+
+def test_compute_chart_emits_no_runtime_warning() -> None:
+    """`compute_chart` must not emit any RuntimeWarning (div/0 ratchet).
+
+    Promotes every RuntimeWarning to an error for the duration of the call
+    so the pre-existing ``invalid value encountered in divide`` warning
+    (heliocentric latitude ``z/r`` for the Sun, where ``r == 0``) can never
+    silently return — the field is unused downstream but the warning used to
+    pollute the REPL on every chart computation. Body ecliptic longitudes
+    flow through a separate, correct path and stay finite.
+    """
+    with warnings.catch_warnings():
+        warnings.filterwarnings("error", category=RuntimeWarning)
+        chart = compute_chart(2451545.0, 48.8566, 2.3522)
+    assert np.all(np.isfinite(chart["body_lons"])), chart["body_lons"]

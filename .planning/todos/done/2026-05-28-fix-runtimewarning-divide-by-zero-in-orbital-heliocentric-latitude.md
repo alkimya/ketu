@@ -40,3 +40,21 @@ Garder la division contre `r == 0`. Options :
 Ajouter un test qui exécute `compute_chart` sous `warnings.simplefilter("error", RuntimeWarning)`
 pour ratcheter l'absence de warning (régression-guard). Vérifier que les latitudes
 écliptiques des bodies restent inchangées après le fix.
+
+## Résolution (2026-06-04)
+
+La division était **déjà gardée** : QAL-11 (Phase 21, Quality) a remplacé `z / r` brut par
+`np.rad2deg(np.arcsin(z / np.maximum(r, 1e-10)))` à
+[ketu/ephemeris/_body_getters.py:314](ketu/ephemeris/_body_getters.py#L314) (l'ancienne
+référence `orbital.py:733` pointait vers le ré-export ; l'implémentation a migré vers
+`_body_getters.py`). Le warning a disparu — `compute_chart` sous `-W error::RuntimeWarning`
+passe sans erreur. Le ratchet source-niveau existait aussi
+(`test_vectorized_path_r_zero_no_warning_no_nan_bounded`).
+
+Ce todo a donc été clos en ajoutant **uniquement** la pièce manquante demandée : le ratchet
+**observable** `test_compute_chart_emits_no_runtime_warning` dans
+[tests/charts/test_compute_chart.py](tests/charts/test_compute_chart.py) — exécute
+`compute_chart` sous `warnings.filterwarnings("error", category=RuntimeWarning)` et asserte
+`body_lons` finis. Sanity-check confirmé : sans le floor `np.maximum`, la division brute
+`0/0` lèverait le RuntimeWarning → le test échouerait (vrai ratchet, pas test vide).
+1627 tests, 100% coverage.
