@@ -982,7 +982,7 @@ from ketu.declination import (
 )
 ```
 
-See the [Declination Aspects](concepts.md#declination-aspects-new-in-v1-6) concepts
+See the [Declination Aspects](#declination-aspects-new-in-v1-6) concepts
 page for the signed-δ definitions, the body-derived orb derivation, and the
 biodynamic framing.
 
@@ -1054,7 +1054,7 @@ The frozen 5-field row contract returned by `find_declination_aspects`:
 
 The per-pair orb is `max((orb_b1 + orb_b2) / 2 × DECLA_COEF, MIN_DECL_ORB)` →
 Sun/Moon `1.0°`, Rahu/Lilith `0.5°` (floor). See the
-[concepts page](concepts.md#declination-aspects-new-in-v1-6) for the full derivation.
+[concepts page](#declination-aspects-new-in-v1-6) for the full derivation.
 
 ---
 

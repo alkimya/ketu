@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-03 22:54+0200\n"
+"POT-Creation-Date: 2026-06-04 22:02+0200\n"
 "PO-Revision-Date: 2026-02-12 22:00+0100\n"
 "Last-Translator: Claude <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -1259,8 +1259,8 @@ msgid ""
 "`(mask, dynamic_specs)`."
 msgstr ""
 "`parse_harmonics_spec` est le validateur argparse `type=` connecté à "
-"l'argument CLI `--harmonics`. Il retourne un NamedTuple `HarmonicsSelection` "
-"`(mask, dynamic_specs)`."
+"l'argument CLI `--harmonics`. Il retourne un NamedTuple "
+"`HarmonicsSelection` `(mask, dynamic_specs)`."
 
 #: ../../source/api.md:896
 msgid "**`HarmonicsSelection` fields:**"
@@ -1272,10 +1272,10 @@ msgid ""
 "`ketu.core.aspects`. All-False for `h<N>` tokens (only dynamic specs are "
 "used); populated for preset / index-list inputs."
 msgstr ""
-"`mask` (`np.ndarray[bool_]`, forme `(14,)`) : masque booléen de longueur 14 "
-"dans `ketu.core.aspects`. Tout-False pour les jetons `h<N>` (seules les "
-"specs dynamiques sont utilisées) ; rempli pour les entrées préréglage / "
-"liste d'indices."
+"`mask` (`np.ndarray[bool_]`, forme `(14,)`) : masque booléen de longueur "
+"14 dans `ketu.core.aspects`. Tout-False pour les jetons `h<N>` (seules "
+"les specs dynamiques sont utilisées) ; rempli pour les entrées préréglage"
+" / liste d'indices."
 
 #: ../../source/api.md:900
 msgid ""
@@ -1357,10 +1357,11 @@ msgid ""
 " worked example."
 msgstr ""
 "La forme `h<N>` (insensible à la casse, `N` dans `[2, 64]`) sélectionne "
-"uniquement les aspects dynamiques `H{N}-{k}` via le canal `dynamic_specs=`. "
-"Les entrées préréglage / liste d'indices donnent `dynamic_specs=None`. "
-"Voir {ref}`harmonics-h7-cli-new-in-v1-5` dans Concepts pour l'usage CLI, "
-"la limite de la grammaire stricte, et un exemple pratique."
+"uniquement les aspects dynamiques `H{N}-{k}` via le canal "
+"`dynamic_specs=`. Les entrées préréglage / liste d'indices donnent "
+"`dynamic_specs=None`. Voir {ref}`harmonics-h7-cli-new-in-v1-5` dans "
+"Concepts pour l'usage CLI, la limite de la grammaire stricte, et un "
+"exemple pratique."
 
 #: ../../source/api.md:920
 msgid "Equatorial Declination (`ketu.calculations`) — New in v1.5"
@@ -1467,10 +1468,267 @@ msgstr ""
 "2024–2025, la Lune atteint |δ| ≈ 28,7°."
 
 #: ../../source/api.md:966
+msgid "Declination Aspects (`ketu.declination`) — New in v1.6"
+msgstr "Aspects de déclinaison (`ketu.declination`) — Nouveau dans v1.6"
+
+#: ../../source/api.md:968
+msgid ""
+"Additive subpackage that detects **parallels** and **contra-parallels** "
+"on the equatorial declination axis. It consumes `chart[\"body_decl\"]` "
+"(the `(14,)` signed-δ field shipped in v1.5); `CHART_DTYPE` is "
+"**unchanged**. These names are reachable **only** via "
+"`ketu.declination.*` — they are NOT re-exported from top-level `ketu` "
+"(`ketu.__all__` is unchanged, additive-only)."
+msgstr ""
+"Sous-paquet additif qui détecte les **parallèles** et les **contre-"
+"parallèles** sur l'axe de la déclinaison équatoriale. Il consomme "
+"`chart[\"body_decl\"]` (le champ δ signé `(14,)` livré en v1.5) ; "
+"`CHART_DTYPE` est **inchangé**. Ces noms sont accessibles **uniquement** "
+"via `ketu.declination.*` — ils ne sont PAS ré-exportés depuis le niveau "
+"supérieur `ketu` (`ketu.__all__` est inchangé, additif seulement)."
+
+#: ../../source/api.md:985
+msgid ""
+"See the [Declination Aspects](#declination-aspects-new-in-v1-6) concepts "
+"page for the signed-δ definitions, the body-derived orb derivation, and "
+"the biodynamic framing."
+msgstr ""
+"Voir la page de concepts [Aspects de "
+"déclinaison](#declination-aspects-new-in-v1-6) pour les définitions sur δ "
+"signé, la dérivation de l'orbe à partir des corps et le cadrage "
+"biodynamique."
+
+#: ../../source/api.md:989
+msgid "`find_declination_aspects(body_decl)`"
+msgstr "`find_declination_aspects(body_decl)`"
+
+#: ../../source/api.md:991
+msgid "Scalar / single-chart detector."
+msgstr "Détecteur scalaire / thème unique."
+
+#: ../../source/api.md:993
+msgid ""
+"**Parameters:** `body_decl` (`ndarray`, shape `(14,)`) — signed "
+"declination δ in degrees, i.e. `chart[\"body_decl\"]`."
+msgstr ""
+"**Paramètres :** `body_decl` (`ndarray`, forme `(14,)`) — déclinaison δ "
+"signée en degrés, c.-à-d. `chart[\"body_decl\"]`."
+
+#: ../../source/api.md:995
+msgid ""
+"**Returns:** `ndarray[DECLA_ASPECT_DTYPE]` — upper-triangle pairs only "
+"(`body1 < body2`), no duplicates, sorted by `(body1, body2)`. Returns "
+"`np.empty(0, dtype=DECLA_ASPECT_DTYPE)` when nothing is detected — "
+"**never** `None`, never a tuple."
+msgstr ""
+"**Retourne :** `ndarray[DECLA_ASPECT_DTYPE]` — uniquement les paires du "
+"triangle supérieur (`body1 < body2`), sans doublons, triées par `(body1, "
+"body2)`. Retourne `np.empty(0, dtype=DECLA_ASPECT_DTYPE)` quand rien "
+"n'est détecté — **jamais** `None`, jamais un tuple."
+
+#: ../../source/api.md:1012
+msgid "`declination_aspect_masks(body_decl)`"
+msgstr "`declination_aspect_masks(body_decl)`"
+
+#: ../../source/api.md:1014
+msgid ""
+"Vectorized batch path. Accepts `(S, 14)` or `(14,)` (promoted via "
+"`np.atleast_2d`) and returns a `DeclinationAspectMasks` NamedTuple. Pure "
+"NumPy broadcasting — no Python body loop."
+msgstr ""
+"Chemin vectorisé par lots. Accepte `(S, 14)` ou `(14,)` (promu via "
+"`np.atleast_2d`) et retourne un NamedTuple `DeclinationAspectMasks`. "
+"Diffusion NumPy pure — pas de boucle Python sur les corps."
+
+#: ../../source/api.md:1018
+msgid "**Parameters:** `body_decl` (`ndarray`, shape `(S, 14)` or `(14,)`)."
+msgstr "**Paramètres :** `body_decl` (`ndarray`, forme `(S, 14)` ou `(14,)`)."
+
+#: ../../source/api.md:1019
+msgid "**Returns:** `DeclinationAspectMasks`."
+msgstr "**Retourne :** `DeclinationAspectMasks`."
+
+#: ../../source/api.md:1021
+msgid "`DeclinationAspectMasks`"
+msgstr "`DeclinationAspectMasks`"
+
+#: ../../source/api.md:1023
+msgid "NamedTuple with six fields, in order:"
+msgstr "NamedTuple à six champs, dans l'ordre :"
+
+#: ../../source/api.md
+msgid "Field"
+msgstr "Champ"
+
+#: ../../source/api.md
+msgid "Shape"
+msgstr "Forme"
+
+#: ../../source/api.md
+msgid "Meaning"
+msgstr "Signification"
+
+#: ../../source/api.md
+msgid "`parallel`"
+msgstr "`parallel`"
+
+#: ../../source/api.md
+msgid "`(S, 91)`"
+msgstr "`(S, 91)`"
+
+#: ../../source/api.md
+msgid "boolean parallel mask per chart per pair"
+msgstr "masque booléen de parallèle par thème et par paire"
+
+#: ../../source/api.md
+msgid "`contra`"
+msgstr "`contra`"
+
+#: ../../source/api.md
+msgid "boolean contra-parallel mask per chart per pair"
+msgstr "masque booléen de contre-parallèle par thème et par paire"
+
+#: ../../source/api.md
+msgid "`gap`"
+msgstr "`gap`"
+
+#: ../../source/api.md
+msgid "`|δ₁−δ₂|` (parallel) / `|δ₁+δ₂|` (contra) per chart per pair"
+msgstr "`|δ₁−δ₂|` (parallèle) / `|δ₁+δ₂|` (contre) par thème et par paire"
+
+#: ../../source/api.md
+msgid "`idx_i`"
+msgstr "`idx_i`"
+
+#: ../../source/api.md
+msgid "`(91,)`"
+msgstr "`(91,)`"
+
+#: ../../source/api.md
+msgid "first body index of each pair"
+msgstr "indice du premier corps de chaque paire"
+
+#: ../../source/api.md
+msgid "`idx_j`"
+msgstr "`idx_j`"
+
+#: ../../source/api.md
+msgid "second body index of each pair"
+msgstr "indice du second corps de chaque paire"
+
+#: ../../source/api.md
+msgid "`orb_pairs`"
+msgstr "`orb_pairs`"
+
+#: ../../source/api.md
+msgid "orb limit for each pair"
+msgstr "limite d'orbe pour chaque paire"
+
+#: ../../source/api.md:1034
+msgid "`91` is the upper-triangle pair count for 14 bodies (`14 × 13 / 2`)."
+msgstr ""
+"`91` est le nombre de paires du triangle supérieur pour 14 corps (`14 × "
+"13 / 2`)."
+
+#: ../../source/api.md:1036
+msgid "`DECLA_ASPECT_DTYPE`"
+msgstr "`DECLA_ASPECT_DTYPE`"
+
+#: ../../source/api.md:1038
+msgid "The frozen 5-field row contract returned by `find_declination_aspects`:"
+msgstr ""
+"Le contrat de ligne figé à 5 champs retourné par "
+"`find_declination_aspects` :"
+
+#: ../../source/api.md
+msgid "Type"
+msgstr "Type"
+
+#: ../../source/api.md
+msgid "`body1`"
+msgstr "`body1`"
+
+#: ../../source/api.md
+msgid "`i1`"
+msgstr "`i1`"
+
+#: ../../source/api.md
+msgid "first body index (`body1 < body2`)"
+msgstr "indice du premier corps (`body1 < body2`)"
+
+#: ../../source/api.md
+msgid "`body2`"
+msgstr "`body2`"
+
+#: ../../source/api.md
+msgid "second body index"
+msgstr "indice du second corps"
+
+#: ../../source/api.md
+msgid "`kind`"
+msgstr "`kind`"
+
+#: ../../source/api.md
+msgid "`U2`"
+msgstr "`U2`"
+
+#: ../../source/api.md
+msgid "`\"P\"` (parallel) or `\"CP\"` (contra-parallel)"
+msgstr "`\"P\"` (parallèle) ou `\"CP\"` (contre-parallèle)"
+
+#: ../../source/api.md
+msgid "`f8`"
+msgstr "`f8`"
+
+#: ../../source/api.md
+msgid "`|δ₁−δ₂|` for P, `|δ₁+δ₂|` for CP"
+msgstr "`|δ₁−δ₂|` pour P, `|δ₁+δ₂|` pour CP"
+
+#: ../../source/api.md
+msgid "`orb`"
+msgstr "`orb`"
+
+#: ../../source/api.md
+msgid "the orb limit used for that pair"
+msgstr "la limite d'orbe utilisée pour cette paire"
+
+#: ../../source/api.md:1048
+msgid "`body1` / `body2` are `i1` (signed 1-byte) in the live dtype."
+msgstr "`body1` / `body2` sont des `i1` (1 octet signé) dans le dtype réel."
+
+#: ../../source/api.md:1050
+msgid "`DECLA_COEF` and `MIN_DECL_ORB`"
+msgstr "`DECLA_COEF` et `MIN_DECL_ORB`"
+
+#: ../../source/api.md:1052
+msgid "`DECLA_COEF = 1/12` (≈ 0.0833) — orb scaling on the declination axis."
+msgstr ""
+"`DECLA_COEF = 1/12` (≈ 0.0833) — mise à l'échelle de l'orbe sur l'axe de "
+"la déclinaison."
+
+#: ../../source/api.md:1053
+msgid "`MIN_DECL_ORB = 0.5` — floor (degrees) so zero-orb bodies stay detectable."
+msgstr ""
+"`MIN_DECL_ORB = 0.5` — plancher (degrés) pour que les corps à orbe nulle "
+"restent détectables."
+
+#: ../../source/api.md:1055
+msgid ""
+"The per-pair orb is `max((orb_b1 + orb_b2) / 2 × DECLA_COEF, "
+"MIN_DECL_ORB)` → Sun/Moon `1.0°`, Rahu/Lilith `0.5°` (floor). See the "
+"[concepts page](#declination-aspects-new-in-v1-6) for the full "
+"derivation."
+msgstr ""
+"L'orbe par paire est `max((orb_b1 + orb_b2) / 2 × DECLA_COEF, "
+"MIN_DECL_ORB)` → Soleil/Lune `1.0°`, Rahu/Lilith `0.5°` (plancher). Voir "
+"la [page de concepts](#declination-aspects-new-in-v1-6) pour la "
+"dérivation complète."
+
+#: ../../source/api.md:1061
 msgid "Chiron (body_id=13) — New in v1.3"
 msgstr "Chiron (body_id=13) — Nouveau en v1.3"
 
-#: ../../source/api.md:968
+#: ../../source/api.md:1063
 msgid ""
 "Chiron is the 14th body added in v1.3. There is no separate Chiron module"
 " in the public API — it is accessed through the standard calculation "
@@ -1480,15 +1738,15 @@ msgstr ""
 "séparé dans l'API publique — il est accessible via les fonctions de "
 "calcul standard en utilisant `body_id=13`."
 
-#: ../../source/api.md:970
+#: ../../source/api.md:1065
 msgid "**Key facts:**"
 msgstr "**Faits clés :**"
 
-#: ../../source/api.md:972
+#: ../../source/api.md:1067
 msgid "`ketu.bodies[\"name\"][13] == b\"Chiron\"`"
 msgstr "`ketu.bodies[\"name\"][13] == b\"Chiron\"`"
 
-#: ../../source/api.md:973
+#: ../../source/api.md:1068
 msgid ""
 "Valid date range: 1900–2100 (expanded in v1.4; 2283 Chebyshev segments "
 "embedded in `ketu/data/chiron_coeffs.npz`). Out-of-range input is "
@@ -1499,17 +1757,17 @@ msgstr ""
 "hors plage est silencieusement clampée à la limite de segment la plus "
 "proche."
 
-#: ../../source/api.md:974
+#: ../../source/api.md:1069
 msgid "Accuracy: max error 0.001214° (sub-arcminute) over the 1900–2100 range"
 msgstr ""
 "Précision : erreur maximale 0,001214° (sous-arcminute) sur la plage "
 "1900–2100"
 
-#: ../../source/api.md:975
+#: ../../source/api.md:1070
 msgid "`CHART_DTYPE` body arrays are 14-wide; index 13 always refers to Chiron"
 msgstr "`CHART_DTYPE` body arrays are 14-wide; index 13 always refers to Chiron"
 
-#: ../../source/api.md:977
+#: ../../source/api.md:1072
 msgid ""
 "**Breaking change (v1.2 → v1.3):** The `CHART_DTYPE` body axis expanded "
 "from 13 to 14 bodies (D-08). Code that accessed bodies by fixed count or "
@@ -1521,7 +1779,7 @@ msgstr ""
 "compte fixe ou l'index codé en dur 12 comme dernier corps doit être mis à"
 " jour. Voir [Migration](migration.md) pour les détails."
 
-#: ../../source/api.md:997
+#: ../../source/api.md:1092
 msgid "See also: [Chiron](chiron.md)"
 msgstr "Voir aussi : [Chiron](chiron.md)"
 

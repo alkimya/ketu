@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-03 22:54+0200\n"
+"POT-Creation-Date: 2026-06-04 21:54+0200\n"
 "PO-Revision-Date: 2026-02-12 00:00+0100\n"
 "Last-Translator: Claude AI <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -615,7 +615,9 @@ msgstr ""
 
 #: ../../source/concepts.md:227
 msgid "`--harmonics h7` — arbitrary harmonics on the CLI (New in v1.5)"
-msgstr "`--harmonics h7` — harmoniques arbitraires en ligne de commande (Nouveau en v1.5)"
+msgstr ""
+"`--harmonics h7` — harmoniques arbitraires en ligne de commande (Nouveau "
+"en v1.5)"
 
 #: ../../source/concepts.md:229
 msgid ""
@@ -637,9 +639,9 @@ msgid ""
 " aspect table mask is empty — only `H{N}-{k}` dynamic aspects are "
 "detected."
 msgstr ""
-"**Syntaxe :** `--harmonics h<N>` (préfixe h, insensible à la casse ; "
-"ex. `h7`, `H7`). `N` doit être un entier dans `[2, 64]`. Le jeton "
-"sélectionne uniquement la famille d'harmoniques choisie via le canal "
+"**Syntaxe :** `--harmonics h<N>` (préfixe h, insensible à la casse ; ex. "
+"`h7`, `H7`). `N` doit être un entier dans `[2, 64]`. Le jeton sélectionne"
+" uniquement la famille d'harmoniques choisie via le canal "
 "`dynamic_specs=` (voir {ref}`synthetic-harmonic-naming` pour "
 "l'explication des deux canaux). Le masque de la table d'aspects statique "
 "est vide — seuls les aspects dynamiques `H{N}-{k}` sont détectés."
@@ -651,11 +653,11 @@ msgid ""
 "trailing block are always emitted unchanged (the timing example uses the "
 "classical Sun-Moon aspects regardless of the `--harmonics` selection)."
 msgstr ""
-"**Sémantique :** l'en-tête de configuration résolue sur stderr indique "
-"`# Aspect set: h7 (...)`. Le bloc de positions et le bloc final "
-"\"Aspect Timing Example\" sont toujours émis inchangés (l'exemple de "
-"timing utilise les aspects classiques Soleil-Lune indépendamment de la "
-"sélection `--harmonics`)."
+"**Sémantique :** l'en-tête de configuration résolue sur stderr indique `#"
+" Aspect set: h7 (...)`. Le bloc de positions et le bloc final \"Aspect "
+"Timing Example\" sont toujours émis inchangés (l'exemple de timing "
+"utilise les aspects classiques Soleil-Lune indépendamment de la sélection"
+" `--harmonics`)."
 
 #: ../../source/concepts.md:243
 msgid "**Tight-grammar boundary — what is supported vs. deferred:**"
@@ -728,8 +730,8 @@ msgid ""
 "v1.5."
 msgstr ""
 "Les formes mixtes (`h7,h11`, `traditional,h7`) sont **reportées** à "
-"HARMF-01 et sont actuellement rejetées avec une erreur `argparse`. "
-"Ne pas les utiliser en v1.5."
+"HARMF-01 et sont actuellement rejetées avec une erreur `argparse`. Ne pas"
+" les utiliser en v1.5."
 
 #: ../../source/concepts.md:256
 msgid "**Worked example (J2000, septile family):**"
@@ -743,11 +745,11 @@ msgid ""
 " resolved selection: `# Aspect set: h7 (3 aspects: H7-1 51°, H7-2 103°, "
 "H7-3 154°)`."
 msgstr ""
-"Cela émet les aspects de la famille des septiles (`H7-1` ≈51.43°, "
-"`H7-2` ≈102.86°, `H7-3` ≈154.29°) pour toutes les paires de corps en "
-"orbe à J2000, suivi du bloc classique \"Aspect Timing Example\". "
-"L'en-tête stderr confirme la sélection résolue : `# Aspect set: h7 "
-"(3 aspects: H7-1 51°, H7-2 103°, H7-3 154°)`."
+"Cela émet les aspects de la famille des septiles (`H7-1` ≈51.43°, `H7-2` "
+"≈102.86°, `H7-3` ≈154.29°) pour toutes les paires de corps en orbe à "
+"J2000, suivi du bloc classique \"Aspect Timing Example\". L'en-tête "
+"stderr confirme la sélection résolue : `# Aspect set: h7 (3 aspects: H7-1"
+" 51°, H7-2 103°, H7-3 154°)`."
 
 #: ../../source/concepts.md:266
 msgid "Orbs"
@@ -1357,15 +1359,271 @@ msgstr ""
 "sur `CHART_DTYPE` doit s'adapter (impact Kala documenté, pas de migration"
 " automatique)."
 
-#: ../../source/concepts.md:448
+#: ../../source/concepts.md:449
+msgid "Declination Aspects — New in v1.6"
+msgstr "Aspects de déclinaison — Nouveau dans v1.6"
+
+#: ../../source/concepts.md:451
+msgid ""
+"Declination aspects compare two bodies on the **equatorial declination "
+"axis** (δ), independent of ecliptic longitude. The detector lives in the "
+"additive `ketu.declination` subpackage — `CHART_DTYPE` is unchanged. It "
+"consumes `chart[\"body_decl\"]` (the `(14,)` field shipped in v1.5)."
+msgstr ""
+"Les aspects de déclinaison comparent deux corps sur l'**axe de la "
+"déclinaison équatoriale** (δ), indépendamment de la longitude écliptique. "
+"Le détecteur réside dans le sous-paquet additif `ketu.declination` — "
+"`CHART_DTYPE` est inchangé. Il consomme `chart[\"body_decl\"]` (le champ "
+"`(14,)` livré en v1.5)."
+
+#: ../../source/concepts.md:456
+msgid "Parallel and Contra-Parallel"
+msgstr "Parallèle et contre-parallèle"
+
+#: ../../source/concepts.md:458
+msgid ""
+"**Parallel** (`P`): two bodies share the same declination δ **AND** are "
+"on the **same side** of the celestial equator (both north OR both south)."
+" Signed-δ rule: `sign(δ₁) == sign(δ₂) ≠ 0  AND  |δ₁ − δ₂| ≤ orb`. The "
+"same-hemisphere rule is **strict** — the dominant convention across "
+"Sepharial, Carter, Cafe Astrology, Lunarium, McAfee, Kerykeion, and "
+"astro.com."
+msgstr ""
+"**Parallèle** (`P`) : deux corps partagent la même déclinaison δ **ET** "
+"sont du **même côté** de l'équateur céleste (tous deux au nord OU tous "
+"deux au sud). Règle sur δ signé : `sign(δ₁) == sign(δ₂) ≠ 0  AND  |δ₁ − "
+"δ₂| ≤ orb`. La règle du même hémisphère est **stricte** — la convention "
+"dominante chez Sepharial, Carter, Cafe Astrology, Lunarium, McAfee, "
+"Kerykeion et astro.com."
+
+#: ../../source/concepts.md:464
+msgid ""
+"**Contra-parallel** (`CP`): equal magnitude of δ but on **opposite "
+"sides** of the celestial equator. Signed-δ rule: `sign(δ₁) ≠ sign(δ₂)  "
+"AND  both ≠ 0  AND  |δ₁ + δ₂| ≤ orb`."
+msgstr ""
+"**Contre-parallèle** (`CP`) : magnitude de δ égale mais de **côtés "
+"opposés** de l'équateur céleste. Règle sur δ signé : `sign(δ₁) ≠ "
+"sign(δ₂)  AND  both ≠ 0  AND  |δ₁ + δ₂| ≤ orb`."
+
+#: ../../source/concepts.md:468
+msgid ""
+"**Zero-sign trap:** a body exactly on the celestial equator (δ = 0, "
+"`np.sign` → 0) forms **neither** a parallel nor a contra-parallel. Two "
+"bodies exactly at δ = 0 have 0° separation but are **not** flagged."
+msgstr ""
+"**Piège du signe nul :** un corps exactement sur l'équateur céleste (δ = "
+"0, `np.sign` → 0) ne forme **ni** parallèle **ni** contre-parallèle. Deux "
+"corps exactement à δ = 0 ont une séparation de 0° mais ne sont **pas** "
+"signalés."
+
+#: ../../source/concepts.md:484
+msgid "The Orb Formula (Body-Derived)"
+msgstr "La formule d'orbe (dérivée des corps)"
+
+#: ../../source/concepts.md:486
+msgid "The per-pair orb on the declination axis is:"
+msgstr "L'orbe par paire sur l'axe de la déclinaison est :"
+
+#: ../../source/concepts.md:492
+msgid "with `DECLA_COEF = 1/12 ≈ 0.0833` and `MIN_DECL_ORB = 0.5°`."
+msgstr "avec `DECLA_COEF = 1/12 ≈ 0.0833` et `MIN_DECL_ORB = 0.5°`."
+
+#: ../../source/concepts.md:494
+msgid ""
+"**Worked Sun/Moon example:** Sun orb 12° + Moon orb 12° → mean 12° → × "
+"1/12 → exactly **1.0°**. The coefficient `1/12` is the reciprocal of the "
+"maximum body orb (Sun/Moon both at 12°) — a justified exact fraction, not"
+" a magic number — chosen so Sun/Moon lands on the published 1° natal "
+"consensus (Carter, Cafe Astrology, astro.com)."
+msgstr ""
+"**Exemple détaillé Soleil/Lune :** orbe Soleil 12° + orbe Lune 12° → "
+"moyenne 12° → × 1/12 → exactement **1.0°**. Le coefficient `1/12` est "
+"l'inverse de l'orbe de corps maximale (Soleil/Lune tous deux à 12°) — une "
+"fraction exacte justifiée, pas un nombre magique — choisie pour que "
+"Soleil/Lune tombe sur le consensus natal publié de 1° (Carter, Cafe "
+"Astrology, astro.com)."
+
+#: ../../source/concepts.md:500
+msgid ""
+"**Floor example:** zero-orb bodies (Rahu, Ketu, Lilith — orb 0) → formula"
+" yields 0° → floored to **0.5°** so they remain detectable."
+msgstr ""
+"**Exemple de plancher :** les corps à orbe nulle (Rahu, Ketu, Lilith — "
+"orbe 0) → la formule donne 0° → plancher à **0.5°** pour qu'ils restent "
+"détectables."
+
+#: ../../source/concepts.md
+msgid "Pair"
+msgstr "Paire"
+
+#: ../../source/concepts.md
+msgid "δ orb"
+msgstr "Orbe δ"
+
+#: ../../source/concepts.md
+msgid "Sun / Moon"
+msgstr "Soleil / Lune"
+
+#: ../../source/concepts.md
+msgid "1.0°"
+msgstr "1,0°"
+
+#: ../../source/concepts.md
+msgid "Sun / Mars"
+msgstr "Soleil / Mars"
+
+#: ../../source/concepts.md
+msgid "0.833°"
+msgstr "0,833°"
+
+#: ../../source/concepts.md
+msgid "Jupiter / Saturn"
+msgstr "Jupiter / Saturne"
+
+#: ../../source/concepts.md
+msgid "Uranus / Neptune"
+msgstr "Uranus / Neptune"
+
+#: ../../source/concepts.md
+msgid "0.5°"
+msgstr "0,5°"
+
+#: ../../source/concepts.md
+msgid "Rahu / Lilith"
+msgstr "Rahu / Lilith"
+
+#: ../../source/concepts.md
+msgid "0.5° (floor)"
+msgstr "0,5° (plancher)"
+
+#: ../../source/concepts.md:511
+msgid "Biodynamic Framing"
+msgstr "Cadrage biodynamique"
+
+#: ../../source/concepts.md:513
+msgid ""
+"Parallel ≈ **conjunction by declination**; contra-parallel ≈ **opposition"
+" by declination** (Sepharial: \"they act as if in conjunction\"; Carter "
+"couples parallel with conjunction). These are ANGLES/relationships "
+"between bodies on the δ axis — the same aspect-centric biodynamic framing"
+" as the rest of Ketu, not zodiacal-sign conventions."
+msgstr ""
+"Parallèle ≈ **conjonction par déclinaison** ; contre-parallèle ≈ "
+"**opposition par déclinaison** (Sepharial : « ils agissent comme en "
+"conjonction » ; Carter associe le parallèle à la conjonction). Ce sont "
+"des ANGLES/relations entre corps sur l'axe δ — le même cadrage "
+"biodynamique centré sur les aspects que le reste de Ketu, pas des "
+"conventions de signes zodiacaux."
+
+#: ../../source/concepts.md:518
+msgid "Parallel ≠ Longitude Conjunction (the Key Distinction)"
+msgstr "Parallèle ≠ conjonction en longitude (la distinction clé)"
+
+#: ../../source/concepts.md:520
+msgid ""
+"Two bodies can be **parallel in declination without being conjunct in "
+"ecliptic longitude**, and vice-versa. Declination δ (equatorial) and "
+"longitude (ecliptic) are **independent measurements**. A \"double "
+"whammy\" (both conjunct AND parallel) is notably stronger, but the "
+"detection paths are entirely separate — `find_declination_aspects` "
+"consumes **only** `body_decl`, never longitudes."
+msgstr ""
+"Deux corps peuvent être **parallèles en déclinaison sans être conjoints "
+"en longitude écliptique**, et inversement. La déclinaison δ (équatoriale) "
+"et la longitude (écliptique) sont des **mesures indépendantes**. Un "
+"« double whammy » (à la fois conjoint ET parallèle) est nettement plus "
+"fort, mais les chemins de détection sont entièrement séparés — "
+"`find_declination_aspects` ne consomme **que** `body_decl`, jamais les "
+"longitudes."
+
+#: ../../source/concepts.md:526
+msgid "Symbols and Abbreviations"
+msgstr "Symboles et abréviations"
+
+#: ../../source/concepts.md
+msgid "Text abbrev"
+msgstr "Abrév. texte"
+
+#: ../../source/concepts.md
+msgid "Notes"
+msgstr "Notes"
+
+#: ../../source/concepts.md
+msgid "Parallel"
+msgstr "Parallèle"
+
+#: ../../source/concepts.md
+msgid "`//` (proposed U+2BDD)"
+msgstr "`//` (U+2BDD proposé)"
+
+#: ../../source/concepts.md
+msgid "`P`"
+msgstr "`P`"
+
+#: ../../source/concepts.md
+msgid "`‖` / `⫽` as text fallbacks"
+msgstr "`‖` / `⫽` comme replis texte"
+
+#: ../../source/concepts.md
+msgid "Contra-parallel"
+msgstr "Contre-parallèle"
+
+#: ../../source/concepts.md
+msgid "`#` (proposed U+2BDE)"
+msgstr "`#` (U+2BDE proposé)"
+
+#: ../../source/concepts.md
+msgid "`CP`"
+msgstr "`CP`"
+
+#: ../../source/concepts.md
+msgid "Dominant in printed tables"
+msgstr "Dominant dans les tables imprimées"
+
+#: ../../source/concepts.md:533
+msgid ""
+"The `//` and `#` glyphs are proposals from David Faulks (Unicode "
+"L2/16-174, 2016) — not yet in the Unicode standard. Text abbreviations "
+"`P` / `CP` match Solar Fire and Astrodienst conventions and are used as "
+"the `kind` field values in `DECLA_ASPECT_DTYPE`."
+msgstr ""
+"Les glyphes `//` et `#` sont des propositions de David Faulks (Unicode "
+"L2/16-174, 2016) — pas encore dans le standard Unicode. Les abréviations "
+"texte `P` / `CP` suivent les conventions de Solar Fire et Astrodienst et "
+"servent de valeurs du champ `kind` dans `DECLA_ASPECT_DTYPE`."
+
+#: ../../source/concepts.md:537
+msgid "Out-of-Bounds Interaction"
+msgstr "Interaction avec les corps hors limites"
+
+#: ../../source/concepts.md:539
+msgid ""
+"OOB bodies (|δ| > ε, tracked via `is_out_of_bounds` from v1.5) "
+"participate in P/CP detection **mechanically identically** — the formula "
+"does not change. \"Both OOB\" is an **interpretive annotation** the "
+"caller composes (e.g. by combining `is_out_of_bounds` results with the "
+"aspect output), **not** a detection flag. Some authors (Boehrer, McAfee) "
+"consider two-OOB parallels especially intense — a delineation note only."
+msgstr ""
+"Les corps hors limites (|δ| > ε, suivis via `is_out_of_bounds` depuis "
+"v1.5) participent à la détection P/CP de manière **mécaniquement "
+"identique** — la formule ne change pas. « Tous deux hors limites » est "
+"une **annotation interprétative** que l'appelant compose (par ex. en "
+"combinant les résultats de `is_out_of_bounds` avec la sortie d'aspects), "
+"**pas** un drapeau de détection. Certains auteurs (Boehrer, McAfee) "
+"considèrent les parallèles à deux corps hors limites comme "
+"particulièrement intenses — une simple note de délination."
+
+#: ../../source/concepts.md:546
 msgid "Planetary Movements"
 msgstr "Mouvements planétaires"
 
-#: ../../source/concepts.md:450
+#: ../../source/concepts.md:548
 msgid "Retrogradation"
 msgstr "Rétrogradation"
 
-#: ../../source/concepts.md:452
+#: ../../source/concepts.md:550
 msgid ""
 "**Retrogradation** is the apparent movement of a planet that seems to "
 "move backward in the zodiac. It's an optical illusion due to differences "
@@ -1375,7 +1633,7 @@ msgstr ""
 "reculer dans le zodiaque. C'est une illusion optique due aux différences "
 "de vitesse orbitale entre la Terre et la planète observée."
 
-#: ../../source/concepts.md:461
+#: ../../source/concepts.md:559
 msgid "Average Speeds"
 msgstr "Vitesses moyennes"
 
@@ -1507,7 +1765,7 @@ msgstr "0,00°/jour"
 msgid "248 years"
 msgstr "248 ans"
 
-#: ../../source/concepts.md:476
+#: ../../source/concepts.md:574
 msgid "Zodiac Signs"
 msgstr "Signes du zodiaque"
 
@@ -1679,15 +1937,15 @@ msgstr "♓"
 msgid "360°"
 msgstr "360°"
 
-#: ../../source/concepts.md:507
+#: ../../source/concepts.md:605
 msgid "Planetary Configurations"
 msgstr "Configurations planétaires"
 
-#: ../../source/concepts.md:509
+#: ../../source/concepts.md:607
 msgid "Grand Trine"
 msgstr "Grand Trigone"
 
-#: ../../source/concepts.md:511
+#: ../../source/concepts.md:609
 msgid ""
 "Three planets forming trines with each other (equilateral triangle of "
 "120°)."
@@ -1695,11 +1953,11 @@ msgstr ""
 "Trois planètes formant des trigones entre elles (triangle équilatéral de "
 "120°)."
 
-#: ../../source/concepts.md:513
+#: ../../source/concepts.md:611
 msgid "T-Square"
 msgstr "T-Carré"
 
-#: ../../source/concepts.md:515
+#: ../../source/concepts.md:613
 msgid ""
 "Two planets in opposition (180°), both square (90°) to a third planet "
 "(apex)."
@@ -1707,11 +1965,11 @@ msgstr ""
 "Deux planètes en opposition (180°), toutes deux en carré (90°) à une "
 "troisième planète (apex)."
 
-#: ../../source/concepts.md:517
+#: ../../source/concepts.md:615
 msgid "Yod (Finger of God)"
 msgstr "Yod (Doigt de Dieu)"
 
-#: ../../source/concepts.md:519
+#: ../../source/concepts.md:617
 msgid ""
 "Two planets in sextile (60°), both quincunx (150°) to a third planet "
 "(apex)."
@@ -1719,11 +1977,11 @@ msgstr ""
 "Deux planètes en sextile (60°), toutes deux en quinconce (150°) à une "
 "troisième planète (apex)."
 
-#: ../../source/concepts.md:521
+#: ../../source/concepts.md:619
 msgid "Grand Square"
 msgstr "Grand Carré"
 
-#: ../../source/concepts.md:523
+#: ../../source/concepts.md:621
 msgid ""
 "Four planets forming four squares (90°) and two oppositions (180°), "
 "creating a square in the chart."
@@ -1731,15 +1989,15 @@ msgstr ""
 "Quatre planètes formant quatre carrés (90°) et deux oppositions (180°), "
 "créant un carré dans le thème."
 
-#: ../../source/concepts.md:525
+#: ../../source/concepts.md:623
 msgid "Cycles and Returns"
 msgstr "Cycles et retours"
 
-#: ../../source/concepts.md:527
+#: ../../source/concepts.md:625
 msgid "Planetary Returns"
 msgstr "Retours planétaires"
 
-#: ../../source/concepts.md:529
+#: ../../source/concepts.md:627
 msgid ""
 "A **planetary return** occurs when a planet returns to its natal position"
 " (same ecliptic longitude)."
@@ -1747,27 +2005,27 @@ msgstr ""
 "Un **retour planétaire** se produit quand une planète revient à sa "
 "position natale (même longitude écliptique)."
 
-#: ../../source/concepts.md:531
+#: ../../source/concepts.md:629
 msgid "**Main returns:**"
 msgstr "**Principaux retours :**"
 
-#: ../../source/concepts.md:533
+#: ../../source/concepts.md:631
 msgid "**Solar return**: Astrological birthday (365.25 days)"
 msgstr "**Retour solaire** : Anniversaire astrologique (365,25 jours)"
 
-#: ../../source/concepts.md:534
+#: ../../source/concepts.md:632
 msgid "**Lunar return**: Approximately every 27.3 days"
 msgstr "**Retour lunaire** : Environ tous les 27,3 jours"
 
-#: ../../source/concepts.md:535
+#: ../../source/concepts.md:633
 msgid "**Jupiter return**: Approximately every 12 years"
 msgstr "**Retour de Jupiter** : Environ tous les 12 ans"
 
-#: ../../source/concepts.md:536
+#: ../../source/concepts.md:634
 msgid "**Saturn return**: Approximately at 29-30 years and 58-60 years"
 msgstr "**Retour de Saturne** : Environ à 29-30 ans et 58-60 ans"
 
-#: ../../source/concepts.md:538
+#: ../../source/concepts.md:636
 msgid ""
 "Ketu provides dedicated functions for solar and lunar returns in "
 "`ketu.returns`. See [Predictive Charts](predictive_charts.md) for "
@@ -1777,23 +2035,23 @@ msgstr ""
 "dans `ketu.returns`. Voir [Thèmes prédictifs](predictive_charts.md) pour "
 "les détails."
 
-#: ../../source/concepts.md:540
+#: ../../source/concepts.md:638
 msgid "Next Steps"
 msgstr "Prochaines étapes"
 
-#: ../../source/concepts.md:542
+#: ../../source/concepts.md:640
 msgid "Explore [Examples](examples.md) to see these concepts in action"
 msgstr "Consultez les [Exemples](examples.md) pour voir ces concepts en action"
 
-#: ../../source/concepts.md:543
+#: ../../source/concepts.md:641
 msgid "See the [API Reference](api.md) for technical implementation"
 msgstr "Consultez la [Référence API](api.md) pour l'implémentation technique"
 
-#: ../../source/concepts.md:544
+#: ../../source/concepts.md:642
 msgid "Read the [Quick Start Guide](quickstart.md) to begin coding"
 msgstr "Lisez le [Guide de démarrage rapide](quickstart.md) pour commencer à coder"
 
-#: ../../source/concepts.md:545
+#: ../../source/concepts.md:643
 msgid "Discover [House Systems](houses.md) for chart calculation"
 msgstr "Découvrez les [Systèmes de maisons](houses.md) pour le calcul de thèmes"
 
