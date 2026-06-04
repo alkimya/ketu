@@ -114,16 +114,29 @@ v1.5 promoted equatorial declination δ to a first-class, vectorizable quantity.
 - ✓ CLI `--harmonics h7` (h-prefixed, Tight grammar) via `HarmonicsSelection` NamedTuple clean under mypy `--strict`; Quadrinovile display bug fixed; new h7 byte-stability fixture audited, v1.1 fixture UNCHANGED; documented en + fr — v1.5.0 (HARM-06..09)
 - ✓ `ketu==1.5.0` shipped to PyPI via OIDC (push main + tag); user go/no-go honoured before publish; post-publish fresh-venv smoke 4/4 (declination, montant/descendant, OOB, `--harmonics h7`, no `pyswisseph` at runtime) — v1.5.0 (REL-01..03)
 
+## Current Milestone: v1.6 Declination Aspects
+
+**Goal:** Add declination aspects — parallels (δ₁≈δ₂) and contra-parallels (δ₁≈−δ₂) — as a new aspect type on the δ axis, the last lightweight Ketu engine milestone before the Rahu UI project.
+
+**Target features:**
+
+- Parallel detection (two bodies at the same declination, same hemisphere ≈ conjunction effect)
+- Contra-parallel detection (opposite declinations, δ₁≈−δ₂ ≈ opposition effect)
+- Dedicated declination orbs derived from `core.bodies['orb']` × coefficient (Ketu-style, like `dyn_coef`)
+- Integration into the natal detection chain (reusing the v1.5 `body_decl` data already in `CHART_DTYPE`)
+- Documentation en + fr (aspect-centric biodynamic framing)
+
+**Scope discipline (LIGHT):** DECLA only. NO declination synastry, NO dedicated CLI surface, NO new bodies. HARMF-01 (rich `--harmonics` grammar) explicitly deferred. This is the final lightweight Ketu engine milestone — Rahu (separate web-UI project consuming `ketu` from PyPI) comes next.
+
 ### Active
 
-<!-- No active milestone. v1.5 shipped + archived 2026-06-04. Next milestone (v1.6) requirements defined by /gsd:new-milestone. -->
+<!-- v1.6 Declination Aspects — DECLA only (light). Requirements defined by /gsd:new-milestone 2026-06-04. -->
 
-**No active milestone.** v1.5 shipped and archived 2026-06-04. Run `/gsd:new-milestone` to define v1.6.
+- [ ] **DECLA** — Declination aspects: parallel + contra-parallel detection, dedicated δ orbs (body-derived, Ketu-style), natal detection-chain integration, docs en + fr. Reuses v1.5 `body_decl` data. NO synastry δ, NO dedicated CLI surface (LIGHT scope).
 
-**Candidate scope for v1.6** (deferred from prior milestones, not yet committed):
+**Deferred (NOT in v1.6):**
 
-- **DECLA-01..03** — Declination aspects (parallels ≈ conjunction / contra-parallels ≈ opposition) as a new aspect type with dedicated orbs + detection-chain integration. The aspect-centric biodynamic framing makes these a natural next step, but they touch the aspect engine.
-- **HARMF-01** — Rich `--harmonics` CLI grammar: multi-harmonic (`h7,h11`) and preset+harmonic mixing (`traditional,h7`). v1.5 shipped only the Tight single-token form.
+- **HARMF-01** — Rich `--harmonics` CLI grammar: multi-harmonic (`h7,h11`) and preset+harmonic mixing (`traditional,h7`). v1.5 shipped only the Tight single-token form. Out of scope for v1.6 (DECLA only); remains a future candidate.
 
 ### Out of Scope
 
@@ -247,4 +260,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-Last updated: 2026-06-04 — v1.5 (Lunar Declination & Harmonics Debt) milestone SHIPPED + ARCHIVED. `ketu==1.5.0` on PyPI via OIDC (tag `cc1a3b8` + main pushed). 21/21 requirements validated and moved to Validated; Active section reset (no active milestone). 8 v1.5 decisions logged. Candidate v1.6 scope: DECLA-01..03 (declination aspects), HARMF-01 (rich CLI grammar). Next: `/gsd:new-milestone` (define v1.6 requirements + roadmap; phases continue at 36).
+Last updated: 2026-06-04 — v1.6 (Declination Aspects) milestone STARTED via `/gsd:new-milestone`. Scope tranché with user: DECLA only (light) — parallel + contra-parallel detection, body-derived δ orbs (Ketu-style), natal detection-chain integration, docs en + fr; NO synastry δ, NO dedicated CLI surface; HARMF-01 deferred. Final lightweight Ketu engine milestone before Rahu. Phases continue at 36. Next: targeted research → REQUIREMENTS.md → ROADMAP.md.

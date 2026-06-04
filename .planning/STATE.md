@@ -1,44 +1,47 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.5
-milestone_name: Lunar Declination & Harmonics Debt
-status: archived
-last_updated: "2026-06-04T11:30:00Z"
+milestone: v1.6
+milestone_name: Declination Aspects
+status: defining_requirements
+last_updated: "2026-06-04T12:00:00Z"
 last_activity: 2026-06-04
 progress:
-  total_phases: 3
-  completed_phases: 3
-  total_plans: 10
-  completed_plans: 10
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-06-04 — v1.5 shipped + archived)
+See: `.planning/PROJECT.md` (updated 2026-06-04 — v1.6 started)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** No active milestone. v1.5 (Lunar Declination & Harmonics Debt) shipped + archived 2026-06-04 — `ketu==1.5.0` on PyPI. Next: define v1.6 via `/gsd:new-milestone`. Candidate scope: DECLA-01..03 (declination aspects: parallels / contra-parallels) + HARMF-01 (rich `--harmonics` CLI grammar).
+**Current focus:** Milestone v1.6 (Declination Aspects) — DECLA only (light): parallel + contra-parallel detection, body-derived δ orbs (Ketu-style), natal detection-chain integration, docs en + fr. NO synastry δ, NO dedicated CLI surface. HARMF-01 deferred. Final lightweight Ketu engine milestone before Rahu (separate web-UI project consuming ketu from PyPI).
 
 ## Current Position
 
-Phase: — (no active milestone)
+Phase: Not started (defining requirements)
 Plan: —
-Status: MILESTONE v1.5 SHIPPED + ARCHIVED. ketu==1.5.0 live on PyPI via OIDC (publish.yml run 26945916843 SUCCESS). Tag v1.5.0/cc1a3b8 (commit cf85e90) + origin/main pushed. GitHub release with sdist+wheel. Archived: v1.5-ROADMAP.md + v1.5-REQUIREMENTS.md + MILESTONES.md entry; ROADMAP collapsed; PROJECT.md evolved (21/21 validated, Active reset); REQUIREMENTS.md removed (fresh for v1.6). Stale RuntimeWarning div/0 todo closed at milestone-close (observable ratchet f256b11).
-Last activity: 2026-06-04 — /gsd:complete-milestone executed (v1.5 archived).
+Status: Defining requirements
+Last activity: 2026-06-04 — Milestone v1.6 started (DECLA scope tranché with user; research=true persisted)
 
-Progress: Milestone v1.5 complete + archived (3/3 phases, 10/10 plans).
+Progress: ░░░░░░░░░░ 0% — defining requirements
 
 ## Next Step
 
-**`/gsd:new-milestone`** — Define v1.6 (requirements → roadmap; phases continue at 36).
+Targeted research (DECLA conventions) → `REQUIREMENTS.md` → `ROADMAP.md` (phases continue at 36).
 
-**Candidate v1.6 scope (deferred, not committed):**
+**v1.6 scope (committed):**
 
-- **DECLA-01..03** — Declination aspects (parallels ≈ conjunction / contra-parallels ≈ opposition) as a new aspect type with dedicated orbs + detection-chain integration. Natural next step for the aspect-centric biodynamic framing, but touches the aspect engine.
-- **HARMF-01** — Rich `--harmonics` CLI grammar: multi-harmonic (`h7,h11`) and preset+harmonic mixing (`traditional,h7`). v1.5 shipped only the Tight single-token form.
+- **DECLA only** — Declination aspects: parallel (δ₁≈δ₂, same hemisphere ≈ conjunction) + contra-parallel (δ₁≈−δ₂ ≈ opposition) detection; dedicated δ orbs derived from `core.bodies['orb']` × coefficient (Ketu-style, like `dyn_coef`); natal detection-chain integration reusing v1.5 `body_decl`; docs en + fr. LIGHT: NO synastry δ, NO dedicated CLI surface.
+
+**Deferred (NOT v1.6):**
+
+- **HARMF-01** — Rich `--harmonics` CLI grammar (`h7,h11` multi-harmonic, `traditional,h7` mixing). Out of scope; future candidate.
 
 ## Accumulated Context
 
