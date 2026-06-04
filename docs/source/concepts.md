@@ -445,6 +445,104 @@ chart = compute_chart(jd, 48.8566, 2.3522)
 moon_decl = chart["body_decl"][1]   # Moon δ in degrees
 ```
 
+(declination-aspects-new-in-v1-6)=
+## Declination Aspects — New in v1.6
+
+Declination aspects compare two bodies on the **equatorial declination axis** (δ),
+independent of ecliptic longitude. The detector lives in the additive
+`ketu.declination` subpackage — `CHART_DTYPE` is unchanged. It consumes
+`chart["body_decl"]` (the `(14,)` field shipped in v1.5).
+
+### Parallel and Contra-Parallel
+
+- **Parallel** (`P`): two bodies share the same declination δ **AND** are on the
+  **same side** of the celestial equator (both north OR both south).
+  Signed-δ rule: `sign(δ₁) == sign(δ₂) ≠ 0  AND  |δ₁ − δ₂| ≤ orb`.
+  The same-hemisphere rule is **strict** — the dominant convention across Sepharial,
+  Carter, Cafe Astrology, Lunarium, McAfee, Kerykeion, and astro.com.
+
+- **Contra-parallel** (`CP`): equal magnitude of δ but on **opposite sides** of the
+  celestial equator. Signed-δ rule:
+  `sign(δ₁) ≠ sign(δ₂)  AND  both ≠ 0  AND  |δ₁ + δ₂| ≤ orb`.
+
+- **Zero-sign trap:** a body exactly on the celestial equator (δ = 0, `np.sign` → 0)
+  forms **neither** a parallel nor a contra-parallel. Two bodies exactly at δ = 0
+  have 0° separation but are **not** flagged.
+
+```python
+import numpy as np
+from ketu.declination import find_declination_aspects
+
+decl = np.zeros(14)
+decl[0] = 20.0   # Sun  δ = +20.0°
+decl[1] = 20.5   # Moon δ = +20.5°  → same hemisphere, gap 0.5° ≤ 1.0° orb
+
+aspects = find_declination_aspects(decl)
+print(aspects)   # [(0, 1, 'P', 0.5, 1.0)] — Sun/Moon parallel
+```
+
+### The Orb Formula (Body-Derived)
+
+The per-pair orb on the declination axis is:
+
+```text
+δ_orb(b1, b2) = max((bodies['orb'][b1] + bodies['orb'][b2]) / 2 × DECLA_COEF, MIN_DECL_ORB)
+```
+
+with `DECLA_COEF = 1/12 ≈ 0.0833` and `MIN_DECL_ORB = 0.5°`.
+
+**Worked Sun/Moon example:** Sun orb 12° + Moon orb 12° → mean 12° → × 1/12 →
+exactly **1.0°**. The coefficient `1/12` is the reciprocal of the maximum body orb
+(Sun/Moon both at 12°) — a justified exact fraction, not a magic number — chosen so
+Sun/Moon lands on the published 1° natal consensus (Carter, Cafe Astrology,
+astro.com).
+
+**Floor example:** zero-orb bodies (Rahu, Ketu, Lilith — orb 0) → formula yields 0° →
+floored to **0.5°** so they remain detectable.
+
+| Pair | δ orb |
+|------|-------|
+| Sun / Moon | 1.0° |
+| Sun / Mars | 0.833° |
+| Jupiter / Saturn | 0.833° |
+| Uranus / Neptune | 0.5° |
+| Rahu / Lilith | 0.5° (floor) |
+
+### Biodynamic Framing
+
+Parallel ≈ **conjunction by declination**; contra-parallel ≈ **opposition by
+declination** (Sepharial: "they act as if in conjunction"; Carter couples parallel with
+conjunction). These are ANGLES/relationships between bodies on the δ axis — the same
+aspect-centric biodynamic framing as the rest of Ketu, not zodiacal-sign conventions.
+
+### Parallel ≠ Longitude Conjunction (the Key Distinction)
+
+Two bodies can be **parallel in declination without being conjunct in ecliptic
+longitude**, and vice-versa. Declination δ (equatorial) and longitude (ecliptic) are
+**independent measurements**. A "double whammy" (both conjunct AND parallel) is
+notably stronger, but the detection paths are entirely separate —
+`find_declination_aspects` consumes **only** `body_decl`, never longitudes.
+
+### Symbols and Abbreviations
+
+| Aspect | Symbol | Text abbrev | Notes |
+|--------|--------|-------------|-------|
+| Parallel | `//` (proposed U+2BDD) | `P` | `‖` / `⫽` as text fallbacks |
+| Contra-parallel | `#` (proposed U+2BDE) | `CP` | Dominant in printed tables |
+
+The `//` and `#` glyphs are proposals from David Faulks (Unicode L2/16-174, 2016) —
+not yet in the Unicode standard. Text abbreviations `P` / `CP` match Solar Fire and
+Astrodienst conventions and are used as the `kind` field values in `DECLA_ASPECT_DTYPE`.
+
+### Out-of-Bounds Interaction
+
+OOB bodies (|δ| > ε, tracked via `is_out_of_bounds` from v1.5) participate in P/CP
+detection **mechanically identically** — the formula does not change. "Both OOB" is
+an **interpretive annotation** the caller composes (e.g. by combining
+`is_out_of_bounds` results with the aspect output), **not** a detection flag. Some
+authors (Boehrer, McAfee) consider two-OOB parallels especially intense — a
+delineation note only.
+
 ## Planetary Movements
 
 ### Retrogradation
