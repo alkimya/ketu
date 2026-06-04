@@ -2,7 +2,7 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Declination Aspects
-status: ready_to_plan
+status: phase_complete
 last_updated: "2026-06-04T14:17:44Z"
 last_activity: 2026-06-04
 progress:

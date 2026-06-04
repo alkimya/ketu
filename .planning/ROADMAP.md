@@ -115,8 +115,8 @@ Full details archived to `.planning/milestones/v1.5-ROADMAP.md`.
 **Plans:** 2 plans
 
 Plans:
-- [ ] 36-01-PLAN.md — `ketu/declination/` foundation: `DECLA_ASPECT_DTYPE` + `DECLA_COEF`/`MIN_DECL_ORB` consts + frozen 14×14 orb matrix + scalar `find_declination_aspects` (P/CP) + pyproject registration + scalar test suite (dtype ratchet, 4 pitfalls, JD 2451717.0 oracle, orb formula) + quality gates
-- [ ] 36-02-PLAN.md — vectorized batch path `declination_aspect_masks` `(S,14)→(S,91)` `DeclinationAspectMasks` NamedTuple (no body loop) + batch test suite (shapes/dtypes, no-loop assertion, multi-chart, scalar-consistency oracle)
+- [x] 36-01-PLAN.md — `ketu/declination/` foundation: `DECLA_ASPECT_DTYPE` + `DECLA_COEF`/`MIN_DECL_ORB` consts + frozen 14×14 orb matrix + scalar `find_declination_aspects` (P/CP) + pyproject registration + scalar test suite (dtype ratchet, 4 pitfalls, JD 2451717.0 oracle, orb formula) + quality gates
+- [x] 36-02-PLAN.md — vectorized batch path `declination_aspect_masks` `(S,14)→(S,91)` `DeclinationAspectMasks` NamedTuple (no body loop) + batch test suite (shapes/dtypes, no-loop assertion, multi-chart, scalar-consistency oracle)
 
 #### Phase 37: Documentation + Release v1.6.0
 
@@ -171,7 +171,7 @@ Plans:
 | 33. Lunar Declination δ                           | v1.5      | 4/4            | ✓ Complete  | 2026-06-03 |
 | 34. Harmonics Debt (ASP-F1/F2/F3)                | v1.5      | 4/4            | ✓ Complete  | 2026-06-03 |
 | 35. Release v1.5.0                                | v1.5      | 2/2            | ✓ Complete  | 2026-06-04 |
-| **36. Declination Aspects Core**                  | **v1.6**  | **0/TBD**      | Not started | -          |
+| **36. Declination Aspects Core**                  | **v1.6**  | **2/2**        | ✓ Complete  | 2026-06-04 |
 | **37. Documentation + Release v1.6.0**            | **v1.6**  | **0/TBD**      | Not started | -          |
 
 ---
