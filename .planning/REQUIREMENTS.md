@@ -56,20 +56,20 @@ Explicitly excluded for v1.6. Documented to prevent scope creep.
 
 Which phases cover which requirements. Updated during roadmap creation.
 
-| Requirement | Phase | Status |
-|-------------|-------|--------|
-| DECLA-01 | TBD | Pending |
-| DECLA-02 | TBD | Pending |
-| DECLA-03 | TBD | Pending |
-| DECLA-04 | TBD | Pending |
-| DECLA-05 | TBD | Pending |
+| Requirement | Phase    | Status  |
+|-------------|----------|---------|
+| DECLA-01    | Phase 36 | Pending |
+| DECLA-02    | Phase 36 | Pending |
+| DECLA-03    | Phase 36 | Pending |
+| DECLA-04    | Phase 36 | Pending |
+| DECLA-05    | Phase 37 | Pending |
 
 **Coverage:**
 
 - v1 requirements: 5 total
-- Mapped to phases: 0 (roadmap pending)
-- Unmapped: 5 ⚠️ (filled by roadmapper)
+- Mapped to phases: 5 (roadmap complete)
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-04*
-*Last updated: 2026-06-04 after initial definition (v1.6 milestone start)*
+*Last updated: 2026-06-04 — traceability filled after roadmap creation (DECLA-01..04 → Phase 36; DECLA-05 → Phase 37; 5/5 mapped)*

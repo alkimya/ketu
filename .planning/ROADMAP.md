@@ -8,6 +8,7 @@
 - ✅ **v1.3 Chiron & Engine Hardening** — Phases 21-27 (+ inserted 26.1) (shipped 2026-06-01; `ketu==1.3.0` on PyPI — Chiron embedded as 14th body, engine hardened to 100% coverage, data-driven aspect engine, full French docs; archived to `.planning/milestones/v1.3-ROADMAP.md`)
 - ✅ **v1.4 Dynamic Harmonics & Chiron Range** — Phases 28-32 (shipped 2026-06-03; `ketu==1.4.0` on PyPI via OIDC — on-the-fly `generate_harmonic_aspects(h)` generator wired through the full detection chain with the frozen `core.aspects` table + preset fingerprints byte-identical, Chiron orb 0°→4° (Pluto parity), Chiron range widened to 1900–2100 (`.npz` regenerated, max|Δλ|=0.001214°), docs recentred on the 180°-division default (en+fr); archived to `.planning/milestones/v1.4-ROADMAP.md`)
 - ✅ **v1.5 Lunar Declination & Harmonics Debt** — Phases 33-35 (shipped 2026-06-04; `ketu==1.5.0` on PyPI via OIDC — additive minor: equatorial declination δ as a first-class vectorizable quantity (`declination` / `declination_velocity` / `is_ascending_declination` / `is_out_of_bounds` + `body_decl` in `CHART_DTYPE`), dynamic-harmonics debt paydown (ASP-F2 `H{h}-{k}` naming contract, ASP-F3 `find_aspect_timing` `dyn_coef` orb derivation, ASP-F1 CLI `--harmonics h7`). No breaking changes; `is_ascending` (β) and the frozen `core.aspects` table stay byte-identical. Archived to `.planning/milestones/v1.5-ROADMAP.md`.)
+- 🚧 **v1.6 Declination Aspects** — Phases 36-37 (in progress — parallel + contra-parallel detection on the δ axis, body-derived δ orbs (Ketu-style), `find_declination_aspects` companion function + `DECLA_ASPECT_DTYPE`, docs en + fr, release `ketu==1.6.0`)
 
 ## Phases
 
@@ -96,9 +97,47 @@ Full details archived to `.planning/milestones/v1.5-ROADMAP.md`.
 
 </details>
 
+### 🚧 v1.6 Declination Aspects (In Progress)
+
+**Milestone Goal:** Add `find_declination_aspects` as a pure-NumPy companion function consuming `CHART_DTYPE["body_decl"]` (already shipped in v1.5), detecting parallels (δ₁≈δ₂, same hemisphere) and contra-parallels (δ₁≈−δ₂, opposite hemisphere) with body-derived orbs (`DECLA_COEF=1/12`, `MIN_DECL_ORB=0.5°`). Additive: `CHART_DTYPE` unchanged, the frozen 14-row `core.aspects` table + V1/V13 sha256 fingerprints byte-identical. The final lightweight Ketu engine milestone before the Rahu UI project.
+
+#### Phase 36: Declination Aspects Core
+
+**Goal:** Users can detect parallel and contra-parallel aspects between all 14 bodies in a natal chart using a dedicated, vectorizable companion function.
+**Depends on:** v1.5 (uses `body_decl` from `CHART_DTYPE`, `core.bodies['orb']`)
+**Requirements:** DECLA-01, DECLA-02, DECLA-03, DECLA-04
+**Success Criteria** (what must be TRUE):
+  1. `find_declination_aspects(chart["body_decl"])` returns a `DECLA_ASPECT_DTYPE` structured array where every row is either `kind="P"` (parallel: same non-zero sign, `|δ₁−δ₂| ≤ orb`) or `kind="CP"` (contra-parallel: opposite non-zero signs, `|δ₁+δ₂| ≤ orb`), with `body1` < `body2` (upper-triangle, no duplicates).
+  2. The orb for each pair is exactly `max((core.bodies['orb'][b1] + core.bodies['orb'][b2]) / 2 * (1/12), 0.5)` — Sun/Moon yields 1.0°, Rahu/Lilith yields 0.5° (floor applied), verified by a test.
+  3. The four pitfall cases from the research brief are guarded by explicit tests: `+15°/−15°` is CP not P (sign conflation guard); a 7° Sun/Moon gap is not a parallel (orb inflation guard); both bodies at δ=0° yield zero aspects (zero-sign trap guard); Rahu/Lilith at gap 0.1° yields one parallel (MIN_DECL_ORB floor guard).
+  4. A vectorized batch path accepts `body_decl` of shape `(S, 14)` and returns parallel/contra masks of shape `(S, 91)` using the precomputed 14×14 orb matrix — no Python loop over bodies in the hot path; tested with a multi-chart array.
+  5. `CHART_DTYPE` is byte-identical to its v1.5 layout (ratchet test passes); the frozen 14-row `core.aspects` table and V1/V13 sha256 fingerprints are unmodified; 100% coverage maintained (fail_under=100, zero pragma); mypy `--strict` clean.
+**Plans:** TBD
+
+Plans:
+- [ ] 36-01: `DECLA_ASPECT_DTYPE`, `DECLA_COEF`, `MIN_DECL_ORB` constants + `find_declination_aspects` scalar implementation (P/CP detection with all pitfall guards)
+- [ ] 36-02: Vectorized batch path (`(S,14)→(S,91)`) + full test suite (orb formula, pitfall cases, batch path, ratchet guards)
+
+#### Phase 37: Documentation + Release v1.6.0
+
+**Goal:** Users can read the full parallel/contra-parallel documentation in English and French, and `ketu==1.6.0` is live on PyPI after a human go/no-go gate.
+**Depends on:** Phase 36
+**Requirements:** DECLA-05
+**Success Criteria** (what must be TRUE):
+  1. The English and French documentation covers all five DECLA-05 items: the signed-δ parallel/contra-parallel definitions (same-hemisphere rule), the body-derived orb formula with the worked Sun/Moon example (1.0°), the biodynamic framing (parallel ≈ conjunction / contra-parallel ≈ opposition on the δ axis), the explicit "parallel ≠ longitude conjunction" distinction, and the `//` / `#` symbol conventions with `P` / `CP` text abbreviations.
+  2. A human go/no-go relecture-validation checkpoint is passed by the user before any irreversible publish action (tag, PyPI push, GitHub release).
+  3. Version is bumped to `1.6.0` in all three source-of-truth files (`pyproject.toml`, `ketu/__init__.py`, `docs/source/conf.py`); a dated `[1.6.0]` CHANGELOG entry exists in the EN root file and the RTD docs copy (byte-identical content); a fresh French `[1.6.0]` CHANGELOG section exists; an UPGRADING v1.5→v1.6 guide is present.
+  4. `ketu==1.6.0` is published on PyPI via OIDC (`publish.yml`); both `origin/main` and the tag `v1.6.0` are pushed (RTD follows main, PyPI follows tag); a GitHub release with sdist + wheel is attached.
+  5. A post-publish fresh-venv smoke test FROM PyPI passes: `find_declination_aspects` correctly detects at least one parallel, no `pyswisseph` at runtime (`find_spec('swisseph') is None`).
+**Plans:** TBD
+
+Plans:
+- [ ] 37-01: Sphinx docs en + fr (parallel/contra-parallel definitions, orb formula, biodynamic framing, symbol conventions, OOB interaction note); FR `.po` translated + `.mo` recompiled
+- [ ] 37-02: Release v1.6.0 (version bump, CHANGELOG en+fr, UPGRADING, README; human go/no-go checkpoint; tag + origin/main push; OIDC publish; GitHub release; post-publish smoke)
+
 ## Progress
 
-**Execution Order:** All shipped milestones (v1.0–v1.5) are complete; phase details are in the archived roadmaps under `.planning/milestones/`. Next milestone (v1.6) execution order will be defined at roadmap creation.
+**Execution Order:** v1.6 phases execute 36 → 37.
 
 | Phase                                             | Milestone | Plans Complete | Status      | Completed  |
 | ------------------------------------------------- | --------- | -------------- | ----------- | ---------- |
@@ -129,9 +168,11 @@ Full details archived to `.planning/milestones/v1.5-ROADMAP.md`.
 | 30. Chiron Range 1900–2100                        | v1.4      | 2/2            | ✓ Complete  | 2026-06-03 |
 | 31. Documentation (en + fr)                       | v1.4      | 7/7            | ✓ Complete  | 2026-06-03 |
 | 32. Release v1.4.0                                | v1.4      | 2/2            | ✓ Complete  | 2026-06-03 |
-| **33. Lunar Declination δ**                       | **v1.5**  | **4/4**        | ✓ Complete  | 2026-06-03 |
-| **34. Harmonics Debt (ASP-F1/F2/F3)**             | **v1.5**  | **4/4**        | ✓ Complete  | 2026-06-03 |
-| **35. Release v1.5.0**                            | **v1.5**  | **2/2**        | ✓ Complete  | 2026-06-04 |
+| 33. Lunar Declination δ                           | v1.5      | 4/4            | ✓ Complete  | 2026-06-03 |
+| 34. Harmonics Debt (ASP-F1/F2/F3)                | v1.5      | 4/4            | ✓ Complete  | 2026-06-03 |
+| 35. Release v1.5.0                                | v1.5      | 2/2            | ✓ Complete  | 2026-06-04 |
+| **36. Declination Aspects Core**                  | **v1.6**  | **0/TBD**      | Not started | -          |
+| **37. Documentation + Release v1.6.0**            | **v1.6**  | **0/TBD**      | Not started | -          |
 
 ---
 
@@ -141,4 +182,4 @@ Full details archived to `.planning/milestones/v1.5-ROADMAP.md`.
 *v1.3 phase details archived to `.planning/milestones/v1.3-ROADMAP.md`*
 *v1.4 phase details archived to `.planning/milestones/v1.4-ROADMAP.md`*
 *v1.5 phase details archived to `.planning/milestones/v1.5-ROADMAP.md`*
-*Roadmap last updated: 2026-06-04 — **MILESTONE v1.5 Lunar Declination & Harmonics Debt ARCHIVED** (`ketu==1.5.0` on PyPI via OIDC, tag `v1.5.0`/`cc1a3b8` + `origin/main` pushed). 3 phases (33-35), 10 plans, all verified PASSED (Phase 35 9/9 must-haves). Roadmap collapsed to a one-line `<details>` entry; full details in `.planning/milestones/v1.5-ROADMAP.md`, requirements in `.planning/milestones/v1.5-REQUIREMENTS.md`, summary in `.planning/MILESTONES.md`. Stale RuntimeWarning div/0 todo closed at milestone-close (observable ratchet added, `f256b11`). Next: `/gsd:new-milestone` (define v1.6 requirements + roadmap — candidate scope: DECLA-01..03 declination aspects, HARMF-01 rich CLI grammar).*
+*Roadmap last updated: 2026-06-04 — v1.6 Declination Aspects roadmap created. 2 phases (36-37), 5 requirements mapped (DECLA-01..05, 100% coverage). Phase 36 = detection core (DECLA-01..04); Phase 37 = docs + release (DECLA-05). Next: `/gsd:plan-phase 36`.*
