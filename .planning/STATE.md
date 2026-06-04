@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Declination Aspects
 status: ready_to_plan
-last_updated: "2026-06-04T14:09:17Z"
+last_updated: "2026-06-04T14:17:44Z"
 last_activity: 2026-06-04
 progress:
   total_phases: 2
-  completed_phases: 0
+  completed_phases: 1
   total_plans: 2
-  completed_plans: 1
-  percent: 50
+  completed_plans: 2
+  percent: 100
 ---
 
 # Project State
@@ -24,16 +24,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-04 — v1.6 roadmap created)
 
 ## Current Position
 
-Phase: 36 of 37 (Declination Aspects Core)
-Plan: 2 of 2 (36-02 batch function)
-Status: In progress — Plan 36-01 complete
-Last activity: 2026-06-04 — Plan 36-01 executed: ketu/declination sub-package (DECLA_ASPECT_DTYPE + find_declination_aspects), 19 tests, 100% coverage
+Phase: 36 of 37 (Declination Aspects Core) — COMPLETE
+Plan: 2 of 2 (36-02 batch function) — COMPLETE
+Status: Phase 36 complete — Phase 37 (v1.6 release) is next
+Last activity: 2026-06-04 — Plan 36-02 executed: declination_aspect_masks batch function + DeclinationAspectMasks NamedTuple, 8 tests, 100% coverage
 
-Progress: █████░░░░░ 50%
+Progress: ██████████ 100%
 
 ## Next Step
 
-Execute Plan 36-02 — batch declination_aspect_masks function.
+Execute Phase 37 — v1.6 release (tag v1.6.0, publish to PyPI, user relecture-validation gate required first).
 
 ## Accumulated Context
 
@@ -49,6 +49,8 @@ Full log in `.planning/PROJECT.md` Key Decisions table. Relevant for v1.6:
 - User go/no-go relecture-validation REQUIRED before any irreversible publish (tag, PyPI, GitHub release) — hard gate in Phase 37.
 - Plan 36-01: find_declination_aspects returns ONE unified DECLA_ASPECT_DTYPE array (P+CP by kind field), sorted by (body1,body2), empty = np.empty(0) never None/tuple — no orbs.py (formula merged into core.py).
 - Plan 36-01: `_ORB_MAT` frozen 14x14 at module load; `ketu.__all__` and `CHART_DTYPE` byte-identical — additive sub-package only.
+- Plan 36-02: `DeclinationAspectMasks` uses `typing.NamedTuple` (mypy `--strict` compatible); `np.count_nonzero()` in tests avoids pytest-cov/numpy bool `.sum()` interaction; no-loop assertion strips docstring before checking source.
+- Plan 36-02: Phase 36 fully complete — `ketu.declination` delivers DECLA-01..04, 1654 tests green, 100% coverage, mypy `--strict` clean, interrogate 100%.
 
 ### Blockers/Concerns
 
@@ -75,6 +77,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-04 — Plan 36-01 executed: ketu/declination sub-package created, 19 tests green, all quality gates pass.
-Stopped at: Completed 36-01-PLAN.md — Plan 36-02 (batch function) is next.
+Last session: 2026-06-04 — Plan 36-02 executed: DeclinationAspectMasks NamedTuple + declination_aspect_masks batch function, 8 tests green, all quality gates pass.
+Stopped at: Completed 36-02-PLAN.md — Phase 36 complete. Phase 37 (v1.6 release) is next.
 Resume file: None
