@@ -134,13 +134,13 @@ Plans:
   4. `ketu==1.6.0` is published on PyPI via OIDC (`publish.yml`); both `origin/main` and the tag `v1.6.0` are pushed (RTD follows main, PyPI follows tag); a GitHub release with sdist + wheel is attached.
   5. A post-publish fresh-venv smoke test FROM PyPI passes: `find_declination_aspects` correctly detects at least one parallel, no `pyswisseph` at runtime (`find_spec('swisseph') is None`).
 
-**Plans:** 2/3 plans executed
+**Plans:** 3/3 plans complete
 
 Plans:
 
 - [x] 37-01-PLAN.md — Sphinx feature docs en + fr (new declination-aspects section in concepts.md + api.md: parallel/contra definitions, same-hemisphere rule, orb formula w/ Sun/Moon=1.0°, biodynamic framing, parallel≠conjunction, // # symbols, zero-sign trap, OOB note); FR `.po` translated + `.mo` recompile verified — DECLA-05 [wave 1]
 - [x] 37-02-PLAN.md — Version bump 1.6.0 (3 files incl. conf.py) + CHANGELOG authored from scratch (en root + RTD docs copy) + fr CHANGELOG + UPGRADING v1.5→v1.6 + README Roadmap [wave 1]
-- [ ] 37-03-PLAN.md — Release ceremony: local pre-flight (mypy/gates/build/local-wheel smoke) + BLOCKING human go/no-go checkpoint + tag v1.6.0 + push tag&main + OIDC publish + GitHub release + post-publish PyPI smoke (find_declination_aspects detects ≥1 parallel, no swisseph) [wave 2, depends 37-01 + 37-02]
+- [x] 37-03-PLAN.md — Release ceremony: local pre-flight (mypy/gates/build/local-wheel smoke) + BLOCKING human go/no-go checkpoint + tag v1.6.0 + push tag&main + OIDC publish + GitHub release + post-publish PyPI smoke (find_declination_aspects detects ≥1 parallel, no swisseph) [wave 2, depends 37-01 + 37-02]
 
 ## Progress
 
