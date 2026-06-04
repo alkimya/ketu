@@ -7,7 +7,7 @@
 - ✅ **v1.2 Astrologie relationnelle et prédictive** — Phases 13-20 (shipped 2026-05-28; `ketu==1.2.0` on PyPI, archived to `.planning/milestones/v1.2-ROADMAP.md`)
 - ✅ **v1.3 Chiron & Engine Hardening** — Phases 21-27 (+ inserted 26.1) (shipped 2026-06-01; `ketu==1.3.0` on PyPI — Chiron embedded as 14th body, engine hardened to 100% coverage, data-driven aspect engine, full French docs; archived to `.planning/milestones/v1.3-ROADMAP.md`)
 - ✅ **v1.4 Dynamic Harmonics & Chiron Range** — Phases 28-32 (shipped 2026-06-03; `ketu==1.4.0` on PyPI via OIDC — on-the-fly `generate_harmonic_aspects(h)` generator wired through the full detection chain with the frozen `core.aspects` table + preset fingerprints byte-identical, Chiron orb 0°→4° (Pluto parity), Chiron range widened to 1900–2100 (`.npz` regenerated, max|Δλ|=0.001214°), docs recentred on the 180°-division default (en+fr); archived to `.planning/milestones/v1.4-ROADMAP.md`)
-- 🚧 **v1.5 Lunar Declination & Harmonics Debt** — Phases 33-35 (ROADMAP CREATED 2026-06-03; targets `ketu==1.5.0`, additive minor — equatorial declination δ as a first-class vectorizable quantity (`declination` / `declination_velocity` / `is_ascending_declination` / `is_out_of_bounds` + `body_decl` in `CHART_DTYPE`), dynamic-harmonics debt paydown (ASP-F2 `H{h}-{k}` naming contract, ASP-F3 `find_aspect_timing` orb derivation, ASP-F1 CLI `--harmonics h7`), release. No breaking changes; `is_ascending` (β) and the frozen `core.aspects` table stay UNCHANGED.)
+- ✅ **v1.5 Lunar Declination & Harmonics Debt** — Phases 33-35 (shipped 2026-06-04; `ketu==1.5.0` on PyPI via OIDC — additive minor: equatorial declination δ as a first-class vectorizable quantity (`declination` / `declination_velocity` / `is_ascending_declination` / `is_out_of_bounds` + `body_decl` in `CHART_DTYPE`), dynamic-harmonics debt paydown (ASP-F2 `H{h}-{k}` naming contract, ASP-F3 `find_aspect_timing` `dyn_coef` orb derivation, ASP-F1 CLI `--harmonics h7`). No breaking changes; `is_ascending` (β) and the frozen `core.aspects` table stay byte-identical. Pending archival via `/gsd:complete-milestone`.)
 
 ## Phases
 
@@ -85,11 +85,11 @@ Full details archived to `.planning/milestones/v1.4-ROADMAP.md`.
 
 </details>
 
-### 🚧 v1.5 Lunar Declination & Harmonics Debt (Phases 33-35) — ACTIVE
+### ✅ v1.5 Lunar Declination & Harmonics Debt (Phases 33-35) — SHIPPED 2026-06-04
 
 - [x] **Phase 33: Lunar Declination δ** (4/4 plans) — completed 2026-06-03 — equatorial declination δ as a first-class vectorizable quantity, montant/descendant trajectory, OOB, and `body_decl` in `CHART_DTYPE`
 - [x] **Phase 34: Harmonics Debt (ASP-F1/F2/F3)** (4/4 plans) — completed 2026-06-03 — `H{h}-{k}` naming contract pinned as public API (TestNamingContractF2), `find_aspect_timing` gains `dyn_coef` orb derivation, CLI `--harmonics h7` via `HarmonicsSelection` NamedTuple (Quadrinovile bug fixed); `core.aspects` V1/V13 fingerprints byte-identical
-- [ ] **Phase 35: Release v1.5.0** — quality gates + version/CHANGELOG/UPGRADING + PyPI publish via OIDC (user-checkpoint-gated)
+- [x] **Phase 35: Release v1.5.0** (2/2 plans) — completed 2026-06-04 — `ketu==1.5.0` live on PyPI via OIDC (publish.yml run 26945916843 SUCCESS), tag `v1.5.0` + `origin/main` both pushed, GitHub release with sdist + wheel; version bumped in all 3 source-of-truth files (incl. conf.py), CHANGELOG/UPGRADING/README updated (en + fr), post-publish fresh-venv smoke confirmed the 4 v1.5 assertions + no `pyswisseph` at runtime; verifier passed 9/9 must-haves
 
 #### Phase 33: Lunar Declination δ
 
@@ -192,7 +192,7 @@ LAST phase, user-checkpoint-gated before tag/publish (the user reviews the whole
 | 32. Release v1.4.0                                | v1.4      | 2/2            | ✓ Complete  | 2026-06-03 |
 | **33. Lunar Declination δ**                       | **v1.5**  | **4/4**        | ✓ Complete  | 2026-06-03 |
 | **34. Harmonics Debt (ASP-F1/F2/F3)**             | **v1.5**  | **4/4**        | ✓ Complete  | 2026-06-03 |
-| **35. Release v1.5.0**                            | **v1.5**  | **0/TBD**      | Not started | -          |
+| **35. Release v1.5.0**                            | **v1.5**  | **2/2**        | ✓ Complete  | 2026-06-04 |
 
 ---
 
@@ -201,4 +201,4 @@ LAST phase, user-checkpoint-gated before tag/publish (the user reviews the whole
 *v1.2 phase details archived to `.planning/milestones/v1.2-ROADMAP.md`*
 *v1.3 phase details archived to `.planning/milestones/v1.3-ROADMAP.md`*
 *v1.4 phase details archived to `.planning/milestones/v1.4-ROADMAP.md`*
-*Roadmap last updated: 2026-06-03 — Phase 34 (Harmonics Debt) COMPLETE (4/4 plans, verifier passed 5/5 must-haves; HARM-01..09 shipped — `H{h}-{k}` naming contract pinned as public API (TestNamingContractF2 + frozen docstring), GENERATOR-vs-DETECTION two-channel docs, `find_aspect_timing` `dyn_coef` orb derivation (explicit-orb-wins precedence), CLI `--harmonics h7` via `HarmonicsSelection` NamedTuple with Tight grammar (Quadrinovile display bug fixed), new h7 byte-stability fixture + v1.1 fixture unchanged, docs en + fr; `core.aspects` V1/V13 sha256 fingerprints byte-identical, core.py untouched; 1623 tests / 100% coverage / mypy --strict clean). Phases 33 + 34 done → only Phase 35 (Release v1.5.0) remains, LAST + user-checkpoint-gated. Next: `/gsd:plan-phase 35`.*
+*Roadmap last updated: 2026-06-04 — Phase 35 (Release v1.5.0) COMPLETE (2/2 plans, verifier passed 9/9 must-haves; REL-01..03 shipped — `ketu==1.5.0` live on PyPI via OIDC trusted publishing (publish.yml run 26945916843 SUCCESS), tag `v1.5.0` + `origin/main` BOTH pushed (RTD follows main), GitHub release with sdist + wheel; version bumped 1.5.0 in all 3 source-of-truth files incl. conf.py, CHANGELOG/UPGRADING/README updated en + fr, user go/no-go checkpoint approved before publish (relecture-validation gate honoured), post-publish fresh-venv smoke FROM PyPI confirmed the 4 v1.5 assertions (declination=-10.746°, is_ascending_declination=False, is_out_of_bounds=False, --harmonics h7 → H7-1) + no `pyswisseph` at runtime; 1626 tests / 100% coverage / mypy --strict clean). **MILESTONE v1.5 SHIPPED** — all 3 phases (33-35) done. Next: `/gsd:complete-milestone` (archive v1.5, start v1.6 roadmap).*
