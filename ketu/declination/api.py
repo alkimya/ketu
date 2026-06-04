@@ -13,8 +13,15 @@ Provides two functions:
   and gap arrays, all ``(S, 91)`` shaped, built via pure broadcasting on the
   precomputed 14x14 orb matrix from :mod:`ketu.declination.core`.
 
-Design notes
-------------
+See Also
+--------
+ketu.charts.compute_chart : Computes the CHART_DTYPE record whose
+    ``body_decl`` field is the input to both functions.
+ketu.declination.core.DECLA_ASPECT_DTYPE : Output dtype contract (scalar path).
+ketu.declination.core._ORB_MAT : Pre-computed per-pair orb limits.
+
+Notes
+-----
 - **Fully vectorized internally**: both functions use :func:`numpy.triu_indices`
   to enumerate all 91 upper-triangle body pairs without a Python loop over bodies.
 - **Single unified return (scalar)**: parallels (``kind="P"``) and
@@ -30,13 +37,6 @@ Design notes
 - **Batch broadcasting**: :func:`declination_aspect_masks` uses
   ``_ORB_MAT[idx_i, idx_j]`` fancy-indexing once (not rebuilt) then broadcasts
   ``(S, 91)`` arrays against the ``(91,)`` orb vector — no Python body loop.
-
-See Also
---------
-ketu.charts.compute_chart : Computes the CHART_DTYPE record whose
-    ``body_decl`` field is the input to both functions.
-ketu.declination.core.DECLA_ASPECT_DTYPE : Output dtype contract (scalar path).
-ketu.declination.core._ORB_MAT : Pre-computed per-pair orb limits.
 """
 from __future__ import annotations
 
@@ -48,7 +48,8 @@ from .core import DECLA_ASPECT_DTYPE, _ORB_MAT
 
 
 class DeclinationAspectMasks(NamedTuple):
-    """Vectorized declination-aspect detection result over S charts.
+    """
+    Vectorized declination-aspect detection result over S charts.
 
     Fields are aligned on the 91 upper-triangle body pairs from
     ``np.triu_indices(14, k=1)`` (pair p maps to bodies ``idx_i[p]`` <
@@ -85,7 +86,8 @@ class DeclinationAspectMasks(NamedTuple):
 
 
 def find_declination_aspects(body_decl: np.ndarray) -> np.ndarray:
-    """Detect parallels and contra-parallels between 14 bodies on the δ axis.
+    """
+    Detect parallels and contra-parallels between 14 bodies on the δ axis.
 
     A **parallel** (``kind="P"``) occurs when two bodies have the same non-zero
     declination sign and their declinations are within the per-pair orb limit:
@@ -135,7 +137,7 @@ def find_declination_aspects(body_decl: np.ndarray) -> np.ndarray:
     >>> d[0] = +15.0   # Sun north
     >>> d[1] = -15.0   # Moon south — contra-parallel
     >>> result = find_declination_aspects(d)
-    >>> result["kind"][0]
+    >>> str(result["kind"][0])
     'CP'
     >>> d2 = np.zeros(14)
     >>> find_declination_aspects(d2).shape
@@ -182,7 +184,8 @@ def find_declination_aspects(body_decl: np.ndarray) -> np.ndarray:
 
 
 def declination_aspect_masks(body_decl: np.ndarray) -> DeclinationAspectMasks:
-    """Detect parallels and contra-parallels across S charts via pure broadcasting.
+    """
+    Detect parallels and contra-parallels across S charts via pure broadcasting.
 
     Accepts either a single ``(14,)`` chart or a batch ``(S, 14)`` array and
     returns a :class:`DeclinationAspectMasks` NamedTuple whose ``parallel``
