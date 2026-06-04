@@ -2,16 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Declination Aspects
-status: executing
+status: completed
 stopped_at: Completed 36-02-PLAN.md — Phase 36 complete. Phase 37 (v1.6 release) is next.
-last_updated: "2026-06-04T20:19:30.978Z"
-last_activity: 2026-06-04 -- Phase 37 execution started
+last_updated: "2026-06-04T21:06:58.264Z"
+last_activity: 2026-06-04 -- Phase 37 marked complete
 progress:
   total_phases: 2
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 5
-  completed_plans: 2
-  percent: 40
+  completed_plans: 5
+  percent: 100
 ---
 
 # Project State
@@ -25,10 +25,10 @@ See: `.planning/PROJECT.md` (updated 2026-06-04 — v1.6 roadmap created)
 
 ## Current Position
 
-Phase: 37 (documentation-release-v1-6-0) — EXECUTING
+Phase: 37 — COMPLETE
 Plan: 1 of 3
-Status: Executing Phase 37
-Last activity: 2026-06-04 -- Phase 37 execution started
+Status: Phase 37 complete
+Last activity: 2026-06-04 -- Phase 37 marked complete
 
 Progress: ██████████ 100%
 
