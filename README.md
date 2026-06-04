@@ -325,6 +325,10 @@ ketu/
 - [x] Arabic Parts framework
 - [x] Chiron as the 14th body (pure-NumPy Chebyshev evaluation)
 - [x] Data-driven aspect engine with harmonic-based selection
+- [x] Equatorial declination δ, montant/descendant, OOB helpers (`declination`,
+  `is_ascending_declination`, `is_out_of_bounds`)
+- [x] Dynamic harmonic CLI (`--harmonics h7`) + `H{h}-{k}` naming contract +
+  `find_aspect_timing(dyn_coef=)`
 
 ## Contribution
 

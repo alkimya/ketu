@@ -3,6 +3,115 @@
 This guide collects migration notes between Ketu releases. Sections are
 ordered newest-first.
 
+## v1.4 -> v1.5
+
+### CHART_DTYPE gains body_decl — additive dtype change
+
+In v1.5.0, `CHART_DTYPE` gains a new `body_decl` field (`float64[14]`) holding
+equatorial declination δ for all 14 bodies. This is a **purely additive** change:
+no existing field is removed or reordered.
+
+**What changes:**
+
+- `compute_chart` and `calculate_composite` both populate `body_decl` automatically
+  via the coordinates chain — no call-site changes needed.
+- **Named field access is UNAFFECTED**: `chart["body_lons"]`, `chart["body_decl"]`,
+  etc. work without modification.
+- **Positional access and `.view()` MUST adapt**: the byte layout has changed
+  (new field appended at the end). Any code that indexes the dtype positionally
+  (`chart[..., N]`) or calls `.view()` on the raw dtype must account for the
+  expanded layout.
+
+**Kala guidance:**
+
+- Update `CHART_DTYPE` definitions to include `body_decl`.
+- Named field access (`chart["body_lons"]`) needs no change.
+- A ratchet test pins the dtype sha256 fingerprint — update it when upgrading.
+
+```python
+# Verify body_decl is present and has the correct shape:
+from ketu.charts import compute_chart
+from ketu.calculations import utc_to_julian
+from datetime import datetime, timezone
+
+jd = utc_to_julian(datetime(2026, 6, 4, 12, 0, tzinfo=timezone.utc))
+chart = compute_chart(jd, lat=48.85, lon=2.35)
+assert chart["body_decl"].shape == (14,), f"Expected (14,), got {chart['body_decl'].shape}"
+```
+
+---
+
+### Lunar node mean speed corrected in core.bodies
+
+In v1.5.0, `core.bodies['speed']` for Rahu (index 10) and Ketu (index 11) has
+been corrected from ~−0.013°/day to **−0.052954°/day** (the true nodal regression
+rate: 360° over ~18.6 years, ≈ −0.052991°/day).
+
+**What changes:**
+
+- Code reading `core.bodies['speed'][10]` or `core.bodies['speed'][11]` sees the
+  corrected value immediately after upgrading.
+- `calculate_speed_ratio` now sources average speeds from `core.bodies['speed']`
+  (single source of truth) instead of a duplicated internal table.
+- Adaptive step sizes for `find_aspect_window` / `find_transits_to_position`
+  involving the nodes are now ~4× sharper, matching the true nodal motion.
+
+**Action required:**
+
+- Recompute any cached speed-ratios or adaptive step sizes involving the nodes.
+- Any downstream code that hardcoded the old speed value (~−0.013°/day) must
+  be updated to use `core.bodies['speed']` directly.
+
+```python
+# Verify the corrected node speed:
+from ketu.core import bodies
+import numpy as np
+
+rahu_idx = np.where(bodies['name'] == b'Rahu')[0][0]   # 10
+ketu_idx  = np.where(bodies['name'] == b'Ketu')[0][0]  # 11
+assert abs(float(bodies['speed'][rahu_idx]) + 0.052954) < 0.0001
+assert abs(float(bodies['speed'][ketu_idx]) + 0.052954) < 0.0001
+```
+
+---
+
+### New API surface — additive, no migration needed
+
+All new entry points in v1.5.0 are purely additive. Existing callers are
+unaffected.
+
+```python
+# Equatorial declination δ (scalar and vectorized)
+from ketu.calculations import declination
+delta = declination(jd, body=1)   # Moon δ in degrees [-90, +90]
+
+# Declination velocity dδ/dt (degrees/day, positive = northward)
+from ketu.calculations import declination_velocity
+vel = declination_velocity(jd, body=1)
+
+# Moon montante/descendante — DISTINCT from is_ascending (β-trajectory)
+from ketu.calculations import is_ascending_declination
+montante = is_ascending_declination(jd, body=1)   # True when dδ/dt > 0
+
+# Out-of-bounds via instantaneous obliquity ε(jd)
+from ketu.calculations import is_out_of_bounds
+oob = is_out_of_bounds(jd, body=1)   # True when |δ| > ε(jd)
+
+# Dynamic harmonic CLI (h2–h64 supported)
+# ketu --harmonics h7 aspects --date 2026-06-04T12:00:00Z
+
+# H{h}-{k} naming is now a public API contract (stable, pinned by tests)
+from ketu.aspects import generate_harmonic_aspects
+h7 = generate_harmonic_aspects(7)   # names: H7-1, H7-2, H7-3
+
+# find_aspect_timing with dynamic orb derivation (backwards-compatible)
+from ketu.aspects import find_aspect_timing
+result = find_aspect_timing(jd_start, jd_end, body1=0, body2=1,
+                             target_angle=180.0, dyn_coef=None)   # None = unchanged
+```
+
+---
+
 ## v1.3 -> v1.4
 
 ### Chiron orb changed from 0° to 4° — Chiron now forms aspects
