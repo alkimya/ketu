@@ -24,16 +24,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-03 — v1.5 milestone started)
 
 ## Current Position
 
-Phase: 34 — Harmonics Debt (COMPLETE — all 4 plans done)
-Plan: Plan 04 of Phase 34 complete; Phase 34 fully closed. Phase 35 (Release v1.5.0) is next.
-Status: Plan 34-04 complete. HARM-08/09 satisfied: h7 byte-stability fixture pinned + audited, TestHarmonicsH7ByteStable (6 tests), --harmonics h7 CLI surface documented en+fr. 1623 tests, 100% coverage.
-Last activity: 2026-06-03 — Plan 34-04 executed (3 tasks, commits e64cabe/ee88b09/0f20569).
+Phase: 35 — Release v1.5.0 (in progress — Plan 01 done)
+Plan: Plan 01 of Phase 35 complete; Plans 02-03 remain.
+Status: Plan 35-01 complete. REL-01+REL-02 satisfied: version bumped to 1.5.0 in all three source-of-truth files (pyproject.toml + ketu/__init__.py + docs/source/conf.py); changelogs date-stamped (Unreleased -> 2026-06-04, content untouched); French [1.5.0] section authored in fr/CHANGELOG.md; UPGRADING.md v1.4->v1.5 section added; README Roadmap updated. 1626 tests, 100% coverage.
+Last activity: 2026-06-04 — Plan 35-01 executed (3 tasks, commits f917271/634a176/3295af0).
 
 Progress: Phase 34 complete (4/4 plans done). Phase 35 next.
 
 ## Next Step
 
-**`/gsd:execute-phase 35`** — Phase 35: Release v1.5.0 (quality gates, version bump + CHANGELOG/UPGRADING, PyPI via OIDC). USER CHECKPOINT REQUIRED before executing (relecture validation decision).
+**`/gsd:execute-phase 35`** — Phase 35 Plan 02: quality gates (mypy --strict full confirmation). Then Plan 03: PyPI via OIDC (tag + main both pushed), post-publish smoke.
 
 **Phase map (v1.5):**
 
@@ -85,10 +85,10 @@ None. See `.planning/research/DECLINATION.md` and `.planning/research/HARMONICS_
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 - v1.3: 30 plans / 8 phases (21-27 + 26.1) (2026-05-29 → 2026-06-01)
 - v1.4: 15 plans / 5 phases (28-32) (2026-06-02 → 2026-06-03)
-- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files); Plan 33-04 done (7 min, 2 tasks, 9 files) — Phase 33 COMPLETE; Plan 34-01 done (15 min, 3 tasks, 8 files) — HARM-01/02/03 satisfied; Plan 34-02 done (12 min, 3 tasks, 5 files) — HARM-04/05 satisfied; Plan 34-03 done (11 min, 3 tasks, 8 files) — HARM-06/07 satisfied; Plan 34-04 done (8 min, 3 tasks, 8 files) — HARM-08/09 satisfied — Phase 34 COMPLETE
+- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files); Plan 33-04 done (7 min, 2 tasks, 9 files) — Phase 33 COMPLETE; Plan 34-01 done (15 min, 3 tasks, 8 files) — HARM-01/02/03 satisfied; Plan 34-02 done (12 min, 3 tasks, 5 files) — HARM-04/05 satisfied; Plan 34-03 done (11 min, 3 tasks, 8 files) — HARM-06/07 satisfied; Plan 34-04 done (8 min, 3 tasks, 8 files) — HARM-08/09 satisfied — Phase 34 COMPLETE; Plan 35-01 done (4 min, 3 tasks, 8 files) — REL-01/02 satisfied (version bump + changelogs + UPGRADING + README)
 
 ## Session Continuity
 
-Last session: 2026-06-03 — Plan 04 of Phase 34 executed. HARM-08/09 satisfied: h7 byte-stability fixture pinned+audited, TestHarmonicsH7ByteStable (6 tests), --harmonics h7 CLI surface documented en+fr. 1623 tests, 100% coverage. Commits: e64cabe (chore), ee88b09 (test), 0f20569 (docs).
-Stopped at: Phase 34 Plan 04 complete — Phase 34 (Harmonics Debt) FULLY CLOSED.
-Resume file: None — proceed with user relecture checkpoint, then Phase 35 (Release v1.5.0).
+Last session: 2026-06-04 — Plan 01 of Phase 35 executed. REL-01/02 satisfied: version bumped to 1.5.0 in all 3 source-of-truth files, changelogs date-stamped (2026-06-04), French [1.5.0] section authored, UPGRADING v1.4->v1.5 added, README Roadmap updated. 1626 tests, 100% coverage. Commits: f917271 (chore), 634a176 (docs), 3295af0 (docs).
+Stopped at: Phase 35 Plan 01 complete.
+Resume file: None — proceed with Phase 35 Plan 02 (quality gates).
