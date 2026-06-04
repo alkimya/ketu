@@ -112,11 +112,11 @@ Full details archived to `.planning/milestones/v1.5-ROADMAP.md`.
   3. The four pitfall cases from the research brief are guarded by explicit tests: `+15°/−15°` is CP not P (sign conflation guard); a 7° Sun/Moon gap is not a parallel (orb inflation guard); both bodies at δ=0° yield zero aspects (zero-sign trap guard); Rahu/Lilith at gap 0.1° yields one parallel (MIN_DECL_ORB floor guard).
   4. A vectorized batch path accepts `body_decl` of shape `(S, 14)` and returns parallel/contra masks of shape `(S, 91)` using the precomputed 14×14 orb matrix — no Python loop over bodies in the hot path; tested with a multi-chart array.
   5. `CHART_DTYPE` is byte-identical to its v1.5 layout (ratchet test passes); the frozen 14-row `core.aspects` table and V1/V13 sha256 fingerprints are unmodified; 100% coverage maintained (fail_under=100, zero pragma); mypy `--strict` clean.
-**Plans:** TBD
+**Plans:** 2 plans
 
 Plans:
-- [ ] 36-01: `DECLA_ASPECT_DTYPE`, `DECLA_COEF`, `MIN_DECL_ORB` constants + `find_declination_aspects` scalar implementation (P/CP detection with all pitfall guards)
-- [ ] 36-02: Vectorized batch path (`(S,14)→(S,91)`) + full test suite (orb formula, pitfall cases, batch path, ratchet guards)
+- [ ] 36-01-PLAN.md — `ketu/declination/` foundation: `DECLA_ASPECT_DTYPE` + `DECLA_COEF`/`MIN_DECL_ORB` consts + frozen 14×14 orb matrix + scalar `find_declination_aspects` (P/CP) + pyproject registration + scalar test suite (dtype ratchet, 4 pitfalls, JD 2451717.0 oracle, orb formula) + quality gates
+- [ ] 36-02-PLAN.md — vectorized batch path `declination_aspect_masks` `(S,14)→(S,91)` `DeclinationAspectMasks` NamedTuple (no body loop) + batch test suite (shapes/dtypes, no-loop assertion, multi-chart, scalar-consistency oracle)
 
 #### Phase 37: Documentation + Release v1.6.0
 
