@@ -2,15 +2,15 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Lunar Declination & Harmonics Debt
-status: in-progress
-last_updated: "2026-06-03T21:00:00Z"
-last_activity: 2026-06-03
+status: complete
+last_updated: "2026-06-04T10:25:41Z"
+last_activity: 2026-06-04
 progress:
   total_phases: 3
-  completed_phases: 2
-  total_plans: 8
-  completed_plans: 8
-  percent: 67
+  completed_phases: 3
+  total_plans: 9
+  completed_plans: 9
+  percent: 100
 ---
 
 # Project State
@@ -24,16 +24,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-03 — v1.5 milestone started)
 
 ## Current Position
 
-Phase: 35 — Release v1.5.0 (in progress — Plan 01 done)
-Plan: Plan 01 of Phase 35 complete; Plans 02-03 remain.
-Status: Plan 35-01 complete. REL-01+REL-02 satisfied: version bumped to 1.5.0 in all three source-of-truth files (pyproject.toml + ketu/__init__.py + docs/source/conf.py); changelogs date-stamped (Unreleased -> 2026-06-04, content untouched); French [1.5.0] section authored in fr/CHANGELOG.md; UPGRADING.md v1.4->v1.5 section added; README Roadmap updated. 1626 tests, 100% coverage.
-Last activity: 2026-06-04 — Plan 35-01 executed (3 tasks, commits f917271/634a176/3295af0).
+Phase: 35 — Release v1.5.0 (COMPLETE)
+Plan: All plans complete (35-01 + 35-02).
+Status: MILESTONE v1.5 SHIPPED. ketu==1.5.0 live on PyPI via OIDC (publish.yml run 26945916843 SUCCESS). Tag v1.5.0 + origin/main both pushed (cf85e90). GitHub release v1.5.0 with sdist+wheel attached. REL-01+REL-02+REL-03 all satisfied.
+Last activity: 2026-06-04 — Plan 35-02 executed (Task 2: tag, push, watch CI, GH release, post-publish smoke).
 
-Progress: Phase 34 complete (4/4 plans done). Phase 35 next.
+Progress: Phase 35 complete (2/2 plans done). Milestone v1.5 complete (3/3 phases).
 
 ## Next Step
 
-**`/gsd:execute-phase 35`** — Phase 35 Plan 02: quality gates (mypy --strict full confirmation). Then Plan 03: PyPI via OIDC (tag + main both pushed), post-publish smoke.
+**`/gsd:complete-milestone`** — Archive v1.5 milestone, start v1.6 roadmap.
 
 **Phase map (v1.5):**
 
@@ -85,10 +85,10 @@ None. See `.planning/research/DECLINATION.md` and `.planning/research/HARMONICS_
 - v1.2: 35 plans / 8 phases (~20 days elapsed)
 - v1.3: 30 plans / 8 phases (21-27 + 26.1) (2026-05-29 → 2026-06-01)
 - v1.4: 15 plans / 5 phases (28-32) (2026-06-02 → 2026-06-03)
-- v1.5: TBD / 3 phases (33-35) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files); Plan 33-04 done (7 min, 2 tasks, 9 files) — Phase 33 COMPLETE; Plan 34-01 done (15 min, 3 tasks, 8 files) — HARM-01/02/03 satisfied; Plan 34-02 done (12 min, 3 tasks, 5 files) — HARM-04/05 satisfied; Plan 34-03 done (11 min, 3 tasks, 8 files) — HARM-06/07 satisfied; Plan 34-04 done (8 min, 3 tasks, 8 files) — HARM-08/09 satisfied — Phase 34 COMPLETE; Plan 35-01 done (4 min, 3 tasks, 8 files) — REL-01/02 satisfied (version bump + changelogs + UPGRADING + README)
+- v1.5: 9 plans / 3 phases (33-35) (2026-06-03 → 2026-06-04) — roadmap created 2026-06-03; Plan 33-01 done (6 min, 3 tasks, 3 files); Plan 33-02 done (7 min, 3 tasks, 3 files); Plan 33-03 done (4 min, 3 tasks, 3 files); Plan 33-04 done (7 min, 2 tasks, 9 files) — Phase 33 COMPLETE; Plan 34-01 done (15 min, 3 tasks, 8 files) — HARM-01/02/03 satisfied; Plan 34-02 done (12 min, 3 tasks, 5 files) — HARM-04/05 satisfied; Plan 34-03 done (11 min, 3 tasks, 8 files) — HARM-06/07 satisfied; Plan 34-04 done (8 min, 3 tasks, 8 files) — HARM-08/09 satisfied — Phase 34 COMPLETE; Plan 35-01 done (4 min, 3 tasks, 8 files) — REL-01/02 satisfied (version bump + changelogs + UPGRADING + README); Plan 35-02 done (12 min, 1 task, 0 files) — REL-03 satisfied (ketu==1.5.0 published PyPI, GH release v1.5.0, origin/main pushed, post-publish smoke PASS) — MILESTONE SHIPPED
 
 ## Session Continuity
 
-Last session: 2026-06-04 — Plan 01 of Phase 35 executed. REL-01/02 satisfied: version bumped to 1.5.0 in all 3 source-of-truth files, changelogs date-stamped (2026-06-04), French [1.5.0] section authored, UPGRADING v1.4->v1.5 added, README Roadmap updated. 1626 tests, 100% coverage. Commits: f917271 (chore), 634a176 (docs), 3295af0 (docs).
-Stopped at: Phase 35 Plan 01 complete.
-Resume file: None — proceed with Phase 35 Plan 02 (quality gates).
+Last session: 2026-06-04 — Plan 02 of Phase 35 executed. REL-03 satisfied: tag v1.5.0 pushed, origin/main pushed, publish.yml SUCCESS (run 26945916843), GitHub release v1.5.0 created (sdist+wheel), post-publish smoke all 6 assertions PASS. Milestone v1.5 COMPLETE.
+Stopped at: Phase 35 Plan 02 complete — MILESTONE v1.5 SHIPPED.
+Resume file: None — run /gsd:complete-milestone to archive v1.5 and start v1.6 roadmap.
