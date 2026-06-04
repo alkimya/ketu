@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "ketu"
-version = "1.4.0"
+version = "1.5.0"
 description = "Library to compute astronomical bodies positions and planetary aspects between them"
 readme = "README.md"
 requires-python = ">=3.10"
