@@ -2,14 +2,14 @@
 gsd_state_version: 1.0
 milestone: v1.5
 milestone_name: Lunar Declination & Harmonics Debt
-status: complete
-last_updated: "2026-06-04T10:25:41Z"
+status: archived
+last_updated: "2026-06-04T11:30:00Z"
 last_activity: 2026-06-04
 progress:
   total_phases: 3
   completed_phases: 3
-  total_plans: 9
-  completed_plans: 9
+  total_plans: 10
+  completed_plans: 10
   percent: 100
 ---
 
@@ -17,29 +17,28 @@ progress:
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-06-03 — v1.5 milestone started)
+See: `.planning/PROJECT.md` (updated 2026-06-04 — v1.5 shipped + archived)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** v1.5 roadmap created — 3 phases (33-35), 21/21 v1.5 requirements mapped. Ready to plan Phase 33 (Lunar Declination δ). Scope: declination δ (scalar + vectorized + montant/descendant + OOB + `body_decl` in `CHART_DTYPE`) + harmonics debt (ASP-F2 naming contract, ASP-F3 timing orb, ASP-F1 CLI `--harmonics h7`) + release v1.5.0. Additive minor, no breaking changes.
+**Current focus:** No active milestone. v1.5 (Lunar Declination & Harmonics Debt) shipped + archived 2026-06-04 — `ketu==1.5.0` on PyPI. Next: define v1.6 via `/gsd:new-milestone`. Candidate scope: DECLA-01..03 (declination aspects: parallels / contra-parallels) + HARMF-01 (rich `--harmonics` CLI grammar).
 
 ## Current Position
 
-Phase: 35 — Release v1.5.0 (COMPLETE)
-Plan: All plans complete (35-01 + 35-02).
-Status: MILESTONE v1.5 SHIPPED. ketu==1.5.0 live on PyPI via OIDC (publish.yml run 26945916843 SUCCESS). Tag v1.5.0 + origin/main both pushed (cf85e90). GitHub release v1.5.0 with sdist+wheel attached. REL-01+REL-02+REL-03 all satisfied.
-Last activity: 2026-06-04 — Plan 35-02 executed (Task 2: tag, push, watch CI, GH release, post-publish smoke).
+Phase: — (no active milestone)
+Plan: —
+Status: MILESTONE v1.5 SHIPPED + ARCHIVED. ketu==1.5.0 live on PyPI via OIDC (publish.yml run 26945916843 SUCCESS). Tag v1.5.0/cc1a3b8 (commit cf85e90) + origin/main pushed. GitHub release with sdist+wheel. Archived: v1.5-ROADMAP.md + v1.5-REQUIREMENTS.md + MILESTONES.md entry; ROADMAP collapsed; PROJECT.md evolved (21/21 validated, Active reset); REQUIREMENTS.md removed (fresh for v1.6). Stale RuntimeWarning div/0 todo closed at milestone-close (observable ratchet f256b11).
+Last activity: 2026-06-04 — /gsd:complete-milestone executed (v1.5 archived).
 
-Progress: Phase 35 complete (2/2 plans done). Milestone v1.5 complete (3/3 phases).
+Progress: Milestone v1.5 complete + archived (3/3 phases, 10/10 plans).
 
 ## Next Step
 
-**`/gsd:complete-milestone`** — Archive v1.5 milestone, start v1.6 roadmap.
+**`/gsd:new-milestone`** — Define v1.6 (requirements → roadmap; phases continue at 36).
 
-**Phase map (v1.5):**
+**Candidate v1.6 scope (deferred, not committed):**
 
-- **Phase 33 — Lunar Declination δ** (DECL-01..09): `declination` / `declination_velocity` / `is_ascending_declination` / `is_out_of_bounds`, `body_decl` in `CHART_DTYPE` + ratchet test, docs en + fr. Reuses `coordinates.py` chain (Meeus 13.4); δ-velocity mirrors `lat_velocity`; OOB via instantaneous ε(jd). Independent of Phase 34.
-- **Phase 34 — Harmonics Debt (ASP-F1/F2/F3)** (HARM-01..09): `H{h}-{k}` naming contract (pinned), `find_aspect_timing` `dyn_coef=` orb derivation, CLI `--harmonics h7` (Tight grammar), byte-stability + docs en + fr. Internal order F2 → F3 → F1. Independent of Phase 33.
-- **Phase 35 — Release v1.5.0** (REL-01..03): quality gates, version bump + CHANGELOG/UPGRADING, PyPI via OIDC (tag + main both pushed), post-publish smoke. LAST + user-checkpoint-gated.
+- **DECLA-01..03** — Declination aspects (parallels ≈ conjunction / contra-parallels ≈ opposition) as a new aspect type with dedicated orbs + detection-chain integration. Natural next step for the aspect-centric biodynamic framing, but touches the aspect engine.
+- **HARMF-01** — Rich `--harmonics` CLI grammar: multi-harmonic (`h7,h11`) and preset+harmonic mixing (`traditional,h7`). v1.5 shipped only the Tight single-token form.
 
 ## Accumulated Context
 

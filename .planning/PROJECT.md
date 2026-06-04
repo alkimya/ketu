@@ -10,11 +10,11 @@ Cycle calculations must be correct, tested, and performant. If the math is wrong
 
 ## Current State
 
-**Latest shipped:** v1.4.0 (PyPI 2026-06-03) — <https://pypi.org/project/ketu/1.4.0/>
+**Latest shipped:** v1.5.0 (PyPI 2026-06-04) — <https://pypi.org/project/ketu/1.5.0/>
 
-v1.4 made aspect harmonics open-ended. A new public `generate_harmonic_aspects(h)` generator produces first-class aspects for ANY integer harmonic `h` — not just the preset set `{1,2,3,5,6,9,10}` — wired through the full detection chain (`calculate_aspects` scalar/vectorized/batch, cycles, synastry) via a `dynamic_specs=` parameter, with per-pair orbs derived from `core.bodies['orb']` × dynamic coefficient. The dynamic path is strictly PARALLEL and ADDITIVE: the frozen 14-row `core.aspects` table and its named-preset sha256 fingerprints stay byte-identical, and `_VALID_HARMONICS` never gates it. Alongside, Chiron's validity range widened to 1900–2100 (`.npz` regenerated, 2283 segments, max|Δλ|=0.001214°, degree=10 held the gate at 8.2× margin), its natal orb corrected 0°→4° (Pluto parity, single-source `core.bodies['orb']`), and the documentation (en+fr) recentred on the 180°-division default (EXTENDED out of tables, stale default-aspect claims removed). 1539 tests; 100% coverage; mypy `--strict` clean; runtime stays pure NumPy (`pyswisseph` test/build-only).
+v1.5 promoted equatorial declination δ to a first-class, vectorizable quantity. Four public functions in `ketu.calculations` — `declination(jdate, body)` (δ in degrees [−90,+90], scalar + array), `declination_velocity` (dδ/dt °/day), `is_ascending_declination` (the Moon's biodynamic montant/descendant trajectory, True when dδ/dt > 0), `is_out_of_bounds` (|δ| > instantaneous ε(jd)) — reuse the verified `coordinates.py` chain (Meeus 13.4 equivalent, Δ = 0 to machine precision). A new `body_decl` field (`float64[14]`) was added to `CHART_DTYPE`, populated by `compute_chart` and inherited by synastry / composite / returns, guarded by a dtype ratchet. In parallel, the three dynamic-harmonics debts from v1.4 were paid down: the `H{h}-{k}` naming scheme became a pinned public API contract, `find_aspect_timing` gained a `dyn_coef=` orb-derivation parameter, and the CLI gained the arbitrary-harmonic `--harmonics h7` flag (Tight grammar; Quadrinovile display bug fixed). All ADDITIVE: `is_ascending` (β-trajectory) and the frozen 14-row `core.aspects` table + V1/V13 sha256 fingerprints stay byte-identical. 1627 tests; 100% coverage; mypy `--strict` clean; runtime stays pure NumPy (`pyswisseph` test/build-only).
 
-**Prior:** v1.3.0 (2026-06-01) embedded Chiron as the 14th body (Chebyshev-by-segment `.npz`, pure-NumPy runtime), hardened the engine to 100% coverage, made the aspect engine data-driven (library default = TRADITIONAL 7 half-circle aspects), and brought Sphinx docs (en+fr) to full surface. The 13→14 body shift deliberately broke the frozen-body-count ratchet and the internal Ketu↔Kala positional contract (Kala adapts).
+**Prior:** v1.4.0 (2026-06-03) made aspect harmonics open-ended — `generate_harmonic_aspects(h)` for ANY integer harmonic wired through the full detection chain via `dynamic_specs=`, the frozen `core.aspects` table + fingerprints byte-identical; Chiron range widened to 1900–2100 and its orb corrected 0°→4°; docs (en+fr) recentred on the 180°-division default. v1.3.0 (2026-06-01) embedded Chiron as the 14th body (Chebyshev `.npz`, pure-NumPy runtime), hardened the engine to 100% coverage, and made the aspect engine data-driven (default = TRADITIONAL 7). The 13→14 body shift deliberately broke the frozen-body-count ratchet and the internal Ketu↔Kala positional contract (Kala adapts).
 
 ## Requirements
 
@@ -103,28 +103,33 @@ v1.4 made aspect harmonics open-ended. A new public `generate_harmonic_aspects(h
 - ✓ Docs recentred on the 180°-division default; EXTENDED out of tables (kept in code); stale EXTENDED/classical default claims removed; `generate_harmonic_aspects` + Chiron 1900–2100/orb-4° documented; full fr gettext cycle (7 catalogs, 0 untranslated); en+fr build at the 1-warning baseline — v1.4.0 (DOC-14..17)
 - ✓ `ketu==1.4.0` shipped to PyPI via OIDC (push main + tag); post-publish fresh-venv smoke 4/4 (dynamic generator, Chiron orb 4°, 1900–2100 range, no `pyswisseph` at runtime) — v1.4.0 (REL-12, REL-13)
 
+**v1.5 Lunar Declination & Harmonics Debt** (full requirements archived in `.planning/milestones/v1.5-REQUIREMENTS.md`):
+
+- ✓ Equatorial declination δ as a first-class quantity: `declination(jdate, body)` (degrees [−90,+90], scalar + vectorized via the `coordinates.py` chain, Meeus 13.4 equivalent), `declination_velocity` (dδ/dt °/day, `lat_velocity` finite-difference idiom), pinned to Δ = 0 vs the rectangular chain — v1.5.0 (DECL-01..04)
+- ✓ Biodynamic montant/descendant `is_ascending_declination` (True when dδ/dt > 0) — distinct from and parallel to the UNCHANGED β-based `is_ascending`; out-of-bounds `is_out_of_bounds` via instantaneous obliquity ε(jd) (`true_obliquity`) — v1.5.0 (DECL-05, DECL-06)
+- ✓ `body_decl` field added to `CHART_DTYPE` (14 bodies, f8, additive, mirrors `body_lats`); populated by `compute_chart`, inherited by synastry / composite / returns (composite δ from the coordinates chain on composite λ,β, not parent-midpoint); dtype-layout ratchet test; Kala positional impact documented — v1.5.0 (DECL-07, DECL-08)
+- ✓ Declination documented en + fr — the 4 functions + aspect-centric montant/descendant framing (~27.21 d draconic cycle, OOB nodal cycle) + explicit β-vs-δ distinction — v1.5.0 (DECL-09)
+- ✓ `H{h}-{k}` synthetic off-table aspect naming pinned as a documented public API contract (TestNamingContractF2 + generator docstring); GENERATOR-vs-DETECTION two-channel distinction documented (DETECTION stays static-first: 120° → Trine, never H3-1) — v1.5.0 (HARM-01..03)
+- ✓ `find_aspect_timing` gained `dyn_coef: Optional[float] = None` orb derivation (`(orb[b1]+orb[b2])/2 * dyn_coef`); static path + explicit `orb=` escape hatch byte-identical; explicit `orb` wins silently when both given — v1.5.0 (HARM-04, HARM-05)
+- ✓ CLI `--harmonics h7` (h-prefixed, Tight grammar) via `HarmonicsSelection` NamedTuple clean under mypy `--strict`; Quadrinovile display bug fixed; new h7 byte-stability fixture audited, v1.1 fixture UNCHANGED; documented en + fr — v1.5.0 (HARM-06..09)
+- ✓ `ketu==1.5.0` shipped to PyPI via OIDC (push main + tag); user go/no-go honoured before publish; post-publish fresh-venv smoke 4/4 (declination, montant/descendant, OOB, `--harmonics h7`, no `pyswisseph` at runtime) — v1.5.0 (REL-01..03)
+
 ### Active
 
-<!-- Current milestone: v1.5 Lunar Declination & Harmonics Debt. Requirements defined by /gsd:new-milestone. -->
+<!-- No active milestone. v1.5 shipped + archived 2026-06-04. Next milestone (v1.6) requirements defined by /gsd:new-milestone. -->
 
-**Current Milestone: v1.5 Lunar Declination & Harmonics Debt**
+**No active milestone.** v1.5 shipped and archived 2026-06-04. Run `/gsd:new-milestone` to define v1.6.
 
-**Goal:** Add lunar (and body) declination δ with biodynamic montant/descendant semantics, and pay down the dynamic-harmonics debt left open by v1.4 (CLI surface, naming contract, timing orb derivation) — additive minor, no breaking changes.
+**Candidate scope for v1.6** (deferred from prior milestones, not yet committed):
 
-**Target features:**
-
-- [ ] Declination δ as a first-class quantity: `declination(jdate, body)` scalar + vectorizable (via `ecliptic_to_equatorial` → `rectangular_to_spherical`), with a biodynamic montant/descendant helper driven by the velocity of δ (analogue of `is_ascending`/`lat_velocity`, which stay UNCHANGED — δ and ecliptic-latitude β are distinct notions)
-- [ ] `body_decl` field added to `CHART_DTYPE` (14 bodies, additive, mirrors `body_lats`) — declination available wherever a chart is computed (returns / synastry / composite inherit it)
-- [ ] **ASP-F1** — CLI surface for arbitrary harmonics: `--harmonics h7` (h-prefixed notation, disambiguated from the rejected bare-int), wired through to `dynamic_specs=` + CLI byte-stability
-- [ ] **ASP-F2** — formalize the synthetic off-table aspect naming scheme (`H{h}-{k}`, e.g. `H7-1`) as a documented, pinned public API contract
-- [ ] **ASP-F3** — `find_aspect_timing` derives the orb from a dynamic spec instead of receiving it raw from the caller (consistency with the rest of the detection chain)
-- [ ] `ketu==1.5.0` shipped to PyPI via OIDC (minor additive)
+- **DECLA-01..03** — Declination aspects (parallels ≈ conjunction / contra-parallels ≈ opposition) as a new aspect type with dedicated orbs + detection-chain integration. The aspect-centric biodynamic framing makes these a natural next step, but they touch the aspect engine.
+- **HARMF-01** — Rich `--harmonics` CLI grammar: multi-harmonic (`h7,h11`) and preset+harmonic mixing (`traditional,h7`). v1.5 shipped only the Tight single-token form.
 
 ### Out of Scope
 
 <!-- Explicit boundaries (audited at v1.2 close; declination scope tranché at v1.5 open). -->
 
-- Declination aspects (parallels / contra-parallels) — defer beyond v1.5; a real Western-astrology technique (parallel ≈ conjunction, contra-parallel ≈ opposition) but it touches the aspect engine (new aspect type, dedicated orbs, detection-chain integration) and is NOT needed by the biodynamic montant/descendant core (which depends only on the Moon's δ trajectory). Named future candidate, not v1.5 scope
+- Declination aspects (parallels / contra-parallels) — was NOT in v1.5 (which shipped per-body δ + montant/descendant only); a real Western-astrology technique (parallel ≈ conjunction, contra-parallel ≈ opposition) that touches the aspect engine (new aspect type, dedicated orbs, detection-chain integration). Now a named v1.6 candidate (DECLA-01..03), not yet committed
 - True/Osculating Lilith (h13) — defer; Mean Lilith is de-facto standard in 95% of astrology software
 - Asteroid Lilith #1181 — defer; different body, separate effort
 - Davison composite — defer beyond v1.3; v1.2 shipped midpoint composite only; v1.3 focuses on Chiron + engine hardening
@@ -144,11 +149,11 @@ v1.4 made aspect harmonics open-ended. A new public `generate_harmonic_aspects(h
 
 ## Context
 
-**v1.4.0 shipped on PyPI on 2026-06-03** — open-ended aspect harmonics + Chiron range widening, a non-breaking minor (only behaviour change: Chiron orb 0°→4°). `generate_harmonic_aspects(h)` for any integer harmonic wired through the full detection chain via `dynamic_specs=`; the frozen `core.aspects` table + preset sha256 fingerprints stay byte-identical. Chiron range widened to 1900–2100 (`.npz` 2283 segments, degree=10, max|Δλ|=0.001214°); docs (en+fr) recentred on the 180°-division default. 1539 tests collected; 100% coverage; mypy `--strict` clean; runtime pure NumPy (`pyswisseph` test/build-only). LOC: ~38.9k Python (ketu/ + tests/).
+**v1.5.0 shipped on PyPI on 2026-06-04** — equatorial declination δ as a first-class vectorizable quantity (`declination` / `declination_velocity` / `is_ascending_declination` / `is_out_of_bounds` + `body_decl` in `CHART_DTYPE`) + dynamic-harmonics debt paid down (`H{h}-{k}` naming contract, `find_aspect_timing` `dyn_coef`, CLI `--harmonics h7`), a non-breaking additive minor. `is_ascending` (β) and the frozen `core.aspects` table + V1/V13 fingerprints stay byte-identical. 1627 tests; 100% coverage; mypy `--strict` clean; runtime pure NumPy (`pyswisseph` test/build-only). LOC: ~40.5k Python (ketu/ + tests/).
 
-**Tag `v1.4.0`** points at commit `3f3f9b4` (annotated `ca9e24c`). PyPI: <https://pypi.org/project/ketu/1.4.0/>. GitHub release (sdist + wheel): <https://github.com/alkimya/ketu/releases/tag/v1.4.0>. Published via OIDC trusted publishing (`publish.yml` SUCCESS); both `origin/main` and the tag pushed (RTD follows main, PyPI follows tag); post-publish fresh-venv smoke FROM PyPI passed all four v1.4 assertions.
+**Tag `v1.5.0`** points at commit `cf85e90` (annotated `cc1a3b8`). PyPI: <https://pypi.org/project/ketu/1.5.0/>. GitHub release (sdist + wheel): <https://github.com/alkimya/ketu/releases/tag/v1.5.0>. Published via OIDC trusted publishing (`publish.yml` run 26945916843 SUCCESS); both `origin/main` and the tag pushed (RTD follows main, PyPI follows tag); the user go/no-go relecture-validation gate was honoured before publish; post-publish fresh-venv smoke FROM PyPI passed all four v1.5 assertions.
 
-**Prior milestones:** v1.3.0 (2026-06-01) embedded Chiron as the 14th body + hardened the engine to 100% coverage + data-driven aspects (archived `.planning/milestones/v1.3-*`). v1.2.0 (2026-05-28) shipped the relational + predictive framework, tag `v1.2.0` at commit `d775663` (archived `.planning/milestones/v1.2-*`).
+**Prior milestones:** v1.4.0 (2026-06-03) open-ended aspect harmonics + Chiron range/orb (archived `.planning/milestones/v1.4-*`). v1.3.0 (2026-06-01) embedded Chiron as the 14th body + 100% coverage + data-driven aspects (archived `.planning/milestones/v1.3-*`). v1.2.0 (2026-05-28) shipped the relational + predictive framework (archived `.planning/milestones/v1.2-*`).
 
 **v1.2 ops debt — RESOLVED:**
 
@@ -212,6 +217,14 @@ v1.4 made aspect harmonics open-ended. A new public `generate_harmonic_aspects(h
 | Accept ~2× smaller full-circle dynamic orbs (no convention unification) | Half-circle (table) and full-circle (dynamic) orb conventions coexist as independent paths; unification deferred | ✓ Good (v1.4) — documented as a known note, not reconciled; no scope creep |
 | Chiron orb single source `core.bodies['orb']` (0°→4°, Pluto parity) | One edit propagates to synastry/cycles/composite/CLI; `_BODY_ORBS_16` sliced read-only at import, never hand-edited | ✓ Good (v1.4) — single constant change, all consumers propagated automatically |
 | v1.4 = additive minor, absorbed the "v1.3.1 docs patch" | Dynamic harmonics + Chiron range made the scope a minor; only behaviour change (Chiron orb) documented in CHANGELOG | ✓ Good (v1.4) — shipped as 1.4.0; docs patch folded in as DOC-14..17 |
+| `is_ascending_declination` distinct from β-based `is_ascending` | δ (equatorial) and β (ecliptic latitude) are separate quantities; both are valid; changing `is_ascending` semantics would be breaking | ✓ Good (v1.5) — both ship; anchor 2025-03-07 confirms they don't flip on the same days |
+| OOB threshold = instantaneous obliquity ε(jd), not fixed 23°26′ | Physically correct and free via `true_obliquity`; the fixed threshold is slightly wrong at range edges | ✓ Good (v1.5) |
+| Declination reuses the `coordinates.py` chain (Meeus 13.4 equivalent) | No new astronomy code; numerically equivalent to the direct formula | ✓ Good (v1.5) — regression test pins Δ = 0 vs the rectangular chain |
+| Composite `body_decl` from the coordinates chain on composite λ,β (not parent-midpoint) | Midpointing parents' δ would be a zero-fill trap and physically wrong | ✓ Good (v1.5) |
+| Harmonics debt grouped into ONE phase, order F2 → F3 → F1 | The CLI surface (F1) depends on a stable naming contract (F2) | ✓ Good (v1.5) — order held; CLI landed on a frozen contract |
+| `find_aspect_timing` `dyn_coef: Optional[float]`; explicit `orb` wins silently when both given | `Optional[float]` clean under `--strict` (no `np.void` single-row typing); escape hatch short-circuits regardless of `dyn_coef` | ✓ Good (v1.5) — precedence defined + tested, no `ValueError` |
+| CLI grammar Tight (`h7` alone + index list); `h7,h11` / `traditional,h7` deferred | Mixing/multi adds grammar + byte-stability cost for little immediate need | ✓ Good (v1.5) — deferred as HARMF-01; v1.1 fixture stayed byte-identical |
+| User go/no-go before irreversible PyPI publish (relecture-validation) | The user personally reviews the whole milestone before tag/publish; auto-publish unacceptable | ✓ Good (v1.5) — checkpoint reached, user approved, then tag + main pushed |
 
 ## Evolution
 
@@ -234,4 +247,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-Last updated: 2026-06-03 — v1.5 (Lunar Declination & Harmonics Debt) milestone started. Scope: declination δ (scalar + biodynamic montant/descendant + `body_decl` in CHART_DTYPE) + harmonics debt (ASP-F1 CLI `--harmonics h7`, ASP-F2 naming contract, ASP-F3 timing orb) + release. Declination aspects out of scope. Next: requirements → roadmap (phases continue at 33).
+Last updated: 2026-06-04 — v1.5 (Lunar Declination & Harmonics Debt) milestone SHIPPED + ARCHIVED. `ketu==1.5.0` on PyPI via OIDC (tag `cc1a3b8` + main pushed). 21/21 requirements validated and moved to Validated; Active section reset (no active milestone). 8 v1.5 decisions logged. Candidate v1.6 scope: DECLA-01..03 (declination aspects), HARMF-01 (rich CLI grammar). Next: `/gsd:new-milestone` (define v1.6 requirements + roadmap; phases continue at 36).

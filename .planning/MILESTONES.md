@@ -4,6 +4,62 @@ Historical record of shipped versions. Most recent first.
 
 ---
 
+## v1.5 Lunar Declination & Harmonics Debt — Shipped 2026-06-04
+
+**Tag:** `v1.5.0` (commit `cf85e90`, annotated SHA `cc1a3b8`)
+**PyPI:** <https://pypi.org/project/ketu/1.5.0/>
+**GitHub release:** <https://github.com/alkimya/ketu/releases/tag/v1.5.0>
+**Phases:** 33-35 (3 phases)
+**Plans:** 10 (4 + 4 + 2)
+**Tests:** 1627 passed / 2 skipped (pure-NumPy runtime; `pyswisseph` build/test-only)
+**Timeline:** 2026-06-03 → 2026-06-04 (~1 day, intensive)
+**Git range:** 60 commits since `v1.4.0`; 100 files changed (+18,050 / −1,135), of which 35 source files (ketu/ + tests/, +1,976 / −354)
+**LOC:** ~40,523 Python (ketu/ + tests/)
+**Coverage:** 100% maintained (fail_under=100); mypy `--strict` clean; numpydoc + interrogate gates held
+
+### Delivered
+
+Ketu promoted equatorial declination δ to a first-class, vectorizable quantity. Four public functions — `declination(jdate, body)` (δ in degrees [−90,+90], scalar + array), `declination_velocity(jdate, body)` (dδ/dt °/day), `is_ascending_declination(jdate, body)` (the Moon's biodynamic montant/descendant trajectory, True when dδ/dt > 0), and `is_out_of_bounds(jdate, body)` (|δ| > instantaneous ε(jd)) — reuse the verified `coordinates.py` chain (Meeus 13.4 equivalent, Δ = 0 to machine precision). A new `body_decl` field (`float64[14]`) was added to `CHART_DTYPE`, populated by `compute_chart` and inherited by synastry / composite / returns, guarded by a dtype ratchet. In parallel, the three dynamic-harmonics debts left open by v1.4 were paid down: the `H{h}-{k}` naming scheme became a pinned public API contract, `find_aspect_timing` gained a `dyn_coef=` orb-derivation parameter, and the CLI gained an arbitrary-harmonic `--harmonics h7` flag (Tight grammar) — the Quadrinovile display bug fixed along the way. All ADDITIVE: `is_ascending` (β-trajectory) and the frozen 14-row `core.aspects` table + V1/V13 sha256 fingerprints stayed byte-identical. Closed with `ketu==1.5.0` on PyPI via OIDC.
+
+### Key Accomplishments
+
+1. **Declination core** (Phase 33) — `declination` / `declination_velocity` / `is_ascending_declination` / `is_out_of_bounds` in `ketu.calculations`, reusing the `coordinates.py` chain (Meeus 13.4 equivalent), with a regression test pinning Δ = 0 vs the rectangular chain. δ-velocity mirrors the `lat_velocity` finite-difference idiom (no wraparound). β-vs-δ independence confirmed (anchor 2025-03-07). Scalar/array dispatch (scalar via `long`/`lat`; array via `calc_planet_position_batch`, loop-free).
+2. **`body_decl` in `CHART_DTYPE`** (Phase 33) — `("body_decl", "f8", (14,))` parallel to `body_lats`, populated by `compute_chart`, with a dtype-layout ratchet test (analogue of the 13→14 body-count ratchet). Composite `body_decl` derived via the coordinates chain on composite λ,β (not a midpoint of parents' δ — zero-fill trap avoided); returns inheritance tested; synastry no-op. Kala positional/`.view()` impact documented.
+3. **Declination docs (en + fr)** (Phase 33) — the 4 functions documented in `api.md` (is_retrograde style), the aspect-centric montant/descendant framing (~27.21 d draconic cycle) + OOB nodal cycle + the explicit β-vs-δ pitfall in `concepts.md`; FR `.po` translated and `.mo` recompiled.
+4. **Naming contract F2** (Phase 34) — `H{h}-{k}` (k = 1..h//2) pinned as a public API contract (`TestNamingContractF2` + frozen generator docstring), with the GENERATOR-vs-DETECTION two-channel distinction documented (en + fr): the generator always emits `H{h}-{k}`; DETECTION stays static-first (120° → Trine, never `H3-1`). No code change.
+5. **`find_aspect_timing` `dyn_coef` F3** (Phase 34) — `dyn_coef: Optional[float] = None` derives the orb as `(orb[b1] + orb[b2]) / 2 * dyn_coef` (mirrors `calculate_aspects` exactly, single canonical formula); explicit `orb` wins silently when both given (no `ValueError`); static path byte-identical. `TestFindAspectTimingF3`, docs en + fr.
+6. **CLI `--harmonics h7` F1** (Phase 34) — `HarmonicsSelection` NamedTuple `(mask, dynamic_specs)` clean under mypy `--strict`; `^h(\d+)$` branch applied after preset + comma branches; Quadrinovile display bug fixed in `print_aspects`; new `--harmonics h7` byte-stability fixture generated + manually audited (5 criteria), v1.1 fixture UNCHANGED; Tight-grammar boundary (`h7,h11` / `traditional,h7` deferred to HARMF-01) documented en + fr.
+7. **Release 1.5.0** (Phase 35) — version → 1.5.0 in all THREE source-of-truth files (incl. the Phase-32-INVERTED `docs/source/conf.py` bump so RTD renders 1.5.0); `[1.5.0]` CHANGELOG date-stamped (EN root + RTD, content byte-identical) + fresh French `[1.5.0]` + UPGRADING v1.4→v1.5 + README Roadmap. BLOCKING human go/no-go honoured (relecture-validation) before any irreversible action. Tag `v1.5.0` + `origin/main` BOTH pushed; GitHub release with sdist + wheel; OIDC publish (`publish.yml` run 26945916843 SUCCESS); post-publish fresh-venv smoke FROM PyPI passed all four assertions (`declination=-10.746°`, `is_ascending_declination=False`, `is_out_of_bounds=False`, `--harmonics h7`→"H7-1") + `find_spec('swisseph')=None`. Verifier PASSED 9/9.
+
+### Decisions Made (Outcomes)
+
+- **`is_ascending_declination` distinct from β-based `is_ascending`** — ✓ Good. δ and β are separate quantities; both ship, neither flips on the same days (anchor 2025-03-07).
+- **OOB via instantaneous ε(jd) (`true_obliquity`), not a fixed 23°26′** — ✓ Good. Physically correct and free; the fixed threshold is slightly wrong at range edges.
+- **Declination reuses the `coordinates.py` chain** — ✓ Good. No new astronomy code; regression test pins Δ = 0 vs the rectangular chain.
+- **Composite `body_decl` from the coordinates chain on composite λ,β** — ✓ Good. Avoided the zero-fill trap of midpointing parents' δ.
+- **Harmonics debt as ONE grouped phase, order F2 → F3 → F1** — ✓ Good. The CLI surface depended on a stable naming contract; the order held.
+- **`find_aspect_timing` `dyn_coef: Optional[float]`; explicit `orb` wins silently** — ✓ Good. Clean under `--strict`; escape hatch short-circuits regardless of `dyn_coef`.
+- **CLI grammar Tight (`h7` alone + index list)** — ✓ Good. `h7,h11` / `traditional,h7` mixing deferred (HARMF-01); byte-stability cost contained.
+- **User go/no-go before irreversible publish** — ✓ Good. The relecture-validation gate was honoured, not bypassed.
+
+### Issues Resolved
+
+- Quadrinovile CLI display bug fixed in `print_aspects` (Phase 34-03).
+- Stale `RuntimeWarning` div/0 todo (orbital heliocentric latitude, created 2026-05-28) closed at milestone-close: the warning had already been cured by QAL-11 (`np.maximum(r, 1e-10)` floor, Phase 21); added the missing observable-level ratchet `test_compute_chart_emits_no_runtime_warning` (commit `f256b11`, post-release). 1627 tests.
+
+### Issues Deferred (v1.6+)
+
+- **HARMF-01** — Rich CLI harmonics grammar (`h7,h11` multi-harmonic, `traditional,h7` preset+harmonic mixing). v1.5 ships the Tight single-token form.
+- **DECLA-01..03** — Declination aspects (parallels / contra-parallels) as a new aspect type with orbs + detection integration. Explicitly OUT OF SCOPE for v1.5 (δ is a per-body quantity here).
+
+### Technical Debt Incurred
+
+None of significance — all 3 phases verified PASSED (33, 34, and 35 at 9/9 must-haves). The `body_decl` additive dtype change is documented for Kala (named access unchanged; positional/`.view()` to adapt) and guarded by a ratchet test. The published wheel's docs cite "1626 tests"; the count is now 1627 after the post-release div/0 ratchet — a cosmetic doc-vs-tree drift, not a behaviour change.
+
+**Archive:** Roadmap details in `.planning/milestones/v1.5-ROADMAP.md`. Requirements in `.planning/milestones/v1.5-REQUIREMENTS.md`.
+
+---
+
 ## v1.4 Dynamic Harmonics & Chiron Range — Shipped 2026-06-03
 
 **Tag:** `v1.4.0` (commit `3f3f9b4`, annotated SHA `ca9e24c`)
