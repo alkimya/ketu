@@ -3,14 +3,14 @@ gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Declination Aspects
 status: ready_to_plan
-last_updated: "2026-06-04T12:00:00Z"
+last_updated: "2026-06-04T14:09:17Z"
 last_activity: 2026-06-04
 progress:
   total_phases: 2
   completed_phases: 0
-  total_plans: 0
-  completed_plans: 0
-  percent: 0
+  total_plans: 2
+  completed_plans: 1
+  percent: 50
 ---
 
 # Project State
@@ -25,15 +25,15 @@ See: `.planning/PROJECT.md` (updated 2026-06-04 — v1.6 roadmap created)
 ## Current Position
 
 Phase: 36 of 37 (Declination Aspects Core)
-Plan: — (not yet planned)
-Status: Ready to plan
-Last activity: 2026-06-04 — Roadmap created; 2 phases (36-37), 5 requirements mapped (100% coverage)
+Plan: 2 of 2 (36-02 batch function)
+Status: In progress — Plan 36-01 complete
+Last activity: 2026-06-04 — Plan 36-01 executed: ketu/declination sub-package (DECLA_ASPECT_DTYPE + find_declination_aspects), 19 tests, 100% coverage
 
-Progress: ░░░░░░░░░░ 0%
+Progress: █████░░░░░ 50%
 
 ## Next Step
 
-`/gsd:plan-phase 36` — plan the declination aspects core implementation.
+Execute Plan 36-02 — batch declination_aspect_masks function.
 
 ## Accumulated Context
 
@@ -47,6 +47,8 @@ Full log in `.planning/PROJECT.md` Key Decisions table. Relevant for v1.6:
 - Detection is vectorizable batch (`(S,14)→(S,91)` upper-triangle) — no Python loop in the hot path.
 - Research pitfalls are REQUIRED test cases: sign conflation (+15°/−15° is CP, not P), orb inflation (7° Sun/Moon gap not parallel), zero-sign trap (both at δ=0 → no aspect), MIN_DECL_ORB floor (Rahu/Lilith gap 0.1° → detected).
 - User go/no-go relecture-validation REQUIRED before any irreversible publish (tag, PyPI, GitHub release) — hard gate in Phase 37.
+- Plan 36-01: find_declination_aspects returns ONE unified DECLA_ASPECT_DTYPE array (P+CP by kind field), sorted by (body1,body2), empty = np.empty(0) never None/tuple — no orbs.py (formula merged into core.py).
+- Plan 36-01: `_ORB_MAT` frozen 14x14 at module load; `ketu.__all__` and `CHART_DTYPE` byte-identical — additive sub-package only.
 
 ### Blockers/Concerns
 
@@ -73,6 +75,6 @@ None.
 
 ## Session Continuity
 
-Last session: 2026-06-04 — Roadmap v1.6 created (2 phases, DECLA-01..05 mapped, STATE + REQUIREMENTS traceability updated).
-Stopped at: Roadmap creation complete — ready to plan Phase 36.
+Last session: 2026-06-04 — Plan 36-01 executed: ketu/declination sub-package created, 19 tests green, all quality gates pass.
+Stopped at: Completed 36-01-PLAN.md — Plan 36-02 (batch function) is next.
 Resume file: None
