@@ -2,15 +2,16 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Declination Aspects
-status: phase_complete
-last_updated: "2026-06-04T14:17:44Z"
-last_activity: 2026-06-04
+status: executing
+stopped_at: Completed 36-02-PLAN.md — Phase 36 complete. Phase 37 (v1.6 release) is next.
+last_updated: "2026-06-04T20:19:30.978Z"
+last_activity: 2026-06-04 -- Phase 37 execution started
 progress:
   total_phases: 2
   completed_phases: 1
-  total_plans: 2
+  total_plans: 5
   completed_plans: 2
-  percent: 100
+  percent: 40
 ---
 
 # Project State
@@ -20,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-06-04 — v1.6 roadmap created)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 36 — Declination Aspects Core (DECLA-01..04)
+**Current focus:** Phase 37 — documentation-release-v1-6-0
 
 ## Current Position
 
-Phase: 36 of 37 (Declination Aspects Core) — COMPLETE
-Plan: 2 of 2 (36-02 batch function) — COMPLETE
-Status: Phase 36 complete — Phase 37 (v1.6 release) is next
-Last activity: 2026-06-04 — Plan 36-02 executed: declination_aspect_masks batch function + DeclinationAspectMasks NamedTuple, 8 tests, 100% coverage
+Phase: 37 (documentation-release-v1-6-0) — EXECUTING
+Plan: 1 of 3
+Status: Executing Phase 37
+Last activity: 2026-06-04 -- Phase 37 execution started
 
 Progress: ██████████ 100%
 

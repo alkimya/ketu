@@ -107,14 +107,17 @@ Full details archived to `.planning/milestones/v1.5-ROADMAP.md`.
 **Depends on:** v1.5 (uses `body_decl` from `CHART_DTYPE`, `core.bodies['orb']`)
 **Requirements:** DECLA-01, DECLA-02, DECLA-03, DECLA-04
 **Success Criteria** (what must be TRUE):
+
   1. `find_declination_aspects(chart["body_decl"])` returns a `DECLA_ASPECT_DTYPE` structured array where every row is either `kind="P"` (parallel: same non-zero sign, `|δ₁−δ₂| ≤ orb`) or `kind="CP"` (contra-parallel: opposite non-zero signs, `|δ₁+δ₂| ≤ orb`), with `body1` < `body2` (upper-triangle, no duplicates).
   2. The orb for each pair is exactly `max((core.bodies['orb'][b1] + core.bodies['orb'][b2]) / 2 * (1/12), 0.5)` — Sun/Moon yields 1.0°, Rahu/Lilith yields 0.5° (floor applied), verified by a test.
   3. The four pitfall cases from the research brief are guarded by explicit tests: `+15°/−15°` is CP not P (sign conflation guard); a 7° Sun/Moon gap is not a parallel (orb inflation guard); both bodies at δ=0° yield zero aspects (zero-sign trap guard); Rahu/Lilith at gap 0.1° yields one parallel (MIN_DECL_ORB floor guard).
   4. A vectorized batch path accepts `body_decl` of shape `(S, 14)` and returns parallel/contra masks of shape `(S, 91)` using the precomputed 14×14 orb matrix — no Python loop over bodies in the hot path; tested with a multi-chart array.
   5. `CHART_DTYPE` is byte-identical to its v1.5 layout (ratchet test passes); the frozen 14-row `core.aspects` table and V1/V13 sha256 fingerprints are unmodified; 100% coverage maintained (fail_under=100, zero pragma); mypy `--strict` clean.
+
 **Plans:** 2 plans
 
 Plans:
+
 - [x] 36-01-PLAN.md — `ketu/declination/` foundation: `DECLA_ASPECT_DTYPE` + `DECLA_COEF`/`MIN_DECL_ORB` consts + frozen 14×14 orb matrix + scalar `find_declination_aspects` (P/CP) + pyproject registration + scalar test suite (dtype ratchet, 4 pitfalls, JD 2451717.0 oracle, orb formula) + quality gates
 - [x] 36-02-PLAN.md — vectorized batch path `declination_aspect_masks` `(S,14)→(S,91)` `DeclinationAspectMasks` NamedTuple (no body loop) + batch test suite (shapes/dtypes, no-loop assertion, multi-chart, scalar-consistency oracle)
 
@@ -124,16 +127,19 @@ Plans:
 **Depends on:** Phase 36
 **Requirements:** DECLA-05
 **Success Criteria** (what must be TRUE):
+
   1. The English and French documentation covers all five DECLA-05 items: the signed-δ parallel/contra-parallel definitions (same-hemisphere rule), the body-derived orb formula with the worked Sun/Moon example (1.0°), the biodynamic framing (parallel ≈ conjunction / contra-parallel ≈ opposition on the δ axis), the explicit "parallel ≠ longitude conjunction" distinction, and the `//` / `#` symbol conventions with `P` / `CP` text abbreviations.
   2. A human go/no-go relecture-validation checkpoint is passed by the user before any irreversible publish action (tag, PyPI push, GitHub release).
   3. Version is bumped to `1.6.0` in all three source-of-truth files (`pyproject.toml`, `ketu/__init__.py`, `docs/source/conf.py`); a dated `[1.6.0]` CHANGELOG entry exists in the EN root file and the RTD docs copy (byte-identical content); a fresh French `[1.6.0]` CHANGELOG section exists; an UPGRADING v1.5→v1.6 guide is present.
   4. `ketu==1.6.0` is published on PyPI via OIDC (`publish.yml`); both `origin/main` and the tag `v1.6.0` are pushed (RTD follows main, PyPI follows tag); a GitHub release with sdist + wheel is attached.
   5. A post-publish fresh-venv smoke test FROM PyPI passes: `find_declination_aspects` correctly detects at least one parallel, no `pyswisseph` at runtime (`find_spec('swisseph') is None`).
-**Plans:** 3 plans (2 waves)
+
+**Plans:** 2/3 plans executed
 
 Plans:
-- [ ] 37-01-PLAN.md — Sphinx feature docs en + fr (new declination-aspects section in concepts.md + api.md: parallel/contra definitions, same-hemisphere rule, orb formula w/ Sun/Moon=1.0°, biodynamic framing, parallel≠conjunction, // # symbols, zero-sign trap, OOB note); FR `.po` translated + `.mo` recompile verified — DECLA-05 [wave 1]
-- [ ] 37-02-PLAN.md — Version bump 1.6.0 (3 files incl. conf.py) + CHANGELOG authored from scratch (en root + RTD docs copy) + fr CHANGELOG + UPGRADING v1.5→v1.6 + README Roadmap [wave 1]
+
+- [x] 37-01-PLAN.md — Sphinx feature docs en + fr (new declination-aspects section in concepts.md + api.md: parallel/contra definitions, same-hemisphere rule, orb formula w/ Sun/Moon=1.0°, biodynamic framing, parallel≠conjunction, // # symbols, zero-sign trap, OOB note); FR `.po` translated + `.mo` recompile verified — DECLA-05 [wave 1]
+- [x] 37-02-PLAN.md — Version bump 1.6.0 (3 files incl. conf.py) + CHANGELOG authored from scratch (en root + RTD docs copy) + fr CHANGELOG + UPGRADING v1.5→v1.6 + README Roadmap [wave 1]
 - [ ] 37-03-PLAN.md — Release ceremony: local pre-flight (mypy/gates/build/local-wheel smoke) + BLOCKING human go/no-go checkpoint + tag v1.6.0 + push tag&main + OIDC publish + GitHub release + post-publish PyPI smoke (find_declination_aspects detects ≥1 parallel, no swisseph) [wave 2, depends 37-01 + 37-02]
 
 ## Progress
