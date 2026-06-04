@@ -147,11 +147,12 @@ Internal implementation order is F2 → F3 → F1: HARM-01..03 (naming contract)
   2. The version is bumped to 1.5.0 (`pyproject.toml` + `ketu/__init__.py`); a dated `[1.5.0]` CHANGELOG documents Added (declination δ + montant/descendant + OOB + `body_decl`; arbitrary-harmonic CLI `h7`) and Changed (none breaking); `fr/CHANGELOG.md` is synced; UPGRADING v1.4→v1.5 + README "What's New" updated. (REL-02)
   3. `ketu==1.5.0` is shipped to PyPI via OIDC trusted publishing; tag `v1.5.0` AND `origin/main` are BOTH pushed (RTD follows main, PyPI follows tag); a GitHub release carries the sdist + wheel. (REL-03)
   4. A post-publish fresh-venv smoke FROM PyPI asserts the v1.5 surface: declination, montant/descendant, OOB, `--harmonics h7`, and no `pyswisseph` at runtime. (REL-03)
-**Plans**: TBD (refined during plan-phase)
+**Plans**: 2 plans (2 waves)
 
 Plans:
 
-- [ ] 35-01: TBD (plan-phase derives the wave breakdown)
+- [ ] 35-01-PLAN.md — version bump (3 files incl. conf.py) + date-stamp both changelogs + author fr/CHANGELOG [1.5.0] + UPGRADING v1.4→v1.5 + README Roadmap (wave 1, autonomous)
+- [ ] 35-02-PLAN.md — full pre-flight → BLOCKING human go/no-go → tag v1.5.0 + push tag + push origin/main + GitHub release + PyPI smoke (wave 2, human-gated)
 
 **Details:**
 LAST phase, user-checkpoint-gated before tag/publish (the user reviews the whole milestone himself first — do not enchaîner into publish without his feu vert). RTD follows `origin/main`, PyPI follows the tag → push BOTH the tag `v1.5.0` and `origin/main`. Post-publish smoke runs FROM PyPI in a fresh venv and asserts all four v1.5 surface points plus `importlib.util.find_spec('swisseph') is None`. Mirror the v1.4 release shape (OIDC `publish.yml`, GitHub release with sdist + wheel).
