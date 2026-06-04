@@ -4,6 +4,28 @@ Historical record of shipped versions. Most recent first.
 
 ---
 
+## v1.6 Declination Aspects (Shipped: 2026-06-04)
+
+**Phases completed:** 2 phases, 5 plans, 10 tasks
+**Git range:** 8963db2..HEAD (32 commits) — 50 files changed, +5991/−139
+**Requirements:** DECLA-01..05 (5/5 satisfied — milestone audit PASSED)
+
+**Delivered:** The additive `ketu.declination` subpackage — pure-NumPy detection of parallel and contra-parallel aspects on the equatorial declination axis (δ), consuming the v1.5 `body_decl` field with no breaking changes. Documented en+fr and shipped as `ketu==1.6.0`. The final lightweight Ketu engine milestone before the Rahu UI project.
+
+**Key accomplishments:**
+
+- Pure-NumPy `ketu/declination/` subpackage: `DECLA_ASPECT_DTYPE`, frozen 14×14 orb matrix, fully vectorized `find_declination_aspects()` — parallels, contra-parallels, body-derived orb formula (DECLA-01/02/03).
+- Pure-broadcasting `declination_aspect_masks(body_decl)` batch path → `DeclinationAspectMasks` NamedTuple of `(S,91)` masks, no Python body loop (DECLA-04).
+- Complete v1.6 feature documentation EN + FR — concepts prose + API reference + verified FR `.mo` recompile, no English fallback (DECLA-05).
+- Version bumped to 1.6.0 in all three source-of-truth files; dated `[1.6.0]` changelog (EN root + RTD docs copy + French); UPGRADING v1.5→v1.6; README Roadmap.
+- Shipped `ketu==1.6.0` to PyPI via OIDC after a 14-gate local pre-flight and an explicit human go/no-go; tag + origin/main both pushed, GitHub release attached, post-publish smoke from PyPI green.
+
+**Invariants preserved:** `CHART_DTYPE` byte-identical (companion function, not a dtype field — no ratchet break); frozen 14-row `core.aspects` table + V1/V13 fingerprints unchanged; `find_declination_aspects` reachable only via `ketu.declination.*` (not `ketu.__all__`).
+
+**Known deferred items at close:** 1 — Phase 17 (v1.2) Astro.com manual cross-check, documented-deferred non-blocker (see STATE.md Deferred Items).
+
+---
+
 ## v1.5 Lunar Declination & Harmonics Debt — Shipped 2026-06-04
 
 **Tag:** `v1.5.0` (commit `cf85e90`, annotated SHA `cc1a3b8`)
@@ -315,4 +337,3 @@ Consolidated v0.4.0 development into a stable production library. Surgical refin
 6. Published on PyPI as `ketu==1.0.0` via trusted publishing OIDC.
 
 **Archive:** Roadmap details in `.planning/milestones/v1.0-ROADMAP.md`. Requirements in `.planning/milestones/v1.0-REQUIREMENTS.md`.
-

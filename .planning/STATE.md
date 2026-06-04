@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.6
 milestone_name: Declination Aspects
-status: completed
+status: Awaiting next milestone
 stopped_at: Completed 36-02-PLAN.md — Phase 36 complete. Phase 37 (v1.6 release) is next.
-last_updated: "2026-06-04T21:06:58.264Z"
-last_activity: 2026-06-04 -- Phase 37 marked complete
+last_updated: "2026-06-04T21:18:06.495Z"
+last_activity: 2026-06-04 — Milestone v1.6 completed and archived
 progress:
   total_phases: 2
   completed_phases: 2
@@ -21,20 +21,18 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-06-04 — v1.6 roadmap created)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 37 — documentation-release-v1-6-0
+**Current focus:** v1.6 shipped & archived — planning next milestone (v1.6 = last lightweight engine milestone; next is the Rahu UI project in a separate repo)
 
 ## Current Position
 
-Phase: 37 — COMPLETE
-Plan: 1 of 3
-Status: Phase 37 complete
-Last activity: 2026-06-04 -- Phase 37 marked complete
-
-Progress: ██████████ 100%
+Phase: Milestone v1.6 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-06-04 — Milestone v1.6 completed and archived
 
 ## Next Step
 
-Execute Phase 37 — v1.6 release (tag v1.6.0, publish to PyPI, user relecture-validation gate required first).
+v1.6 "Declination Aspects" shipped to PyPI (`ketu==1.6.0`) and archived. Start the next milestone with `/gsd-new-milestone` — candidate is the **Rahu** web UI project (separate repo `~/workspace/rahu`, consuming ketu from PyPI; FastAPI + SvelteKit + D3/SVG). Ketu the engine is considered ~complete.
 
 ## Accumulated Context
 
@@ -61,6 +59,16 @@ None. v1.6 builds additively on the green v1.5 base (1627 tests, 100% coverage, 
 
 None.
 
+## Deferred Items
+
+Items acknowledged and deferred at milestone close on 2026-06-04 (v1.6):
+
+| Category | Item | Status |
+|----------|------|--------|
+| verification_gap | Phase 17 (Composite Chart, v1.2) — 17-VERIFICATION.md | human_needed |
+
+Note: Phase 17 belongs to the already-shipped v1.2 milestone. The open flag is the documented-deferred Astro.com manual cross-check (a bot-blocked UI task, ~30 min). It is NOT a blocker — the self-consistency oracle at tolerance 0.0001° is the headline regression gate and passes. Deferral is documented in CHANGELOG, REQUIREMENTS COMP-04, and each fixture's `cross_check_astro_com.performed=false` flag. Out of v1.6 scope.
+
 ## Performance Metrics
 
 **Velocity (shipped milestones):**
@@ -81,3 +89,7 @@ None.
 Last session: 2026-06-04 — Plan 36-02 executed: DeclinationAspectMasks NamedTuple + declination_aspect_masks batch function, 8 tests green, all quality gates pass.
 Stopped at: Completed 36-02-PLAN.md — Phase 36 complete. Phase 37 (v1.6 release) is next.
 Resume file: None
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone

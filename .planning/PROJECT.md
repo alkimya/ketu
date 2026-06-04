@@ -10,11 +10,11 @@ Cycle calculations must be correct, tested, and performant. If the math is wrong
 
 ## Current State
 
-**Latest shipped:** v1.5.0 (PyPI 2026-06-04) — <https://pypi.org/project/ketu/1.5.0/>
+**Latest shipped:** v1.6.0 (PyPI 2026-06-04) — <https://pypi.org/project/ketu/1.6.0/>
 
-v1.5 promoted equatorial declination δ to a first-class, vectorizable quantity. Four public functions in `ketu.calculations` — `declination(jdate, body)` (δ in degrees [−90,+90], scalar + array), `declination_velocity` (dδ/dt °/day), `is_ascending_declination` (the Moon's biodynamic montant/descendant trajectory, True when dδ/dt > 0), `is_out_of_bounds` (|δ| > instantaneous ε(jd)) — reuse the verified `coordinates.py` chain (Meeus 13.4 equivalent, Δ = 0 to machine precision). A new `body_decl` field (`float64[14]`) was added to `CHART_DTYPE`, populated by `compute_chart` and inherited by synastry / composite / returns, guarded by a dtype ratchet. In parallel, the three dynamic-harmonics debts from v1.4 were paid down: the `H{h}-{k}` naming scheme became a pinned public API contract, `find_aspect_timing` gained a `dyn_coef=` orb-derivation parameter, and the CLI gained the arbitrary-harmonic `--harmonics h7` flag (Tight grammar; Quadrinovile display bug fixed). All ADDITIVE: `is_ascending` (β-trajectory) and the frozen 14-row `core.aspects` table + V1/V13 sha256 fingerprints stay byte-identical. 1627 tests; 100% coverage; mypy `--strict` clean; runtime stays pure NumPy (`pyswisseph` test/build-only).
+v1.6 added the additive `ketu.declination` subpackage — detection of **parallel** and **contra-parallel** aspects on the equatorial declination axis (δ), the last lightweight Ketu engine milestone before the Rahu UI project. Two pure-NumPy public functions: `find_declination_aspects(body_decl)` (scalar/single-chart detector over the `(14,)` `chart["body_decl"]` array → a `DECLA_ASPECT_DTYPE` structured array of upper-triangle P/CP pairs; `np.empty(0, …)` when none, never `None`) and `declination_aspect_masks(body_decl)` (vectorized batch path `(S,14)`→`DeclinationAspectMasks` NamedTuple of `(S,91)` masks, pure broadcasting, no Python body loop). Orbs are body-derived: `max((orb_b1+orb_b2)/2 × DECLA_COEF, MIN_DECL_ORB)` with `DECLA_COEF=1/12` (Sun/Moon = exactly 1.0°) and `MIN_DECL_ORB=0.5°` (floor so zero-orb bodies stay detectable). Documented en + fr (signed-δ definitions, same-hemisphere rule, orb formula, biodynamic framing parallel ≈ conjunction / contra ≈ opposition, the parallel ≠ longitude-conjunction distinction, P/CP symbols). All ADDITIVE: `CHART_DTYPE` byte-identical (companion function, not a dtype field — no ratchet break), the frozen 14-row `core.aspects` table + V1/V13 fingerprints unchanged, and the new names are reachable only via `ketu.declination.*` (not `ketu.__all__`). 1654 tests; 100% coverage; mypy `--strict` clean; runtime stays pure NumPy (`pyswisseph` test/build-only).
 
-**Prior:** v1.4.0 (2026-06-03) made aspect harmonics open-ended — `generate_harmonic_aspects(h)` for ANY integer harmonic wired through the full detection chain via `dynamic_specs=`, the frozen `core.aspects` table + fingerprints byte-identical; Chiron range widened to 1900–2100 and its orb corrected 0°→4°; docs (en+fr) recentred on the 180°-division default. v1.3.0 (2026-06-01) embedded Chiron as the 14th body (Chebyshev `.npz`, pure-NumPy runtime), hardened the engine to 100% coverage, and made the aspect engine data-driven (default = TRADITIONAL 7). The 13→14 body shift deliberately broke the frozen-body-count ratchet and the internal Ketu↔Kala positional contract (Kala adapts).
+**Prior:** v1.5.0 (2026-06-04) promoted equatorial declination δ to a first-class, vectorizable quantity — `declination` / `declination_velocity` / `is_ascending_declination` (biodynamic montant/descendant) / `is_out_of_bounds` in `ketu.calculations`, a `body_decl` field added to `CHART_DTYPE`, plus the dynamic-harmonics debt paid down (`H{h}-{k}` naming contract, `find_aspect_timing` `dyn_coef=`, CLI `--harmonics h7`). v1.4.0 (2026-06-03) made aspect harmonics open-ended — `generate_harmonic_aspects(h)` for ANY integer harmonic wired through the full detection chain via `dynamic_specs=`, the frozen `core.aspects` table + fingerprints byte-identical; Chiron range widened to 1900–2100 and its orb corrected 0°→4°; docs (en+fr) recentred on the 180°-division default. v1.3.0 (2026-06-01) embedded Chiron as the 14th body (Chebyshev `.npz`, pure-NumPy runtime), hardened the engine to 100% coverage, and made the aspect engine data-driven (default = TRADITIONAL 7). The 13→14 body shift deliberately broke the frozen-body-count ratchet and the internal Ketu↔Kala positional contract (Kala adapts).
 
 ## Requirements
 
@@ -114,35 +114,35 @@ v1.5 promoted equatorial declination δ to a first-class, vectorizable quantity.
 - ✓ CLI `--harmonics h7` (h-prefixed, Tight grammar) via `HarmonicsSelection` NamedTuple clean under mypy `--strict`; Quadrinovile display bug fixed; new h7 byte-stability fixture audited, v1.1 fixture UNCHANGED; documented en + fr — v1.5.0 (HARM-06..09)
 - ✓ `ketu==1.5.0` shipped to PyPI via OIDC (push main + tag); user go/no-go honoured before publish; post-publish fresh-venv smoke 4/4 (declination, montant/descendant, OOB, `--harmonics h7`, no `pyswisseph` at runtime) — v1.5.0 (REL-01..03)
 
-## Current Milestone: v1.6 Declination Aspects
+**v1.6 Declination Aspects** (full requirements archived in `.planning/milestones/v1.6-REQUIREMENTS.md`):
 
-**Goal:** Add declination aspects — parallels (δ₁≈δ₂) and contra-parallels (δ₁≈−δ₂) — as a new aspect type on the δ axis, the last lightweight Ketu engine milestone before the Rahu UI project.
+- ✓ Parallel detection (`kind="P"`): same non-zero-sign declination within orb (`sign(δ₁)==sign(δ₂)≠0 ∧ |δ₁−δ₂|≤orb`); bodies at δ=0° form no parallel (zero-sign trap guarded) — v1.6.0 (DECLA-01)
+- ✓ Contra-parallel detection (`kind="CP"`): opposite-sign mirrored declination within orb (`sign(δ₁)≠sign(δ₂) ∧ both≠0 ∧ |δ₁+δ₂|≤orb`) — v1.6.0 (DECLA-02)
+- ✓ Body-derived δ orb `max((orb_b1+orb_b2)/2 × DECLA_COEF, MIN_DECL_ORB)` with `DECLA_COEF=1/12` (Sun/Moon=1.0°) and `MIN_DECL_ORB=0.5°` floor (Rahu/Lilith stay detectable); frozen 14×14 `_ORB_MAT` — v1.6.0 (DECLA-03)
+- ✓ Companion function `find_declination_aspects(body_decl)` → `DECLA_ASPECT_DTYPE` (5 fields: body1/body2 i1, kind U2, gap/orb f8), upper-triangle sorted, empty=`np.empty(0,…)`; vectorizable batch `declination_aspect_masks((S,14))→(S,91)` `DeclinationAspectMasks` NamedTuple, no Python body loop; `CHART_DTYPE` UNCHANGED (additive, no ratchet break) — v1.6.0 (DECLA-04)
+- ✓ Documented en + fr: signed-δ definitions + same-hemisphere rule, body-derived orb formula (Sun/Moon=1.0°), aspect-centric biodynamic framing (parallel ≈ conjunction / contra ≈ opposition on δ), parallel ≠ longitude-conjunction distinction, `//`/`#` + `P`/`CP` symbols, OOB-interaction note; FR `.mo` recompiled (no English fallback) — v1.6.0 (DECLA-05)
+- ✓ `ketu==1.6.0` shipped to PyPI via OIDC (push main + tag); user go/no-go honoured before publish; post-publish fresh-venv smoke FROM PyPI green (find_declination_aspects detects ≥1 parallel, dtype == DECLA_ASPECT_DTYPE, no `pyswisseph` at runtime) — v1.6.0
 
-**Target features:**
+## Next Milestone: TBD (candidate — Rahu UI project)
 
-- Parallel detection (two bodies at the same declination, same hemisphere ≈ conjunction effect)
-- Contra-parallel detection (opposite declinations, δ₁≈−δ₂ ≈ opposition effect)
-- Dedicated declination orbs derived from `core.bodies['orb']` × coefficient (Ketu-style, like `dyn_coef`)
-- Integration into the natal detection chain (reusing the v1.5 `body_decl` data already in `CHART_DTYPE`)
-- Documentation en + fr (aspect-centric biodynamic framing)
-
-**Scope discipline (LIGHT):** DECLA only. NO declination synastry, NO dedicated CLI surface, NO new bodies. HARMF-01 (rich `--harmonics` grammar) explicitly deferred. This is the final lightweight Ketu engine milestone — Rahu (separate web-UI project consuming `ketu` from PyPI) comes next.
+**Ketu the engine is considered ~complete.** v1.6 was the final lightweight engine milestone. The intended next direction is **Rahu** — a shareable web UI built on top of Ketu, in a SEPARATE repo (`~/workspace/rahu`) consuming `ketu` from PyPI (no symlink). Stack: FastAPI + SvelteKit + D3/SVG. No further bodies, houses, or parts are planned for the Ketu engine itself. A Rust rewrite is explicitly rejected (latency invisible in a UI; would throw away 1654 tests/oracles — if a real hot path emerges, surgical PyO3 only, never a full rewrite).
 
 ### Active
 
-<!-- v1.6 Declination Aspects — DECLA only (light). Requirements defined by /gsd:new-milestone 2026-06-04. -->
+<!-- v1.6 shipped & archived. No active engine requirements. Next milestone (Rahu or another engine increment) defined by /gsd-new-milestone. -->
 
-- [ ] **DECLA** — Declination aspects: parallel + contra-parallel detection, dedicated δ orbs (body-derived, Ketu-style), natal detection-chain integration, docs en + fr. Reuses v1.5 `body_decl` data. NO synastry δ, NO dedicated CLI surface (LIGHT scope).
+(None — awaiting next milestone. Start with `/gsd-new-milestone`.)
 
-**Deferred (NOT in v1.6):**
+**Deferred (future candidates, not committed):**
 
-- **HARMF-01** — Rich `--harmonics` CLI grammar: multi-harmonic (`h7,h11`) and preset+harmonic mixing (`traditional,h7`). v1.5 shipped only the Tight single-token form. Out of scope for v1.6 (DECLA only); remains a future candidate.
+- **HARMF-01** — Rich `--harmonics` CLI grammar: multi-harmonic (`h7,h11`) and preset+harmonic mixing (`traditional,h7`). v1.5 shipped only the Tight single-token form; v1.6 stayed DECLA-only. Remains a future candidate.
+- **Declination synastry / dedicated CLI surface** — v1.6 shipped in-orb detection only (no applying/timing/synastry/CLI for declination aspects). Natural follow-ups if demand surfaces.
 
 ### Out of Scope
 
 <!-- Explicit boundaries (audited at v1.2 close; declination scope tranché at v1.5 open). -->
 
-- Declination aspects (parallels / contra-parallels) — was NOT in v1.5 (which shipped per-body δ + montant/descendant only); a real Western-astrology technique (parallel ≈ conjunction, contra-parallel ≈ opposition) that touches the aspect engine (new aspect type, dedicated orbs, detection-chain integration). Now a named v1.6 candidate (DECLA-01..03), not yet committed
+- ✓ SHIPPED v1.6 (was here as a candidate): Declination aspects (parallels / contra-parallels) — the `ketu.declination` subpackage (`find_declination_aspects` + `declination_aspect_masks`), body-derived δ orbs, docs en+fr. In-orb detection only; declination synastry / applying-timing / dedicated CLI remain out of scope (future candidates above)
 - True/Osculating Lilith (h13) — defer; Mean Lilith is de-facto standard in 95% of astrology software
 - Asteroid Lilith #1181 — defer; different body, separate effort
 - Davison composite — defer beyond v1.3; v1.2 shipped midpoint composite only; v1.3 focuses on Chiron + engine hardening
@@ -162,11 +162,13 @@ v1.5 promoted equatorial declination δ to a first-class, vectorizable quantity.
 
 ## Context
 
-**v1.5.0 shipped on PyPI on 2026-06-04** — equatorial declination δ as a first-class vectorizable quantity (`declination` / `declination_velocity` / `is_ascending_declination` / `is_out_of_bounds` + `body_decl` in `CHART_DTYPE`) + dynamic-harmonics debt paid down (`H{h}-{k}` naming contract, `find_aspect_timing` `dyn_coef`, CLI `--harmonics h7`), a non-breaking additive minor. `is_ascending` (β) and the frozen `core.aspects` table + V1/V13 fingerprints stay byte-identical. 1627 tests; 100% coverage; mypy `--strict` clean; runtime pure NumPy (`pyswisseph` test/build-only). LOC: ~40.5k Python (ketu/ + tests/).
+**v1.6.0 shipped on PyPI on 2026-06-04** — the additive `ketu.declination` subpackage: parallel + contra-parallel detection on the δ axis (`find_declination_aspects` scalar + `declination_aspect_masks` batch + `DeclinationAspectMasks` + `DECLA_ASPECT_DTYPE` + `DECLA_COEF=1/12` + `MIN_DECL_ORB=0.5°`), consuming the v1.5 `body_decl` field. Documented en+fr. A non-breaking additive minor: `CHART_DTYPE` byte-identical (companion function, not a field), the frozen `core.aspects` table + fingerprints unchanged, names reachable only via `ketu.declination.*`. 1654 tests; 100% coverage; mypy `--strict` clean; runtime pure NumPy (`pyswisseph` test/build-only). The final lightweight Ketu engine milestone before the Rahu UI project.
 
-**Tag `v1.5.0`** points at commit `cf85e90` (annotated `cc1a3b8`). PyPI: <https://pypi.org/project/ketu/1.5.0/>. GitHub release (sdist + wheel): <https://github.com/alkimya/ketu/releases/tag/v1.5.0>. Published via OIDC trusted publishing (`publish.yml` run 26945916843 SUCCESS); both `origin/main` and the tag pushed (RTD follows main, PyPI follows tag); the user go/no-go relecture-validation gate was honoured before publish; post-publish fresh-venv smoke FROM PyPI passed all four v1.5 assertions.
+**Tag `v1.6.0`** points at commit `455cb36`. PyPI: <https://pypi.org/project/ketu/1.6.0/>. GitHub release (sdist + wheel): <https://github.com/alkimya/ketu/releases/tag/v1.6.0>. Published via OIDC trusted publishing (`publish.yml` run 26978132507 SUCCESS); both `origin/main` and the tag pushed (RTD follows main, PyPI follows tag); the user go/no-go relecture-validation gate was honoured before publish; post-publish fresh-venv smoke FROM PyPI confirmed the v1.6 surface (find_declination_aspects detects a Sun/Moon parallel, dtype == DECLA_ASPECT_DTYPE, no `pyswisseph` at runtime). Milestone audit PASSED 5/5; cross-phase integration checker PASS (0 blocker).
 
-**Prior milestones:** v1.4.0 (2026-06-03) open-ended aspect harmonics + Chiron range/orb (archived `.planning/milestones/v1.4-*`). v1.3.0 (2026-06-01) embedded Chiron as the 14th body + 100% coverage + data-driven aspects (archived `.planning/milestones/v1.3-*`). v1.2.0 (2026-05-28) shipped the relational + predictive framework (archived `.planning/milestones/v1.2-*`).
+**CI note (future maintenance):** `publish.yml` runs Node.js-20 actions (`upload-artifact`/`download-artifact`); GitHub forces Node 24 on 2026-06-16. Not blocking — v1.6 publish succeeded — but the workflow should be bumped before that date.
+
+**Prior milestones:** v1.5.0 (2026-06-04) first-class declination δ + harmonics debt (archived `.planning/milestones/v1.5-*`). v1.4.0 (2026-06-03) open-ended aspect harmonics + Chiron range/orb (archived `.planning/milestones/v1.4-*`). v1.3.0 (2026-06-01) embedded Chiron as the 14th body + 100% coverage + data-driven aspects (archived `.planning/milestones/v1.3-*`). v1.2.0 (2026-05-28) shipped the relational + predictive framework (archived `.planning/milestones/v1.2-*`).
 
 **v1.2 ops debt — RESOLVED:**
 
@@ -238,6 +240,12 @@ v1.5 promoted equatorial declination δ to a first-class, vectorizable quantity.
 | `find_aspect_timing` `dyn_coef: Optional[float]`; explicit `orb` wins silently when both given | `Optional[float]` clean under `--strict` (no `np.void` single-row typing); escape hatch short-circuits regardless of `dyn_coef` | ✓ Good (v1.5) — precedence defined + tested, no `ValueError` |
 | CLI grammar Tight (`h7` alone + index list); `h7,h11` / `traditional,h7` deferred | Mixing/multi adds grammar + byte-stability cost for little immediate need | ✓ Good (v1.5) — deferred as HARMF-01; v1.1 fixture stayed byte-identical |
 | User go/no-go before irreversible PyPI publish (relecture-validation) | The user personally reviews the whole milestone before tag/publish; auto-publish unacceptable | ✓ Good (v1.5) — checkpoint reached, user approved, then tag + main pushed |
+| Declination aspects = companion function, NOT a `CHART_DTYPE` field | Keeps `CHART_DTYPE` byte-identical (no ratchet break); detection consumes the existing `body_decl` array | ✓ Good (v1.6) — `find_declination_aspects` + masks live in a separate `ketu.declination` subpackage; CHART_DTYPE unchanged |
+| Unified `DECLA_ASPECT_DTYPE` (P+CP by `kind` field), not separate arrays | One return type, sorted upper-triangle, `np.empty(0,…)` for none — never `None`/tuple | ✓ Good (v1.6) — single contract; `body1`/`body2` chosen as `i1` (compact, sufficient for 14 indices) |
+| δ orb `DECLA_COEF=1/12`, `MIN_DECL_ORB=0.5°` floor | `1/12` = reciprocal of max body orb (12°) → Sun/Moon lands on the published 1.0° consensus; floor keeps zero-orb bodies (Rahu/Ketu/Lilith) detectable | ✓ Good (v1.6) — exact fraction, not a magic number; verified by test |
+| v1.6 LIGHT scope: DECLA only, in-orb detection | Final lightweight engine milestone before Rahu; no synastry δ / no applying-timing / no dedicated CLI; HARMF-01 deferred | ✓ Good (v1.6) — shipped tight; follow-ups remain explicit future candidates |
+| MyST cross-doc links use explicit-label `[text](#label)`, not `file.md#anchor` | Bare-hash explicit-label form resolves in both EN and FR builds with no `xref_missing` warning | ✓ Good (v1.6) — cleared the warning in both builds |
+| Commit recompiled `.mo` files (repo convention over plan premise) | Git history shows `.mo` are versioned every docs phase; `.po`-without-`.mo` would ship stale French docs (English fallback) | ✓ Good (v1.6) — FR docs render `contre-parallèle`; convention upheld |
 
 ## Evolution
 
@@ -260,4 +268,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-Last updated: 2026-06-04 — v1.6 (Declination Aspects) milestone STARTED via `/gsd:new-milestone`. Scope tranché with user: DECLA only (light) — parallel + contra-parallel detection, body-derived δ orbs (Ketu-style), natal detection-chain integration, docs en + fr; NO synastry δ, NO dedicated CLI surface; HARMF-01 deferred. Final lightweight Ketu engine milestone before Rahu. Phases continue at 36. Next: targeted research → REQUIREMENTS.md → ROADMAP.md.
+Last updated: 2026-06-04 — v1.6 (Declination Aspects) milestone SHIPPED & ARCHIVED via `/gsd-complete-milestone`. `ketu==1.6.0` live on PyPI (additive `ketu.declination` subpackage; DECLA-01..05 satisfied, audit PASSED 5/5, integration checker PASS). All shipped requirements moved to Validated; Key Decisions logged; Out of Scope audited (DECLA aspects now shipped). Ketu the engine is considered ~complete — next intended direction is the Rahu UI project (separate repo, consumes ketu from PyPI). Next: `/gsd-new-milestone`.
