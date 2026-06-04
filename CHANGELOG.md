@@ -7,7 +7,7 @@ All notable changes to Ketu are documented here.
 This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.5.0] - Unreleased
+## [1.5.0] - 2026-06-04
 
 ### Added
 

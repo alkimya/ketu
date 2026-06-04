@@ -9,6 +9,75 @@
 
 ---
 
+## [1.5.0] - 2026-06-04
+
+### Ajouts
+
+- **`declination(jdate, body)` — déclinaison équatoriale δ** : retourne δ en degrés
+  [−90, +90] (nord positif, sud négatif). Scalaire et vectorisé (tableau `jdate`
+  via `calc_planet_position_batch`, sans boucle). Calculé via la chaîne
+  écliptique → équatorial (`spherical_to_rectangular → ecliptic_to_equatorial →
+  rectangular_to_spherical`), numériquement équivalent à Meeus éq. 13.4 à la
+  précision machine. (Phase 33)
+- **`declination_velocity(jdate, body)`** : dδ/dt en degrés/jour (positif = vers
+  le nord). Différence finie avant, pas 0,01 jour — symétrique de l'idiome FD de
+  `lat_velocity`. (Phase 33)
+- **`is_ascending_declination(jdate, body)`** : `True` quand dδ/dt > 0 (Lune
+  montante). Auxiliaire biodynamique montant/descendant. **Distinct de
+  `is_ascending`** (trajectoire β) — les deux peuvent diverger pour le même corps
+  à la même date. (Phase 33)
+- **`is_out_of_bounds(jdate, body)`** : `True` quand |δ| > ε(jd). Le seuil OOB
+  utilise l'obliquité vraie instantanée (non l'obliquité moyenne). La Lune peut
+  dépasser ε lors des grandes stations lunaires (~cycle nodal 18,6 ans ; pic
+  ~2024–2025). (Phase 33)
+- **`CHART_DTYPE` — champ `body_decl` (additif)** : nouveau champ `float64[14]`
+  contenant la déclinaison équatoriale δ pour les 14 corps. `compute_chart` et
+  `calculate_composite` le remplissent tous deux via la chaîne de coordonnées.
+  Le nombre de corps reste 14 ; c'est un changement de dtype additif. (Phase 33)
+- **Surface CLI `--harmonics h<N>` pour les harmoniques dynamiques** : la commande
+  `aspects` accepte `--harmonics h7` (et tout `h2`–`h64`) pour détecter les aspects
+  harmoniques dynamiques aux côtés de l'ensemble statique, via le chemin moteur
+  `dynamic_specs=`. (Phase 34)
+
+### Modifié
+
+- **Nommage `H{h}-{k}` promu en contrat d'API public** : les lignes d'harmoniques
+  dynamiques sont nommées `H{h}-{k}` (harmonique `h`, multiple `k`), verrouillées
+  par des tests et documentées comme stables. (Phase 34)
+- **`find_aspect_timing` gagne le paramètre `dyn_coef=`** : l'orbe pour un aspect
+  dynamique est dérivé de `(orb[b1] + orb[b2]) / 2 × dyn_coef`, correspondant au
+  chemin de détection. (Phase 34)
+
+### Corrigé
+
+- **Vitesse moyenne des nœuds lunaires corrigée (−0,013 → −0,052954 °/jour)** :
+  `core.bodies['speed']` pour Rahu et Ketu contenait une valeur ~4× trop faible.
+  La véritable régression nodale est de 360° sur ~18,6 ans (≈ −0,052991 °/jour) ;
+  le moteur produisait déjà −0,052954 °/jour pour les nœuds, la table est donc
+  désormais cohérente avec le mouvement calculé. `calculate_speed_ratio` source
+  désormais ses vitesses moyennes depuis `core.bodies['speed']` (source de vérité
+  unique). (Phase 33)
+- **Lignes de paires en double de `calculate_aspects_batch` éliminées** : avec des
+  orbes qui se chevauchent (ex. le jeu EXTENDED), le chemin batch pouvait émettre
+  plus d'une ligne pour la même paire `(body1, body2)` à une date unique,
+  violant le contrat documenté « exactement une ligne par paire ».
+  `calculate_aspects_vectorized` et `calculate_aspects_batch` partagent désormais
+  un noyau de détection unique (`_detect_aspects_for_date`), imposant statique
+  d'abord / dynamique ensuite, premier-trouvé-gagne par paire de façon identique.
+  (Phase 33)
+
+### Notes
+
+- **`is_ascending` (β) inchangé** : l'existant `is_ascending` basé sur la latitude
+  écliptique est octet-identique à la v1.4. Le nouveau `is_ascending_declination`
+  est un auxiliaire indépendant et parallèle.
+- **Impact Kala (additif, sans rupture pour l'accès par nom)** : `CHART_DTYPE`
+  gagne `body_decl` comme champ additif. Le code utilisant l'accès par nom de
+  champ (`chart["body_lons"]`) n'est pas affecté. Le code utilisant l'accès
+  positionnel ou `.view()` sur le dtype brut doit être adapté. La correction de
+  vitesse des nœuds modifie `core.bodies['speed'][10]` / `[11]` ; le code aval
+  lisant ce champ verra la valeur corrigée.
+
 ## [1.4.0] - 2026-06-03
 
 ### Ajouts
