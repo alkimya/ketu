@@ -963,6 +963,101 @@ if is_out_of_bounds(jd, 1):
 
 ---
 
+## Declination Aspects (`ketu.declination`) — New in v1.6
+
+Additive subpackage that detects **parallels** and **contra-parallels** on the
+equatorial declination axis. It consumes `chart["body_decl"]` (the `(14,)` signed-δ
+field shipped in v1.5); `CHART_DTYPE` is **unchanged**. These names are reachable
+**only** via `ketu.declination.*` — they are NOT re-exported from top-level `ketu`
+(`ketu.__all__` is unchanged, additive-only).
+
+```python
+from ketu.declination import (
+    find_declination_aspects,
+    declination_aspect_masks,
+    DeclinationAspectMasks,
+    DECLA_ASPECT_DTYPE,
+    DECLA_COEF,
+    MIN_DECL_ORB,
+)
+```
+
+See the [Declination Aspects](concepts.md#declination-aspects-new-in-v1-6) concepts
+page for the signed-δ definitions, the body-derived orb derivation, and the
+biodynamic framing.
+
+### `find_declination_aspects(body_decl)`
+
+Scalar / single-chart detector.
+
+- **Parameters:** `body_decl` (`ndarray`, shape `(14,)`) — signed declination δ in
+  degrees, i.e. `chart["body_decl"]`.
+- **Returns:** `ndarray[DECLA_ASPECT_DTYPE]` — upper-triangle pairs only
+  (`body1 < body2`), no duplicates, sorted by `(body1, body2)`. Returns
+  `np.empty(0, dtype=DECLA_ASPECT_DTYPE)` when nothing is detected — **never**
+  `None`, never a tuple.
+
+```python
+import numpy as np
+from ketu.declination import find_declination_aspects
+
+decl = np.zeros(14)
+decl[0] = 20.0   # Sun  δ = +20.0°
+decl[1] = 20.5   # Moon δ = +20.5°  → same hemisphere, gap 0.5° ≤ 1.0° orb
+
+aspects = find_declination_aspects(decl)
+print(aspects)   # [(0, 1, 'P', 0.5, 1.0)] — Sun/Moon parallel
+```
+
+### `declination_aspect_masks(body_decl)`
+
+Vectorized batch path. Accepts `(S, 14)` or `(14,)` (promoted via `np.atleast_2d`)
+and returns a `DeclinationAspectMasks` NamedTuple. Pure NumPy broadcasting — no
+Python body loop.
+
+- **Parameters:** `body_decl` (`ndarray`, shape `(S, 14)` or `(14,)`).
+- **Returns:** `DeclinationAspectMasks`.
+
+### `DeclinationAspectMasks`
+
+NamedTuple with six fields, in order:
+
+| Field | Shape | Meaning |
+|-------|-------|---------|
+| `parallel` | `(S, 91)` | boolean parallel mask per chart per pair |
+| `contra` | `(S, 91)` | boolean contra-parallel mask per chart per pair |
+| `gap` | `(S, 91)` | `\|δ₁−δ₂\|` (parallel) / `\|δ₁+δ₂\|` (contra) per chart per pair |
+| `idx_i` | `(91,)` | first body index of each pair |
+| `idx_j` | `(91,)` | second body index of each pair |
+| `orb_pairs` | `(91,)` | orb limit for each pair |
+
+`91` is the upper-triangle pair count for 14 bodies (`14 × 13 / 2`).
+
+### `DECLA_ASPECT_DTYPE`
+
+The frozen 5-field row contract returned by `find_declination_aspects`:
+
+| Field | Type | Meaning |
+|-------|------|---------|
+| `body1` | `i1` | first body index (`body1 < body2`) |
+| `body2` | `i1` | second body index |
+| `kind` | `U2` | `"P"` (parallel) or `"CP"` (contra-parallel) |
+| `gap` | `f8` | `\|δ₁−δ₂\|` for P, `\|δ₁+δ₂\|` for CP |
+| `orb` | `f8` | the orb limit used for that pair |
+
+`body1` / `body2` are `i1` (signed 1-byte) in the live dtype.
+
+### `DECLA_COEF` and `MIN_DECL_ORB`
+
+- `DECLA_COEF = 1/12` (≈ 0.0833) — orb scaling on the declination axis.
+- `MIN_DECL_ORB = 0.5` — floor (degrees) so zero-orb bodies stay detectable.
+
+The per-pair orb is `max((orb_b1 + orb_b2) / 2 × DECLA_COEF, MIN_DECL_ORB)` →
+Sun/Moon `1.0°`, Rahu/Lilith `0.5°` (floor). See the
+[concepts page](concepts.md#declination-aspects-new-in-v1-6) for the full derivation.
+
+---
+
 ## Chiron (body_id=13) — New in v1.3
 
 Chiron is the 14th body added in v1.3. There is no separate Chiron module in the public API — it is accessed through the standard calculation functions using `body_id=13`.
