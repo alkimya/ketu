@@ -7,6 +7,32 @@ All notable changes to Ketu are documented here.
 This project follows the [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.7.0] - 2026-06-15
+
+### Changed
+
+- **Rahu / Ketu / Lilith longitude orb: 0° → 2°** (`core.bodies`, single-source).
+  All consumers (`get_orb`, `calculate_aspects*`, synastry, composite, CLI) inherit
+  the change with zero further edits. Point-to-point conjunction threshold is now 2°;
+  point-to-planet mean: e.g. Rahu-Sun yields (2+12)/2 = 7°. Chiron (orb = 4°) and
+  all other planet rows are unchanged. (Phase 38 — ORB-01)
+- **Tautological Rahu-Ketu Opposition suppressed** (`aspects/calculator.py`
+  `_is_tautological_node_opposition`): the engine now silently drops the North-Node /
+  South-Node Opposition (which is always present by definition and carries no
+  astrological information). Every other Rahu/Ketu aspect is detected normally.
+  (Phase 38 — ORB-02)
+
+### Notes
+
+- **BREAKING RESULTS — MINOR release, not a patch**: aspect detection results change
+  for all consumers. Node/Lilith aspects that were previously invisible (orb 0 → inside
+  2°) now appear. This is a deliberate, reviewed behaviour change shipped as a MINOR
+  version per Semantic Versioning. Downstream code (Kala and any oracle/snapshot that
+  enumerates node or Lilith aspects) **must treat the upgrade as deliberate** — do not
+  `pip install -U` as a neutral patch.
+- **`CHART_DTYPE` and `core.aspects` are byte-identical**: no dtype ratchet break.
+  Only detection results change. (Phase 38)
+
 ## [1.6.0] - 2026-06-04
 
 ### Added
