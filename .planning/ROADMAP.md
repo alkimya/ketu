@@ -111,7 +111,7 @@ Full detail archived to `.planning/milestones/v1.6-ROADMAP.md`. Additive `ketu.d
 ### v1.7 Fictitious-Point Orbs (Phases 38-39) — IN PROGRESS
 
 - [x] **Phase 38: Fictitious-Point Orbs Engine** — Single-source orb 0°→2° edit in `core.bodies`, Rahu↔Ketu Opposition filter in the aspect engine, full test-suite regression sweep + synastry oracle rewrite (completed 2026-06-15)
-- [ ] **Phase 39: Documentation + Release v1.7.0** — Docs en+fr (new orb, filter rationale, MINOR-not-patch Kala note), version bump, CHANGELOG/UPGRADING, human go/no-go gate, PyPI OIDC publish, post-publish smoke
+- [x] **Phase 39: Documentation + Release v1.7.0** — Docs en+fr (new orb, filter rationale, MINOR-not-patch Kala note), version bump, CHANGELOG/UPGRADING, human go/no-go gate, PyPI OIDC publish, post-publish smoke (completed 2026-06-15)
 
 ## Phase Details
 
@@ -158,7 +158,7 @@ Plans:
 
 **Wave 2** *(blocked on Wave 1)*
 
-- [ ] 39-03-PLAN.md — REL-01 release ceremony: local pre-flight, BLOCKING human go/no-go, tag v1.7.0 + push main+tag, OIDC publish, GitHub release, post-publish PyPI smoke (Wave 2, depends on 39-01 + 39-02)
+- [x] 39-03-PLAN.md — REL-01 release ceremony: local pre-flight, BLOCKING human go/no-go, tag v1.7.0 + push main+tag, OIDC publish, GitHub release, post-publish PyPI smoke (Wave 2, depends on 39-01 + 39-02)
 
 ## Progress
 
