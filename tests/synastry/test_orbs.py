@@ -1,9 +1,12 @@
 """Tests for ketu.synastry.orbs — formula, preset resolver, edge cases.
 
 Pure data assertions on the orb formula and resolver. No chart computation.
-Pins the formula values (Sun-Moon = 6 deg, Rahu-Rahu = 0 deg, Venus-Mars
+Pins the formula values (Sun-Moon = 6 deg, Rahu-Rahu = 1 deg, Venus-Mars
 trine = 3 deg, ASC-Sun = 5 deg) as ratchet against drift, and verifies the
 resolver error paths.
+
+v1.7 ratchet: Rahu/Ketu/Lilith natal orb is 2° (ORB-01, phase 38).
+Synastry self-pair: (2+2)/2 * coef_conj(1) * factor(0.5) = 1.0 deg.
 """
 from __future__ import annotations
 
@@ -87,23 +90,30 @@ def test_synastry_orb_limit_venus_mars_trine() -> None:
     assert result == pytest.approx(3.0, abs=1e-5)
 
 
-def test_synastry_orb_limit_rahu_rahu_zero_orb() -> None:
-    """Rahu-Rahu conjunction == 0.0 deg (Rahu has zero natal orb in bodies['orb']).
+def test_synastry_orb_limit_rahu_rahu_two_degree_orb() -> None:
+    """Rahu-Rahu conjunction == 1.0 deg (Rahu natal orb is 2° since ORB-01, phase 38).
 
-    Documented edge case — pre-empts user surprise when Rahu/Ketu/Lilith
-    self-pairs never trigger an orbed aspect (Pitfall 2 in 16-RESEARCH.md).
+    Math: (2+2)/2 * coef_conj(1) * factor(0.5) = 1.0 deg.
+    v1.7 ratchet: Rahu/Ketu/Lilith orb was 0°, now 2° — self-pairs are detectable
+    in synastry (self-synastry dist==0 is still detected via non-strict <=).
     """
-    assert synastry_orb_limit(10, 10, 0) == 0.0
+    assert synastry_orb_limit(10, 10, 0) == 1.0
 
 
-def test_synastry_orb_limit_ketu_ketu_zero_orb() -> None:
-    """Ketu-Ketu conjunction == 0.0 deg (zero-orb body)."""
-    assert synastry_orb_limit(11, 11, 0) == 0.0
+def test_synastry_orb_limit_ketu_ketu_two_degree_orb() -> None:
+    """Ketu-Ketu conjunction == 1.0 deg (natal orb 2° since ORB-01, phase 38).
+
+    Math: (2+2)/2 * coef_conj(1) * factor(0.5) = 1.0 deg.
+    """
+    assert synastry_orb_limit(11, 11, 0) == 1.0
 
 
-def test_synastry_orb_limit_lilith_lilith_zero_orb() -> None:
-    """Lilith-Lilith conjunction == 0.0 deg (zero-orb body)."""
-    assert synastry_orb_limit(12, 12, 0) == 0.0
+def test_synastry_orb_limit_lilith_lilith_two_degree_orb() -> None:
+    """Lilith-Lilith conjunction == 1.0 deg (natal orb 2° since ORB-01, phase 38).
+
+    Math: (2+2)/2 * coef_conj(1) * factor(0.5) = 1.0 deg.
+    """
+    assert synastry_orb_limit(12, 12, 0) == 1.0
 
 
 def test_synastry_orb_limit_chiron_chiron_parity_pluto() -> None:
