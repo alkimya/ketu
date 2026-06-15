@@ -18,9 +18,9 @@ artefact that a non-zero orb creates (Rahu↔Ketu Opposition).
 
 ### Orbs
 
-- [ ] **ORB-01**: Rahu, Ketu, and Lilith carry orb `2°` (was `0°`) in the single-source `core.bodies` table; all consumers (`get_orb`, `synastry_orb_limit`, cycles, composite, CLI) inherit the new value data-driven with no per-consumer edits. Point↔point conjunction orb = 2°; point↔planet orb = mean of the two (e.g. Rahu↔Sun = (2+12)/2 = 7°).
-- [ ] **ORB-02**: The aspect engine suppresses ONLY the simultaneous `(body1, body2) == (Rahu, Ketu)` AND `aspect == Opposition` detection (both conditions together) — the permanent, tautological 180° artefact (Ketu = South Node, exact opposite of Rahu by construction). Rahu and Ketu remain FULLY active for every other aspect and every other pair (Rahu↔Sun, Ketu↔Lilith, Rahu/Ketu conjunctions, etc.); the filter targets the noise pair only, not the bodies.
-- [ ] **ORB-03**: Synastry inherits the new point orb everywhere; the `orb = 0` oracles are rewritten to the new expected values (at least `synastry_orb_limit` cases in `tests/synastry/test_orbs.py` and the idempotent-modes oracle in `tests/synastry/test_modes_idempotent.py`), and a full regression sweep over every test that references Rahu/Ketu/Lilith (~40 files) is green. New/changed aspect detections are pinned, not silently accepted.
+- [x] **ORB-01**: Rahu, Ketu, and Lilith carry orb `2°` (was `0°`) in the single-source `core.bodies` table; all consumers (`get_orb`, `synastry_orb_limit`, cycles, composite, CLI) inherit the new value data-driven with no per-consumer edits. Point↔point conjunction orb = 2°; point↔planet orb = mean of the two (e.g. Rahu↔Sun = (2+12)/2 = 7°).
+- [x] **ORB-02**: The aspect engine suppresses ONLY the simultaneous `(body1, body2) == (Rahu, Ketu)` AND `aspect == Opposition` detection (both conditions together) — the permanent, tautological 180° artefact (Ketu = South Node, exact opposite of Rahu by construction). Rahu and Ketu remain FULLY active for every other aspect and every other pair (Rahu↔Sun, Ketu↔Lilith, Rahu/Ketu conjunctions, etc.); the filter targets the noise pair only, not the bodies.
+- [x] **ORB-03**: Synastry inherits the new point orb everywhere; the `orb = 0` oracles are rewritten to the new expected values (at least `synastry_orb_limit` cases in `tests/synastry/test_orbs.py` and the idempotent-modes oracle in `tests/synastry/test_modes_idempotent.py`), and a full regression sweep over every test that references Rahu/Ketu/Lilith (~40 files) is green. New/changed aspect detections are pinned, not silently accepted.
 
 ### Documentation
 
@@ -61,9 +61,9 @@ Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
 | ----------- | ----- | ------ |
-| ORB-01 | Phase 38 | Pending |
-| ORB-02 | Phase 38 | Pending |
-| ORB-03 | Phase 38 | Pending |
+| ORB-01 | Phase 38 | Complete |
+| ORB-02 | Phase 38 | Complete |
+| ORB-03 | Phase 38 | Complete |
 | ORB-04 | Phase 39 | Pending |
 | REL-01 | Phase 39 | Pending |
 
