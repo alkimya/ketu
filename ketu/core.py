@@ -78,9 +78,9 @@ bodies = np.array(
         ("Uranus", 7, 6, 0.012),
         ("Neptune", 8, 6, 0.007),
         ("Pluto", 9, 4, 0.004),
-        ("Rahu", 10, 0, -0.052954),  # Mean North Node (regression ~360°/18.6yr)
-        ("Ketu", 11, 0, -0.052954),  # Mean South Node (opposite of Rahu)
-        ("Lilith", 12, 0, 0.113),  # Mean Apogee (Black Moon)
+        ("Rahu", 10, 2, -0.052954),  # Mean North Node (regression ~360°/18.6yr)
+        ("Ketu", 11, 2, -0.052954),  # Mean South Node (opposite of Rahu)
+        ("Lilith", 12, 2, 0.113),  # Mean Apogee (Black Moon)
         ("Chiron", 13, 4, 0.019),  # Centaur, Chebyshev-based position
     ],
     dtype=[("name", "S12"), ("id", "i4"), ("orb", "f4"), ("speed", "f4")],
