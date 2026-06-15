@@ -331,6 +331,8 @@ ketu/
   `find_aspect_timing(dyn_coef=)`
 - [x] Declination aspects — parallels & contra-parallels on the δ axis
   (`ketu.declination`: `find_declination_aspects`, `declination_aspect_masks`)
+- [x] Fictitious-point longitude orbs — Rahu/Ketu/Lilith orb 0° → 2°; tautological
+  Rahu-Ketu Opposition suppressed (`_is_tautological_node_opposition`)
 
 ## Contribution
 

@@ -9,6 +9,34 @@
 
 ---
 
+## [1.7.0] - 2026-06-15
+
+### Modifications
+
+- **Orbe de longitude Rahu / Ketu / Lilith : 0° → 2°** (`core.bodies`, source unique).
+  Tous les consommateurs (`get_orb`, `calculate_aspects*`, synastrie, composite, CLI)
+  héritent du changement sans aucune modification supplémentaire. Seuil de conjonction
+  point à point : 2° ; moyenne point à planète : ex. Rahu-Soleil donne (2+12)/2 = 7°.
+  Chiron (orbe = 4°) et toutes les autres planètes restent inchangés. (Phase 38 — ORB-01)
+- **Opposition tautologique Rahu-Ketu supprimée** (`aspects/calculator.py`
+  `_is_tautologique_node_opposition`) : le moteur supprime silencieusement
+  l'Opposition Nœud Nord / Nœud Sud (toujours présente par définition, sans
+  information astrologique). Tous les autres aspects de Rahu/Ketu restent
+  détectés normalement. (Phase 38 — ORB-02)
+
+### Notes
+
+- **RUPTURE DE RÉSULTATS — version mineure, et non un correctif** : les résultats
+  de détection d'aspects changent pour tous les consommateurs. Les aspects de
+  nœuds/Lilith auparavant invisibles (orbe 0 → dans la limite des 2°) apparaissent
+  désormais. Il s'agit d'un changement de comportement délibéré et contrôlé, livré
+  en tant que version MINEURE selon le Versionnage Sémantique. Le code aval (Kala et
+  tout oracle/instantané qui énumère les aspects des nœuds ou de Lilith) **doit
+  traiter la mise à jour comme délibérée** — ne pas effectuer `pip install -U`
+  comme un correctif neutre.
+- **`CHART_DTYPE` et `core.aspects` sont octet-identiques** : aucune rupture du
+  ratchet de dtype. Seuls les résultats de détection changent. (Phase 38)
+
 ## [1.6.0] - 2026-06-04
 
 ### Ajouts

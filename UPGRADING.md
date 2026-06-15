@@ -3,6 +3,57 @@
 This guide collects migration notes between Ketu releases. Sections are
 ordered newest-first.
 
+## v1.6 -> v1.7
+
+v1.7 **changes aspect detection results** — this is not additive. Node/Lilith aspects
+that were previously invisible now appear, and the tautological Rahu-Ketu Opposition
+is suppressed. See below.
+
+### Rahu / Ketu / Lilith orb change: 0° → 2°
+
+In v1.7.0, the `orb` field for Rahu (id=10), Ketu (id=11), and Lilith (id=12) in
+`core.bodies` is changed from `0` to `2`. This is a **single-source change** — all
+consumers inherit it automatically:
+
+- `get_orb` — orb lookups now return 2.0 for node self-pairs
+- `calculate_aspects*` — node/Lilith aspects now detected within 2° longitude orb
+- Synastry (`_BODY_ORBS_16`) — inherited
+- Composite, CLI — inherited
+
+**Point-to-planet mean orb example:** Rahu-Sun = (2+12)/2 = 7°.
+Chiron (orb = 4°) and all other planet rows are **unchanged**.
+
+### Tautological Rahu-Ketu Opposition suppressed
+
+`aspects/calculator.py` now suppresses the North-Node / South-Node Opposition via
+`_is_tautological_node_opposition`. Because Rahu and Ketu are always exactly 180°
+apart by definition, this opposition carried no astrological information and was
+previously detected only because their orb was 0 (never in-orb). With orb = 2° it
+would fire every time — the filter prevents that noise.
+
+All other Rahu/Ketu aspects (Conjunction, Trine, Square, etc.) are detected normally.
+
+### CHART_DTYPE and core.aspects are UNCHANGED — no dtype ratchet break
+
+`CHART_DTYPE` is byte-identical to v1.6. `core.aspects` (the frozen 14-row table) is
+byte-identical to v1.6. Only detection **results** change — the dtype fingerprint is
+the same.
+
+### Kala guidance
+
+**`pip install -U ketu` to 1.7.0 is NOT a neutral upgrade for node calculations.**
+
+- Any oracle or snapshot that enumerates node/Lilith aspects will now differ —
+  Rahu/Ketu/Lilith aspects appear that did not before.
+- The `v1_1_reference_output.txt` CLI fixture gained two new lines in Phase 38:
+  `Sun-Rahu Quincunx` and `Venus-Rahu Trine`.
+- Synastry orb-limit oracles for Rahu/Ketu/Lilith self-pairs changed from 0.0 to 1.0.
+- **Action required:** re-pin every oracle or snapshot that enumerates node or Lilith
+  aspects after upgrading. Treat 1.6.x → 1.7.0 as a deliberate, reviewed upgrade —
+  not an automatic dependency bump.
+
+---
+
 ## v1.5 -> v1.6
 
 v1.6 is **purely additive** — no field is removed or reordered, no existing API changes
