@@ -153,8 +153,8 @@ Plans:
 Plans:
 **Wave 1** *(parallel)*
 
-- [ ] 39-01-PLAN.md — ORB-04 docs en+fr: 2° fictitious-point orb, Rahu↔Ketu Opposition filter rationale, MINOR-not-patch note; FR .po translated + .mo recompiled (Wave 1)
-- [ ] 39-02-PLAN.md — ORB-04/REL-01 version bump 1.7.0 (3 source-of-truth files) + [1.7.0] CHANGELOG (EN root + RTD copy + FR) + UPGRADING v1.6→v1.7 Kala guidance (Wave 1)
+- [x] 39-01-PLAN.md — ORB-04 docs en+fr: 2° fictitious-point orb, Rahu↔Ketu Opposition filter rationale, MINOR-not-patch note; FR .po translated + .mo recompiled (Wave 1)
+- [x] 39-02-PLAN.md — ORB-04/REL-01 version bump 1.7.0 (3 source-of-truth files) + [1.7.0] CHANGELOG (EN root + RTD copy + FR) + UPGRADING v1.6→v1.7 Kala guidance (Wave 1)
 
 **Wave 2** *(blocked on Wave 1)*
 
