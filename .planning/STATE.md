@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.7
 milestone_name: Fictitious-Point Orbs
-status: executing
-stopped_at: Phase 38 context gathered
-last_updated: "2026-06-15T21:57:56.748Z"
-last_activity: 2026-06-15
+status: Awaiting next milestone
+stopped_at: Milestone v1.7 archived
+last_updated: "2026-06-16"
+last_activity: 2026-06-16 — Milestone v1.7 (Fictitious-Point Orbs) completed and archived
 progress:
   total_phases: 2
   completed_phases: 2
@@ -18,42 +18,31 @@ progress:
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-06-15 — v1.7 milestone started)
+See: `.planning/PROJECT.md` (updated 2026-06-16 — after v1.7 milestone)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 39 — documentation-release-v1-7-0
+**Current focus:** Planning next milestone (Ketu is ~feature-complete; Rahu UI project follows in a separate repo).
 
 ## Current Position
 
-Phase: 39
-Plan: Not started
-Status: Executing Phase 39
-Last activity: 2026-06-15
-
-```text
-Progress: [░░░░░░░░░░░░░░░░░░░░] 0% (0/2 phases, 0/0 plans)
-```
+Phase: Milestone v1.7 complete + archived
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-06-16 — Milestone v1.7 (Fictitious-Point Orbs) archived; `ketu==1.7.0` live on PyPI
 
 ## Next Step
 
-Run `/gsd-plan-phase 38` to plan Phase 38: Fictitious-Point Orbs Engine (ORB-01, ORB-02, ORB-03).
+Run `/gsd-new-milestone` if a new engine scope surfaces. Otherwise Ketu is considered ~feature-complete and downstream work moves to the Rahu UI project (separate repo `~/workspace/rahu`).
 
 ## Accumulated Context
 
 ### Decisions
 
-Full log in `.planning/PROJECT.md` Key Decisions table. Relevant context for v1.7:
-
-- Orb change is a single-source edit in `core.bodies` rows 10/11/12 (Rahu/Ketu/Lilith `orb` field). All consumers (`get_orb`, `synastry_orb_limit`, cycles, composite, CLI) inherit data-driven — no per-consumer edits.
-- Rahu↔Ketu Opposition filter targets BOTH conditions simultaneously: `(body1, body2) == (Rahu, Ketu)` AND `aspect == Opposition`. Rahu and Ketu stay fully active for ALL other aspects and ALL other pairs.
-- Synastry is IN SCOPE: orb=0 oracles in `tests/synastry/test_orbs.py` and `tests/synastry/test_modes_idempotent.py` must be rewritten; ~40 test files reference the points and need a regression sweep. New/changed detections are pinned deliberately, never silently accepted.
-- This is MINOR 1.7.0 (not patch 1.6.1) because aspect results change for consumers — Kala must treat the upgrade as deliberate.
-- User go/no-go relecture-validation REQUIRED before any irreversible action (tag, PyPI, GitHub release) — hard gate in Phase 39.
-- Declination MIN_DECL_ORB floor (0.5°) already kept Rahu/Ketu/Lilith detectable in the δ axis even at orb=0; the new 2° longitude orb is separate and independent of the δ path.
+Full log in `.planning/PROJECT.md` Key Decisions table. v1.7 decisions (orb single-source, surgical filter, MINOR-not-patch, synastry in scope) are recorded there and in `.planning/milestones/v1.7-ROADMAP.md`.
 
 ### Blockers/Concerns
 
-None. v1.7 builds on the green v1.6 base (1654 tests, 100% coverage, mypy `--strict` clean).
+None. v1.7 shipped on a green base (1668 tests, 100% coverage, mypy `--strict` clean); verifier PASSED 4/4.
 
 ### Pending Todos
 
@@ -82,15 +71,16 @@ Note: Phase 17 belongs to the already-shipped v1.2 milestone. The open flag is t
 | v1.4      | 5      | 15    | ~1d         |
 | v1.5      | 3      | 9     | ~1d         |
 | v1.6      | 2      | 5     | <1d         |
+| v1.7      | 2      | 5     | ~3h         |
 
 *Updated after each plan completion*
 
 ## Session Continuity
 
-Last session: 2026-06-15T18:00:00.823Z
-Stopped at: Phase 38 context gathered
-Resume file: .planning/phases/38-fictitious-point-orbs-engine/38-CONTEXT.md
+Last session: 2026-06-16 — v1.7 milestone close
+Stopped at: Milestone v1.7 archived
+Resume file: — (no active phase; run `/gsd-new-milestone` to start the next)
 
 ## Operator Next Steps
 
-- Run `/gsd-plan-phase 38` to plan the engine phase (ORB-01/02/03)
+- Start the next milestone with /gsd-new-milestone

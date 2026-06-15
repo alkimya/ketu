@@ -43,6 +43,46 @@
 
 ---
 
+## Milestone: v1.7 — Fictitious-Point Orbs
+
+**Shipped:** 2026-06-15
+**Phases:** 2 | **Plans:** 5 | **Sessions:** 1
+
+### What Was Built
+- Orb `0°→2°` on Rahu/Ketu/Lilith in the single-source `core.bodies` table; all consumers (`get_orb`, `synastry_orb_limit`, cycles, composite, CLI) inherit data-driven (ORB-01).
+- Shared `_is_tautological_node_opposition` helper wired into all four public natal/scalar emit paths; suppresses ONLY the permanent `(Rahu, Ketu)` + `Opposition` artefact, never the bodies (ORB-02).
+- Synastry `orb=0` oracles rewritten (0.0→1.0 for point self-pairs) + full ~40-file regression sweep; two new CLI Rahu detections (Sun-Rahu Quincunx, Venus-Rahu Trine) deliberately pinned (ORB-03).
+- Docs en + fr (2° orb, Rahu↔Ketu filter rationale, MINOR-not-patch Kala note); FR `.po` translated + `.mo` recompiled (ORB-04).
+- `ketu==1.7.0` shipped to PyPI via OIDC after local pre-flight + explicit human go/no-go; tag + origin/main pushed, post-publish smoke from PyPI green (REL-01).
+
+### What Worked
+- **Single-source orb edit propagated cleanly** — flipping one value in `core.bodies` changed every consumer with no per-consumer edit, exactly as the Chiron-orb pattern (v1.4) predicted. The data-driven design paid off again.
+- **The surgical filter stayed surgical** — `_is_tautological_node_opposition` targets the one pair+aspect; the regression sweep confirmed Rahu/Ketu remain fully active for every other aspect and pair.
+- **The release pre-flight caught two stale ORB-04 defects before publish** — leftover `orb=0` docstrings and a broken `concepts.md#orbs` Sphinx xref in `api.md` (EN+FR). Same pattern as v1.6: the pre-flight runs gates against code earlier phases didn't.
+- **The human go/no-go checkpoint held again** — paused, surfaced the deviations, waited for explicit approval before the irreversible tag/push/publish.
+- **No silent oracle updates** — every changed detection (synastry self-pairs, two new CLI Rahu aspects) was deliberately pinned, so the diff is auditable.
+
+### What Was Inefficient
+- **The 39-01 worktree executor was Bash-blocked** (same failure mode as v1.6's 37-01) and the docs plan finished inline. The lesson from v1.6 — a parallel docs executor without `git`/`make` permissions is dead weight — recurred; the execution mode wasn't adjusted preemptively.
+- **Stale `orb=0` artefacts lived in docstrings and a doc xref** that earlier phases' verification didn't flag — only the release pre-flight surfaced them. A grep for `orb=0` / `0°` in docs during Phase 38 would have caught them earlier.
+
+### Patterns Established
+- **A single-source data table (`core.bodies`) makes a behaviour change a one-line edit** — orb changes (Chiron v1.4, fictitious points v1.7) propagate to all consumers for free. Keep new tunables in the table, not in consumers.
+- **Suppress the artefact, not the body** — when a non-zero orb creates a tautological detection (fixed-angle pair), filter the exact `(pair, aspect)` tuple in the emit path; never disable the body.
+- **MINOR-not-patch when results change** — even a "small" orb tweak that alters aspect detections is a minor bump with an UPGRADING note, not a patch. Consumers must opt in deliberately.
+
+### Key Lessons
+1. **A behaviour change that alters downstream RESULTS is a MINOR, regardless of code size.** One value flipped, but every consumer's aspect grid changed — semver tracks observable behaviour, not diff size.
+2. **The release pre-flight is the de-facto final doc audit.** Stale `orb=0` docstrings/xrefs survived phase verification and were only caught at pre-flight (third milestone running: v1.6 numpydoc/doctest, v1.7 docstring/xref). Run a docs grep for changed constants during the engine phase, not just at release.
+3. **Match the execution mode to the plan's tool needs up front.** The Bash-blocked worktree docs executor recurred from v1.6; for docs/release plans that need `git`/`make`, go inline by default.
+
+### Cost Observations
+- Model mix: orchestration on Opus 4.8; executors + verifier on Sonnet.
+- Sessions: 1 (same-day plan → execute → ship, ~3h elapsed: `ce48b17` 20:45 → `fae8eea` 23:58).
+- Notable: a tight 2-phase / 5-plan milestone; the surgical scope kept the regression surface bounded to point-referencing tests.
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -50,6 +90,7 @@
 | Milestone | Sessions | Phases | Key Change |
 |-----------|----------|--------|------------|
 | v1.6 | 1 | 2 | First milestone where the release pre-flight caught prior-phase CI-gate debt; human go/no-go checkpoint exercised end-to-end |
+| v1.7 | 1 | 2 | First behaviour-changing (non-additive) minor since v1.3; surgical artefact filter + single-source orb edit; pre-flight again caught stale docs (xref + docstrings) |
 
 ### Cumulative Quality
 
@@ -57,9 +98,12 @@
 |-----------|-------|----------|-------------------|
 | v1.5 | 1627 | 100% | declination δ functions + body_decl field |
 | v1.6 | 1654 | 100% | ketu.declination subpackage (parallels/contra-parallels) |
+| v1.7 | 1668 | 100% | fictitious-point 2° orbs (behaviour change, not zero-dep additions) |
 
 ### Top Lessons (Verified Across Milestones)
 
 1. **The user go/no-go relecture-validation gate before any irreversible PyPI publish is non-negotiable** — held in v1.5 and again in v1.6.
 2. **Additive-only minors keep the frozen contracts intact** (`CHART_DTYPE`, `core.aspects` fingerprints) — verified across v1.4, v1.5, v1.6.
-3. **Push BOTH the tag AND origin/main on release** — RTD follows main, PyPI follows the tag (v1.5 lesson, re-applied in v1.6).
+3. **Push BOTH the tag AND origin/main on release** — RTD follows main, PyPI follows the tag (v1.5 lesson, re-applied in v1.6 and v1.7).
+4. **The release pre-flight is the de-facto final doc audit** — caught CI-gate debt in v1.6 (numpydoc/doctest) and stale-constant docs in v1.7 (`orb=0` docstrings + broken xref). Phase verification alone doesn't run those gates against earlier code.
+5. **MINOR-not-patch when downstream results change** — even a one-value orb tweak is a minor with an UPGRADING note (v1.7), so consumers opt in deliberately rather than assuming `pip install -U` is neutral.

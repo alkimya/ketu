@@ -4,6 +4,24 @@ Historical record of shipped versions. Most recent first.
 
 ---
 
+## v1.7 Fictitious-Point Orbs (Shipped: 2026-06-15)
+
+**Phases completed:** 2 phases, 5 plans, 12 tasks
+**Git range:** ce48b17..fae8eea (30 commits) — 53 files changed, +4730/−1211
+**Requirements:** ORB-01/02/03/04, REL-01 (5/5 satisfied)
+
+**Delivered:** Rahu, Ketu, and Lilith gained a 2° aspect orb (was 0°) so the three fictitious points finally enter aspect detection — unblocking the Rahu UI's empty node/Lilith aspect grid. The single tautological artefact a non-zero orb creates (the permanent Rahu↔Ketu Opposition) is suppressed surgically, the bodies staying fully active everywhere else. Shipped as `ketu==1.7.0` — a MINOR-not-patch bump because aspect results change for consumers.
+
+**Key accomplishments:**
+
+- **ORB-01** — Single-source orb 0→2° for Rahu/Ketu/Lilith in `core.bodies`; all consumers (`get_orb`, `synastry_orb_limit`, cycles, composite, CLI) inherit data-driven with no per-consumer edits (point↔point = 2°, point↔planet = mean, e.g. Rahu↔Sun = 7°).
+- **ORB-02** — Shared `_is_tautological_node_opposition` helper wired into all four public natal/scalar emit paths; suppresses ONLY the simultaneous Rahu↔Ketu Opposition, never the bodies themselves.
+- **ORB-03** — Synastry orb-limit oracles rewritten 0.0→1.0 for Rahu/Ketu/Lilith self-pairs + CLI snapshot re-pinned with two new Rahu detections (Sun-Rahu Quincunx, Venus-Rahu Trine) that surface because Rahu orb 0→2°; full ~40-file regression sweep green.
+- **ORB-04** — Docs en+fr for the 2° orb, the Rahu↔Ketu filter, and the MINOR-not-patch rationale for Kala; FR `.po` translated and `.mo` recompiled (no English fallback). Pre-flight caught two stale ORB-04 defects (orb=0 docstrings, broken Sphinx xref).
+- **REL-01** — `ketu==1.7.0` live on PyPI via OIDC trusted publishing; version bumped across all source-of-truth files, dated [1.7.0] changelog (EN+FR) + UPGRADING v1.6→v1.7 with explicit Kala guidance; both `origin/main` and the `v1.7.0` tag pushed; human go/no-go honoured; post-publish fresh-venv smoke from PyPI confirmed ≥1 node/Lilith aspect and the absent Rahu↔Ketu Opposition (no `pyswisseph` at runtime). Verifier PASSED 4/4.
+
+---
+
 ## v1.6 Declination Aspects (Shipped: 2026-06-04)
 
 **Phases completed:** 2 phases, 5 plans, 10 tasks
