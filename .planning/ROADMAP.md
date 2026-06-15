@@ -9,6 +9,7 @@
 - ✅ **v1.4 Dynamic Harmonics & Chiron Range** — Phases 28-32 (shipped 2026-06-03; `ketu==1.4.0` on PyPI via OIDC — on-the-fly `generate_harmonic_aspects(h)` generator wired through the full detection chain with the frozen `core.aspects` table + preset fingerprints byte-identical, Chiron orb 0°→4° (Pluto parity), Chiron range widened to 1900–2100 (`.npz` regenerated, max|Δλ|=0.001214°), docs recentred on the 180°-division default (en+fr); archived to `.planning/milestones/v1.4-ROADMAP.md`)
 - ✅ **v1.5 Lunar Declination & Harmonics Debt** — Phases 33-35 (shipped 2026-06-04; `ketu==1.5.0` on PyPI via OIDC — additive minor: equatorial declination δ as a first-class vectorizable quantity (`declination` / `declination_velocity` / `is_ascending_declination` / `is_out_of_bounds` + `body_decl` in `CHART_DTYPE`), dynamic-harmonics debt paydown (ASP-F2 `H{h}-{k}` naming contract, ASP-F3 `find_aspect_timing` `dyn_coef` orb derivation, ASP-F1 CLI `--harmonics h7`). No breaking changes; `is_ascending` (β) and the frozen `core.aspects` table stay byte-identical. Archived to `.planning/milestones/v1.5-ROADMAP.md`.)
 - ✅ **v1.6 Declination Aspects** — Phases 36-37 (shipped 2026-06-04; `ketu==1.6.0` on PyPI via OIDC — additive `ketu.declination` subpackage: parallel + contra-parallel detection on the δ axis (`find_declination_aspects` scalar + `declination_aspect_masks` batch + `DECLA_ASPECT_DTYPE`), body-derived δ orbs (`DECLA_COEF=1/12`, `MIN_DECL_ORB=0.5°`), docs en + fr. No breaking changes; `CHART_DTYPE` byte-identical, `core.aspects` unchanged. Archived to `.planning/milestones/v1.6-ROADMAP.md`.)
+- [ ] **v1.7 Fictitious-Point Orbs** — Phases 38-39 (in progress — orb 0°→2° on Rahu/Ketu/Lilith, targeted Rahu↔Ketu Opposition filter, synastry oracle rewrite + full regression sweep, docs en+fr, `ketu==1.7.0` on PyPI)
 
 ## Phases
 
@@ -107,9 +108,42 @@ Full detail archived to `.planning/milestones/v1.6-ROADMAP.md`. Additive `ketu.d
 
 </details>
 
+### v1.7 Fictitious-Point Orbs (Phases 38-39) — IN PROGRESS
+
+- [ ] **Phase 38: Fictitious-Point Orbs Engine** — Single-source orb 0°→2° edit in `core.bodies`, Rahu↔Ketu Opposition filter in the aspect engine, full test-suite regression sweep + synastry oracle rewrite
+- [ ] **Phase 39: Documentation + Release v1.7.0** — Docs en+fr (new orb, filter rationale, MINOR-not-patch Kala note), version bump, CHANGELOG/UPGRADING, human go/no-go gate, PyPI OIDC publish, post-publish smoke
+
+## Phase Details
+
+### Phase 38: Fictitious-Point Orbs Engine
+
+**Goal**: Rahu, Ketu, and Lilith participate in aspect detection with a 2° orb, the tautological Rahu↔Ketu Opposition is suppressed, and the full test suite is green against the new oracles
+**Depends on**: Nothing (first phase of v1.7; builds on shipped v1.6 base)
+**Requirements**: ORB-01, ORB-02, ORB-03
+**Success Criteria** (what must be TRUE):
+
+  1. A call to `get_orb` for Rahu, Ketu, or Lilith returns 2.0°; a point↔planet pair (e.g. Rahu↔Sun) returns 7.0°; a point↔point pair (e.g. Rahu↔Lilith) returns 2.0°
+  2. The aspect engine never emits a `(Rahu, Ketu)` + `Opposition` detection regardless of the separation; every other aspect involving Rahu or Ketu (e.g. Rahu conjunction, Rahu↔Sun opposition, Ketu↔Lilith conjunction) is detected normally
+  3. `tests/synastry/test_orbs.py` and `tests/synastry/test_modes_idempotent.py` pass with oracles rewritten to the new 2° point orb; no oracle update is silent — every changed detection is deliberately pinned
+  4. All ~40 test files that reference Rahu, Ketu, or Lilith are green; `pytest tests/` reports 0 failures, 100% coverage maintained, mypy `--strict` clean
+**Plans**: TBD
+
+### Phase 39: Documentation + Release v1.7.0
+
+**Goal**: The 2° fictitious-point orb change and its rationale are documented in English and French, and `ketu==1.7.0` is live on PyPI with a human-approved go/no-go
+**Depends on**: Phase 38
+**Requirements**: ORB-04, REL-01
+**Success Criteria** (what must be TRUE):
+
+  1. The English and French docs explain the new 2° orb for Rahu/Ketu/Lilith, the Rahu↔Ketu Opposition filter and its rationale (tautological fixed angle), and the MINOR-not-patch reasoning (aspect results change for Kala); FR `.po` translated and `.mo` recompiled with no English fallback
+  2. The `[1.7.0]` CHANGELOG entry (EN + FR) is dated, lists the orb change and the Opposition filter; UPGRADING covers the v1.6→v1.7 migration note for Kala consumers
+  3. Version is bumped to `1.7.0` in all source-of-truth files; the human go/no-go relecture-validation gate is honoured before any irreversible action (tag, push, publish)
+  4. `ketu==1.7.0` is live on PyPI via OIDC trusted publishing; a post-publish fresh-venv smoke FROM PyPI confirms: at least one Rahu or Lilith aspect is detected, the Rahu↔Ketu Opposition is absent from results, and `pyswisseph` is not importable at runtime
+**Plans**: TBD
+
 ## Progress
 
-**Execution Order:** v1.6 phases execute 36 → 37.
+**Execution Order:** v1.7 phases execute 38 → 39.
 
 | Phase                                             | Milestone | Plans Complete | Status      | Completed  |
 | ------------------------------------------------- | --------- | -------------- | ----------- | ---------- |
@@ -143,8 +177,10 @@ Full detail archived to `.planning/milestones/v1.6-ROADMAP.md`. Additive `ketu.d
 | 33. Lunar Declination δ                           | v1.5      | 4/4            | ✓ Complete  | 2026-06-03 |
 | 34. Harmonics Debt (ASP-F1/F2/F3)                | v1.5      | 4/4            | ✓ Complete  | 2026-06-03 |
 | 35. Release v1.5.0                                | v1.5      | 2/2            | ✓ Complete  | 2026-06-04 |
-| **36. Declination Aspects Core**                  | **v1.6**  | **2/2**        | ✓ Complete  | 2026-06-04 |
-| **37. Documentation + Release v1.6.0**            | **v1.6**  | **3/3**        | ✓ Complete  | 2026-06-04 |
+| 36. Declination Aspects Core                      | v1.6      | 2/2            | ✓ Complete  | 2026-06-04 |
+| 37. Documentation + Release v1.6.0               | v1.6      | 3/3            | ✓ Complete  | 2026-06-04 |
+| **38. Fictitious-Point Orbs Engine**              | **v1.7**  | **0/TBD**      | Not started | -          |
+| **39. Documentation + Release v1.7.0**            | **v1.7**  | **0/TBD**      | Not started | -          |
 
 ---
 
@@ -154,4 +190,5 @@ Full detail archived to `.planning/milestones/v1.6-ROADMAP.md`. Additive `ketu.d
 *v1.3 phase details archived to `.planning/milestones/v1.3-ROADMAP.md`*
 *v1.4 phase details archived to `.planning/milestones/v1.4-ROADMAP.md`*
 *v1.5 phase details archived to `.planning/milestones/v1.5-ROADMAP.md`*
-*Roadmap last updated: 2026-06-04 — v1.6 Declination Aspects SHIPPED & ARCHIVED. `ketu==1.6.0` live on PyPI; DECLA-01..05 satisfied (audit PASSED 5/5). Detail archived to `.planning/milestones/v1.6-ROADMAP.md`. Next: `/gsd-new-milestone` (candidate: Rahu UI project, separate repo).*
+*v1.6 phase details archived to `.planning/milestones/v1.6-ROADMAP.md`*
+*Roadmap last updated: 2026-06-15 — v1.7 Fictitious-Point Orbs STARTED. Phases 38-39 defined. ORB-01..04 + REL-01 mapped. Next: `/gsd-plan-phase 38`.*

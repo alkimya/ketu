@@ -47,7 +47,7 @@ Deferred to a future release. Tracked but not in this roadmap.
 Explicitly excluded for v1.7. Documented to prevent scope creep.
 
 | Feature | Reason |
-|---------|--------|
+| ------- | ------ |
 | Configurable per-call point orb (override `core.bodies`) | v1.7 sets one global value (2°); a runtime override is a separate, larger config-surface decision with no current demand |
 | Filtering other tautological/degenerate pairs | Only Rahu↔Ketu Opposition is tautological by construction; no other point pair has a permanent fixed angle |
 | Changing planet orbs (Sun..Chiron) | v1.7 touches the three fictitious points only; the Abu Ma'shar / Al-Biruni planet orbs stay frozen |
@@ -60,18 +60,19 @@ Explicitly excluded for v1.7. Documented to prevent scope creep.
 Which phases cover which requirements. Populated during roadmap creation.
 
 | Requirement | Phase | Status |
-|-------------|-------|--------|
-| ORB-01 | TBD | Pending |
-| ORB-02 | TBD | Pending |
-| ORB-03 | TBD | Pending |
-| ORB-04 | TBD | Pending |
-| REL-01 | TBD | Pending |
+| ----------- | ----- | ------ |
+| ORB-01 | Phase 38 | Pending |
+| ORB-02 | Phase 38 | Pending |
+| ORB-03 | Phase 38 | Pending |
+| ORB-04 | Phase 39 | Pending |
+| REL-01 | Phase 39 | Pending |
 
 **Coverage:**
+
 - v1.7 requirements: 5 total
-- Mapped to phases: 0 (roadmap pending)
-- Unmapped: 5 ⚠️ (filled by roadmapper)
+- Mapped to phases: 5 (Phase 38: ORB-01/02/03; Phase 39: ORB-04/REL-01)
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-15*
-*Last updated: 2026-06-15 after milestone v1.7 definition*
+*Last updated: 2026-06-15 — traceability filled by roadmapper (phases 38-39)*
