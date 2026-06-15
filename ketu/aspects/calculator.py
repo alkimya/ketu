@@ -62,6 +62,44 @@ def _normalize_dynamic_specs(
 
 _RESULT_DTYPE = [("body1", "i4"), ("body2", "i4"), ("i_asp", "i4"), ("orb", "f4")]
 
+# Module-level constants for the tautological-node-opposition guard.
+# Using named constants avoids magic numbers and makes the intent auditable.
+_RAHU_ID = 10
+_KETU_ID = 11
+_OPPOSITION_IASP = 13  # Canonical index into core.aspects (last row)
+
+
+def _is_tautological_node_opposition(body1: int, body2: int, i_asp: int) -> bool:
+    """
+    Return True iff this aspect is the intra-chart Rahu↔Ketu Opposition.
+
+    Rahu and Ketu are always ~180° apart by astronomical definition (Ketu is
+    the Mean South Node, exactly opposite the Mean North Node Rahu). Emitting
+    this Opposition adds no information and pollutes downstream consumers.
+    The helper is order-insensitive so it works regardless of which body ID
+    is passed as ``body1``.
+
+    Parameters
+    ----------
+    body1 : int
+        First body ID (may be a ``np.int32`` from ``body1_ids[idx]``).
+    body2 : int
+        Second body ID (may be a ``np.int32``).
+    i_asp : int
+        Canonical aspect index into ``ketu.core.aspects`` (0-13). Dynamic
+        rows carry ``i_asp = -2`` and are structurally exempt (returns False).
+
+    Returns
+    -------
+    bool
+        ``True`` only for ``(Rahu, Ketu)`` or ``(Ketu, Rahu)`` paired with
+        the Opposition aspect (``i_asp == 13``).
+    """
+    if i_asp != _OPPOSITION_IASP:
+        return False
+    pair = (int(body1), int(body2))
+    return pair == (_RAHU_ID, _KETU_ID) or pair == (_KETU_ID, _RAHU_ID)
+
 
 def _detect_aspects_for_date(
     distances: np.ndarray,
