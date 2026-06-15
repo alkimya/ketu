@@ -1057,7 +1057,7 @@ Sun/Moon `1.0°`. For Rahu, Ketu, and Lilith: as of **v1.7** their **longitude**
 is 2° (was 0°), but the declination formula yields `(2+2)/2 × 1/12 ≈ 0.167°` for a
 point↔point pair — still below the floor — so their δ orb remains `0.5°`. The two
 axes (longitude and declination) are independent. See the
-[concepts page](concepts.md#orbs) for the full derivation.
+[concepts page](concepts.md) for the full derivation.
 
 ---
 
