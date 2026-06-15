@@ -3,8 +3,12 @@
 Pins ``calculate_synastry(a, b, mode='dense')[mask] == calculate_synastry(a, b, mode='filtered')``
 modulo row order across multiple chart pairs (parametrised). Also pins
 the self-synastry diagonal-conjunction sanity (a chart synastry'd with
-itself shows all 16 self-pair conjunctions at exact orb), including the
-zero-orb-body edge case for Rahu / Ketu / Lilith.
+itself shows all 16 self-pair conjunctions at exact orb).
+
+Rahu / Ketu / Lilith have a 2° natal orb since ORB-01 (phase 38) — their
+self-pair synastry tolerance is 1.0°, but the emitted orb is still 0.0 because
+``dist == 0`` on a self-pair (``delta = -dist``). The ``|orb| < 1e-6`` invariant
+remains valid at the new orb.
 
 Fixtures live in :mod:`tests.synastry.conftest` (auto-discovered).
 """
@@ -109,13 +113,12 @@ def test_self_synastry_dense_diagonal_is_conjunction(
 ) -> None:
     """``calculate_synastry(a, a, mode='dense')`` shows all 16 self-pair conjunctions at exact orb.
 
-    Rahu / Ketu / Lilith have zero natal orbs (in
-    :data:`ketu.core.bodies`), so the synastry orb tolerance for these
-    self-pairs is ``0``. The conjunction is detected because the
-    in-orb test uses ``dist <= orbs_pair`` (non-strict), and self-synastry
-    gives ``dist == 0`` exactly. This edge case pre-empts the
-    "zero-orb body conjunction not detected" surprise documented in
-    16-RESEARCH.md (Pitfall 2 / Rahu zero-orb conjunction edge case).
+    Rahu / Ketu / Lilith now have a 2° natal orb (ORB-01, phase 38), so the
+    synastry orb tolerance for their self-pairs is ``1.0`` deg (= 2/2 * 0.5).
+    The conjunction is always detected because on a self-pair ``dist == 0``
+    and the in-orb test uses ``dist <= orbs_pair`` (non-strict). The emitted
+    orb value is ``delta = -dist = 0.0`` regardless of the orb tolerance,
+    so the ``|orb| < 1e-6`` invariant below remains valid at 2°.
     """
     self_syn = calculate_synastry(
         chart_a_paris, chart_a_paris, mode="dense",
