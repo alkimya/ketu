@@ -123,15 +123,29 @@ v1.6 added the additive `ketu.declination` subpackage — detection of **paralle
 - ✓ Documented en + fr: signed-δ definitions + same-hemisphere rule, body-derived orb formula (Sun/Moon=1.0°), aspect-centric biodynamic framing (parallel ≈ conjunction / contra ≈ opposition on δ), parallel ≠ longitude-conjunction distinction, `//`/`#` + `P`/`CP` symbols, OOB-interaction note; FR `.mo` recompiled (no English fallback) — v1.6.0 (DECLA-05)
 - ✓ `ketu==1.6.0` shipped to PyPI via OIDC (push main + tag); user go/no-go honoured before publish; post-publish fresh-venv smoke FROM PyPI green (find_declination_aspects detects ≥1 parallel, dtype == DECLA_ASPECT_DTYPE, no `pyswisseph` at runtime) — v1.6.0
 
-## Next Milestone: TBD (candidate — Rahu UI project)
+## Current Milestone: v1.7 Fictitious-Point Orbs
 
-**Ketu the engine is considered ~complete.** v1.6 was the final lightweight engine milestone. The intended next direction is **Rahu** — a shareable web UI built on top of Ketu, in a SEPARATE repo (`~/workspace/rahu`) consuming `ketu` from PyPI (no symlink). Stack: FastAPI + SvelteKit + D3/SVG. No further bodies, houses, or parts are planned for the Ketu engine itself. A Rust rewrite is explicitly rejected (latency invisible in a UI; would throw away 1654 tests/oracles — if a real hot path emerges, surgical PyO3 only, never a full rewrite).
+**Goal:** Give Rahu, Ketu, and Lilith a non-zero orb (0°→2°) so the fictitious points actually enter aspect — unblocking a Rahu (frontend) need — while filtering out the tautological Rahu↔Ketu opposition.
+
+**Target features:**
+- Orb 0°→2° on Rahu (10), Ketu (11), Lilith (12) in `ketu/core.py` `bodies` table; everything inherits data-driven (`get_orb`, `synastry_orb_limit` read the table). Point↔point conjunction = 2°; point↔planet (e.g. Sun 12°) = 7°.
+- Targeted filter of the `(Rahu, Ketu)` pair AND `Opposition` aspect SIMULTANEOUSLY in the aspect engine — tautological (Ketu = South Node, exact 180° opposite of Rahu by construction); pollutes the reading once the orb is non-zero. Rahu and Ketu stay FULLY active for all their other aspects.
+- Synastry IN SCOPE: the points inherit the new orb everywhere; `orb=0` oracles rewritten + full regression sweep (~40 test files reference the points).
+- `ketu==1.7.0` shipped to PyPI via OIDC; user go/no-go relecture-validation before publish.
+
+**Why MINOR (1.7.0), not patch 1.6.1:** the change alters aspect RESULTS for every consumer (Kala included) — new aspects appear. orb=0 was an intentional modelling decision (Abu Ma'shar / Al-Biruni, fictitious points with no orb, frozen in the oracles), not a bug. A patch would tell Kala a `pip install -U` is safe while it silently shifts its node calculations. Kala adapts post-release (Ketu is source-of-truth) — not a blocker.
+
+**After v1.7:** the **Rahu** UI project (separate repo `~/workspace/rahu`, consumes `ketu` from PyPI, FastAPI + SvelteKit + D3/SVG). v1.7 was triggered by a Rahu need: with orb=0 the points never form aspects, so the frontend would render an empty node/Lilith aspect grid. No further bodies, houses, or parts are planned for the Ketu engine. A Rust rewrite stays explicitly rejected.
 
 ### Active
 
-<!-- v1.6 shipped & archived. No active engine requirements. Next milestone (Rahu or another engine increment) defined by /gsd-new-milestone. -->
+<!-- v1.7 requirements (full list in .planning/REQUIREMENTS.md). -->
 
-(None — awaiting next milestone. Start with `/gsd-new-milestone`.)
+- **ORB-01** — Rahu/Ketu/Lilith orb 0°→2° in `core.bodies` (single-source; all consumers inherit)
+- **ORB-02** — Targeted filter: suppress ONLY the `(Rahu, Ketu)` + `Opposition` detection (both conditions), keep all other point aspects active
+- **ORB-03** — Synastry oracles rewritten for the new orb; full regression sweep over point-referencing tests green
+- **ORB-04** — Docs (en + fr) updated: new 2° point orb, the Rahu↔Ketu opposition filter rationale, the MINOR-not-patch Kala note
+- **REL-01** — `ketu==1.7.0` shipped to PyPI via OIDC (push main + tag), human go/no-go honoured, post-publish fresh-venv smoke green
 
 **Deferred (future candidates, not committed):**
 
@@ -268,4 +282,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-Last updated: 2026-06-04 — v1.6 (Declination Aspects) milestone SHIPPED & ARCHIVED via `/gsd-complete-milestone`. `ketu==1.6.0` live on PyPI (additive `ketu.declination` subpackage; DECLA-01..05 satisfied, audit PASSED 5/5, integration checker PASS). All shipped requirements moved to Validated; Key Decisions logged; Out of Scope audited (DECLA aspects now shipped). Ketu the engine is considered ~complete — next intended direction is the Rahu UI project (separate repo, consumes ketu from PyPI). Next: `/gsd-new-milestone`.
+Last updated: 2026-06-15 — v1.7 (Fictitious-Point Orbs) milestone STARTED via `/gsd-new-milestone`. Scope: orb 0°→2° on Rahu/Ketu/Lilith in `core.bodies`, targeted filter of the tautological `(Rahu, Ketu)` + Opposition detection, synastry in scope (oracles rewritten), shipped as MINOR `1.7.0` (aspect results change for consumers — not a patch). Triggered by a Rahu (frontend) need; Rahu UI project follows v1.7. ORB-01..04 + REL-01 active. Next: `/gsd-plan-phase` once the roadmap is approved.

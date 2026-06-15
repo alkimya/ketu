@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.6
-milestone_name: Declination Aspects
-status: Awaiting next milestone
-stopped_at: Completed 36-02-PLAN.md — Phase 36 complete. Phase 37 (v1.6 release) is next.
-last_updated: "2026-06-04T21:18:06.495Z"
-last_activity: 2026-06-04 — Milestone v1.6 completed and archived
+milestone: v1.7
+milestone_name: Fictitious-Point Orbs
+status: planning
+last_updated: "2026-06-15T16:59:28.347Z"
+last_activity: 2026-06-15
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-06-04 — v1.6 roadmap created)
 
 ## Current Position
 
-Phase: Milestone v1.6 complete
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-06-04 — Milestone v1.6 completed and archived
+Status: Defining requirements
+Last activity: 2026-06-15 — Milestone v1.7 started
 
 ## Next Step
 
