@@ -110,7 +110,7 @@ Full detail archived to `.planning/milestones/v1.6-ROADMAP.md`. Additive `ketu.d
 
 ### v1.7 Fictitious-Point Orbs (Phases 38-39) — IN PROGRESS
 
-- [ ] **Phase 38: Fictitious-Point Orbs Engine** — Single-source orb 0°→2° edit in `core.bodies`, Rahu↔Ketu Opposition filter in the aspect engine, full test-suite regression sweep + synastry oracle rewrite
+- [x] **Phase 38: Fictitious-Point Orbs Engine** — Single-source orb 0°→2° edit in `core.bodies`, Rahu↔Ketu Opposition filter in the aspect engine, full test-suite regression sweep + synastry oracle rewrite (completed 2026-06-15)
 - [ ] **Phase 39: Documentation + Release v1.7.0** — Docs en+fr (new orb, filter rationale, MINOR-not-patch Kala note), version bump, CHANGELOG/UPGRADING, human go/no-go gate, PyPI OIDC publish, post-publish smoke
 
 ## Phase Details
@@ -131,11 +131,11 @@ Full detail archived to `.planning/milestones/v1.6-ROADMAP.md`. Additive `ketu.d
 Plans:
 **Wave 1**
 
-- [ ] 38-01-PLAN.md — ORB-01 single-source orb 0→2 edit + ORB-02 shared `_is_tautological_node_opposition` helper wired into all natal/scalar emit paths + helper unit & per-path integration tests (Wave 1)
+- [x] 38-01-PLAN.md — ORB-01 single-source orb 0→2 edit + ORB-02 shared `_is_tautological_node_opposition` helper wired into all natal/scalar emit paths + helper unit & per-path integration tests (Wave 1)
 
 **Wave 2** *(blocked on Wave 1 completion)*
 
-- [ ] 38-02-PLAN.md — ORB-03 synastry oracle rewrite (D-06/D-07) + full ~31-file regression sweep, final gates green (Wave 2, depends on 38-01)
+- [x] 38-02-PLAN.md — ORB-03 synastry oracle rewrite (D-06/D-07) + full ~31-file regression sweep, final gates green (Wave 2, depends on 38-01)
 
 ### Phase 39: Documentation + Release v1.7.0
 
