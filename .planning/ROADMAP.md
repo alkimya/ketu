@@ -126,7 +126,11 @@ Full detail archived to `.planning/milestones/v1.6-ROADMAP.md`. Additive `ketu.d
   2. The aspect engine never emits a `(Rahu, Ketu)` + `Opposition` detection regardless of the separation; every other aspect involving Rahu or Ketu (e.g. Rahu conjunction, Rahu↔Sun opposition, Ketu↔Lilith conjunction) is detected normally
   3. `tests/synastry/test_orbs.py` and `tests/synastry/test_modes_idempotent.py` pass with oracles rewritten to the new 2° point orb; no oracle update is silent — every changed detection is deliberately pinned
   4. All ~40 test files that reference Rahu, Ketu, or Lilith are green; `pytest tests/` reports 0 failures, 100% coverage maintained, mypy `--strict` clean
-**Plans**: TBD
+**Plans**: 2 plans
+
+Plans:
+- [ ] 38-01-PLAN.md — ORB-01 single-source orb 0→2 edit + ORB-02 shared `_is_tautological_node_opposition` helper wired into all natal/scalar emit paths + helper unit & per-path integration tests (Wave 1)
+- [ ] 38-02-PLAN.md — ORB-03 synastry oracle rewrite (D-06/D-07) + full ~31-file regression sweep, final gates green (Wave 2, depends on 38-01)
 
 ### Phase 39: Documentation + Release v1.7.0
 
@@ -179,7 +183,7 @@ Full detail archived to `.planning/milestones/v1.6-ROADMAP.md`. Additive `ketu.d
 | 35. Release v1.5.0                                | v1.5      | 2/2            | ✓ Complete  | 2026-06-04 |
 | 36. Declination Aspects Core                      | v1.6      | 2/2            | ✓ Complete  | 2026-06-04 |
 | 37. Documentation + Release v1.6.0               | v1.6      | 3/3            | ✓ Complete  | 2026-06-04 |
-| **38. Fictitious-Point Orbs Engine**              | **v1.7**  | **0/TBD**      | Not started | -          |
+| **38. Fictitious-Point Orbs Engine**              | **v1.7**  | **0/2**        | Planned     | -          |
 | **39. Documentation + Release v1.7.0**            | **v1.7**  | **0/TBD**      | Not started | -          |
 
 ---
