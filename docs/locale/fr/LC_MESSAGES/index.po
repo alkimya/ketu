@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-05-30 00:44+0200\n"
+"POT-Creation-Date: 2026-06-15 23:25+0200\n"
 "PO-Revision-Date: 2026-02-12 00:00+0000\n"
 "Last-Translator: Claude Code <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -39,19 +39,18 @@ msgid ""
 "**Ketu** is a Python library for calculating planetary positions and "
 "planetary aspects using pure NumPy."
 msgstr ""
-"**Ketu** est une bibliothèque Python pour calculer les positions "
-"planétaires et les aspects planétaires en utilisant NumPy pur."
+"**Ketu** est une bibliothèque Python pour calculer les positions planétaires"
+" et les aspects planétaires en utilisant NumPy pur."
 
 #: ../../source/index.md:5
 msgid ""
-"The library was originally designed to produce biodynamic calendars and "
-"time series driven by planetary aspects, and it can serve as a foundation"
-" for building astrology software."
+"The library was originally designed to produce biodynamic calendars and time"
+" series driven by planetary aspects, and it can serve as a foundation for "
+"building astrology software."
 msgstr ""
 "La bibliothèque a été conçue à l'origine pour produire des calendriers "
-"biodynamiques et des séries temporelles basées sur les aspects "
-"planétaires, et elle peut servir de fondation pour développer des "
-"logiciels d'astrologie."
+"biodynamiques et des séries temporelles basées sur les aspects planétaires, "
+"et elle peut servir de fondation pour développer des logiciels d'astrologie."
 
 #: ../../source/index.md:7
 msgid "Overview"
@@ -63,16 +62,16 @@ msgstr "Ketu vous permet de :"
 
 #: ../../source/index.md:11
 msgid ""
-"Calculate precise positions of celestial bodies (Sun, Moon, planets, "
-"Nodes, Lilith, Chiron)"
+"Calculate precise positions of celestial bodies (Sun, Moon, planets, Nodes, "
+"Lilith, Chiron)"
 msgstr ""
 "Calculer les positions précises des corps célestes (Soleil, Lune, planètes, "
 "Nœuds, Lilith, Chiron)"
 
 #: ../../source/index.md:12
 msgid ""
-"Determine aspects between planets with configurable aspect sets "
-"(Classical, Traditional, Extended)"
+"Determine aspects between planets with configurable aspect sets (Classical, "
+"Traditional, Extended)"
 msgstr ""
 "Déterminer les aspects entre planètes avec des ensembles d'aspects "
 "configurables (Classique, Traditionnel, Étendu)"
@@ -87,19 +86,23 @@ msgstr "Identifier les rétrogradations et les signes du zodiaque"
 
 #: ../../source/index.md:15
 msgid ""
-"Calculate astrological house systems (Placidus, Koch, Porphyry, Whole "
-"Sign, Equal, Regiomontanus)"
+"Calculate astrological house systems (Placidus, Koch, Porphyry, Whole Sign, "
+"Equal, Regiomontanus)"
 msgstr ""
 "Calculer les systèmes de maisons astrologiques (Placidus, Koch, Porphyre, "
 "Signes entiers, Maisons égales, Regiomontanus)"
 
 #: ../../source/index.md:16
 msgid "Compute full natal charts as structured NumPy arrays (CHART_DTYPE)"
-msgstr "Calculer des thèmes nataux complets sous forme de tableaux structurés NumPy (CHART_DTYPE)"
+msgstr ""
+"Calculer des thèmes nataux complets sous forme de tableaux structurés NumPy "
+"(CHART_DTYPE)"
 
 #: ../../source/index.md:17
 msgid "Analyse synastry and composite (midpoint) charts between two individuals"
-msgstr "Analyser les thèmes de synastrie et composite (points médians) entre deux individus"
+msgstr ""
+"Analyser les thèmes de synastrie et composite (points médians) entre deux "
+"individus"
 
 #: ../../source/index.md:18
 msgid "Calculate solar and lunar returns for predictive astrology"
@@ -290,12 +293,20 @@ msgid "☊"
 msgstr "☊"
 
 #: ../../source/index.md:40
-msgid "0º"
-msgstr "0º"
+msgid "2°"
+msgstr "2°"
 
 #: ../../source/index.md:40
-msgid "-0.013°/day"
-msgstr "-0.013°/jour"
+msgid "-0.052954°/day"
+msgstr "-0.052954°/jour"
+
+#: ../../source/index.md:40
+msgid "Ketu (Mean South Node)"
+msgstr "Ketu (Nœud Sud moyen)"
+
+#: ../../source/index.md:40
+msgid "☋"
+msgstr "☋"
 
 #: ../../source/index.md:40
 msgid "Lilith (Black Moon)"
@@ -321,7 +332,7 @@ msgstr "⚷"
 msgid "~0.018°/day"
 msgstr "~0.018°/jour"
 
-#: ../../source/index.md:70
+#: ../../source/index.md:71
 msgid "Major Aspects"
 msgstr "Aspects majeurs"
 
@@ -445,52 +456,58 @@ msgstr "180°"
 msgid "☍"
 msgstr "☍"
 
-#: ../../source/index.md:82
+#: ../../source/index.md:83
 msgid "Quick Example"
 msgstr "Exemple rapide"
 
-#: ../../source/index.md:100
+#: ../../source/index.md:101
 msgid "Indices and Tables"
 msgstr "Indices et tables"
 
-#: ../../source/index.md:102
+#: ../../source/index.md:103
 #, python-brace-format
 msgid "{ref}`genindex`"
 msgstr "{ref}`genindex`"
 
-#: ../../source/index.md:104
+#: ../../source/index.md:105
 #, python-brace-format
 msgid "{ref}`search`"
 msgstr "{ref}`search`"
 
-#: ../../source/index.md:106
+#: ../../source/index.md:107
 msgid "License"
 msgstr "Licence"
 
-#: ../../source/index.md:108
+#: ../../source/index.md:109
 msgid "MIT License - Copyright (c) 2021-2026 Loc Cosnier"
 msgstr "Licence MIT - Copyright (c) 2021-2026 Loc Cosnier"
 
-#: ../../source/index.md:110
+#: ../../source/index.md:111
 msgid "Contact"
 msgstr "Contact"
 
-#: ../../source/index.md:112
+#: ../../source/index.md:113
 msgid "Author: Loc Cosnier"
 msgstr "Auteur : Loc Cosnier"
 
-#: ../../source/index.md:113
+#: ../../source/index.md:114
 msgid "Email: <loc.cosnier@pm.me>"
 msgstr "Email : <loc.cosnier@pm.me>"
 
-#: ../../source/index.md:114
+#: ../../source/index.md:115
 msgid "GitHub: alkimya/ketu"
 msgstr "GitHub : alkimya/ketu"
 
-#: ../../source/index.md:115
+#: ../../source/index.md:116
 msgid "PyPI: pypi.org/project/ketu"
 msgstr "PyPI : pypi.org/project/ketu"
 
 #~ msgid "Determine aspects between planets"
 #~ msgstr "Déterminer les aspects entre planètes"
+
+#~ msgid "0º"
+#~ msgstr "0º"
+
+#~ msgid "-0.013°/day"
+#~ msgstr "-0.013°/jour"
 
