@@ -24,11 +24,11 @@ artefact that a non-zero orb creates (Rahu↔Ketu Opposition).
 
 ### Documentation
 
-- [ ] **ORB-04**: Documentation (en + fr) updated for the 2° fictitious-point orb, the Rahu↔Ketu Opposition filter and its rationale, and the MINOR-not-patch reasoning (aspect results change → Kala must opt in via a deliberate upgrade, not assume `pip install -U` is neutral). FR `.po` translated and `.mo` recompiled (no English fallback).
+- [x] **ORB-04**: Documentation (en + fr) updated for the 2° fictitious-point orb, the Rahu↔Ketu Opposition filter and its rationale, and the MINOR-not-patch reasoning (aspect results change → Kala must opt in via a deliberate upgrade, not assume `pip install -U` is neutral). FR `.po` translated and `.mo` recompiled (no English fallback).
 
 ### Release
 
-- [ ] **REL-01**: `ketu == 1.7.0` shipped to PyPI via OIDC trusted publishing — version bumped in all source-of-truth files, dated `[1.7.0]` changelog (EN + FR) + UPGRADING v1.6→v1.7 documenting the point-orb behaviour change, both `origin/main` and the `v1.7.0` tag pushed, a human go/no-go relecture-validation honoured before any irreversible action, and a post-publish fresh-venv smoke FROM PyPI confirming the new point orb produces ≥1 node/Lilith aspect and the Rahu↔Ketu Opposition is absent (and no `pyswisseph` at runtime).
+- [x] **REL-01**: `ketu == 1.7.0` shipped to PyPI via OIDC trusted publishing — version bumped in all source-of-truth files, dated `[1.7.0]` changelog (EN + FR) + UPGRADING v1.6→v1.7 documenting the point-orb behaviour change, both `origin/main` and the `v1.7.0` tag pushed, a human go/no-go relecture-validation honoured before any irreversible action, and a post-publish fresh-venv smoke FROM PyPI confirming the new point orb produces ≥1 node/Lilith aspect and the Rahu↔Ketu Opposition is absent (and no `pyswisseph` at runtime).
 
 ## Future Requirements
 
@@ -64,8 +64,8 @@ Which phases cover which requirements. Populated during roadmap creation.
 | ORB-01 | Phase 38 | Complete |
 | ORB-02 | Phase 38 | Complete |
 | ORB-03 | Phase 38 | Complete |
-| ORB-04 | Phase 39 | Pending |
-| REL-01 | Phase 39 | Pending |
+| ORB-04 | Phase 39 | Complete |
+| REL-01 | Phase 39 | Complete |
 
 **Coverage:**
 
