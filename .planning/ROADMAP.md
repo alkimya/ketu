@@ -149,7 +149,16 @@ Plans:
   3. Version is bumped to `1.7.0` in all source-of-truth files; the human go/no-go relecture-validation gate is honoured before any irreversible action (tag, push, publish)
   4. `ketu==1.7.0` is live on PyPI via OIDC trusted publishing; a post-publish fresh-venv smoke FROM PyPI confirms: at least one Rahu or Lilith aspect is detected, the Rahu↔Ketu Opposition is absent from results, and `pyswisseph` is not importable at runtime
 
-**Plans**: TBD
+**Plans**: 3 plans
+Plans:
+**Wave 1** *(parallel)*
+
+- [ ] 39-01-PLAN.md — ORB-04 docs en+fr: 2° fictitious-point orb, Rahu↔Ketu Opposition filter rationale, MINOR-not-patch note; FR .po translated + .mo recompiled (Wave 1)
+- [ ] 39-02-PLAN.md — ORB-04/REL-01 version bump 1.7.0 (3 source-of-truth files) + [1.7.0] CHANGELOG (EN root + RTD copy + FR) + UPGRADING v1.6→v1.7 Kala guidance (Wave 1)
+
+**Wave 2** *(blocked on Wave 1)*
+
+- [ ] 39-03-PLAN.md — REL-01 release ceremony: local pre-flight, BLOCKING human go/no-go, tag v1.7.0 + push main+tag, OIDC publish, GitHub release, post-publish PyPI smoke (Wave 2, depends on 39-01 + 39-02)
 
 ## Progress
 
@@ -190,7 +199,7 @@ Plans:
 | 36. Declination Aspects Core                      | v1.6      | 2/2            | ✓ Complete  | 2026-06-04 |
 | 37. Documentation + Release v1.6.0               | v1.6      | 3/3            | ✓ Complete  | 2026-06-04 |
 | **38. Fictitious-Point Orbs Engine**              | **v1.7**  | **0/2**        | Planned     | -          |
-| **39. Documentation + Release v1.7.0**            | **v1.7**  | **0/TBD**      | Not started | -          |
+| **39. Documentation + Release v1.7.0**            | **v1.7**  | **0/3**        | Planned     | -          |
 
 ---
 
@@ -201,4 +210,4 @@ Plans:
 *v1.4 phase details archived to `.planning/milestones/v1.4-ROADMAP.md`*
 *v1.5 phase details archived to `.planning/milestones/v1.5-ROADMAP.md`*
 *v1.6 phase details archived to `.planning/milestones/v1.6-ROADMAP.md`*
-*Roadmap last updated: 2026-06-15 — v1.7 Fictitious-Point Orbs STARTED. Phases 38-39 defined. ORB-01..04 + REL-01 mapped. Next: `/gsd-plan-phase 38`.*
+*Roadmap last updated: 2026-06-15 — Phase 39 planned (3 plans, 2 waves). ORB-04 + REL-01 mapped. Next: `/gsd-execute-phase 39`.*
