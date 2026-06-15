@@ -90,8 +90,8 @@ def cmd_list_orbs() -> None:
     Emits a header, the per-pair-aspect orb formula, the ASC/MC default
     orb annotation, then the preset table iterated from
     :data:`ketu.synastry.orbs._PRESET_BY_NAME` (sorted alphabetically),
-    followed by three worked examples and a Rahu/Ketu/Lilith zero-orb
-    edge-case note.
+    followed by three worked examples and a note on the v1.7 Rahu/Ketu/Lilith
+    2° natal orb (previously 0).
 
     Data-driven: the preset loop iterates ``sorted(_ORB_PRESETS.keys())``
     so a v1.3 in-place dict extension (e.g. a ``"liz_greene"`` preset)
@@ -122,14 +122,14 @@ def cmd_list_orbs() -> None:
     print("  ASC↔Sun  conjunction : ( 8+12)/2 * 1.00 * 0.5 =  5.0°")
     print()
     print(
-        "Note: Rahu/Ketu/Lilith have natal orb=0 in ketu.core.bodies — "
-        "synastry self-pairs"
+        "Note: as of v1.7 Rahu/Ketu/Lilith carry a 2° natal orb in "
+        "ketu.core.bodies (was 0),"
     )
     print(
-        "involving them require exact-degree matches (documented "
-        "behavior; v1.3 may add"
+        "so synastry pairs involving them now produce non-zero tolerances "
+        "(e.g. a Rahu↔Rahu"
     )
-    print("a per-body override map).")
+    print("conjunction yields (2+2)/2 * 1.00 * 0.5 = 1.0°).")
 
 
 _PART_DESCRIPTIONS = {

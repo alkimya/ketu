@@ -126,8 +126,9 @@ def synastry_orb_limit(
     -------
     float
         Orb tolerance in degrees (always non-negative; distance from exact
-        aspect angle). Zero when either body has a zero natal orb (Rahu, Ketu,
-        Lilith in :data:`ketu.core.bodies`).
+        aspect angle). As of v1.7 the fictitious points Rahu, Ketu, and Lilith
+        carry a 2 deg natal orb (previously 0) in :data:`ketu.core.bodies`, so
+        point-point pairs yield a non-zero tolerance.
 
     See Also
     --------
@@ -142,8 +143,8 @@ def synastry_orb_limit(
     >>> from ketu.synastry.orbs import synastry_orb_limit
     >>> synastry_orb_limit(0, 1, 0)   # Sun-Moon conjunction: (12+12)/2 * 1 * 0.5
     6.0
-    >>> synastry_orb_limit(10, 10, 0)  # Rahu-Rahu conjunction: zero-orb body
-    0.0
+    >>> synastry_orb_limit(10, 10, 0)  # Rahu-Rahu conjunction: (2+2)/2 * 1 * 0.5
+    1.0
     """
     return float(
         (_BODY_ORBS_16[b1] + _BODY_ORBS_16[b2]) / 2.0
