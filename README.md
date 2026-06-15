@@ -238,10 +238,10 @@ Run both locally before pushing: `make doc-gates`.
 | Uranus | 7 | 6° | 0.012 |
 | Neptune | 8 | 6° | 0.007 |
 | Pluto | 9 | 4° | 0.004 |
-| Rahu (Mean Node) | 10 | 0° | -0.013 |
-| True North Node | 11 | 0° | -0.013 |
-| Lilith (Black Moon) | 12 | 0° | -0.113 |
-| Chiron | 13 | 0° | 0.019 |
+| Rahu (Mean Node) | 10 | 2° | -0.052954 |
+| Ketu (Mean South Node) | 11 | 2° | -0.052954 |
+| Lilith (Black Moon) | 12 | 2° | 0.113 |
+| Chiron | 13 | 4° | 0.019 |
 
 ## Supported aspects
 

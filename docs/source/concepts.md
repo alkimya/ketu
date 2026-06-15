@@ -276,14 +276,48 @@ orb = [(orb_planet1 + orb_planet2) / 2] * harmonic_coefficient
 
 ### Default Orbs of Planets
 
-Body                    | Orb
-------------------------|--------
-Sun, Moon               | 12°
-Venus, Jupiter, Saturn  | 10°
-Mercury, Mars           | 8°
-Uranus, Neptune         | 6°
-Pluto, Chiron           | 4°
-Rahu, Lilith            | 0°
+Body                        | Orb
+----------------------------|--------
+Sun, Moon                   | 12°
+Venus, Jupiter, Saturn      | 10°
+Mercury, Mars               | 8°
+Uranus, Neptune             | 6°
+Pluto, Chiron               | 4°
+Rahu, Ketu, Lilith          | 2° (since v1.7; previously 0°)
+
+### Fictitious Points: Rahu, Ketu, Lilith (new in v1.7)
+
+Prior to v1.7, Rahu (Mean Node, id 10), Ketu (Mean South Node, id 11), and Lilith
+(Black Moon, id 12) carried a 0° orb — an Abu Ma'shar / Al-Biruni modelling choice
+for fictitious (non-physical) points. Because the aspect-orb formula is
+`(orb_b1 + orb_b2) / 2 × coef`, two zero-orb points yield a 0° joint orb,
+meaning they can only form an aspect at exact separation — in practice never
+detected. **v1.7 gives the three points a 2° longitude orb** so they enter
+ecliptic aspects normally.
+
+Orb examples with the new 2° point orb:
+
+- Point↔point conjunction: **(2 + 2) / 2 × 1 = 2°**
+- Rahu↔Sun opposition: **(2 + 12) / 2 × 1 = 7°**
+- Ketu↔Moon trine: **(2 + 12) / 2 × 2/3 ≈ 4.67°**
+
+**Rahu↔Ketu Opposition filter:** Ketu (Mean South Node) is the exact 180°
+opposite of Rahu by construction — the two mean nodes are always separated by
+180° in the geocentric ecliptic. With a non-zero orb, the aspect engine would
+permanently detect this pair as an Opposition on every date, producing a
+tautological artefact. The engine therefore suppresses **only** the simultaneous
+condition `(body1, body2) == (Rahu, Ketu)` AND `aspect == Opposition`.
+Every other Rahu or Ketu aspect is detected normally (Rahu↔Sun oppositions,
+Rahu↔Ketu conjunctions, Ketu↔Lilith sextiles, etc.).
+
+> **v1.7 — fictitious-point orbs (MINOR, not patch)**
+>
+> The 2° longitude orb causes aspect RESULTS to change: new node/Lilith aspects
+> now appear in the output where none existed before, and the Rahu↔Ketu
+> tautological Opposition no longer appears. Consumers such as Kala must treat
+> the upgrade from 1.6.x to 1.7.0 as a **deliberate, reviewed upgrade** — NOT a
+> neutral `pip install -U`. This is why the release carries version MINOR 1.7.0
+> (semver: behaviour changes) rather than a patch increment.
 
 ### Aspect Types and Harmonic Coefficients
 
@@ -497,16 +531,24 @@ exactly **1.0°**. The coefficient `1/12` is the reciprocal of the maximum body 
 Sun/Moon lands on the published 1° natal consensus (Carter, Cafe Astrology,
 astro.com).
 
-**Floor example:** zero-orb bodies (Rahu, Ketu, Lilith — orb 0) → formula yields 0° →
-floored to **0.5°** so they remain detectable.
+**Floor example (v1.6 and earlier):** When Rahu, Ketu, and Lilith had a 0° longitude
+orb, the declination formula yielded 0° and the floor kicked in, giving **0.5°**
+so they remained detectable on the δ axis.
 
-| Pair | δ orb |
-|------|-------|
-| Sun / Moon | 1.0° |
-| Sun / Mars | 0.833° |
-| Jupiter / Saturn | 0.833° |
-| Uranus / Neptune | 0.5° |
-| Rahu / Lilith | 0.5° (floor) |
+**v1.7 note:** As of v1.7 the **longitude** orb of Rahu, Ketu, and Lilith is 2°
+(see the Fictitious Points subsection above). The two axes are **independent**: the
+longitude change does NOT affect the declination formula. On the δ axis the formula
+still yields `(2+2)/2 × 1/12 ≈ 0.167°` for a point↔point pair, which is below the
+0.5° floor — so the δ orb for Rahu/Lilith/Ketu pairs remains **0.5°** (floor),
+unchanged from v1.6.
+
+Pair                 | δ orb
+---------------------|----------------------------------
+Sun / Moon           | 1.0°
+Sun / Mars           | 0.833°
+Jupiter / Saturn     | 0.833°
+Uranus / Neptune     | 0.5°
+Rahu / Lilith        | 0.5° (floor, unchanged from v1.6)
 
 ### Biodynamic Framing
 

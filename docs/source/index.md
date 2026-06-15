@@ -51,21 +51,22 @@ acknowledgments
 
 ### Supported Celestial Bodies
 
-Body                |   Symbol  |   Orb     |   Average Speed
---------------------|-----------|-----------|-------------------
-Sun                 |   ☉       |  12°      |  0.986°/day
-Moon                |   ☽       |  12°      |  13.176°/day
-Mercury             |   ☿       |  8°       |  1.383°/day
-Venus               |   ♀       |  10°       |  1.2°/day
-Mars                |   ♂       |  8°      |  0.524°/day
-Jupiter             |   ♃       |  10°      |  0.083°/day
-Saturn              |   ♄       |  10°      |  0.034°/day
-Uranus              |   ♅       |  6°       |  0.012°/day
-Neptune             |   ♆       |  6°       |  0.007°/day
-Pluto               |   ♇       |  4°       |  0.004°/day
-Rahu (Mean Node)    |   ☊       |  0º       |  -0.013°/day
-Lilith (Black Moon) |   ⚸       |  0º       |  0.113°/day
-Chiron              |   ⚷       |  4°       |  ~0.018°/day
+Body                   | Symbol | Orb | Average Speed
+-----------------------|--------|-----|---------------
+Sun                    | ☉      | 12° | 0.986°/day
+Moon                   | ☽      | 12° | 13.176°/day
+Mercury                | ☿      | 8°  | 1.383°/day
+Venus                  | ♀      | 10° | 1.2°/day
+Mars                   | ♂      | 8°  | 0.524°/day
+Jupiter                | ♃      | 10° | 0.083°/day
+Saturn                 | ♄      | 10° | 0.034°/day
+Uranus                 | ♅      | 6°  | 0.012°/day
+Neptune                | ♆      | 6°  | 0.007°/day
+Pluto                  | ♇      | 4°  | 0.004°/day
+Rahu (Mean Node)       | ☊      | 2°  | -0.052954°/day
+Ketu (Mean South Node) | ☋      | 2°  | -0.052954°/day
+Lilith (Black Moon)    | ⚸      | 2°  | 0.113°/day
+Chiron                 | ⚷      | 4°  | ~0.018°/day
 
 ### Major Aspects
 

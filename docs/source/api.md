@@ -1050,11 +1050,14 @@ The frozen 5-field row contract returned by `find_declination_aspects`:
 ### `DECLA_COEF` and `MIN_DECL_ORB`
 
 - `DECLA_COEF = 1/12` (≈ 0.0833) — orb scaling on the declination axis.
-- `MIN_DECL_ORB = 0.5` — floor (degrees) so zero-orb bodies stay detectable.
+- `MIN_DECL_ORB = 0.5` — floor (degrees) applied when the formula result falls below 0.5°.
 
 The per-pair orb is `max((orb_b1 + orb_b2) / 2 × DECLA_COEF, MIN_DECL_ORB)` →
-Sun/Moon `1.0°`, Rahu/Lilith `0.5°` (floor). See the
-[concepts page](#declination-aspects-new-in-v1-6) for the full derivation.
+Sun/Moon `1.0°`. For Rahu, Ketu, and Lilith: as of **v1.7** their **longitude** orb
+is 2° (was 0°), but the declination formula yields `(2+2)/2 × 1/12 ≈ 0.167°` for a
+point↔point pair — still below the floor — so their δ orb remains `0.5°`. The two
+axes (longitude and declination) are independent. See the
+[concepts page](concepts.md#orbs) for the full derivation.
 
 ---
 
