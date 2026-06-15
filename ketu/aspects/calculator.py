@@ -166,7 +166,15 @@ def _detect_aspects_for_date(
                 pair = (body1_ids[idx], body2_ids[idx])
                 if pair not in matched_pairs:
                     # Emit canonical i_asp (NOT k) to preserve Kala contract.
-                    results.append((body1_ids[idx], body2_ids[idx], i_asp, orb_values[i]))
+                    # Suppress the tautological intra-chart Rahu↔Ketu Opposition.
+                    # The pair is still added to matched_pairs so no later aspect re-emits
+                    # for it (first-match-wins contract: Opposition is i_asp 13, the last
+                    # static row, so no other static aspect competes; suppressing the emit
+                    # while still marking the pair consumed is the safest placement).
+                    if not _is_tautological_node_opposition(
+                        int(body1_ids[idx]), int(body2_ids[idx]), i_asp
+                    ):
+                        results.append((body1_ids[idx], body2_ids[idx], i_asp, orb_values[i]))
                     matched_pairs.add(pair)
 
     # Dynamic aspects second — only pairs not matched by a static aspect.
@@ -177,7 +185,12 @@ def _detect_aspects_for_date(
             for idx in np.where(in_orb)[0]:
                 pair = (body1_ids[idx], body2_ids[idx])
                 if pair not in matched_pairs:
-                    results.append((body1_ids[idx], body2_ids[idx], -2, dyn_angle - distances[idx]))
+                    # Dynamic rows carry i_asp = -2; helper returns False (structurally exempt).
+                    # Guard is present for uniformity (D-01 single-source rule).
+                    if not _is_tautological_node_opposition(
+                        int(body1_ids[idx]), int(body2_ids[idx]), -2
+                    ):
+                        results.append((body1_ids[idx], body2_ids[idx], -2, dyn_angle - distances[idx]))
                     matched_pairs.add(pair)
 
     return results
@@ -231,6 +244,11 @@ def get_aspect(jdate: float, body1: int, body2: int) -> Optional[Tuple]:
         if i_asp == 0 and dist <= orb:
             return body1, body2, i_asp, dist
         elif aspect - orb <= dist <= aspect + orb:
+            # Suppress the tautological intra-chart Rahu↔Ketu Opposition.
+            # Helper is order-insensitive; body1/body2 are already in canonical
+            # ascending order after the swap above.
+            if _is_tautological_node_opposition(body1, body2, i_asp):
+                return None
             return body1, body2, i_asp, aspect - dist
     return None
 
@@ -321,11 +339,18 @@ def calculate_aspects(
                    l_bodies["orb"][np.where(l_bodies["id"] == b2)[0][0]]) / 2 * aspect_coef
             if i_asp == 0:
                 if dist <= orb:
-                    aspects_data.append((int(b1), int(b2), i_asp, float(dist)))
+                    # Conjunction: tautological node opposition guard returns False
+                    # for i_asp=0 (conjunction is never suppressed). Guard present
+                    # for D-01 single-source consistency.
+                    if not _is_tautological_node_opposition(int(b1), int(b2), i_asp):
+                        aspects_data.append((int(b1), int(b2), i_asp, float(dist)))
                     matched = True
                     break
             elif aspect_angle - orb <= dist <= aspect_angle + orb:
-                aspects_data.append((int(b1), int(b2), i_asp, float(aspect_angle - dist)))
+                # Suppress the tautological intra-chart Rahu↔Ketu Opposition.
+                # Dynamic rows carry i_asp=-2 and are structurally exempt.
+                if not _is_tautological_node_opposition(int(b1), int(b2), i_asp):
+                    aspects_data.append((int(b1), int(b2), i_asp, float(aspect_angle - dist)))
                 matched = True
                 break
 
