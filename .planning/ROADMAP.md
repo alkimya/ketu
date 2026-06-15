@@ -126,10 +126,15 @@ Full detail archived to `.planning/milestones/v1.6-ROADMAP.md`. Additive `ketu.d
   2. The aspect engine never emits a `(Rahu, Ketu)` + `Opposition` detection regardless of the separation; every other aspect involving Rahu or Ketu (e.g. Rahu conjunction, Rahu↔Sun opposition, Ketu↔Lilith conjunction) is detected normally
   3. `tests/synastry/test_orbs.py` and `tests/synastry/test_modes_idempotent.py` pass with oracles rewritten to the new 2° point orb; no oracle update is silent — every changed detection is deliberately pinned
   4. All ~40 test files that reference Rahu, Ketu, or Lilith are green; `pytest tests/` reports 0 failures, 100% coverage maintained, mypy `--strict` clean
-**Plans**: 2 plans
 
+**Plans**: 2 plans
 Plans:
+**Wave 1**
+
 - [ ] 38-01-PLAN.md — ORB-01 single-source orb 0→2 edit + ORB-02 shared `_is_tautological_node_opposition` helper wired into all natal/scalar emit paths + helper unit & per-path integration tests (Wave 1)
+
+**Wave 2** *(blocked on Wave 1 completion)*
+
 - [ ] 38-02-PLAN.md — ORB-03 synastry oracle rewrite (D-06/D-07) + full ~31-file regression sweep, final gates green (Wave 2, depends on 38-01)
 
 ### Phase 39: Documentation + Release v1.7.0
@@ -143,6 +148,7 @@ Plans:
   2. The `[1.7.0]` CHANGELOG entry (EN + FR) is dated, lists the orb change and the Opposition filter; UPGRADING covers the v1.6→v1.7 migration note for Kala consumers
   3. Version is bumped to `1.7.0` in all source-of-truth files; the human go/no-go relecture-validation gate is honoured before any irreversible action (tag, push, publish)
   4. `ketu==1.7.0` is live on PyPI via OIDC trusted publishing; a post-publish fresh-venv smoke FROM PyPI confirms: at least one Rahu or Lilith aspect is detected, the Rahu↔Ketu Opposition is absent from results, and `pyswisseph` is not importable at runtime
+
 **Plans**: TBD
 
 ## Progress
