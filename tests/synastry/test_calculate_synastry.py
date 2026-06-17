@@ -383,3 +383,51 @@ def test_calculate_synastry_with_polar_chart(
     # ASC/MC longitudes (body_b in {14, 15}) must be finite.
     polar_angle_rows = dense[(dense["body_b"] == 14) | (dense["body_b"] == 15)]
     assert np.isfinite(polar_angle_rows["lon_b"]).all()
+
+
+# ---------------------------------------------------------------------------
+# J. DSPD-03 synastry inheritance (body_decl_speed carried by CHART_DTYPE inputs)
+# ---------------------------------------------------------------------------
+
+def test_synastry_input_charts_carry_body_decl_speed_finite_and_non_zero(
+    chart_a_paris: np.ndarray, chart_b_nyc: np.ndarray,
+) -> None:
+    """DSPD-03: compute_chart-produced inputs to synastry carry finite non-zero body_decl_speed.
+
+    "Synastry inheritance" means that when two natal charts produced by
+    :func:`ketu.charts.compute_chart` are passed to :func:`calculate_synastry`,
+    each CHART_DTYPE input already carries ``body_decl_speed`` populated by
+    :func:`compute_chart`. SYNASTRY_DTYPE deliberately does NOT carry the field
+    (correct by design — do NOT assert ``body_decl_speed`` on the output).
+
+    This is a structural / pinning test: it pins that compute_chart-produced
+    synastry inputs have the field, and that the synastry call still succeeds
+    with the 16-field CHART_DTYPE inputs (regression guard). No source change
+    to :mod:`ketu.synastry.api` is made — inheritance is free (Pitfall 4 note
+    in 40-RESEARCH.md §"Synastry: Inheritance is Free").
+    """
+    # Each natal chart (CHART_DTYPE) must carry finite non-zero body_decl_speed.
+    speed_a = np.asarray(chart_a_paris["body_decl_speed"], dtype=np.float64)
+    speed_b = np.asarray(chart_b_nyc["body_decl_speed"], dtype=np.float64)
+
+    assert np.all(np.isfinite(speed_a)), (
+        f"chart_a['body_decl_speed'] contains non-finite values: {speed_a}"
+    )
+    assert np.any(np.abs(speed_a) > 0.001), (
+        "chart_a['body_decl_speed'] is all-zero — compute_chart not populating field"
+    )
+    assert np.all(np.isfinite(speed_b)), (
+        f"chart_b['body_decl_speed'] contains non-finite values: {speed_b}"
+    )
+    assert np.any(np.abs(speed_b) > 0.001), (
+        "chart_b['body_decl_speed'] is all-zero — compute_chart not populating field"
+    )
+
+    # Synastry call succeeds with 16-field CHART_DTYPE inputs.
+    result = calculate_synastry(chart_a_paris, chart_b_nyc)
+    assert result.ndim == 1, "synastry call failed with 16-field CHART_DTYPE inputs"
+
+    # Confirm SYNASTRY_DTYPE does NOT carry body_decl_speed (correct by design).
+    assert "body_decl_speed" not in result.dtype.names, (
+        "SYNASTRY_DTYPE unexpectedly gained body_decl_speed — regression in synastry dtype"
+    )
