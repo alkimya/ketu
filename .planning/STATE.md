@@ -3,10 +3,10 @@ gsd_state_version: 1.0
 milestone: v1.8
 milestone_name: Declination Speed
 status: planning
-last_updated: "2026-06-17T10:08:37.494Z"
+last_updated: "2026-06-17"
 last_activity: 2026-06-17
 progress:
-  total_phases: 0
+  total_phases: 2
   completed_phases: 0
   total_plans: 0
   completed_plans: 0
@@ -17,31 +17,40 @@ progress:
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-06-16 — after v1.7 milestone)
+See: `.planning/PROJECT.md` (updated 2026-06-17 — milestone v1.8 started)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Planning next milestone (Ketu is ~feature-complete; Rahu UI project follows in a separate repo).
+**Current focus:** Phase 40 — Declination Speed Field & Chart API (ready to plan)
 
 ## Current Position
 
-Phase: Not started (defining requirements)
+Phase: 40 of 41 (Declination Speed Field & Chart API)
 Plan: —
-Status: Defining requirements
-Last activity: 2026-06-17 — Milestone v1.8 started
+Status: Ready to plan
+Last activity: 2026-06-17 — Roadmap created (Phases 40-41)
+
+Progress: [░░░░░░░░░░] 0%
 
 ## Next Step
 
-Run `/gsd-new-milestone` if a new engine scope surfaces. Otherwise Ketu is considered ~feature-complete and downstream work moves to the Rahu UI project (separate repo `~/workspace/rahu`).
+`/gsd-plan-phase 40`
 
 ## Accumulated Context
 
 ### Decisions
 
-Full log in `.planning/PROJECT.md` Key Decisions table. v1.7 decisions (orb single-source, surgical filter, MINOR-not-patch, synastry in scope) are recorded there and in `.planning/milestones/v1.7-ROADMAP.md`.
+Full log in `.planning/PROJECT.md` Key Decisions table.
+
+Key constraints for this milestone:
+- Δt = 0.01 day reused verbatim from `declination_velocity` — not configurable, no new API surface
+- Composite `body_decl_speed` derived from the composite chart, never midpoint of parents
+- `DECL_STANDSTILL_EPS` defined IN Ketu as a public contract (Rahu invents no threshold)
+- MINOR bump (1.8.0) — dtype layout grows; UPGRADING v1.7→v1.8 must give Kala explicit re-pin guidance
+- Human go/no-go before irreversible PyPI publish
 
 ### Blockers/Concerns
 
-None. v1.7 shipped on a green base (1668 tests, 100% coverage, mypy `--strict` clean); verifier PASSED 4/4.
+None. v1.7 shipped on a green base (1668 tests, 100% coverage, mypy `--strict` clean).
 
 ### Pending Todos
 
@@ -49,13 +58,11 @@ None.
 
 ## Deferred Items
 
-Items acknowledged and deferred at milestone close on 2026-06-04 (v1.6):
-
 | Category | Item | Status |
 |----------|------|--------|
-| verification_gap | Phase 17 (Composite Chart, v1.2) — 17-VERIFICATION.md | human_needed |
+| verification_gap | Phase 17 (Composite Chart, v1.2) — Astro.com manual cross-check | human_needed |
 
-Note: Phase 17 belongs to the already-shipped v1.2 milestone. The open flag is the documented-deferred Astro.com manual cross-check (a bot-blocked UI task, ~30 min). It is NOT a blocker. Out of v1.7 scope.
+Note: Non-blocker. Out of v1.8 scope.
 
 ## Performance Metrics
 
@@ -76,10 +83,6 @@ Note: Phase 17 belongs to the already-shipped v1.2 milestone. The open flag is t
 
 ## Session Continuity
 
-Last session: 2026-06-16 — v1.7 milestone close
-Stopped at: Milestone v1.7 archived
-Resume file: — (no active phase; run `/gsd-new-milestone` to start the next)
-
-## Operator Next Steps
-
-- Start the next milestone with /gsd-new-milestone
+Last session: 2026-06-17 — Roadmap v1.8 created
+Stopped at: ROADMAP.md written (Phases 40-41), REQUIREMENTS.md traceability filled
+Resume file: — (run `/gsd-plan-phase 40`)

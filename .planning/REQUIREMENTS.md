@@ -66,20 +66,20 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DSPD-01 | TBD | Pending |
-| DSPD-02 | TBD | Pending |
-| DSPD-03 | TBD | Pending |
-| DSPD-04 | TBD | Pending |
-| DSPD-05 | TBD | Pending |
-| DSPD-06 | TBD | Pending |
-| DSPD-07 | TBD | Pending |
-| REL-01 | TBD | Pending |
+| DSPD-01 | Phase 40 | Pending |
+| DSPD-02 | Phase 40 | Pending |
+| DSPD-03 | Phase 40 | Pending |
+| DSPD-04 | Phase 40 | Pending |
+| DSPD-05 | Phase 40 | Pending |
+| DSPD-06 | Phase 40 | Pending |
+| DSPD-07 | Phase 41 | Pending |
+| REL-01 | Phase 41 | Pending |
 
 **Coverage:**
 - v1.8 requirements: 8 total
-- Mapped to phases: 0 (roadmap pending)
-- Unmapped: 8 ⚠️ (filled by roadmapper)
+- Mapped to phases: 8/8
+- Unmapped: 0 ✓
 
 ---
 *Requirements defined: 2026-06-17*
-*Last updated: 2026-06-17 after initial definition (milestone v1.8 Declination Speed)*
+*Last updated: 2026-06-17 — traceability filled by roadmapper (Phases 40-41)*
