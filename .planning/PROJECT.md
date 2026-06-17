@@ -133,9 +133,23 @@ v1.7 gave the three fictitious points — Rahu (10), Ketu (11), Lilith (12) — 
 
 ### Active
 
-<!-- No active milestone. Next milestone scope defined via `/gsd-new-milestone`. -->
+<!-- Current milestone scope. Building toward these. -->
 
-_No active milestone. Ketu is considered ~feature-complete as an engine. Next scope (if any) defined via `/gsd-new-milestone`._
+## Current Milestone: v1.8 Declination Speed
+
+**Goal:** Expose declination velocity dδ/dt as a `body_decl_speed` field in `CHART_DTYPE` — the one real gap that blocks the Rahu UI from showing montant/descendant in declination without computing astronomy in the front-end.
+
+**Key insight:** Ketu *already computes* dδ/dt — `declination_velocity(jd, body)` and `is_ascending_declination(jd, body)` have existed since v1.5 (finite-difference step 0.01 d). The gap is NOT the calculation; it is that dδ/dt is **not in the structured chart** that Rahu consumes. `body_decl` (δ) is there; `body_decl_speed` (dδ/dt) is not. This milestone exposes the field, it does not reinvent the math.
+
+**Target features:**
+
+- **`body_decl_speed` field** — add `("body_decl_speed", "f8", (14,))` to `CHART_DTYPE`, populated by `compute_chart` via the vectorized `declination_velocity` path; inherited by synastry / composite / returns. Composite δ-speed **derived from the chart**, never midpoint of parents (same trap as `body_decl` in v1.5). Raw deg/day value (mirrors `body_speeds` for longitude); the ↗/↘ sense reads off the sign.
+- **Δt = 0.01 day** — reuse the existing FD step of `declination_velocity` verbatim (package-wide idiom, consistent with `lat_velocity`). Not configurable — no new API surface.
+- **Standstill threshold IN Ketu** — a tested constant (e.g. `DECL_STANDSTILL_EPS`) documented as a public contract, so Rahu invents NO astronomical threshold of its own (≈0 → neutral "—").
+- **Chart-level `is_ascending_declination` helper** — expose the montant/descendant check at the chart level (reads the field sign + standstill threshold), not only the v1.5 scalar version.
+- **MINOR-not-patch bump (1.8.0)** — the dtype layout grows (like `body_decl` in v1.5) → Kala must re-pin PyPI; dtype ratchet test updated. It is a derivative of an existing field (δ), not a new body/house/part — in the spirit of "Ketu ~complete".
+
+**Out of milestone scope (Rahu-side display decisions):** whether the panel shows the dδ/dt value or only the ↗/↘ sense, and the visual language (arrow/tint consistency with longitudinal ℞) are Rahu choices — the Ketu field gives both. Rahu never computes the derivative itself; the Ketu/Rahu boundary is non-negotiable.
 
 **Deferred (future candidates, not committed):**
 
@@ -283,4 +297,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-Last updated: 2026-06-16 — after v1.7 (Fictitious-Point Orbs) milestone. `ketu==1.7.0` shipped to PyPI (tag `v1.7.0` / `77a64eb`): orb 0°→2° on Rahu/Ketu/Lilith in `core.bodies`, surgical `(Rahu, Ketu)` + Opposition filter, synastry oracles rewritten + full regression sweep, docs en+fr, MINOR-not-patch. ORB-01..04 + REL-01 all moved to Validated. No active milestone — Ketu is ~feature-complete as an engine; the Rahu UI project (separate repo) follows. Next: `/gsd-new-milestone` if a new engine scope surfaces.
+Last updated: 2026-06-17 — milestone v1.8 (Declination Speed) started via `/gsd-new-milestone`. Scope: expose dδ/dt as a `body_decl_speed` field in `CHART_DTYPE` (the calc already exists since v1.5 as `declination_velocity`; the gap is that it is not in the structured chart Rahu consumes), Δt = 0.01 d reused verbatim, a `DECL_STANDSTILL_EPS` public-contract threshold defined IN Ketu, and a chart-level `is_ascending_declination` helper. MINOR-not-patch (1.8.0) because the dtype layout grows (Kala re-pins). Triggered by the Rahu declination panel gap ([KETU-GAPS-declination.md], decisions of 2026-06-16). Rahu computes no astronomy — the boundary is non-negotiable. Next: requirements → roadmap (phases continue from 40).

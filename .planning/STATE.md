@@ -1,17 +1,16 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.7
-milestone_name: Fictitious-Point Orbs
-status: Awaiting next milestone
-stopped_at: Milestone v1.7 archived
-last_updated: "2026-06-16"
-last_activity: 2026-06-16 — Milestone v1.7 (Fictitious-Point Orbs) completed and archived
+milestone: v1.8
+milestone_name: Declination Speed
+status: planning
+last_updated: "2026-06-17T10:08:37.494Z"
+last_activity: 2026-06-17
 progress:
-  total_phases: 2
-  completed_phases: 2
-  total_plans: 5
-  completed_plans: 5
-  percent: 100
+  total_phases: 0
+  completed_phases: 0
+  total_plans: 0
+  completed_plans: 0
+  percent: 0
 ---
 
 # Project State
@@ -25,10 +24,10 @@ See: `.planning/PROJECT.md` (updated 2026-06-16 — after v1.7 milestone)
 
 ## Current Position
 
-Phase: Milestone v1.7 complete + archived
+Phase: Not started (defining requirements)
 Plan: —
-Status: Awaiting next milestone
-Last activity: 2026-06-16 — Milestone v1.7 (Fictitious-Point Orbs) archived; `ketu==1.7.0` live on PyPI
+Status: Defining requirements
+Last activity: 2026-06-17 — Milestone v1.8 started
 
 ## Next Step
 
