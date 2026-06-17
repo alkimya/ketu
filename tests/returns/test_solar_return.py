@@ -260,6 +260,42 @@ class TestSolarReturnSystemKwarg:
             )
 
 
+# ---------------------------------------------------------------------------
+# DSPD-03: returns inherit body_decl_speed for free via compute_chart
+# ---------------------------------------------------------------------------
+
+
+class TestSolarReturnBodyDeclSpeedInherited:
+    """DSPD-03: solar_return chart carries finite non-zero body_decl_speed.
+
+    body_decl_speed is populated by compute_chart, which solar_return calls
+    internally. No extra wiring is needed — the field is inherited for free.
+    This test pins the inheritance contract so that any future refactor that
+    accidentally bypasses compute_chart is caught.
+    """
+
+    def test_body_decl_speed_finite_and_non_zero(
+        self, natal_diana: dict[str, float]
+    ) -> None:
+        """solar_return body_decl_speed is finite and not all-zero (DSPD-03).
+
+        Parameters
+        ----------
+        natal_diana : dict[str, float]
+            Session-scoped natal fixture (jd/lat/lon).
+        """
+        chart = solar_return(
+            natal_diana["jd"], natal_diana["lat"], natal_diana["lon"], 1990
+        )
+        speeds = np.asarray(chart["body_decl_speed"], dtype=np.float64)
+        assert np.all(np.isfinite(speeds)), (
+            f"solar_return body_decl_speed has non-finite values: {speeds}"
+        )
+        assert not np.all(speeds == 0.0), (
+            "solar_return body_decl_speed is all-zero — inheritance broken (DSPD-03)"
+        )
+
+
 class TestSolarReturnTargetYearTypeGuard:
     """``target_year`` MUST be int; float raises ValueError."""
 
