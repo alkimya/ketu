@@ -45,11 +45,12 @@ Examples
 """
 from __future__ import annotations
 
-from .api import compute_chart, is_day_chart
+from .api import compute_chart, is_ascending_declination_chart, is_day_chart
 from .core import CHART_DTYPE
 
 __all__ = [
     "CHART_DTYPE",
     "compute_chart",
+    "is_ascending_declination_chart",
     "is_day_chart",
 ]
