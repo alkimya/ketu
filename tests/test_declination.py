@@ -1,7 +1,8 @@
 """Unit and vectorization tests for ketu.calculations declination functions.
 
 Covers DECL-01 (scalar), DECL-02 (vectorized), DECL-04 (velocity),
-DECL-05 (montant/descendant + β-vs-δ distinction), DECL-06 (OOB).
+DECL-05 (montant/descendant + β-vs-δ distinction), DECL-06 (OOB),
+DSPD-05 (DECL_STANDSTILL_EPS constant).
 All 14 bodies (including Chiron id=13) are exercised for DECL-01.
 """
 
@@ -17,6 +18,7 @@ from ketu.calculations import (
     is_ascending,
     is_out_of_bounds,
     utc_to_julian,
+    DECL_STANDSTILL_EPS,
 )
 from ketu.ephemeris.coordinates import true_obliquity
 
@@ -300,3 +302,54 @@ class TestIsOutOfBounds:
         for body_id in range(14):
             result = is_out_of_bounds(JD_DESC, body_id)
             assert isinstance(result, bool), f"body {body_id}: expected bool, got {type(result)}"
+
+
+# ---------------------------------------------------------------------------
+# DSPD-05 — DECL_STANDSTILL_EPS public constant
+# ---------------------------------------------------------------------------
+
+# Sun exact solstice 2024-06-21 ~12:51 UTC — FD ≈ 0.000020 deg/day → neutral
+JD_SUN_SOLSTICE = 2460482.36
+
+# Jupiter mid-cycle 2025-01-15 — typical |dδ/dt| ≈ 0.005 deg/day → NOT masked
+JD_JUPITER_MID = JD_DESC  # use the existing reference JD (2025-01-15 12:00 UTC)
+
+
+class TestDeclStandstillEps:
+    """DSPD-05: DECL_STANDSTILL_EPS importable, valued 0.001, classifies correctly."""
+
+    def test_importable(self):
+        """DECL_STANDSTILL_EPS must be importable from ketu.calculations."""
+        from ketu.calculations import DECL_STANDSTILL_EPS as eps  # noqa: F401
+        assert eps is not None
+
+    def test_value(self):
+        """DECL_STANDSTILL_EPS must equal exactly 0.001 deg/day."""
+        assert DECL_STANDSTILL_EPS == 0.001
+
+    def test_in_all(self):
+        """DECL_STANDSTILL_EPS must appear in ketu.calculations.__all__."""
+        import ketu.calculations as m
+        assert "DECL_STANDSTILL_EPS" in m.__all__
+
+    def test_sun_solstice_classifies_neutral(self):
+        """Sun at exact solstice: |dδ/dt| ≈ 0.000020 < 0.001 → standstill (neutral).
+
+        JD ~2460482.36 corresponds to 2024-06-21 ~12:51 UTC (summer solstice).
+        The FD value at this date is empirically ~0.000020 deg/day, well below EPS.
+        """
+        vel = declination_velocity(JD_SUN_SOLSTICE, 0)  # body 0 = Sun
+        assert abs(vel) <= DECL_STANDSTILL_EPS, (
+            f"Sun at solstice: |dδ/dt|={abs(vel):.6f} should be ≤ EPS={DECL_STANDSTILL_EPS}"
+        )
+
+    def test_jupiter_in_motion_not_masked(self):
+        """Jupiter mid-cycle: |dδ/dt| ≈ 0.005 > 0.001 → ascending/descending (NOT standstill).
+
+        Uses JD_DESC (2025-01-15 12:00 UTC); Jupiter's typical daily δ-velocity
+        at this date is ~0.005 deg/day, which must exceed EPS so it is NOT masked.
+        """
+        vel = declination_velocity(JD_JUPITER_MID, 5)  # body 5 = Jupiter
+        assert abs(vel) > DECL_STANDSTILL_EPS, (
+            f"Jupiter mid-cycle: |dδ/dt|={abs(vel):.6f} should be > EPS={DECL_STANDSTILL_EPS}"
+        )
