@@ -5,6 +5,35 @@ All notable changes to Ketu are documented here.
 The format follows [Keep a Changelog](https://keepachangelog.com/en/1.0.0/)
 and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.8.0] - 2026-06-17
+
+### Added 1.8.0
+
+- **`body_decl_speed` field in `CHART_DTYPE`** (`float64[14]`, index 8):
+  equatorial declination velocity dδ/dt in degrees/day for all 14 bodies.
+  Positive = northward (montante), negative = southward (descendante).
+  Computed via forward finite difference at Δt = 0.01 day (the package-wide
+  FD idiom). Populated automatically by `compute_chart` and
+  `calculate_composite`. (Phase 40 — DSPD-01, DSPD-02, DSPD-03)
+
+- **`DECL_STANDSTILL_EPS = 0.001` (°/day)**: public constant exported from
+  `ketu.calculations`. Defines the threshold below which a body's declination
+  velocity is classified as a standstill (|dδ/dt| ≤ EPS → neutral).
+  Ketu owns this boundary; downstream consumers read it directly. (DSPD-05)
+
+- **`is_ascending_declination_chart(chart)` — chart-level helper**: returns
+  `int8` `{+1, 0, −1}` per body (shape `(14,)` for scalar charts, `(S, 14)`
+  for batches). `+1` = montante (dδ/dt > EPS), `−1` = descendante
+  (dδ/dt < −EPS), `0` = standstill (|dδ/dt| ≤ EPS). **Distinct from the v1.5
+  scalar `is_ascending_declination(jdate, body)` (bool, no EPS gate).** (DSPD-06)
+
+### Notes 1.8.0
+
+- **MINOR release, not a patch**: `CHART_DTYPE` byte layout grows (16 fields,
+  was 15 — `body_decl_speed` appended at index 8). Named field access
+  (`chart["body_lons"]`) is unaffected. Positional access or `.view()` on
+  `CHART_DTYPE` must adapt. See [UPGRADING.md](../../UPGRADING.md) → "v1.7 -> v1.8".
+
 ## [1.7.0] - 2026-06-15
 
 ### Changed 1.7.0

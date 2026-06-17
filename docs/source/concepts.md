@@ -314,7 +314,7 @@ Rahu↔Ketu conjunctions, Ketu↔Lilith sextiles, etc.).
 >
 > The 2° longitude orb causes aspect RESULTS to change: new node/Lilith aspects
 > now appear in the output where none existed before, and the Rahu↔Ketu
-> tautological Opposition no longer appears. Consumers such as Kala must treat
+> tautological Opposition no longer appears. Downstream consumers must treat
 > the upgrade from 1.6.x to 1.7.0 as a **deliberate, reviewed upgrade** — NOT a
 > neutral `pip install -U`. This is why the release carries version MINOR 1.7.0
 > (semver: behaviour changes) rather than a patch increment.
@@ -470,13 +470,77 @@ print(f"Moon OOB: {is_out_of_bounds(jd_standstill, 1)}")   # True
 
 ### CHART_DTYPE — body_decl field (New in v1.5)
 
-`CHART_DTYPE` gains an additive field `body_decl` (`float64[14]`) holding the equatorial declination δ for each of the 14 bodies. This is an **additive dtype change**: the body count (14) is unchanged, but downstream code using positional access or `.view()` on `CHART_DTYPE` must adapt (Kala impact documented, not auto-migrated).
+`CHART_DTYPE` gains an additive field `body_decl` (`float64[14]`) holding the equatorial declination δ for each of the 14 bodies. This is an **additive dtype change**: the body count (14) is unchanged, but downstream code using positional access or `.view()` on `CHART_DTYPE` must adapt (downstream impact documented, not auto-migrated).
 
 ```python
 from ketu.charts import compute_chart
 
 chart = compute_chart(jd, 48.8566, 2.3522)
 moon_decl = chart["body_decl"][1]   # Moon δ in degrees
+```
+
+### CHART_DTYPE — body_decl_speed field (New in v1.8)
+
+`CHART_DTYPE` gains an additive field `body_decl_speed` (`float64[14]`)
+holding the equatorial declination velocity dδ/dt (degrees/day) for each of
+the 14 bodies. The field sits at dtype index 8, after `body_decl`.
+
+**What the sign means:** positive = northward (montante in biodynamics),
+negative = southward (descendante). This mirrors `body_speeds` for ecliptic
+longitude: the sign is the direction of motion, the magnitude is the rate.
+
+**Why finite difference at Δt = 0.01 day:** Ketu computes all position
+derivatives by forward finite difference at a 0.01-day step — the same idiom
+used by `lat_velocity`, `dist_velocity_au`, and the scalar
+`declination_velocity`. The step is a package-wide constant, not configurable,
+and introduces no new API surface. The difference between two declination
+values 0.01 day apart divided by 0.01 gives dδ/dt in °/day.
+
+**Standstill contract and `DECL_STANDSTILL_EPS`:** When |dδ/dt| is very
+small, the body is at a **declination standstill** — neither clearly montante
+nor descendante. Ketu defines the threshold as
+`DECL_STANDSTILL_EPS = 0.001` °/day and exports it as a public constant.
+The chart-level helper `is_ascending_declination_chart(chart)` applies this
+threshold and returns `int8` values: `+1` (ascending), `-1` (descending),
+`0` (standstill — |dδ/dt| ≤ EPS).
+
+**Library design principle:** Ketu computes all the astronomy — the finite
+difference, the declination velocity, and the standstill threshold — and
+exposes them as plain array fields and a named constant. Downstream consumers
+read `chart["body_decl_speed"]`, compare against `DECL_STANDSTILL_EPS`, or
+call `is_ascending_declination_chart`; they compute no astronomy of their own.
+
+**Additive dtype change:** the body count (14) is unchanged. Code using named
+field access (`chart["body_decl_speed"]`) needs no migration. Positional /
+`.view()` consumers must adapt (see [UPGRADING.md](../../UPGRADING.md) →
+"v1.7 -> v1.8").
+
+```python
+from ketu.charts import compute_chart, is_ascending_declination_chart
+from ketu.calculations import DECL_STANDSTILL_EPS
+from ketu.calculations import utc_to_julian
+from datetime import datetime, timezone
+
+jd = utc_to_julian(datetime(2026, 6, 17, 12, 0, tzinfo=timezone.utc))
+chart = compute_chart(jd, lat=48.8566, lon=2.3522)
+
+# Per-body dδ/dt in °/day (positive = northward)
+speeds = chart["body_decl_speed"]
+moon_speed = float(speeds[1])   # Moon dδ/dt
+
+# Chart-level montant/descendant/standstill
+directions = is_ascending_declination_chart(chart)
+# +1 = montante, -1 = descendante, 0 = standstill (|dδ/dt| ≤ DECL_STANDSTILL_EPS)
+moon_dir = int(directions[1])
+
+print(f"Moon dδ/dt: {moon_speed:.4f} °/day")
+print(f"Standstill threshold: {DECL_STANDSTILL_EPS} °/day")
+if moon_dir == 1:
+    print("Moon montante (northward)")
+elif moon_dir == -1:
+    print("Moon descendante (southward)")
+else:
+    print("Moon at declination standstill")
 ```
 
 (declination-aspects-new-in-v1-6)=

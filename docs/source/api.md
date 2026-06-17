@@ -177,6 +177,80 @@ if is_ascending_declination(jd, 1):   # Moon montante
     print("Moon montante (northward in declination)")
 ```
 
+### `DECL_STANDSTILL_EPS` — New in v1.8
+
+```python
+from ketu.calculations import DECL_STANDSTILL_EPS   # 0.001 (°/day)
+```
+
+Public constant defining the threshold below which a body's declination
+velocity is considered a **standstill** (neither clearly montante nor
+descendante): `|dδ/dt| ≤ DECL_STANDSTILL_EPS`.
+
+- **Value:** `0.001` °/day
+- **Purpose:** `is_ascending_declination_chart` applies this threshold to
+  return `0` (neutral) instead of `+1` or `-1` when motion is negligible.
+  Downstream consumers read this constant directly — they need not define
+  their own threshold.
+- **Scope:** applies to the chart-level helper
+  `is_ascending_declination_chart`; the scalar `is_ascending_declination`
+  (v1.5) remains a simple `dδ/dt > 0` comparison with no threshold.
+
+### `is_ascending_declination_chart(chart)` — New in v1.8
+
+```python
+from ketu.charts import is_ascending_declination_chart
+```
+
+Chart-level montant / descendant / standstill classifier for all 14 bodies.
+
+**Distinct from the v1.5 scalar `is_ascending_declination(jdate, body)`:**
+
+| Function | Input | Output | Standstill |
+|---|---|---|---|
+| `is_ascending_declination(jdate, body)` | scalar jd + body id | `bool` | no (> 0 only) |
+| `is_ascending_declination_chart(chart)` | CHART_DTYPE array | `int8[14]` | yes (EPS gate) |
+
+The chart-level helper reads the pre-computed `body_decl_speed` field from
+the chart (populated by `compute_chart` at Δt = 0.01 day) and classifies each
+body against `DECL_STANDSTILL_EPS`.
+
+**Parameters:**
+- `chart` (`numpy.ndarray`): scalar or `(S,)` `CHART_DTYPE` array from
+  `compute_chart`.
+
+**Returns:** `numpy.ndarray`, dtype `int8`, shape `(14,)` for a scalar chart
+or `(S, 14)` for a batch:
+- `+1` — ascending (dδ/dt > `DECL_STANDSTILL_EPS`, montante)
+- `-1` — descending (dδ/dt < −`DECL_STANDSTILL_EPS`, descendante)
+- `0` — standstill (|dδ/dt| ≤ `DECL_STANDSTILL_EPS`)
+
+**See also:** `ketu.calculations.DECL_STANDSTILL_EPS`,
+`ketu.charts.compute_chart` (populates `body_decl_speed`).
+
+```python
+from ketu.charts import compute_chart, is_ascending_declination_chart
+from ketu.calculations import DECL_STANDSTILL_EPS, utc_to_julian
+from datetime import datetime, timezone
+
+jd = utc_to_julian(datetime(2026, 6, 17, 12, 0, tzinfo=timezone.utc))
+chart = compute_chart(jd, lat=48.8566, lon=2.3522)
+
+# Per-body direction: +1 montante, -1 descendante, 0 standstill
+directions = is_ascending_declination_chart(chart)
+
+moon_dir = int(directions[1])
+moon_speed = float(chart["body_decl_speed"][1])
+
+print(f"Moon dδ/dt: {moon_speed:.4f} °/day  (threshold: {DECL_STANDSTILL_EPS})")
+if moon_dir == 1:
+    print("Moon montante")
+elif moon_dir == -1:
+    print("Moon descendante")
+else:
+    print("Moon at declination standstill")
+```
+
 ### `is_out_of_bounds(jdate, body)` — New in v1.5
 
 Return `True` when |δ| > ε(jd) — the body's declination exceeds the instantaneous true obliquity of the ecliptic (out-of-bounds / hors limites).
@@ -562,20 +636,22 @@ from ketu.charts import compute_chart, is_day_chart, CHART_DTYPE
 NumPy dtype for a complete natal chart:
 
 ```
-jd              float64      Julian Day
-lat             float64      geographic latitude
-lon             float64      geographic longitude
-system          U16          house system
-body_lons       float64[14]  ecliptic longitudes (index 13 = Chiron)
-body_lats       float64[14]  ecliptic latitudes
-body_speeds     float64[14]  longitudinal velocities (°/day)
-cusps           float64[12]  house cusp longitudes
-asc             float64      Ascendant
-mc              float64      Midheaven
-armc            float64      ARMC
-vertex          float64      Vertex
-aspect_matrix   float64[14,14]  aspect type for each pair (-1 = none)
-aspect_orbs     float64[14,14]  orb in degrees for each pair
+jd              float64         Julian Day
+lat             float64         geographic latitude
+lon             float64         geographic longitude
+system          U16             house system
+body_lons       float64[14]     ecliptic longitudes (index 13 = Chiron)
+body_lats       float64[14]     ecliptic latitudes
+body_speeds     float64[14]     longitudinal velocities (°/day)
+body_decl       float64[14]     equatorial declination δ (°) — New in v1.5
+body_decl_speed float64[14]     declination velocity dδ/dt (°/day; +ve = northward) — New in v1.8
+cusps           float64[12]     house cusp longitudes
+asc             float64         Ascendant
+mc              float64         Midheaven
+armc            float64         ARMC
+vertex          float64         Vertex
+aspect_matrix   int8[14,14]     aspect type for each pair (-1 = none)
+aspect_orbs     float32[14,14]  orb in degrees for each pair
 ```
 
 ### `compute_chart(jd, lat, lon, system="placidus", aspects=None, polar_fallback="raise")`
