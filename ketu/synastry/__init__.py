@@ -44,7 +44,7 @@ the same loud invariant as the rest of Ketu.
 
 The body axis is 16 (14 canonical bodies + ASC + MC). D-08 (v1.3) moved the
 canonical body axis 13->14 when Chiron was added, widening this count 15->16;
-the prior 13-body freeze is intentionally broken (Kala adapts to Ketu).
+the prior 13-body freeze is intentionally broken (downstream consumers adapt to Ketu).
 """
 from __future__ import annotations
 

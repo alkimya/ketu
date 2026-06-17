@@ -7,8 +7,8 @@ for the requested house system).
 
 The dtype is a structured ``numpy.dtype`` with 9 fields including a
 12-element subarray field ``cusps``. This matches the v1.1 milestone
-contract HOU-05: a single dtype that downstream consumers (Kala) can
-index positionally for ML pipelines.
+contract HOU-05: a single dtype that downstream consumers can index
+positionally for ML pipelines.
 
 The exception is a :class:`ValueError` subclass so callers can catch
 ``ValueError`` generically when the distinction between "bad input" and

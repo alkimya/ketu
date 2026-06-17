@@ -18,7 +18,7 @@ reasoning mirrors the Phase 14 precedent locked in
 ``ketu/charts/core.py`` (D-01, D-08) and the v1.0 ``CYCLE_DTYPE``
 precedent:
 
-1. **ML-interop, NumPy-first.** Kala (the downstream ML consumer) indexes
+1. **ML-interop, NumPy-first.** The downstream ML consumer indexes
    inter-chart aspects positionally — ``rec["body_a"]``, ``rec["body_b"]``,
    ``rec["orb"]``. The body axis order is FROZEN by the same D-08 contract
    that pins ``CHART_DTYPE``; synastry indices 0..12 reuse
@@ -43,7 +43,7 @@ Why 8 fields, not 5 or 12?
 
 The ROADMAP success criterion #1 mandates 5 fields (``body_a, body_b,
 aspect_type, orb, applying``). We extend to 8 to make rows
-**auto-sufficient** — a downstream consumer (a Kala feature pipeline, a
+**auto-sufficient** — a downstream consumer (a downstream feature pipeline, a
 JSON dump, a UI table) needs the longitudes ``lon_a`` and ``lon_b`` to
 render the aspect glyph at the correct degree, and the ``orb_limit``
 that was applied to decide the row was orbed. Without those 3 metadata
@@ -102,7 +102,7 @@ SYNASTRY_BODY_COUNT: int = 16
 #:
 #: D-08 (v1.3) moved the canonical body axis 13->14 (Chiron added as body
 #: 13), widening this synastry axis 15->16. The prior 13-body freeze is
-#: intentionally broken (Kala adapts to Ketu).
+#: intentionally broken (downstream consumers adapt to Ketu).
 SYNASTRY_DTYPE: np.dtype = np.dtype([
     ("body_a",      "i1"),
     ("body_b",      "i1"),

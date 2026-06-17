@@ -17,9 +17,9 @@ structured dtype rather than a Python ``@dataclass`` or a flat
 ``dict[str, np.ndarray]``. Four reasons drove the choice (Phase 14
 Option A, locked in PROJECT.md and CONTEXT.md D-01):
 
-1. **ML-interop, NumPy-first.** Kala (the downstream ML consumer) indexes
-   each chart positionally — ``chart["body_lons"][i]`` for body ``i`` of
-   the canonical 13-body axis. The axis order is FROZEN by D-08 so that
+1. **ML-interop, NumPy-first.** The downstream ML consumer indexes each
+   chart positionally — ``chart["body_lons"][i]`` for body ``i`` of the
+   canonical 13-body axis. The axis order is FROZEN by D-08 so that
    adapters never need to rebuild mappings.
 2. **Batchability.** A single ``np.empty(S, dtype=CHART_DTYPE)`` allocation
    carries S charts as one contiguous buffer. Compared to S Python
@@ -94,13 +94,13 @@ import numpy as np
 #:     13=Chiron.
 #:
 #: Axis extended to 14 by the v1.3 D-08 ratchet (Chiron added). This is
-#: a breaking change for downstream consumers (Kala) indexing by position.
+#: a breaking change for downstream consumers indexing by position.
 #: The ``body_decl`` field was appended additively by v1.5 (lunar
 #: declination). The ``body_decl_speed`` field was appended additively by
 #: v1.8 (dδ/dt, deg/day; DSPD-01, DSPD-04). The body COUNT stays 14;
 #: each addition is a dtype-version bump (new field), not an axis change.
-#: Downstream positional-offset / ``.view()`` consumers (Kala) must adapt
-#: after each dtype bump — documented, not fixed here.
+#: Downstream positional-offset / ``.view()`` consumers must adapt after
+#: each dtype bump — documented, not fixed here.
 CHART_DTYPE: np.dtype = np.dtype([
     ("jd",              "f8"),
     ("lat",             "f8"),

@@ -165,7 +165,7 @@ def _detect_aspects_for_date(
             for i, idx in enumerate(np.where(in_orb)[0]):
                 pair = (body1_ids[idx], body2_ids[idx])
                 if pair not in matched_pairs:
-                    # Emit canonical i_asp (NOT k) to preserve Kala contract.
+                    # Emit canonical i_asp (NOT k) to preserve the downstream contract.
                     # Suppress the tautological intra-chart Rahu↔Ketu Opposition.
                     # The pair is still added to matched_pairs so no later aspect re-emits
                     # for it (first-match-wins contract: Opposition is i_asp 13, the last
@@ -296,8 +296,8 @@ def calculate_aspects(
     -----
     The ``i_asp`` field in the returned structured array is the canonical
     index into ``ketu.core.aspects`` (0-13), not a position within the
-    selected subset. Downstream consumers (e.g. Kala) rely on this
-    positional contract. Dynamic rows carry ``i_asp = -2``.
+    selected subset. Downstream consumers rely on this positional contract.
+    Dynamic rows carry ``i_asp = -2``.
 
     Examples
     --------
@@ -420,8 +420,8 @@ def calculate_aspects_vectorized(
     -----
     The ``i_asp`` field in the returned structured array is the canonical
     index into ``ketu.core.aspects`` (0-13), not a position within the
-    selected subset. Downstream consumers (e.g. Kala) rely on this
-    positional contract. Dynamic rows carry ``i_asp = -2``.
+    selected subset. Downstream consumers rely on this positional contract.
+    Dynamic rows carry ``i_asp = -2``.
     """
     # Resolve aspect-set ONCE per API call (above the per-pair / per-aspect
     # work). The resolved mask, selected indices, and parallel angle/coef
@@ -457,7 +457,7 @@ def calculate_aspects_vectorized(
 
     # Pre-compute per-pair orb sums once (independent of aspect type), then
     # scale by each aspect's coefficient. ``i_asp`` is the canonical 0-13 index
-    # emitted to results — Kala's positional contract.
+    # emitted to results — the downstream positional contract.
     pair_orb_sums = (l_bodies["orb"][i_indices] + l_bodies["orb"][j_indices]) / 2
     static_iasp = [int(v) for v in selected_indices]
     static_angles = [float(v) for v in selected_angles]
@@ -533,8 +533,8 @@ def calculate_aspects_batch(
     -----
     The ``i_asp`` field in the returned structured arrays is the canonical
     index into ``ketu.core.aspects`` (0-13), not a position within the
-    selected subset. Downstream consumers (e.g. Kala) rely on this
-    positional contract. Dynamic rows carry ``i_asp = -2``.
+    selected subset. Downstream consumers rely on this positional contract.
+    Dynamic rows carry ``i_asp = -2``.
     """
     from ketu.ephemeris.planets import calc_planet_position_batch
 
