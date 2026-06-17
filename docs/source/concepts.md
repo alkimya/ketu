@@ -512,7 +512,7 @@ call `is_ascending_declination_chart`; they compute no astronomy of their own.
 
 **Additive dtype change:** the body count (14) is unchanged. Code using named
 field access (`chart["body_decl_speed"]`) needs no migration. Positional /
-`.view()` consumers must adapt (see [UPGRADING.md](../../UPGRADING.md) →
+`.view()` consumers must adapt (see `UPGRADING.md` at the repository root →
 "v1.7 -> v1.8").
 
 ```python

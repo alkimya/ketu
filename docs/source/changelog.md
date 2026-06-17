@@ -32,7 +32,7 @@ and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **MINOR release, not a patch**: `CHART_DTYPE` byte layout grows (16 fields,
   was 15 — `body_decl_speed` appended at index 8). Named field access
   (`chart["body_lons"]`) is unaffected. Positional access or `.view()` on
-  `CHART_DTYPE` must adapt. See [UPGRADING.md](../../UPGRADING.md) → "v1.7 -> v1.8".
+  `CHART_DTYPE` must adapt. See `UPGRADING.md` (repository root) → "v1.7 -> v1.8".
 
 ## [1.7.0] - 2026-06-15
 
