@@ -129,30 +129,37 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
 ## Phase Details
 
 ### Phase 40: Declination Speed Field & Chart API
+
 **Goal**: `CHART_DTYPE` carries `body_decl_speed` (dδ/dt, deg/day) for all 14 bodies, inherited across the full chart family, with a public standstill threshold and a chart-level ascending-declination helper that Rahu can consume without computing any astronomy
 **Depends on**: Phase 39 (v1.7 shipped green base)
 **Requirements**: DSPD-01, DSPD-02, DSPD-03, DSPD-04, DSPD-05, DSPD-06
 **Success Criteria** (what must be TRUE):
+
   1. `np.dtype(CHART_DTYPE).names` includes `body_decl_speed`; a chart computed by `compute_chart` has the field populated with non-zero finite float64 values (verified against `declination_velocity(jd, body)` scalar — Δ = 0 or documented FD tolerance)
   2. `compute_chart` over an array `jd` produces a `body_decl_speed` array with the correct shape `(N, 14)`, using Δt = 0.01 day verbatim (no new parameter, no new API surface)
   3. Synastry, composite, and returns all inherit `body_decl_speed`; composite speed is computed from the composite chart directly (a test pins that it differs from the naïve parent-midpoint value)
   4. The dtype ratchet test is updated and passes: the old layout fingerprint is replaced by the new one (the break is intentional and documented with Kala positional-access impact)
   5. `DECL_STANDSTILL_EPS` is importable from `ketu.calculations` (or the appropriate public namespace), its value is tested, and `|dδ/dt| ≤ DECL_STANDSTILL_EPS` classifies a body as in standstill
   6. A chart-level `is_ascending_declination(chart)` helper returns ascending / descending / neutral (standstill) per body using the `body_decl_speed` field and `DECL_STANDSTILL_EPS`; its output is consistent with the existing v1.5 scalar for matching inputs; 100% coverage maintained
+
 **Plans**: 3 plans, 3 waves
-- [ ] 40-01-PLAN.md — Foundation: append `body_decl_speed` to `CHART_DTYPE`, define `DECL_STANDSTILL_EPS = 0.001`, re-pin the dtype ratchet (Wave 1) — DSPD-01/04/05
+
+- [x] 40-01-PLAN.md — Foundation: append `body_decl_speed` to `CHART_DTYPE`, define `DECL_STANDSTILL_EPS = 0.001`, re-pin the dtype ratchet (Wave 1) — DSPD-01/04/05
 - [ ] 40-02-PLAN.md — Natal: populate `body_decl_speed` in `compute_chart` (vectorised FD, Δ=0 vs scalar) + `is_ascending_declination_chart` helper + returns inheritance (Wave 2) — DSPD-01/02/03/06
 - [ ] 40-03-PLAN.md — Composite: derive `body_decl_speed` from the composite's own frozen λ,β (D-01, anti-averaging ratchet) + synastry inheritance pinning (Wave 3 — depends on 40-02 so parent charts carry the field) — DSPD-03
 
 ### Phase 41: Documentation + Release v1.8.0
+
 **Goal**: The `body_decl_speed` field, the 0.01 d FD step, `DECL_STANDSTILL_EPS`, the chart-level helper, and the Ketu/Rahu boundary are fully documented in English and French, the version is bumped to 1.8.0, and `ketu==1.8.0` is live on PyPI
 **Depends on**: Phase 40
 **Requirements**: DSPD-07, REL-01
 **Success Criteria** (what must be TRUE):
+
   1. `docs/source/api.md` and `docs/source/concepts.md` (en + fr) document `body_decl_speed`, `DECL_STANDSTILL_EPS`, the chart-level `is_ascending_declination` helper, the 0.01 d step rationale, and the explicit statement that Rahu computes no threshold of its own; FR `.mo` files recompiled (no English fallback in the French build)
   2. `CHANGELOG.md` has a dated `[1.8.0]` entry (EN + FR) documenting the new field and the MINOR-not-patch rationale; `UPGRADING.md` gives explicit Kala re-pin guidance (dtype layout grows, positional/`.view()` users must adapt)
   3. `ketu==1.8.0` is live on PyPI via OIDC trusted publishing (push main + tag); the human go/no-go relecture-validation gate is honoured before the irreversible publish
   4. Post-publish fresh-venv smoke FROM PyPI confirms: `body_decl_speed` present in `CHART_DTYPE`, field populated with non-trivial values for a test chart, `DECL_STANDSTILL_EPS` importable, no `pyswisseph` at runtime
+
 **Plans**: TBD
 
 ## Progress
@@ -195,7 +202,7 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
 | 37. Documentation + Release v1.6.0               | v1.6      | 3/3            | ✓ Complete  | 2026-06-04 |
 | 38. Fictitious-Point Orbs Engine                  | v1.7      | 2/2            | ✓ Complete  | 2026-06-15 |
 | 39. Documentation + Release v1.7.0                | v1.7      | 3/3            | ✓ Complete  | 2026-06-15 |
-| 40. Declination Speed Field & Chart API           | v1.8      | 0/3            | Planned     | -          |
+| 40. Declination Speed Field & Chart API           | v1.8      | 1/3 | In Progress|  |
 | 41. Documentation + Release v1.8.0               | v1.8      | 0/TBD          | Not started | -          |
 
 ---
