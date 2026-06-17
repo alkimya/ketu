@@ -298,3 +298,80 @@ def test_compute_chart_emits_no_runtime_warning() -> None:
         warnings.filterwarnings("error", category=RuntimeWarning)
         chart = compute_chart(2451545.0, 48.8566, 2.3522)
     assert np.all(np.isfinite(chart["body_lons"])), chart["body_lons"]
+
+
+# ---------------------------------------------------------------------------
+# DSPD-01 / DSPD-02: body_decl_speed field (forward FD at Δt=0.01)
+# ---------------------------------------------------------------------------
+
+
+class TestBodyDeclSpeed:
+    """DSPD-01/02: body_decl_speed is populated, finite, non-zero, and
+    equals the scalar declination_velocity exactly (Δ == 0).
+
+    Test 1 (DSPD-01): field present + non-zero anti-zero-fill ratchet.
+    Test 2 (DSPD-02): vectorised chart value equals scalar declination_velocity
+        exactly (Δ must be 0.0 — both paths use the identical δ chain at Δt=0.01).
+    Test 3 (DSPD-01): vectorised shape S+(14,) over an array of N jd values.
+    Test 4: all values are finite (no NaN/inf after the FD pass).
+    """
+
+    # Known JD (2025-01-15T12:00Z) and Moon body index.
+    _JD = 2460690.0  # 2025-01-15T12:00 UT
+    _LAT = 48.8566
+    _LON = 2.3522
+
+    def test_body_decl_speed_present_and_not_all_zero(self) -> None:
+        """DSPD-01: body_decl_speed field is non-zero (anti zero-fill ratchet)."""
+        from ketu.charts import CHART_DTYPE
+
+        chart = compute_chart(self._JD, self._LAT, self._LON)
+        assert "body_decl_speed" in CHART_DTYPE.names, (
+            "body_decl_speed must be a field of CHART_DTYPE"
+        )
+        speeds = np.asarray(chart["body_decl_speed"], dtype=np.float64)
+        assert not np.all(speeds == 0.0), (
+            "body_decl_speed must not be all-zero (zero-fill trap ratchet; DSPD-01)"
+        )
+
+    def test_body_decl_speed_matches_scalar_declination_velocity_exactly(
+        self,
+    ) -> None:
+        """DSPD-02: chart body_decl_speed equals scalar declination_velocity(jd, body).
+
+        Both paths use the identical δ chain at Δt=0.01; the difference must be
+        exactly 0.0 (not approximate — Δ == 0 is the DSPD-02 success criterion).
+        """
+        from ketu.calculations import declination_velocity
+
+        # Use Moon (body_id=1) as a fast-moving test body.
+        body_id = 1  # Moon
+        chart = compute_chart(self._JD, self._LAT, self._LON)
+        chart_speed = float(chart["body_decl_speed"][body_id])
+        scalar_speed = declination_velocity(self._JD, body_id)
+        delta = chart_speed - scalar_speed
+        assert delta == 0.0, (
+            f"body_decl_speed[{body_id}] ({chart_speed}) != "
+            f"declination_velocity({self._JD}, {body_id}) ({scalar_speed}); "
+            f"Δ = {delta} (must be exactly 0.0 per DSPD-02)"
+        )
+
+    def test_body_decl_speed_vectorised_shape(self) -> None:
+        """DSPD-01: vectorised chart over N jd values gives body_decl_speed.shape (N, 14)."""
+        n = 5
+        jd_arr = np.linspace(self._JD, self._JD + 10, n)
+        lat_arr = np.full(n, self._LAT)
+        lon_arr = np.full(n, self._LON)
+        chart = compute_chart(jd_arr, lat_arr, lon_arr)
+        speeds = np.asarray(chart["body_decl_speed"])
+        assert speeds.shape == (n, 14), (
+            f"Expected shape ({n}, 14) for vectorised body_decl_speed; got {speeds.shape}"
+        )
+
+    def test_body_decl_speed_all_finite(self) -> None:
+        """All 14 body_decl_speed values are finite (no NaN or inf after FD pass)."""
+        chart = compute_chart(self._JD, self._LAT, self._LON)
+        speeds = np.asarray(chart["body_decl_speed"], dtype=np.float64)
+        assert np.all(np.isfinite(speeds)), (
+            f"body_decl_speed contains non-finite values: {speeds}"
+        )
