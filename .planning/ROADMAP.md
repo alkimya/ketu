@@ -123,7 +123,7 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
 
 **Milestone Goal:** Expose dδ/dt as `body_decl_speed` in `CHART_DTYPE` — the gap that blocks the Rahu UI from showing montant/descendant in declination without computing astronomy in the front-end. The calculation already exists since v1.5 (`declination_velocity`); this milestone exposes the field, defines the `DECL_STANDSTILL_EPS` public contract, and ships the chart-level helper.
 
-- [ ] **Phase 40: Declination Speed Field & Chart API** — Add `body_decl_speed` to `CHART_DTYPE`, populate via `compute_chart`, inherit by synastry/composite/returns, re-pin dtype ratchet, define `DECL_STANDSTILL_EPS`, expose chart-level helper
+- [x] **Phase 40: Declination Speed Field & Chart API** — Add `body_decl_speed` to `CHART_DTYPE`, populate via `compute_chart`, inherit by synastry/composite/returns, re-pin dtype ratchet, define `DECL_STANDSTILL_EPS`, expose chart-level helper (completed 2026-06-17)
 - [ ] **Phase 41: Documentation + Release v1.8.0** — Docs en+fr for the field, step, threshold, and helper; MINOR bump + UPGRADING Kala re-pin guidance; human go/no-go; PyPI publish
 
 ## Phase Details
@@ -146,7 +146,7 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
 
 - [x] 40-01-PLAN.md — Foundation: append `body_decl_speed` to `CHART_DTYPE`, define `DECL_STANDSTILL_EPS = 0.001`, re-pin the dtype ratchet (Wave 1) — DSPD-01/04/05
 - [x] 40-02-PLAN.md — Natal: populate `body_decl_speed` in `compute_chart` (vectorised FD, Δ=0 vs scalar) + `is_ascending_declination_chart` helper + returns inheritance (Wave 2) — DSPD-01/02/03/06
-- [ ] 40-03-PLAN.md — Composite: derive `body_decl_speed` from the composite's own frozen λ,β (D-01, anti-averaging ratchet) + synastry inheritance pinning (Wave 3 — depends on 40-02 so parent charts carry the field) — DSPD-03
+- [x] 40-03-PLAN.md — Composite: derive `body_decl_speed` from the composite's own frozen λ,β (D-01, anti-averaging ratchet) + synastry inheritance pinning (Wave 3 — depends on 40-02 so parent charts carry the field) — DSPD-03
 
 ### Phase 41: Documentation + Release v1.8.0
 
@@ -202,7 +202,7 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
 | 37. Documentation + Release v1.6.0               | v1.6      | 3/3            | ✓ Complete  | 2026-06-04 |
 | 38. Fictitious-Point Orbs Engine                  | v1.7      | 2/2            | ✓ Complete  | 2026-06-15 |
 | 39. Documentation + Release v1.7.0                | v1.7      | 3/3            | ✓ Complete  | 2026-06-15 |
-| 40. Declination Speed Field & Chart API           | v1.8      | 2/3 | In Progress|  |
+| 40. Declination Speed Field & Chart API           | v1.8      | 3/3 | Complete   | 2026-06-17 |
 | 41. Documentation + Release v1.8.0               | v1.8      | 0/TBD          | Not started | -          |
 
 ---
