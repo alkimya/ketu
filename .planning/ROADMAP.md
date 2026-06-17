@@ -163,7 +163,7 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
 **Plans**: 3 plans, 3 waves
 
 - [x] 41-01-PLAN.md — EN docs for the v1.8 surface (body_decl_speed / DECL_STANDSTILL_EPS / is_ascending_declination_chart) + full name-clean sweep of source docstrings + EN changelogs/UPGRADING + re-run all quality gates (Wave 1) — DSPD-07
-- [ ] 41-02-PLAN.md — FR translations of the v1.8 strings + name-clean of FR catalogs + recompile .mo + EN/FR docs build at the 1-warning baseline (Wave 2) — DSPD-07
+- [x] 41-02-PLAN.md — FR translations of the v1.8 strings + name-clean of FR catalogs + recompile .mo + EN/FR docs build at the 1-warning baseline (Wave 2) — DSPD-07
 - [ ] 41-03-PLAN.md — Bump 1.8.0 (three files) + human go/no-go gate + push main+tag (OIDC publish) + post-publish fresh-venv smoke (Wave 3) — REL-01
 
 ## Progress
@@ -207,7 +207,7 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
 | 38. Fictitious-Point Orbs Engine                  | v1.7      | 2/2            | ✓ Complete  | 2026-06-15 |
 | 39. Documentation + Release v1.7.0                | v1.7      | 3/3            | ✓ Complete  | 2026-06-15 |
 | 40. Declination Speed Field & Chart API           | v1.8      | 3/3 | Complete    | 2026-06-17 |
-| 41. Documentation + Release v1.8.0               | v1.8      | 1/3 | In Progress|  |
+| 41. Documentation + Release v1.8.0               | v1.8      | 2/3 | In Progress|  |
 
 ---
 
