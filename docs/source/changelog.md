@@ -25,7 +25,7 @@ and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 - **BREAKING RESULTS — MINOR release, not a patch**: aspect detection results change
   for all consumers. Node/Lilith aspects that were previously invisible (orb 0 → inside
   2°) now appear. This is a deliberate, reviewed behaviour change shipped as a MINOR
-  version per Semantic Versioning. Downstream code (Kala and any oracle/snapshot that
+  version per Semantic Versioning. Downstream code (any oracle/snapshot that
   enumerates node or Lilith aspects) **must treat the upgrade as deliberate** — do not
   `pip install -U` as a neutral patch.
 - **`CHART_DTYPE` and `core.aspects` are byte-identical**: no dtype ratchet break.
@@ -90,7 +90,7 @@ and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 ### Notes 1.5.0
 
 - **`is_ascending` (β) unchanged**: the existing ecliptic-latitude-based `is_ascending` is byte-for-byte identical to v1.4. The new `is_ascending_declination` is an independent, parallel helper.
-- **Kala impact (additive, not breaking for named access)**: `CHART_DTYPE` gains `body_decl` as an additive field. Code using named field access (`chart["body_lons"]`) is unaffected. Code using positional access or `.view()` on the raw dtype must adapt. The node-speed fix changes `core.bodies['speed'][10]` / `[11]`.
+- **Downstream impact (additive, not breaking for named access)**: `CHART_DTYPE` gains `body_decl` as an additive field. Code using named field access (`chart["body_lons"]`) is unaffected. Code using positional access or `.view()` on the raw dtype must adapt. The node-speed fix changes `core.bodies['speed'][10]` / `[11]`.
 
 ## [1.4.0] - 2026-06-03
 

@@ -3,6 +3,68 @@
 This guide collects migration notes between Ketu releases. Sections are
 ordered newest-first.
 
+## v1.7 -> v1.8
+
+### CHART_DTYPE gains body_decl_speed — additive dtype change
+
+In v1.8.0, `CHART_DTYPE` gains a new `body_decl_speed` field (`float64[14]`)
+holding the equatorial declination velocity dδ/dt (in degrees/day) for all 14
+bodies. This is a **purely additive** change: no existing field is removed or
+reordered.
+
+**What changes:**
+
+- `compute_chart` populates `body_decl_speed` automatically via a forward
+  finite-difference step of Δt = 0.01 day — no call-site changes needed.
+- **Named field access is UNAFFECTED**: `chart["body_lons"]`, `chart["body_decl"]`,
+  `chart["body_decl_speed"]`, etc. work without modification.
+- **Positional access and `.view()` MUST adapt**: the byte layout has changed
+  (new field appended at index 8, after `body_decl`). Any code that indexes the
+  dtype positionally or calls `.view()` on the raw dtype must account for the
+  expanded layout (now 16 fields, was 15).
+
+**Why MINOR, not PATCH:** the byte layout of `CHART_DTYPE` grows with a new
+field — named-field access is safe, but positional / `.view()` consumers are
+affected. This is an intentional, reviewed dtype bump shipped as a MINOR version
+per Semantic Versioning.
+
+**Migration checklist:**
+
+- Named field access (`chart["body_lons"]`) needs no change.
+- Positional / `.view()` consumers must account for the new field at index 8.
+- Re-pin the `ketu` version in your project after upgrading.
+
+```python
+# Verify body_decl_speed is present and has the correct shape:
+from ketu.charts import compute_chart
+from ketu.calculations import utc_to_julian
+from datetime import datetime, timezone
+
+jd = utc_to_julian(datetime(2026, 6, 17, 12, 0, tzinfo=timezone.utc))
+chart = compute_chart(jd, lat=48.85, lon=2.35)
+assert chart["body_decl_speed"].shape == (14,), (
+    f"Expected (14,), got {chart['body_decl_speed'].shape}"
+)
+```
+
+### New API surface — additive, no migration needed
+
+```python
+# Declination velocity dδ/dt for all 14 bodies (deg/day, +ve = northward)
+speeds = chart["body_decl_speed"]   # shape (14,), float64
+
+# Chart-level montant/descendant helper — int8 {+1, 0, -1} per body
+# DISTINCT from the v1.5 scalar is_ascending_declination(jdate, body)
+from ketu.charts import is_ascending_declination_chart
+directions = is_ascending_declination_chart(chart)  # shape (14,), int8
+# +1 = ascending (montant), -1 = descending (descendant), 0 = standstill
+
+# Standstill threshold (public constant, lives in Ketu)
+from ketu.calculations import DECL_STANDSTILL_EPS   # 0.001 deg/day
+```
+
+---
+
 ## v1.6 -> v1.7
 
 v1.7 **changes aspect detection results** — this is not additive. Node/Lilith aspects
@@ -39,7 +101,7 @@ All other Rahu/Ketu aspects (Conjunction, Trine, Square, etc.) are detected norm
 byte-identical to v1.6. Only detection **results** change — the dtype fingerprint is
 the same.
 
-### Kala guidance
+### Downstream guidance
 
 **`pip install -U ketu` to 1.7.0 is NOT a neutral upgrade for node calculations.**
 
@@ -85,7 +147,7 @@ The detector consumes the v1.5 `body_decl` field (shape `(14,)`);
 `CHART_DTYPE` sha256 fingerprint needs **NO change** for v1.6 (contrast v1.4 → v1.5,
 which DID change the dtype). The frozen 14-row `core.aspects` table is byte-identical.
 
-### Kala guidance
+### Downstream guidance (v1.6)
 
 No migration required; the new detector is opt-in. Compose `is_out_of_bounds`
 (v1.5) with the aspect output if "both OOB" annotation is desired (interpretive,
@@ -112,7 +174,7 @@ no existing field is removed or reordered.
   (`chart[..., N]`) or calls `.view()` on the raw dtype must account for the
   expanded layout.
 
-**Kala guidance:**
+**Downstream guidance:**
 
 - Update `CHART_DTYPE` definitions to include `body_decl`.
 - Named field access (`chart["body_lons"]`) needs no change.
@@ -216,7 +278,7 @@ Any downstream code that assumed zero Chiron aspects must be updated.
 **CHART_DTYPE body axis:** Unchanged from v1.3 — still 14 bodies / indices 0–13. Only
 the orb scalar for body_id=13 changed from 0° to 4°.
 
-**Kala / downstream guidance:** After upgrading, body_id=13 (Chiron) aspect tallies
+**Downstream guidance:** After upgrading, body_id=13 (Chiron) aspect tallies
 will be non-empty. Recompute cached charts and synastry results after upgrade.
 
 ```python
@@ -316,7 +378,7 @@ In v1.3.0, Chiron is the 14th celestial body at positional index 13.
 | `body_speeds` | `(13,)` | `(14,)` |
 | `aspects` | `(13, 13)` | `(14, 14)` |
 
-#### Kala / downstream consumers
+#### Downstream consumers
 
 Any code that hardcoded the body count as 13 or accessed body arrays by
 fixed numeric index beyond 12 must be updated. Cached `CHART_DTYPE` arrays
@@ -337,7 +399,7 @@ No `pyswisseph` installation is required. Chiron longitudes are evaluated
 from the embedded `ketu/data/chiron_coeffs.npz` Chebyshev coefficient file
 (289.7 KB, seg=32d/deg=10). Max |Δλ| = 0.005695° over 1950–2050.
 
-#### Kala synastry body axis
+#### Synastry body axis
 
 The synastry cross-product body axis expands from 15 → 16 bodies
 (Sun, Moon, Mercury, Venus, Mars, Jupiter, Saturn, Uranus, Neptune, Pluto,
@@ -426,14 +488,14 @@ The orb-coefficient field in `core.aspects` is named `coef` in the NumPy dtype a
 always been named `coef`. API documentation refers to it as `coefficient` conceptually.
 The field was NOT renamed in v1.3 — access it as `core.aspects["coef"]`.
 
-#### Kala / downstream adapters
+#### Downstream adapters
 
 If you pass `aspects=` **explicitly** in your Ketu calls, you are **unaffected** — the
 explicit argument always takes precedence over the default.
 
 If you rely on the **implicit default** (no `aspects=` argument), you now receive 7
-aspects instead of 5. Kala adapts to the new default post-release; this is not a release
-blocker. Update calls that depend on a specific aspect count:
+aspects instead of 5. Downstream consumers adapt to the new default post-release; this
+is not a release blocker. Update calls that depend on a specific aspect count:
 
 ```python
 # If you previously relied on implicit default = 5:
@@ -633,7 +695,7 @@ apogee, ML feature columns including Lilith longitude or its
 derivatives, aspect-window catalogues for Lilith, natal/transit
 charts) for downstream consumption, regenerate them with v1.1.
 
-**Downstream consumers (Kala, etc.):** Lilith body index `12` is
+**Downstream consumers:** Lilith body index `12` is
 unchanged. Positional arrays remain length-14 (no schema break). Only
 the longitude returned for a given JD shifts by approximately 180 deg.
 Any pipeline that re-runs Ketu calls is automatically migrated;
@@ -693,13 +755,13 @@ from ketu.aspects.presets import EXTENDED
 result = calculate_aspects(jd, bodies, aspects=EXTENDED)  # 14 aspects
 ```
 
-### Kala / Downstream Adapter Migration (Phase 9 / ASP-04)
+### Downstream Adapter Migration (Phase 9 / ASP-04)
 
 If you maintain a downstream adapter that consumes Ketu's aspect
-output (Kala's `KetuDataAdapter`, custom scripts, ML feature
-pipelines), check whether your code depends on the **count** of
-aspect rows or on a specific *named* aspect (quincunx, semisextile,
-etc.) that only EXTENDED includes.
+output (custom scripts, ML feature pipelines, downstream adapters),
+check whether your code depends on the **count** of aspect rows or on
+a specific *named* aspect (quincunx, semisextile, etc.) that only
+EXTENDED includes.
 
 In v1.0, downstream consumers received EXTENDED implicitly. In v1.1,
 they receive CLASSICAL by default — silently losing 9 rows per body
@@ -715,15 +777,15 @@ from ketu.aspects import calculate_aspects_batch
 aspects = calculate_aspects_batch(jds, bodies, aspects=EXTENDED)
 ```
 
-The `core.aspects` array remains length-14 and append-only (Kala
+The `core.aspects` array remains length-14 and append-only (downstream
 positional indexing unaffected). Cache keys include the aspect-set
 configuration hash, so explicit `aspects=EXTENDED` produces a fresh
 cache entry rather than serving stale CLASSICAL data.
 
 > **Note:** This guidance is for *downstream maintainers* of adapters
 > that depend on Ketu's CLI or Python API. It does not require any
-> change inside `ketu` itself. Sibling project Kala (separate
-> repository) handles its own upgrade independently.
+> change inside `ketu` itself. Downstream consumers handle their own
+> upgrade independently.
 
 ### Houses Module (Phase 10 / HOU-10)
 

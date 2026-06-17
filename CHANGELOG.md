@@ -27,7 +27,7 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - **BREAKING RESULTS — MINOR release, not a patch**: aspect detection results change
   for all consumers. Node/Lilith aspects that were previously invisible (orb 0 → inside
   2°) now appear. This is a deliberate, reviewed behaviour change shipped as a MINOR
-  version per Semantic Versioning. Downstream code (Kala and any oracle/snapshot that
+  version per Semantic Versioning. Downstream code (any oracle/snapshot that
   enumerates node or Lilith aspects) **must treat the upgrade as deliberate** — do not
   `pip install -U` as a neutral patch.
 - **`CHART_DTYPE` and `core.aspects` are byte-identical**: no dtype ratchet break.
@@ -122,7 +122,7 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - **`is_ascending` (β) unchanged**: the existing ecliptic-latitude-based `is_ascending`
   is byte-for-byte identical to v1.4. The new `is_ascending_declination` is an
   independent, parallel helper.
-- **Kala impact (additive, not breaking for named access)**: `CHART_DTYPE` gains
+- **Downstream impact (additive, not breaking for named access)**: `CHART_DTYPE` gains
   `body_decl` as an additive field. Code using named field access (`chart["body_lons"]`)
   is unaffected. Code using positional access or `.view()` on the raw dtype must adapt.
   The node-speed fix changes `core.bodies['speed'][10]` / `[11]`; downstream code reading
@@ -198,7 +198,7 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 
 ### Changed
 
-- **BREAKING (Kala / downstream positional contract):** `CHART_DTYPE` body
+- **BREAKING (downstream positional contract):** `CHART_DTYPE` body
   arrays expanded from shape (13,) → (14,) and aspects from (13,13) → (14,14).
   Positional index 13 is Chiron. Any code that hardcoded the body count as 13
   or addressed body arrays by fixed numeric index beyond 12 must be updated.
@@ -234,7 +234,7 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   (0deg) and opposition (180deg) are unchanged. This aligns the cycle module
   with `ketu.complex.CycleRatio`, which already used the correct convention.
   Downstream consumers that read `angular_separation` / `cycle_progress` /
-  `cycle_phase` (e.g. Kala) must adjust: values are now `360 - old` away from
+  `cycle_phase`) must adjust: values are now `360 - old` away from
   the conjunction except at 0deg/180deg.
 
 ### Fixed
@@ -418,7 +418,7 @@ format and adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
   `U16` pour accommoder `"regiomontanus"` (13 chars) sans troncature.
   **Non-breaking** : NumPy cast U10⇄U16 transparent à l'assignation ;
   les comparaisons par contenu restent identiques ; aucun consommateur
-  Kala ou test ne dépend de la largeur exacte. Premier consommateur :
+  aucun test ne dépend de la largeur exacte. Premier consommateur :
   Phase 15 (HOU2-03 Regiomontanus). (Phase 15 / HOU2-05)
 
 ### Infrastructure
@@ -477,7 +477,7 @@ Read each in detail in the dedicated sub-sections below and consult
   Square, Sextile). v1.0 emitted all 14 harmonics by default; users
   who scraped CLI stdout will see approximately 64% fewer aspect
   rows per body pair. The `core.aspects` array remains length-14
-  append-only (Kala positional indexing is unaffected — verified by
+  append-only (positional indexing is unaffected — verified by
   the Phase 9 invariant test); only the *default selection* changed.
   Restore v1.0 behavior with `ketu --harmonics extended`. List
   available presets with `ketu --list-aspect-sets`. (Phase 9 /
@@ -582,8 +582,8 @@ Read each in detail in the dedicated sub-sections below and consult
 ### Migration
 
 See `UPGRADING.md` v1.0 -> v1.1 section for per-date v1.0 vs. v1.1
-Lilith values, the action required, and downstream-consumer notes
-(Kala, etc.). Non-Lilith bodies, cycles, harmonics, houses, and
+Lilith values, the action required, and downstream-consumer notes.
+Non-Lilith bodies, cycles, harmonics, houses, and
 aspect calculations are unaffected.
 
 ## [1.0.0] - 2026-02-12
@@ -677,8 +677,8 @@ Ketu 1.0 is a pure calculation library. Visualization and calendar export featur
   - Pattern discovery tools for aspect clusters and retrograde periods
   - Full documentation in `docs/aspect_timelines.md`
 
-- **Kala Integration**: Perfect pipeline from Ketu (ephemeris) to Kala (ML)
-  - `KetuDataAdapter`: Convert AspectTimeline → enriched DataFrames
+- **Downstream ML Integration**: Pipeline from Ketu ephemeris to downstream ML consumers
+  - Convert AspectTimeline → enriched DataFrames via user-side pandas conversion
   - `AspectPatternDiscovery`: Discover patterns in aspect cycles
   - `generate_full_planetary_calendar()`: Generate all aspects for multiple planet pairs
   - Feature engineering with 27+ ML-ready features
@@ -717,7 +717,7 @@ Ketu 1.0 is a pure calculation library. Visualization and calendar export featur
 ### Documentation
 
 - New `docs/aspect_timelines.md`: Complete aspect timeline documentation
-- Kala integration guide: `kala/KETU_INTEGRATION.md`
+- Integration guide: `docs/source/concepts.md` → "Downstream Consumers" section
 - Examples:
   - `examples/aspect_timeline_demo.py`: 5 comprehensive demos
   - `examples/full_planetary_calendar.py`: Complete calendar generation
