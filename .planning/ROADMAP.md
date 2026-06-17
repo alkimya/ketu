@@ -10,7 +10,7 @@
 - ✅ **v1.5 Lunar Declination & Harmonics Debt** — Phases 33-35 (shipped 2026-06-04; `ketu==1.5.0` on PyPI via OIDC — additive minor: equatorial declination δ as a first-class vectorizable quantity (`declination` / `declination_velocity` / `is_ascending_declination` / `is_out_of_bounds` + `body_decl` in `CHART_DTYPE`), dynamic-harmonics debt paydown (ASP-F2 `H{h}-{k}` naming contract, ASP-F3 `find_aspect_timing` `dyn_coef` orb derivation, ASP-F1 CLI `--harmonics h7`). No breaking changes; `is_ascending` (β) and the frozen `core.aspects` table stay byte-identical. Archived to `.planning/milestones/v1.5-ROADMAP.md`.)
 - ✅ **v1.6 Declination Aspects** — Phases 36-37 (shipped 2026-06-04; `ketu==1.6.0` on PyPI via OIDC — additive `ketu.declination` subpackage: parallel + contra-parallel detection on the δ axis (`find_declination_aspects` scalar + `declination_aspect_masks` batch + `DECLA_ASPECT_DTYPE`), body-derived δ orbs (`DECLA_COEF=1/12`, `MIN_DECL_ORB=0.5°`), docs en + fr. No breaking changes; `CHART_DTYPE` byte-identical, `core.aspects` unchanged. Archived to `.planning/milestones/v1.6-ROADMAP.md`.)
 - ✅ **v1.7 Fictitious-Point Orbs** — Phases 38-39 (shipped 2026-06-15; `ketu==1.7.0` on PyPI via OIDC — orb 0°→2° on Rahu/Ketu/Lilith so the three fictitious points enter aspect detection, surgical Rahu↔Ketu Opposition filter (tautological 180°), synastry oracle rewrite + full regression sweep, MINOR-not-patch for Kala, docs en+fr. Archived to `.planning/milestones/v1.7-ROADMAP.md`.)
-- 🚧 **v1.8 Declination Speed** — Phases 40-41 (in progress — Phase 40 planned: 3 plans, 2 waves; expose dδ/dt as `body_decl_speed` in `CHART_DTYPE`, `DECL_STANDSTILL_EPS` public constant, chart-level helper, docs en+fr, release 1.8.0)
+- 🚧 **v1.8 Declination Speed** — Phases 40-41 (in progress — Phase 40 planned: 3 plans, 3 waves; expose dδ/dt as `body_decl_speed` in `CHART_DTYPE`, `DECL_STANDSTILL_EPS` public constant, chart-level helper, docs en+fr, release 1.8.0)
 
 ## Phases
 
@@ -139,10 +139,10 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
   4. The dtype ratchet test is updated and passes: the old layout fingerprint is replaced by the new one (the break is intentional and documented with Kala positional-access impact)
   5. `DECL_STANDSTILL_EPS` is importable from `ketu.calculations` (or the appropriate public namespace), its value is tested, and `|dδ/dt| ≤ DECL_STANDSTILL_EPS` classifies a body as in standstill
   6. A chart-level `is_ascending_declination(chart)` helper returns ascending / descending / neutral (standstill) per body using the `body_decl_speed` field and `DECL_STANDSTILL_EPS`; its output is consistent with the existing v1.5 scalar for matching inputs; 100% coverage maintained
-**Plans**: 3 plans, 2 waves
+**Plans**: 3 plans, 3 waves
 - [ ] 40-01-PLAN.md — Foundation: append `body_decl_speed` to `CHART_DTYPE`, define `DECL_STANDSTILL_EPS = 0.001`, re-pin the dtype ratchet (Wave 1) — DSPD-01/04/05
 - [ ] 40-02-PLAN.md — Natal: populate `body_decl_speed` in `compute_chart` (vectorised FD, Δ=0 vs scalar) + `is_ascending_declination_chart` helper + returns inheritance (Wave 2) — DSPD-01/02/03/06
-- [ ] 40-03-PLAN.md — Composite: derive `body_decl_speed` from the composite's own frozen λ,β (D-01, anti-averaging ratchet) + synastry inheritance pinning (Wave 2) — DSPD-03
+- [ ] 40-03-PLAN.md — Composite: derive `body_decl_speed` from the composite's own frozen λ,β (D-01, anti-averaging ratchet) + synastry inheritance pinning (Wave 3 — depends on 40-02 so parent charts carry the field) — DSPD-03
 
 ### Phase 41: Documentation + Release v1.8.0
 **Goal**: The `body_decl_speed` field, the 0.01 d FD step, `DECL_STANDSTILL_EPS`, the chart-level helper, and the Ketu/Rahu boundary are fully documented in English and French, the version is bumped to 1.8.0, and `ketu==1.8.0` is live on PyPI
