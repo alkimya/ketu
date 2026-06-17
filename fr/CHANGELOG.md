@@ -9,6 +9,38 @@
 
 ---
 
+## [1.8.0] - 2026-06-17
+
+### Ajouts
+
+- **Champ `body_decl_speed` dans `CHART_DTYPE`** (`float64[14]`, index 8) :
+  vitesse de déclinaison équatoriale dδ/dt en degrés/jour pour les 14 corps.
+  Positif = vers le nord (montante), négatif = vers le sud (descendante).
+  Calculé par différence finie vers l'avant à Δt = 0,01 jour (l'idiome FD
+  global du paquet). Rempli automatiquement par `compute_chart` et
+  `calculate_composite`. (Phase 40 — DSPD-01, DSPD-02, DSPD-03)
+
+- **`DECL_STANDSTILL_EPS = 0.001` (°/jour)** : constante publique exportée
+  depuis `ketu.calculations`. Définit le seuil en dessous duquel la vitesse
+  de déclinaison d'un corps est classifiée comme station (|dδ/dt| ≤ EPS →
+  neutre). Ketu définit cette frontière ; les consommateurs en aval la lisent
+  directement. (DSPD-05)
+
+- **`is_ascending_declination_chart(chart)` — auxiliaire de niveau thème** :
+  retourne `int8` `{+1, 0, −1}` par corps (forme `(14,)` pour les thèmes
+  scalaires, `(S, 14)` pour les lots). `+1` = montante (dδ/dt > EPS),
+  `−1` = descendante (dδ/dt < −EPS), `0` = station (|dδ/dt| ≤ EPS).
+  **Distinct du scalaire v1.5 `is_ascending_declination(jdate, body)` (bool,
+  pas de seuil EPS).** (DSPD-06)
+
+### Notes
+
+- **Version MINEURE, pas un correctif** : la disposition octets de `CHART_DTYPE`
+  s'agrandit (16 champs, était 15 — `body_decl_speed` ajouté à l'index 8).
+  L'accès par nom de champ (`chart["body_lons"]`) n'est pas affecté. L'accès
+  positionnel ou `.view()` sur `CHART_DTYPE` doit s'adapter. Voir
+  [UPGRADING.md](../UPGRADING.md) → « v1.7 -> v1.8 ».
+
 ## [1.7.0] - 2026-06-15
 
 ### Modifications
@@ -30,8 +62,8 @@
   de détection d'aspects changent pour tous les consommateurs. Les aspects de
   nœuds/Lilith auparavant invisibles (orbe 0 → dans la limite des 2°) apparaissent
   désormais. Il s'agit d'un changement de comportement délibéré et contrôlé, livré
-  en tant que version MINEURE selon le Versionnage Sémantique. Le code aval (Kala et
-  tout oracle/instantané qui énumère les aspects des nœuds ou de Lilith) **doit
+  en tant que version MINEURE selon le Versionnage Sémantique. Les consommateurs en aval
+  (tout oracle/instantané qui énumère les aspects des nœuds ou de Lilith) **doivent
   traiter la mise à jour comme délibérée** — ne pas effectuer `pip install -U`
   comme un correctif neutre.
 - **`CHART_DTYPE` et `core.aspects` sont octet-identiques** : aucune rupture du
@@ -135,7 +167,7 @@
 - **`is_ascending` (β) inchangé** : l'existant `is_ascending` basé sur la latitude
   écliptique est octet-identique à la v1.4. Le nouveau `is_ascending_declination`
   est un auxiliaire indépendant et parallèle.
-- **Impact Kala (additif, sans rupture pour l'accès par nom)** : `CHART_DTYPE`
+- **Impact en aval (additif, sans rupture pour l'accès par nom)** : `CHART_DTYPE`
   gagne `body_decl` comme champ additif. Le code utilisant l'accès par nom de
   champ (`chart["body_lons"]`) n'est pas affecté. Le code utilisant l'accès
   positionnel ou `.view()` sur le dtype brut doit être adapté. La correction de
@@ -206,7 +238,7 @@
 
 ### Modifié
 
-- **RUPTURE (contrat positionnel Kala / en aval) :** les tableaux du
+- **RUPTURE (contrat positionnel en aval) :** les tableaux du
   `CHART_DTYPE` sont étendus de la forme (13,) → (14,) et les aspects de
   (13,13) → (14,14). L'index positionnel 13 est Chiron. Tout code ayant
   codé en dur le nombre de corps à 13 ou adressant les tableaux de corps
@@ -230,7 +262,7 @@
   (et donc `cycle_progress` et `cycle_phase`) depuis
   `generate_cycle_series` / `generate_multi_cycle_series` suit désormais
   la direction documentée body1 → body2 : `(body2_lon - body1_lon) % 360`.
-  Précédemment inversé. Les consommateurs en aval (ex. Kala) doivent
+  Précédemment inversé. Les consommateurs en aval doivent
   ajuster : les valeurs sont maintenant `360 - ancien` de la conjonction
   sauf à 0°/180°.
 
