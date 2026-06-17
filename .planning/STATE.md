@@ -4,12 +4,12 @@ milestone: v1.8
 milestone_name: Declination Speed
 status: executing
 stopped_at: Phase 41 context gathered
-last_updated: "2026-06-17T17:23:24.153Z"
-last_activity: 2026-06-17
+last_updated: "2026-06-17T18:33:27.935Z"
+last_activity: 2026-06-17 -- Phase 41 execution started
 progress:
   total_phases: 2
   completed_phases: 1
-  total_plans: 3
+  total_plans: 6
   completed_plans: 3
   percent: 50
 ---
@@ -21,14 +21,14 @@ progress:
 See: `.planning/PROJECT.md` (updated 2026-06-17 — milestone v1.8 started)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 40 — declination-speed-field-chart-api
+**Current focus:** Phase 41 — documentation-release-v1-8-0
 
 ## Current Position
 
-Phase: 41
-Plan: Not started
-Status: Executing Phase 40
-Last activity: 2026-06-17
+Phase: 41 (documentation-release-v1-8-0) — EXECUTING
+Plan: 1 of 3
+Status: Executing Phase 41
+Last activity: 2026-06-17 -- Phase 41 execution started
 
 Progress: [░░░░░░░░░░] 0%
 
