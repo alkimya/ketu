@@ -3,8 +3,8 @@ gsd_state_version: 1.0
 milestone: v1.8
 milestone_name: Declination Speed
 status: executing
-stopped_at: Phase 40 context gathered
-last_updated: "2026-06-17T16:15:33.089Z"
+stopped_at: Phase 41 context gathered
+last_updated: "2026-06-17T17:23:24.153Z"
 last_activity: 2026-06-17
 progress:
   total_phases: 2
@@ -85,6 +85,6 @@ Note: Non-blocker. Out of v1.8 scope.
 
 ## Session Continuity
 
-Last session: 2026-06-17T11:34:20.469Z
-Stopped at: Phase 40 context gathered
-Resume file: .planning/phases/40-declination-speed-field-chart-api/40-CONTEXT.md
+Last session: 2026-06-17T17:23:24.141Z
+Stopped at: Phase 41 context gathered
+Resume file: .planning/phases/41-documentation-release-v1-8-0/41-CONTEXT.md
