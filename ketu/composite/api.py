@@ -79,6 +79,7 @@ from ketu.ephemeris.coordinates import (
     spherical_to_rectangular,
     true_obliquity,
 )
+from ketu.ephemeris.planets import calc_planet_position_batch
 from ketu.houses.registry import get_system
 
 from .core import circular_midpoint
@@ -264,6 +265,47 @@ def calculate_composite(
     _xe, _ye, _ze = ecliptic_to_equatorial(_x, _y, _z, _eps)
     _, _decl, _ = rectangular_to_spherical(_xe, _ye, _ze)
     out["body_decl"] = _decl  # shape (14,) — δ ∈ [−90, +90]°, north positive
+
+    # Derive body_decl_speed from the composite's OWN frozen (λ, β) advanced by their
+    # midpoint velocities over Δt=0.01 d (D-01 / DSPD-03).
+    #
+    # Design (D-01, 40-CONTEXT.md): the composite has no canonical jd, so dδ/dt must
+    # be computed self-consistently with the composite's frozen chart. Two rejected
+    # approaches: ❌ FD at the composite jd (re-fetches real positions — physically
+    # meaningless), ❌ midpoint of parents' body_decl_speed (the trap DSPD-03 forbids).
+    #
+    # Approach: advance (λ₀, β₀) by midpoint velocities over Δt=0.01 d, then run the
+    # same coordinate chain to get δ₁; slope = (δ₁ − δ₀) / Δt.
+    #
+    # β-rate: dβ/dt midpoint for each body, sourced from calc_planet_position_batch
+    # column 4 (lat_speed) at each parent's natal jd. For the Moon, dβ/dt contributes
+    # 2.6× more to Δδ than dλ/dt over Δt=0.01 d — must NOT be zeroed (DSPD-03).
+    _jd_a_flat = np.array([float(chart_a["jd"])], dtype=np.float64)
+    _jd_b_flat = np.array([float(chart_b["jd"])], dtype=np.float64)
+    _body_lat_speeds = np.empty((_BODY_COUNT,), dtype=np.float64)
+    for _bid in range(_BODY_COUNT):
+        _lat_spd_a = float(calc_planet_position_batch(_jd_a_flat, _bid)[0, 4])
+        _lat_spd_b = float(calc_planet_position_batch(_jd_b_flat, _bid)[0, 4])
+        _body_lat_speeds[_bid] = (_lat_spd_a + _lat_spd_b) / 2.0
+    # _body_lat_speeds is NOT stored in CHART_DTYPE — local only (see RESEARCH Pitfall 3)
+
+    # Advance frozen composite (λ, β) by their midpoint velocity rates over Δt=0.01 d:
+    _Dt = 0.01  # verbatim from declination_velocity (calculations.py:495-524)
+    _lons_adv = np.asarray(out["body_lons"], dtype=np.float64) + (
+        np.asarray(out["body_speeds"], dtype=np.float64) * _Dt
+    )
+    _lats_adv = np.asarray(out["body_lats"], dtype=np.float64) + _body_lat_speeds * _Dt
+
+    # Coordinate chain at advanced (λ, β): identical to the chain above (step 4)
+    # but for a single frozen-advanced instant. ε uses composite jd (bookkeeping) + Δt.
+    _eps_adv = true_obliquity(float(out["jd"]) + _Dt)
+    _x1, _y1, _z1 = spherical_to_rectangular(_lons_adv, _lats_adv, 1.0)
+    _xe1, _ye1, _ze1 = ecliptic_to_equatorial(_x1, _y1, _z1, _eps_adv)
+    _, _decl_adv, _ = rectangular_to_spherical(_xe1, _ye1, _ze1)
+
+    # Forward finite difference — slope = (δ₁ − δ₀) / Δt, deg/day.
+    # Reuses the already-computed _decl as δ₀ (no re-evaluation at composite jd).
+    out["body_decl_speed"] = (_decl_adv - np.asarray(_decl, dtype=np.float64)) / _Dt
 
     # 5. Angles — circular midpoints. ARMC and Vertex stored for
     #    bookkeeping; ASC and MC drive the house-cusp trisection in

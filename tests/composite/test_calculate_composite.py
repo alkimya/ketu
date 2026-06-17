@@ -317,3 +317,68 @@ class TestCompositeDeclination:
             f"body_decl not self-consistent with chain re-derivation: "
             f"max diff = {max_diff:.2e}° (expected < 1e-9°)"
         )
+
+
+class TestBodyDeclSpeed:
+    """DSPD-03 composite: body_decl_speed derived from composite's OWN frozen λ,β.
+
+    D-01 (40-CONTEXT.md): finite difference on the composite's frozen body_lons /
+    body_lats advanced by their midpoint velocities over Δt=0.01 d — NOT the midpoint
+    of the parents' body_decl_speed, NOT re-fetching real positions at the composite jd.
+
+    Test 4 is the binding DSPD-03 anti-averaging ratchet: proves composite
+    body_decl_speed differs from the naïve parent midpoint (the Moon's dβ/dt
+    dominates and is not zeroed, making the FD-derived composite value diverge
+    from the averaging approach).
+    """
+
+    def test_body_decl_speed_shape(self, chart_a_paris, chart_b_nyc) -> None:
+        """body_decl_speed has shape (14,) — one dδ/dt per body."""
+        composite = calculate_composite(chart_a_paris, chart_b_nyc)
+        speed = np.asarray(composite["body_decl_speed"])
+        assert speed.shape == (14,), f"expected shape (14,), got {speed.shape}"
+
+    def test_body_decl_speed_not_all_zero(self, chart_a_paris, chart_b_nyc) -> None:
+        """Anti-regression for zero-fill trap (Pitfall 1 from 40-RESEARCH.md).
+
+        If body_decl_speed is never assigned in calculate_composite it stays 0.0
+        for every body. At least one body must have |dδ/dt| > 0.001 deg/day.
+        """
+        composite = calculate_composite(chart_a_paris, chart_b_nyc)
+        speed = np.asarray(composite["body_decl_speed"])
+        assert np.any(np.abs(speed) > 0.001), (
+            "body_decl_speed is all-zero — zero-fill trap not closed in "
+            "calculate_composite (DSPD-03 regression)"
+        )
+
+    def test_body_decl_speed_all_finite(self, chart_a_paris, chart_b_nyc) -> None:
+        """All body_decl_speed values are finite (no NaN / inf after FD pass)."""
+        composite = calculate_composite(chart_a_paris, chart_b_nyc)
+        speed = np.asarray(composite["body_decl_speed"])
+        assert np.all(np.isfinite(speed)), (
+            f"body_decl_speed contains non-finite values: {speed}"
+        )
+
+    def test_body_decl_speed_not_parent_midpoint(
+        self, chart_a_paris, chart_b_nyc
+    ) -> None:
+        """DSPD-03 anti-averaging ratchet: composite body_decl_speed != parent midpoint.
+
+        D-01 forbids deriving composite body_decl_speed as the arithmetic mean of the
+        parents' body_decl_speed (the same trap body_decl closed in v1.5). The FD on the
+        composite's OWN frozen (λ, β) advanced by midpoint velocities must differ from the
+        naïve average because dβ/dt dominates for the Moon (2.6× contribution).
+
+        Proves: composite["body_decl_speed"] is NOT equal to
+        (chart_a["body_decl_speed"] + chart_b["body_decl_speed"]) / 2.0.
+        """
+        composite = calculate_composite(chart_a_paris, chart_b_nyc)
+        midpoint = (
+            np.asarray(chart_a_paris["body_decl_speed"], dtype=np.float64)
+            + np.asarray(chart_b_nyc["body_decl_speed"], dtype=np.float64)
+        ) / 2.0
+        composite_speed = np.asarray(composite["body_decl_speed"], dtype=np.float64)
+        assert not np.allclose(composite_speed, midpoint), (
+            "composite body_decl_speed equals the naïve parent midpoint — "
+            "D-01 FD derivation not implemented (DSPD-03 anti-averaging ratchet)"
+        )
