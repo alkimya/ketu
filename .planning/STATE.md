@@ -3,8 +3,9 @@ gsd_state_version: 1.0
 milestone: v1.8
 milestone_name: Declination Speed
 status: planning
-last_updated: "2026-06-17"
-last_activity: 2026-06-17
+stopped_at: Phase 40 context gathered
+last_updated: "2026-06-17T11:34:20.475Z"
+last_activity: 2026-06-17 — Roadmap created (Phases 40-41)
 progress:
   total_phases: 2
   completed_phases: 0
@@ -42,6 +43,7 @@ Progress: [░░░░░░░░░░] 0%
 Full log in `.planning/PROJECT.md` Key Decisions table.
 
 Key constraints for this milestone:
+
 - Δt = 0.01 day reused verbatim from `declination_velocity` — not configurable, no new API surface
 - Composite `body_decl_speed` derived from the composite chart, never midpoint of parents
 - `DECL_STANDSTILL_EPS` defined IN Ketu as a public contract (Rahu invents no threshold)
@@ -83,6 +85,6 @@ Note: Non-blocker. Out of v1.8 scope.
 
 ## Session Continuity
 
-Last session: 2026-06-17 — Roadmap v1.8 created
-Stopped at: ROADMAP.md written (Phases 40-41), REQUIREMENTS.md traceability filled
-Resume file: — (run `/gsd-plan-phase 40`)
+Last session: 2026-06-17T11:34:20.469Z
+Stopped at: Phase 40 context gathered
+Resume file: .planning/phases/40-declination-speed-field-chart-api/40-CONTEXT.md
