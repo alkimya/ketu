@@ -19,15 +19,15 @@ Requirements for the v1.8 release. Each maps to roadmap phases (numbering contin
 
 ### Declination Speed Field
 
-- [ ] **DSPD-01**: `CHART_DTYPE` gains an additive field `("body_decl_speed", "f8", (14,))` (layout grows like `body_decl` in v1.5), populated by `compute_chart` (scalar + array `jd`) via the vectorized `declination_velocity` path; raw deg/day value (mirrors `body_speeds` for longitude — the ↗/↘ sense reads off the sign).
-- [ ] **DSPD-02**: Δt = 0.01 day reused verbatim from the existing `declination_velocity` finite-difference step (no new API surface, not configurable); numerical agreement verified against scalar `declination_velocity(jd, body)` (Δ = 0, or a documented FD tolerance).
-- [ ] **DSPD-03**: `body_decl_speed` inherited by synastry / composite / returns; the composite δ-speed is **derived from the composite chart** (recomputed on composite λ,β via the same path), never the midpoint of the parents' `body_decl_speed` (same trap as `body_decl` in v1.5).
-- [ ] **DSPD-04**: the `CHART_DTYPE` layout ratchet test is updated for the new field — the ratchet breaks intentionally and is re-pinned (as for `body_decl` in v1.5); Kala positional impact documented.
+- [x] **DSPD-01**: `CHART_DTYPE` gains an additive field `("body_decl_speed", "f8", (14,))` (layout grows like `body_decl` in v1.5), populated by `compute_chart` (scalar + array `jd`) via the vectorized `declination_velocity` path; raw deg/day value (mirrors `body_speeds` for longitude — the ↗/↘ sense reads off the sign).
+- [x] **DSPD-02**: Δt = 0.01 day reused verbatim from the existing `declination_velocity` finite-difference step (no new API surface, not configurable); numerical agreement verified against scalar `declination_velocity(jd, body)` (Δ = 0, or a documented FD tolerance).
+- [x] **DSPD-03**: `body_decl_speed` inherited by synastry / composite / returns; the composite δ-speed is **derived from the composite chart** (recomputed on composite λ,β via the same path), never the midpoint of the parents' `body_decl_speed` (same trap as `body_decl` in v1.5).
+- [x] **DSPD-04**: the `CHART_DTYPE` layout ratchet test is updated for the new field — the ratchet breaks intentionally and is re-pinned (as for `body_decl` in v1.5); Kala positional impact documented.
 
 ### Standstill & Chart-Level API
 
-- [ ] **DSPD-05**: a public, tested constant `DECL_STANDSTILL_EPS` (deg/day) defined IN Ketu and documented as a contract — Rahu invents no astronomical threshold; `|dδ/dt| ≤ DECL_STANDSTILL_EPS` ⇒ standstill (neutral).
-- [ ] **DSPD-06**: a chart-level `is_ascending_declination` helper reading the sign of `body_decl_speed` + the standstill threshold (ascending if `> DECL_STANDSTILL_EPS`, descending if `< −DECL_STANDSTILL_EPS`, neutral otherwise), distinct from — and consistent with — the v1.5 scalar version.
+- [x] **DSPD-05**: a public, tested constant `DECL_STANDSTILL_EPS` (deg/day) defined IN Ketu and documented as a contract — Rahu invents no astronomical threshold; `|dδ/dt| ≤ DECL_STANDSTILL_EPS` ⇒ standstill (neutral).
+- [x] **DSPD-06**: a chart-level `is_ascending_declination` helper reading the sign of `body_decl_speed` + the standstill threshold (ascending if `> DECL_STANDSTILL_EPS`, descending if `< −DECL_STANDSTILL_EPS`, neutral otherwise), distinct from — and consistent with — the v1.5 scalar version.
 
 ### Documentation & Release
 
@@ -66,16 +66,17 @@ Which phases cover which requirements. Updated during roadmap creation.
 
 | Requirement | Phase | Status |
 |-------------|-------|--------|
-| DSPD-01 | Phase 40 | Pending |
-| DSPD-02 | Phase 40 | Pending |
-| DSPD-03 | Phase 40 | Pending |
-| DSPD-04 | Phase 40 | Pending |
-| DSPD-05 | Phase 40 | Pending |
-| DSPD-06 | Phase 40 | Pending |
+| DSPD-01 | Phase 40 | Complete |
+| DSPD-02 | Phase 40 | Complete |
+| DSPD-03 | Phase 40 | Complete |
+| DSPD-04 | Phase 40 | Complete |
+| DSPD-05 | Phase 40 | Complete |
+| DSPD-06 | Phase 40 | Complete |
 | DSPD-07 | Phase 41 | Pending |
 | REL-01 | Phase 41 | Pending |
 
 **Coverage:**
+
 - v1.8 requirements: 8 total
 - Mapped to phases: 8/8
 - Unmapped: 0 ✓
