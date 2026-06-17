@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Ketu 0.3.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-06-03 22:04+0200\n"
+"POT-Creation-Date: 2026-06-17 20:57+0200\n"
 "PO-Revision-Date: 2026-02-12 22:00+0100\n"
 "Last-Translator: Claude Code <noreply@anthropic.com>\n"
 "Language: fr\n"
@@ -37,14 +37,215 @@ msgstr ""
 "[Semantic Versioning](https://semver.org/spec/v2.0.0.html)."
 
 #: ../../source/changelog.md:8
-msgid "[1.5.0] - Unreleased"
-msgstr "[1.5.0] - Non publié"
+msgid "[1.8.0] - 2026-06-17"
+msgstr "[1.8.0] - 2026-06-17"
 
 #: ../../source/changelog.md:10
+msgid "Added 1.8.0"
+msgstr "Ajouté 1.8.0"
+
+#: ../../source/changelog.md:12
+msgid ""
+"**`body_decl_speed` field in `CHART_DTYPE`** (`float64[14]`, index 8): "
+"equatorial declination velocity dδ/dt in degrees/day for all 14 bodies. "
+"Positive = northward (montante), negative = southward (descendante). "
+"Computed via forward finite difference at Δt = 0.01 day (the package-wide"
+" FD idiom). Populated automatically by `compute_chart` and "
+"`calculate_composite`. (Phase 40 — DSPD-01, DSPD-02, DSPD-03)"
+msgstr ""
+"**Champ `body_decl_speed` dans `CHART_DTYPE`** (`float64[14]`, index 8) : "
+"vitesse de déclinaison équatoriale dδ/dt en degrés/jour pour les 14 corps. "
+"Positif = vers le nord (montante), négatif = vers le sud (descendante). "
+"Calculé par différence finie vers l'avant à Δt = 0,01 jour (l'idiome FD "
+"global du paquet). Rempli automatiquement par `compute_chart` et "
+"`calculate_composite`. (Phase 40 — DSPD-01, DSPD-02, DSPD-03)"
+
+#: ../../source/changelog.md:19
+msgid ""
+"**`DECL_STANDSTILL_EPS = 0.001` (°/day)**: public constant exported from "
+"`ketu.calculations`. Defines the threshold below which a body's "
+"declination velocity is classified as a standstill (|dδ/dt| ≤ EPS → "
+"neutral). Ketu owns this boundary; downstream consumers read it directly."
+" (DSPD-05)"
+msgstr ""
+"**`DECL_STANDSTILL_EPS = 0.001` (°/jour)** : constante publique exportée "
+"depuis `ketu.calculations`. Définit le seuil en dessous duquel la vitesse "
+"de déclinaison d'un corps est classifiée comme station (|dδ/dt| ≤ EPS → "
+"neutre). Ketu définit cette frontière ; les consommateurs en aval la "
+"lisent directement. (DSPD-05)"
+
+#: ../../source/changelog.md:24
+#, python-brace-format
+msgid ""
+"**`is_ascending_declination_chart(chart)` — chart-level helper**: returns"
+" `int8` `{+1, 0, −1}` per body (shape `(14,)` for scalar charts, `(S, "
+"14)` for batches). `+1` = montante (dδ/dt > EPS), `−1` = descendante "
+"(dδ/dt < −EPS), `0` = standstill (|dδ/dt| ≤ EPS). **Distinct from the "
+"v1.5 scalar `is_ascending_declination(jdate, body)` (bool, no EPS "
+"gate).** (DSPD-06)"
+msgstr ""
+"**`is_ascending_declination_chart(chart)` — auxiliaire de niveau thème** :"
+" retourne `int8` `{+1, 0, −1}` par corps (forme `(14,)` pour les thèmes "
+"scalaires, `(S, 14)` pour les lots). `+1` = montante (dδ/dt > EPS), "
+"`−1` = descendante (dδ/dt < −EPS), `0` = station (|dδ/dt| ≤ EPS). "
+"**Distinct du scalaire v1.5 `is_ascending_declination(jdate, body)` "
+"(bool, pas de seuil EPS).** (DSPD-06)"
+
+#: ../../source/changelog.md:30
+msgid "Notes 1.8.0"
+msgstr "Notes 1.8.0"
+
+#: ../../source/changelog.md:32
+msgid ""
+"**MINOR release, not a patch**: `CHART_DTYPE` byte layout grows (16 "
+"fields, was 15 — `body_decl_speed` appended at index 8). Named field "
+"access (`chart[\"body_lons\"]`) is unaffected. Positional access or "
+"`.view()` on `CHART_DTYPE` must adapt. See "
+"[UPGRADING.md](../../UPGRADING.md) → \"v1.7 -> v1.8\"."
+msgstr ""
+"**Version MINEURE, pas un correctif** : la disposition octets de "
+"`CHART_DTYPE` s'agrandit (16 champs, était 15 — `body_decl_speed` ajouté "
+"à l'index 8). L'accès par nom de champ (`chart[\"body_lons\"]`) n'est pas "
+"affecté. L'accès positionnel ou `.view()` sur `CHART_DTYPE` doit s'adapter."
+" Voir [UPGRADING.md](../../UPGRADING.md) → « v1.7 -> v1.8 »."
+
+#: ../../source/changelog.md:37
+#, fuzzy
+msgid "[1.7.0] - 2026-06-15"
+msgstr "[1.3.0] - 2026-06-XX"
+
+#: ../../source/changelog.md:39
+#, fuzzy
+msgid "Changed 1.7.0"
+msgstr "Modifié 1.4.0"
+
+#: ../../source/changelog.md:41
+msgid ""
+"**Rahu / Ketu / Lilith longitude orb: 0° → 2°** (`core.bodies`, single-"
+"source). All consumers (`get_orb`, `calculate_aspects*`, synastry, "
+"composite, CLI) inherit the change with zero further edits. Point-to-"
+"point conjunction threshold is now 2°; point-to-planet mean: e.g. Rahu-"
+"Sun yields (2+12)/2 = 7°. Chiron (orb = 4°) and all other planet rows are"
+" unchanged. (Phase 38 — ORB-01)"
+msgstr ""
+
+#: ../../source/changelog.md:46
+msgid ""
+"**Tautological Rahu-Ketu Opposition suppressed** (`aspects/calculator.py`"
+" `_is_tautological_node_opposition`): the engine now silently drops the "
+"North-Node / South-Node Opposition (which is always present by definition"
+" and carries no astrological information). Every other Rahu/Ketu aspect "
+"is detected normally. (Phase 38 — ORB-02)"
+msgstr ""
+
+#: ../../source/changelog.md:52
+#, fuzzy
+msgid "Notes 1.7.0"
+msgstr "Notes 1.5.0"
+
+#: ../../source/changelog.md:54
+msgid ""
+"**BREAKING RESULTS — MINOR release, not a patch**: aspect detection "
+"results change for all consumers. Node/Lilith aspects that were "
+"previously invisible (orb 0 → inside 2°) now appear. This is a "
+"deliberate, reviewed behaviour change shipped as a MINOR version per "
+"Semantic Versioning. Downstream code (any oracle/snapshot that enumerates"
+" node or Lilith aspects) **must treat the upgrade as deliberate** — do "
+"not `pip install -U` as a neutral patch."
+msgstr ""
+
+#: ../../source/changelog.md:60
+msgid ""
+"**`CHART_DTYPE` and `core.aspects` are byte-identical**: no dtype ratchet"
+" break. Only detection results change. (Phase 38)"
+msgstr ""
+
+#: ../../source/changelog.md:63
+#, fuzzy
+msgid "[1.6.0] - 2026-06-04"
+msgstr "[1.4.0] - 2026-06-XX"
+
+#: ../../source/changelog.md:65
+#, fuzzy
+msgid "Added 1.6.0"
+msgstr "Ajouté 1.5.0"
+
+#: ../../source/changelog.md:67
+msgid ""
+"**`ketu.declination` subpackage — declination aspects (parallels & "
+"contra-parallels)**: a NEW additive subpackage detecting parallel (`P`) "
+"and contra-parallel (`CP`) aspects on the equatorial declination axis "
+"(δ), independent of ecliptic longitude. (Phase 36)"
+msgstr ""
+
+#: ../../source/changelog.md:71
+msgid ""
+"**`find_declination_aspects(body_decl)`**: scalar/single-chart detector. "
+"Takes the `(14,)` signed-δ `chart[\"body_decl\"]` array; returns a "
+"`DECLA_ASPECT_DTYPE` structured array (upper-triangle pairs, sorted, "
+"deduplicated); `np.empty(0, …)` when none detected (never `None`)."
+msgstr ""
+
+#: ../../source/changelog.md:75
+msgid ""
+"**`declination_aspect_masks(body_decl)`**: vectorized batch path. Accepts"
+" `(S, 14)` or `(14,)` (promoted via `np.atleast_2d`); returns a "
+"`DeclinationAspectMasks` NamedTuple of `(S, 91)` masks + `(91,)` "
+"index/orb vectors. Pure broadcasting, no Python body loop."
+msgstr ""
+
+#: ../../source/changelog.md:79
+msgid ""
+"**`DeclinationAspectMasks` NamedTuple** (6 fields: `parallel`, `contra`, "
+"`gap`, `idx_i`, `idx_j`, `orb_pairs`)."
+msgstr ""
+
+#: ../../source/changelog.md:81
+#, python-brace-format
+msgid ""
+"**`DECLA_ASPECT_DTYPE`** (5 fields: `body1`, `body2`, `kind` ∈ "
+"{\"P\",\"CP\"}, `gap`, `orb`)."
+msgstr ""
+
+#: ../../source/changelog.md:83
+msgid ""
+"**`DECLA_COEF = 1/12` and `MIN_DECL_ORB = 0.5°`**: the body-derived orb "
+"formula `max((orb_b1 + orb_b2)/2 × DECLA_COEF, MIN_DECL_ORB)` → Sun/Moon "
+"= 1.0°, zero-orb bodies (Rahu/Ketu/Lilith) floored to 0.5°."
+msgstr ""
+
+#: ../../source/changelog.md:87
+#, fuzzy
+msgid "Notes 1.6.0"
+msgstr "Notes 1.5.0"
+
+#: ../../source/changelog.md:89
+msgid ""
+"**`CHART_DTYPE` unchanged — additive subpackage**: `ketu.declination` is "
+"a purely additive companion to the v1.5 declination δ infrastructure. The"
+" `body_decl` field (shape `(14,)`) shipped in v1.5 is the sole input; "
+"`CHART_DTYPE` is byte-identical to v1.5 (no ratchet break). The new names"
+" are reachable via `ketu.declination.*` only — `ketu.__all__` is "
+"unchanged."
+msgstr ""
+
+#: ../../source/changelog.md:94
+msgid ""
+"**Parallel ≠ longitude conjunction**: declination aspects are independent"
+" of ecliptic-longitude aspects. The frozen 14-row `core.aspects` table is"
+" byte-identical to v1.5."
+msgstr ""
+
+#: ../../source/changelog.md:98
+#, fuzzy
+msgid "[1.5.0] - 2026-06-04"
+msgstr "[1.4.0] - 2026-06-XX"
+
+#: ../../source/changelog.md:100
 msgid "Added 1.5.0"
 msgstr "Ajouté 1.5.0"
 
-#: ../../source/changelog.md:12
+#: ../../source/changelog.md:102
 msgid ""
 "**`declination(jdate, body)` — equatorial declination δ**: returns δ in "
 "degrees [−90, +90] (north positive, south negative). Scalar and "
@@ -60,7 +261,7 @@ msgstr ""
 "ecliptic_to_equatorial → rectangular_to_spherical`), numériquement "
 "équivalente à l'éq. 13.4 de Meeus à la précision machine."
 
-#: ../../source/changelog.md:13
+#: ../../source/changelog.md:103
 msgid ""
 "**`declination_velocity(jdate, body)`**: dδ/dt in degrees/day (positive ="
 " northward). Forward finite difference, step 0.01 day — mirrors the "
@@ -70,7 +271,7 @@ msgstr ""
 " vers le nord). Différence finie vers l'avant, pas de 0,01 jour — miroir "
 "de l'idiome DF de `lat_velocity`."
 
-#: ../../source/changelog.md:14
+#: ../../source/changelog.md:104
 msgid ""
 "**`is_ascending_declination(jdate, body)`**: `True` when dδ/dt > 0 (Moon "
 "montante). Biodynamic montant/descendant helper. **Distinct from "
@@ -82,19 +283,19 @@ msgstr ""
 " `is_ascending`** (trajectoire β) — les deux peuvent diverger pour le "
 "même corps à la même date."
 
-#: ../../source/changelog.md:15
+#: ../../source/changelog.md:105
 msgid ""
 "**`is_out_of_bounds(jdate, body)`**: `True` when |δ| > ε(jd). OOB "
 "threshold uses the instantaneous true obliquity (not mean obliquity). The"
 " Moon can exceed ε during major lunar standstill (~18.6-year nodal cycle;"
 " peak ~2024–2025)."
 msgstr ""
-"**`is_out_of_bounds(jdate, body)`** : `True` quand |δ| > ε(jd). Le seuil"
-" hors limites utilise l'obliquité vraie instantanée (pas l'obliquité "
+"**`is_out_of_bounds(jdate, body)`** : `True` quand |δ| > ε(jd). Le seuil "
+"hors limites utilise l'obliquité vraie instantanée (pas l'obliquité "
 "moyenne). La Lune peut dépasser ε lors du grand arrêt lunaire (~18,6 ans "
 "de cycle nodal ; pic ~2024–2025)."
 
-#: ../../source/changelog.md:16
+#: ../../source/changelog.md:106
 msgid ""
 "**`CHART_DTYPE` — `body_decl` field (additive)**: new `float64[14]` field"
 " holding equatorial declination δ for all 14 bodies. `compute_chart` and "
@@ -107,11 +308,65 @@ msgstr ""
 "chaîne de coordonnées. Le nombre de corps reste 14 ; c'est un changement "
 "de dtype additif."
 
-#: ../../source/changelog.md:18
+#: ../../source/changelog.md:107
+msgid ""
+"**`--harmonics h<N>` CLI surface for dynamic harmonics**: the `aspects` "
+"command accepts `--harmonics h7` (and any `h2`–`h64`) to detect dynamic "
+"harmonic aspects alongside the static set, via the `dynamic_specs=` "
+"engine path."
+msgstr ""
+
+#: ../../source/changelog.md:109
+#, fuzzy
+msgid "Changed 1.5.0"
+msgstr "Modifié 1.4.0"
+
+#: ../../source/changelog.md:111
+#, python-brace-format
+msgid ""
+"**`H{h}-{k}` dynamic-aspect naming promoted to a public API contract**: "
+"dynamic harmonic rows are named `H{h}-{k}` (harmonic `h`, multiple `k`), "
+"pinned by tests and documented as stable."
+msgstr ""
+
+#: ../../source/changelog.md:112
+msgid ""
+"**`find_aspect_timing` gains a `dyn_coef=` parameter**: the orb for a "
+"dynamic aspect is derived from `(orb[b1] + orb[b2]) / 2 × dyn_coef`, "
+"matching the detection path."
+msgstr ""
+
+#: ../../source/changelog.md:114
+#, fuzzy
+msgid "Fixed 1.5.0"
+msgstr "Corrigé 1.0.0"
+
+#: ../../source/changelog.md:116
+msgid ""
+"**Lunar node mean speed corrected (−0.013 → −0.052954 °/day)**: "
+"`core.bodies['speed']` for Rahu and Ketu held a value ~4× too slow. The "
+"true nodal regression is 360° over ~18.6 years (≈ −0.052991 °/day); the "
+"engine already produced −0.052954 °/day for the nodes, so the table is "
+"now consistent with the computed motion. `calculate_speed_ratio` now "
+"sources its average speeds from `core.bodies['speed']` (single source of "
+"truth)."
+msgstr ""
+
+#: ../../source/changelog.md:117
+msgid ""
+"**`calculate_aspects_batch` duplicate-pair rows eliminated**: with "
+"overlapping orbs (e.g. the EXTENDED set) the batch path could emit more "
+"than one row for the same `(body1, body2)` pair on a single date. Both "
+"`calculate_aspects_vectorized` and `calculate_aspects_batch` now share a "
+"single detection core, enforcing \"exactly one row per pair\" (static-"
+"first / dynamic-second, first-match-wins) identically."
+msgstr ""
+
+#: ../../source/changelog.md:119
 msgid "Notes 1.5.0"
 msgstr "Notes 1.5.0"
 
-#: ../../source/changelog.md:20
+#: ../../source/changelog.md:121
 msgid ""
 "**`is_ascending` (β) unchanged**: the existing ecliptic-latitude-based "
 "`is_ascending` is byte-for-byte identical to v1.4. The new "
@@ -121,28 +376,30 @@ msgstr ""
 "la latitude écliptique est byte-pour-byte identique à v1.4. La nouvelle "
 "`is_ascending_declination` est une fonction indépendante et parallèle."
 
-#: ../../source/changelog.md:21
+#: ../../source/changelog.md:122
+#, fuzzy
 msgid ""
-"**Kala impact (additive, not breaking)**: `CHART_DTYPE` gains `body_decl`"
-" as an additive field. Code using named field access "
-"(`chart[\"body_lons\"]`) is unaffected. Code using positional access or "
-"`.view()` on the raw dtype must adapt."
+"**Downstream impact (additive, not breaking for named access)**: "
+"`CHART_DTYPE` gains `body_decl` as an additive field. Code using named "
+"field access (`chart[\"body_lons\"]`) is unaffected. Code using "
+"positional access or `.view()` on the raw dtype must adapt. The node-"
+"speed fix changes `core.bodies['speed'][10]` / `[11]`."
 msgstr ""
-"**Impact Kala (additif, pas de rupture)** : `CHART_DTYPE` gagne "
-"`body_decl` comme champ additif. Le code utilisant l'accès par nom de "
+"**Impact en aval (additif, sans rupture pour l'accès par nom)** : `CHART_DTYPE` "
+"gagne `body_decl` comme champ additif. Le code utilisant l'accès par nom de "
 "champ (`chart[\"body_lons\"]`) n'est pas affecté. Le code utilisant "
 "l'accès positionnel ou `.view()` sur le dtype brut doit s'adapter."
 
-#: ../../source/changelog.md:23
+#: ../../source/changelog.md:124
 #, fuzzy
 msgid "[1.4.0] - 2026-06-03"
 msgstr "[1.4.0] - 2026-06-XX"
 
-#: ../../source/changelog.md:25
+#: ../../source/changelog.md:126
 msgid "Added 1.4.0"
 msgstr "Ajouté 1.4.0"
 
-#: ../../source/changelog.md:27
+#: ../../source/changelog.md:128
 msgid ""
 "**`generate_harmonic_aspects(h)` — dynamic harmonic generator**: builds "
 "aspect specs on the fly for ANY integer harmonic `h` (2 ≤ h ≤ 64), using "
@@ -162,7 +419,7 @@ msgstr ""
 "`calculate_synastry`. La table `core.aspects` figée à 14 lignes et les "
 "empreintes de presets sont byte-identiques (chemin de code parallèle)."
 
-#: ../../source/changelog.md:28
+#: ../../source/changelog.md:129
 msgid ""
 "**Chiron range expanded to 1900–2100**: `ketu/data/chiron_coeffs.npz` "
 "regenerated (2283 Chebyshev segments, `jd_start=2415020.5`, "
@@ -174,11 +431,11 @@ msgstr ""
 "`jd_end=2488069.5`), erreur maximale 0,001214° sur la nouvelle plage. "
 "Runtime Pure-NumPy préservé."
 
-#: ../../source/changelog.md:30
+#: ../../source/changelog.md:131
 msgid "Changed 1.4.0"
 msgstr "Modifié 1.4.0"
 
-#: ../../source/changelog.md:32
+#: ../../source/changelog.md:133
 msgid ""
 "**Chiron orb 0° → 4°** (Pluto parity): `core.bodies['orb']` for Chiron is"
 " now 4°, so Chiron now forms scored aspects."
@@ -187,7 +444,7 @@ msgstr ""
 "pour Chiron est désormais 4°, Chiron forme donc maintenant des aspects "
 "notés."
 
-#: ../../source/changelog.md:33
+#: ../../source/changelog.md:134
 msgid ""
 "**Chiron out-of-range behaviour**: input outside 1900–2100 is now "
 "**silently clamped** to the nearest segment boundary (previously raised "
@@ -197,7 +454,7 @@ msgstr ""
 "sont désormais **silencieusement clampées** à la limite de segment la "
 "plus proche (levait précédemment une `ValueError`)."
 
-#: ../../source/changelog.md:34
+#: ../../source/changelog.md:135
 msgid ""
 "**Documentation recentred on the 180°-division default**: `concepts.md` "
 "aspect tables now show CLASSICAL (5) and TRADITIONAL (7) only; the full-"
@@ -210,16 +467,16 @@ msgstr ""
 "EXTENDED) restent disponibles dans le code mais sont hors des tableaux de"
 " synthèse."
 
-#: ../../source/changelog.md:36
+#: ../../source/changelog.md:137
 #, fuzzy
 msgid "[1.3.0] - 2026-06-01"
 msgstr "[1.3.0] - 2026-06-XX"
 
-#: ../../source/changelog.md:38
+#: ../../source/changelog.md:139
 msgid "Added 1.3.0"
 msgstr "Ajouté 1.3.0"
 
-#: ../../source/changelog.md:40
+#: ../../source/changelog.md:141
 msgid ""
 "**Chiron (14th body, body_id=13)**: Centaur body between Saturn and "
 "Uranus. Computed via embedded Chebyshev polynomial coefficients (`.npz`),"
@@ -232,7 +489,7 @@ msgstr ""
 "l'arcminute). Accessible via les fonctions de calcul standard : `long(jd,"
 " 13)`, `lat(jd, 13)`, etc."
 
-#: ../../source/changelog.md:41
+#: ../../source/changelog.md:142
 msgid ""
 "**`ketu/data/chiron_coeffs.npz`**: Embedded coefficient file (1142 "
 "segments, seg=32 days, degree=10, three quantities: longitude, latitude, "
@@ -243,7 +500,7 @@ msgstr ""
 "latitude, distance). Généré hors ligne depuis pyswisseph — pas une "
 "dépendance d'exécution."
 
-#: ../../source/changelog.md:42
+#: ../../source/changelog.md:143
 msgid ""
 "**`ketu/ephemeris/chiron.py`**: Pure-NumPy Chebyshev evaluator for Chiron"
 " positions."
@@ -251,11 +508,11 @@ msgstr ""
 "**`ketu/ephemeris/chiron.py`** : Évaluateur de Chebyshev Pure NumPy pour "
 "les positions de Chiron."
 
-#: ../../source/changelog.md:44
+#: ../../source/changelog.md:145
 msgid "Breaking Changes 1.3.0"
 msgstr "Changements incompatibles 1.3.0"
 
-#: ../../source/changelog.md:46
+#: ../../source/changelog.md:147
 msgid ""
 "**`CHART_DTYPE` body axis expanded from 13 to 14 bodies (D-08)**: "
 "`body_lons`, `body_lats`, `body_speeds` arrays are now shape `(14,)` "
@@ -269,7 +526,7 @@ msgstr ""
 "14)`. Le code qui code en dur le nombre de corps ou utilise l'index 12 "
 "comme dernier corps doit être mis à jour. Index 13 = Chiron."
 
-#: ../../source/changelog.md:47
+#: ../../source/changelog.md:148
 msgid ""
 "**`SYNASTRY_BODY_COUNT` changed from 15 to 16**: Reflects the additional "
 "Chiron body (14 bodies + ASC + MC)."
@@ -277,21 +534,21 @@ msgstr ""
 "**`SYNASTRY_BODY_COUNT` modifié de 15 à 16** : Reflète le corps Chiron "
 "supplémentaire (14 corps + ASC + MC)."
 
-#: ../../source/changelog.md:49
+#: ../../source/changelog.md:150
 msgid "See [Migration Guide](migration.md) for upgrade instructions."
 msgstr ""
 "Voir le [Guide de migration](migration.md) pour les instructions de mise "
 "à niveau."
 
-#: ../../source/changelog.md:51
+#: ../../source/changelog.md:152
 msgid "[1.2.0] - 2026-04-XX"
 msgstr "[1.2.0] - 2026-04-XX"
 
-#: ../../source/changelog.md:53
+#: ../../source/changelog.md:154
 msgid "Added 1.2.0"
 msgstr "Ajouté 1.2.0"
 
-#: ../../source/changelog.md:55
+#: ../../source/changelog.md:156
 msgid ""
 "**`ketu.charts` — Full natal chart (`compute_chart`)**: Returns a single "
 "`CHART_DTYPE` structured array combining body positions (13 bodies), "
@@ -304,7 +561,7 @@ msgstr ""
 "et une matrice d'aspects 13×13. `is_day_chart(jd, lat, lon)` aide à la "
 "détection de sect."
 
-#: ../../source/changelog.md:56
+#: ../../source/changelog.md:157
 msgid ""
 "**`ketu.synastry` — Inter-chart aspect analysis**: "
 "`calculate_synastry(chart_a, chart_b, aspects, orbs, mode)` returns "
@@ -316,7 +573,7 @@ msgstr ""
 "tableau structuré `SYNASTRY_DTYPE` avec indicateur "
 "d'application/séparation et limites d'orbe."
 
-#: ../../source/changelog.md:57
+#: ../../source/changelog.md:158
 msgid ""
 "**`ketu.composite` — Midpoint composite charts**: "
 "`calculate_composite(chart_a, chart_b, system)` returns a `CHART_DTYPE` "
@@ -328,7 +585,7 @@ msgstr ""
 " où chaque position de corps est le point médian circulaire à arc le plus"
 " court. Utilitaire `circular_midpoint(lon_a, lon_b)`."
 
-#: ../../source/changelog.md:58
+#: ../../source/changelog.md:159
 msgid ""
 "**`ketu.returns` — Solar and lunar returns**: `solar_return(natal_jd, …, "
 "target_year)` and `lunar_return(natal_jd, …, target_jd)` both return "
@@ -340,7 +597,7 @@ msgstr ""
 "target_jd)` retournent tous deux `CHART_DTYPE` pour le thème de retour. "
 "Support de délocalisation via `return_lat/return_lon`."
 
-#: ../../source/changelog.md:59
+#: ../../source/changelog.md:160
 msgid ""
 "**`ketu.parts` — Arabic Parts / Hermetic Lots**: Registry-based system "
 "with built-in `fortune`, `spirit` (sect-aware Fortune/Spirit), and "
@@ -352,7 +609,7 @@ msgstr ""
 "sensibles à la sect) et `marriage` (formule fixe). `calculate_part`, "
 "`calculate_all_parts`, `register`, `get_part`, `PartSpec`."
 
-#: ../../source/changelog.md:60
+#: ../../source/changelog.md:161
 msgid ""
 "**Additional house systems**: Whole Sign (`whole_sign`), Equal (`equal`),"
 " Regiomontanus (`regiomontanus`) added alongside the existing Placidus, "
@@ -362,7 +619,7 @@ msgstr ""
 "(`whole_sign`), Égales (`equal`), Regiomontanus (`regiomontanus`) ajoutés"
 " aux systèmes existants Placidus, Koch, Porphyre (v1.1)."
 
-#: ../../source/changelog.md:61
+#: ../../source/changelog.md:162
 msgid ""
 "**Ephemeris refactor**: `ORBITAL_ELEMENTS` extracted to `_elements.py`; "
 "`apply_perturbations` to `_perturbations.py`; `orbital.py` is now a "
@@ -372,7 +629,7 @@ msgstr ""
 "`_elements.py` ; `apply_perturbations` vers `_perturbations.py` ; "
 "`orbital.py` est maintenant un hub de ré-export de 70 lignes."
 
-#: ../../source/changelog.md:62
+#: ../../source/changelog.md:163
 msgid ""
 "**BODY_STRATEGIES dispatch**: `planets.py` uses a strategy dict instead "
 "of if-elif chains, making body extension (e.g. Chiron in v1.3) clean."
@@ -381,7 +638,7 @@ msgstr ""
 "stratégies au lieu de chaînes if-elif, rendant l'extension de corps (ex. "
 "Chiron en v1.3) propre."
 
-#: ../../source/changelog.md:63
+#: ../../source/changelog.md:164
 msgid ""
 "**Root `conftest.py`**: Shared session-scoped fixtures consolidated in "
 "`tests/conftest.py`."
@@ -389,15 +646,15 @@ msgstr ""
 "**`conftest.py` racine** : Fixtures partagées de portée session "
 "consolidées dans `tests/conftest.py`."
 
-#: ../../source/changelog.md:65
+#: ../../source/changelog.md:166
 msgid "[1.1.0] - 2026-03-XX"
 msgstr "[1.1.0] - 2026-03-XX"
 
-#: ../../source/changelog.md:67
+#: ../../source/changelog.md:168
 msgid "Added 1.1.0"
 msgstr "Ajouté 1.1.0"
 
-#: ../../source/changelog.md:69
+#: ../../source/changelog.md:170
 msgid ""
 "**`ketu.aspects` — Configurable aspect sets**: `CLASSICAL` (5 aspects), "
 "`TRADITIONAL` (7), `EXTENDED` (14 — default at v1.1, changed to "
@@ -412,7 +669,7 @@ msgstr ""
 "l_bodies, aspects=None)` accepte désormais une spécification d'ensemble "
 "d'aspects."
 
-#: ../../source/changelog.md:70
+#: ../../source/changelog.md:171
 msgid ""
 "**`ketu.houses` — House system calculations**: `calculate_houses(jd, lat,"
 " lon, system, polar_fallback)`, `house_of(planet_lon, cusps)`, "
@@ -425,7 +682,7 @@ msgstr ""
 "`HighLatitudeError`, `register`. Systèmes initiaux : `placidus`, `koch`, "
 "`porphyry`."
 
-#: ../../source/changelog.md:71
+#: ../../source/changelog.md:172
 msgid ""
 "**`HOUSES_DTYPE`**: Structured array with fields `jd`, `lat`, `lon`, "
 "`system`, `cusps[12]`, `asc`, `mc`, `armc`, `vertex`."
@@ -433,15 +690,15 @@ msgstr ""
 "**`HOUSES_DTYPE`** : Tableau structuré avec les champs `jd`, `lat`, "
 "`lon`, `system`, `cusps[12]`, `asc`, `mc`, `armc`, `vertex`."
 
-#: ../../source/changelog.md:73
+#: ../../source/changelog.md:174
 msgid "[1.0.0] - 2026-02-12"
 msgstr "[1.0.0] - 2026-02-12"
 
-#: ../../source/changelog.md:75
+#: ../../source/changelog.md:176
 msgid "Breaking Changes 1.0.0"
 msgstr "Changements incompatibles 1.0.0"
 
-#: ../../source/changelog.md:77
+#: ../../source/changelog.md:178
 msgid ""
 "**Removed export modules**: `ketu.export.chart`, `ketu.export.icalendar` "
 "— Ketu is now a pure calculation library"
@@ -450,7 +707,7 @@ msgstr ""
 "`ketu.export.icalendar` — Ketu est désormais une bibliothèque de calcul "
 "pure"
 
-#: ../../source/changelog.md:78
+#: ../../source/changelog.md:179
 msgid ""
 "**Removed pandas dependency**: `generate_aspect_timeline()` returns NumPy"
 " structured array; use `pd.DataFrame(timeline)` for manual conversion"
@@ -459,7 +716,7 @@ msgstr ""
 "un tableau structuré NumPy ; utilisez `pd.DataFrame(timeline)` pour une "
 "conversion manuelle"
 
-#: ../../source/changelog.md:79
+#: ../../source/changelog.md:180
 msgid ""
 "**Renamed velocity functions**: `vlong()` → `long_velocity()`, `vlat()` →"
 " `lat_velocity()`, `vdist_au()` → `dist_velocity_au()`"
@@ -467,7 +724,7 @@ msgstr ""
 "**Fonctions de vélocité renommées** : `vlong()` → `long_velocity()`, "
 "`vlat()` → `lat_velocity()`, `vdist_au()` → `dist_velocity_au()`"
 
-#: ../../source/changelog.md:80
+#: ../../source/changelog.md:181
 msgid ""
 "**Public API surface**: `ketu.__init__.py` exports only metadata + core "
 "constants; functions accessed via submodule imports"
@@ -476,11 +733,11 @@ msgstr ""
 " métadonnées + constantes de base ; fonctions accessibles via des imports"
 " de sous-modules"
 
-#: ../../source/changelog.md:82
+#: ../../source/changelog.md:183
 msgid "Fixed 1.0.0"
 msgstr "Corrigé 1.0.0"
 
-#: ../../source/changelog.md:84
+#: ../../source/changelog.md:185
 msgid ""
 "**Cache operator precedence bug**: `use_cache=False` was ignored due to "
 "missing parentheses"
@@ -488,7 +745,7 @@ msgstr ""
 "**Bug de précédence d'opérateur du cache** : `use_cache=False` était "
 "ignoré en raison de parenthèses manquantes"
 
-#: ../../source/changelog.md:85
+#: ../../source/changelog.md:186
 msgid ""
 "**Aspect vectorization non-determinism**: "
 "`calculate_aspects_vectorized()` now returns consistent results"
@@ -497,7 +754,7 @@ msgstr ""
 "`calculate_aspects_vectorized()` retourne maintenant des résultats "
 "cohérents"
 
-#: ../../source/changelog.md:86
+#: ../../source/changelog.md:187
 msgid ""
 "**Moon velocity wrapping**: Correct velocity at 360°/0° boundary (was "
 "showing ±360° spikes)"
@@ -505,21 +762,21 @@ msgstr ""
 "**Enroulement de la vélocité lunaire** : Vélocité correcte à la frontière"
 " 360°/0° (affichait auparavant des pics de ±360°)"
 
-#: ../../source/changelog.md:88
+#: ../../source/changelog.md:189
 msgid "Added 1.0.0"
 msgstr "Ajouté 1.0.0"
 
-#: ../../source/changelog.md:90
+#: ../../source/changelog.md:191
 msgid "**Type hints everywhere**: mypy strict mode compliance"
 msgstr "**Annotations de type partout** : conformité au mode strict de mypy"
 
-#: ../../source/changelog.md:91
+#: ../../source/changelog.md:192
 msgid "**NumPy-style docstrings**: Examples section in all public functions"
 msgstr ""
 "**Docstrings au style NumPy** : section Exemples dans toutes les "
 "fonctions publiques"
 
-#: ../../source/changelog.md:92
+#: ../../source/changelog.md:193
 msgid ""
 "**Standardized error messages**: All `ValueError` messages include "
 "received value and valid options"
@@ -527,7 +784,7 @@ msgstr ""
 "**Messages d'erreur standardisés** : Tous les messages `ValueError` "
 "incluent la valeur reçue et les options valides"
 
-#: ../../source/changelog.md:93
+#: ../../source/changelog.md:194
 msgid ""
 "**Numerical precision guarantees**: ±1e-6° for angular separation "
 "(documented)"
@@ -535,19 +792,19 @@ msgstr ""
 "**Garanties de précision numérique** : ±1e-6° pour la séparation "
 "angulaire (documenté)"
 
-#: ../../source/changelog.md:94
+#: ../../source/changelog.md:195
 msgid "**98% test coverage**: 408 tests across all modules"
 msgstr "**98% de couverture de tests** : 408 tests sur tous les modules"
 
-#: ../../source/changelog.md:96
+#: ../../source/changelog.md:197
 msgid "[0.4.0] - 2026-01-14"
 msgstr "[0.4.0] - 2026-01-14"
 
-#: ../../source/changelog.md:98
+#: ../../source/changelog.md:199
 msgid "Added 0.4.0"
 msgstr "Ajouts 0.4.0"
 
-#: ../../source/changelog.md:100
+#: ../../source/changelog.md:201
 #, python-brace-format
 msgid ""
 "**Complex Engine**: New `ketu.complex` module using $e^{i\\theta}$ "
@@ -556,17 +813,17 @@ msgstr ""
 "**Moteur complexe** : Nouveau module `ketu.complex` utilisant la "
 "représentation $e^{i\\theta}$ pour les cycles."
 
-#: ../../source/changelog.md:101
+#: ../../source/changelog.md:202
 msgid "**Expanded Aspects**: Support for 14 aspects (Harmonics H1-H6, H9, H10)."
 msgstr "**Aspects étendus** : Support de 14 aspects (Harmoniques H1-H6, H9, H10)."
 
-#: ../../source/changelog.md:102
+#: ../../source/changelog.md:203
 msgid "**Ephemeris Cache**: Persistent cache for O(1) position lookups."
 msgstr ""
 "**Cache d'éphémérides** : Cache persistant pour des recherches de "
 "positions en O(1)."
 
-#: ../../source/changelog.md:103
+#: ../../source/changelog.md:204
 msgid ""
 "**Vectorized Cycles**: Refactored `ketu.cycles` to use complex vector "
 "operations."
@@ -574,7 +831,7 @@ msgstr ""
 "**Cycles vectorisés** : Refonte de `ketu.cycles` pour utiliser des "
 "opérations vectorielles complexes."
 
-#: ../../source/changelog.md:104
+#: ../../source/changelog.md:205
 msgid ""
 "**ML Features**: Direct generation of Machine Learning features "
 "(`cos_phase`, `sin_phase`)."
@@ -582,269 +839,269 @@ msgstr ""
 "**Fonctionnalités ML** : Génération directe de features pour le Machine "
 "Learning (`cos_phase`, `sin_phase`)."
 
-#: ../../source/changelog.md:106
+#: ../../source/changelog.md:207
 msgid "[0.3.0] - 2025-12-XX"
 msgstr "[0.3.0] - 2025-12-XX"
 
-#: ../../source/changelog.md:108
+#: ../../source/changelog.md:209
 msgid "Added 0.3.0"
 msgstr "Ajouts 0.3.0"
 
-#: ../../source/changelog.md:110
+#: ../../source/changelog.md:211
 msgid "**Pure NumPy**: Removed dependency on `pyswisseph` binary."
 msgstr "**Pure NumPy** : Suppression de la dépendance au binaire `pyswisseph`."
 
-#: ../../source/changelog.md:111
+#: ../../source/changelog.md:212
 msgid "**New Modules**: `ketu.ephemeris`, `ketu.cycles`."
 msgstr "**Nouveaux modules** : `ketu.ephemeris`, `ketu.cycles`."
 
-#: ../../source/changelog.md:112
+#: ../../source/changelog.md:213
 msgid "**Performance**: Significant speedups in time series generation."
 msgstr ""
 "**Performance** : Accélérations significatives dans la génération de "
 "séries temporelles."
 
-#: ../../source/changelog.md:114
+#: ../../source/changelog.md:215
 msgid "[0.2.1] - 2025-10-27"
 msgstr "[0.2.1] - 2025-10-27"
 
-#: ../../source/changelog.md:116
+#: ../../source/changelog.md:217
 msgid "Minor fix"
 msgstr "Correction mineure"
 
-#: ../../source/changelog.md:118
+#: ../../source/changelog.md:219
 msgid "[0.2.0] - 2025-10-27"
 msgstr "[0.2.0] - 2025-10-27"
 
-#: ../../source/changelog.md:120
+#: ../../source/changelog.md:221
 msgid "Added 0.2.0"
 msgstr "Ajouts 0.2.0"
 
-#: ../../source/changelog.md:122
+#: ../../source/changelog.md:223
 msgid "Full packaging setup for a PyPI release"
 msgstr "Configuration complète du packaging pour une publication PyPI"
 
-#: ../../source/changelog.md:123
+#: ../../source/changelog.md:224
 msgid "`pyproject.toml` metadata and dependencies"
 msgstr "Métadonnées et dépendances dans `pyproject.toml`"
 
-#: ../../source/changelog.md:124
+#: ../../source/changelog.md:225
 msgid "`requirements.txt` for a minimal install"
 msgstr "`requirements.txt` pour une installation minimale"
 
-#: ../../source/changelog.md:125
+#: ../../source/changelog.md:226
 msgid "Public exports in `ketu/__init__.py`"
 msgstr "Exports publics dans `ketu/__init__.py`"
 
-#: ../../source/changelog.md:126
+#: ../../source/changelog.md:227
 msgid "Expanded README with usage examples"
 msgstr "README enrichi avec des exemples d'utilisation"
 
-#: ../../source/changelog.md:127
+#: ../../source/changelog.md:228
 msgid "PyPI, Python versions, and license badges"
 msgstr "Badges PyPI, versions Python et licence"
 
-#: ../../source/changelog.md:128
+#: ../../source/changelog.md:229
 msgid "`MANIFEST.in` to ship data files"
 msgstr "`MANIFEST.in` pour distribuer les fichiers de données"
 
-#: ../../source/changelog.md:129
+#: ../../source/changelog.md:230
 msgid "GitHub Actions workflow for automated tests"
 msgstr "Workflow GitHub Actions pour les tests automatisés"
 
-#: ../../source/changelog.md:130
+#: ../../source/changelog.md:231
 msgid "GitHub Actions workflow for PyPI publishing"
 msgstr "Workflow GitHub Actions pour la publication PyPI"
 
-#: ../../source/changelog.md:131
+#: ../../source/changelog.md:232
 msgid "CI coverage for Python 3.9 through 3.13"
 msgstr "Couverture CI pour Python 3.9 à 3.13"
 
-#: ../../source/changelog.md:132
+#: ../../source/changelog.md:233
 msgid "`ketu` CLI entry point"
 msgstr "Point d'entrée CLI `ketu`"
 
-#: ../../source/changelog.md:133
+#: ../../source/changelog.md:234
 msgid "Support for 13 celestial bodies (added True Node)"
 msgstr "Support de 13 corps célestes (ajout du Nœud Nord vrai)"
 
-#: ../../source/changelog.md:134
+#: ../../source/changelog.md:235
 msgid "English and French documentation"
 msgstr "Documentation en anglais et en français"
 
-#: ../../source/changelog.md:136
+#: ../../source/changelog.md:237
 msgid "Changed 0.2.0"
 msgstr "Modifié 0.2.0"
 
-#: ../../source/changelog.md:138
+#: ../../source/changelog.md:239
 msgid "Fixed and hardened the unit tests"
 msgstr "Correction et renforcement des tests unitaires"
 
-#: ../../source/changelog.md:139
+#: ../../source/changelog.md:240
 msgid "Renamed `timea.py` to `_timea.py` (private module)"
 msgstr "Renommage de `timea.py` en `_timea.py` (module privé)"
 
-#: ../../source/changelog.md:140
+#: ../../source/changelog.md:241
 msgid "Optimised package structure for distribution"
 msgstr "Optimisation de la structure du package pour la distribution"
 
-#: ../../source/changelog.md:141
+#: ../../source/changelog.md:242
 msgid "Aligned the documentation with the new layout"
 msgstr "Alignement de la documentation avec la nouvelle organisation"
 
-#: ../../source/changelog.md:143
+#: ../../source/changelog.md:244
 msgid "Technical PyPI deployment 0.2.0"
 msgstr "Déploiement technique PyPI 0.2.0"
 
-#: ../../source/changelog.md:145
+#: ../../source/changelog.md:246
 msgid "Official support for Python 3.10–3.13"
 msgstr "Support officiel de Python 3.10–3.13"
 
-#: ../../source/changelog.md:146
+#: ../../source/changelog.md:247
 msgid "Pytest configuration embedded in `pyproject.toml`"
 msgstr "Configuration Pytest intégrée dans `pyproject.toml`"
 
-#: ../../source/changelog.md:147
+#: ../../source/changelog.md:248
 msgid "Coverage configuration for CI analysis"
 msgstr "Configuration de la couverture pour l'analyse CI"
 
-#: ../../source/changelog.md:148
+#: ../../source/changelog.md:249
 msgid "Package installable via `pip install ketu`"
 msgstr "Package installable via `pip install ketu`"
 
-#: ../../source/changelog.md:149
+#: ../../source/changelog.md:250
 msgid "Works seamlessly in virtual environments"
 msgstr "Fonctionne parfaitement dans les environnements virtuels"
 
-#: ../../source/changelog.md:151
+#: ../../source/changelog.md:252
 msgid "[0.1.0] - 2024-01-XX"
 msgstr "[0.1.0] - 2024-01-XX"
 
-#: ../../source/changelog.md:153
+#: ../../source/changelog.md:254
 msgid "Added 0.1.0"
 msgstr "Ajouts 0.1.0"
 
-#: ../../source/changelog.md:155
+#: ../../source/changelog.md:256
 msgid "Interactive CLI to calculate positions and aspects"
 msgstr "CLI interactif pour calculer les positions et les aspects"
 
-#: ../../source/changelog.md:156
+#: ../../source/changelog.md:257
 msgid "Planetary position calculations via pyswisseph"
 msgstr "Calculs de positions planétaires via pyswisseph"
 
-#: ../../source/changelog.md:157
+#: ../../source/changelog.md:258
 msgid "Detection of major aspects with orbs"
 msgstr "Détection des aspects majeurs avec orbes"
 
-#: ../../source/changelog.md:158
+#: ../../source/changelog.md:259
 msgid "Conversions between time systems (UTC, Julian)"
 msgstr "Conversions entre systèmes de temps (UTC, Julien)"
 
-#: ../../source/changelog.md:159
+#: ../../source/changelog.md:260
 msgid "Retrogradation detection"
 msgstr "Détection de la rétrogradation"
 
-#: ../../source/changelog.md:160
+#: ../../source/changelog.md:261
 msgid "Complete documentation with Sphinx and MyST"
 msgstr "Documentation complète avec Sphinx et MyST"
 
-#: ../../source/changelog.md:161
+#: ../../source/changelog.md:262
 msgid "Installable PyPI package"
 msgstr "Package PyPI installable"
 
-#: ../../source/changelog.md:162
+#: ../../source/changelog.md:263
 msgid "Initial unit tests"
 msgstr "Tests unitaires initiaux"
 
-#: ../../source/changelog.md:164
+#: ../../source/changelog.md:265
 msgid "Features 0.1.0"
 msgstr "Fonctionnalités 0.1.0"
 
-#: ../../source/changelog.md:166
+#: ../../source/changelog.md:267
 msgid "Support for 10 planets + Rahu + Lilith"
 msgstr "Support de 10 planètes + Rahu + Lilith"
 
-#: ../../source/changelog.md:167
+#: ../../source/changelog.md:268
 msgid "7 major aspects (conjunction through opposition)"
 msgstr "7 aspects majeurs (de la conjonction à l'opposition)"
 
-#: ../../source/changelog.md:168
+#: ../../source/changelog.md:269
 msgid "Zodiac sign calculations"
 msgstr "Calculs des signes du zodiaque"
 
-#: ../../source/changelog.md:169
+#: ../../source/changelog.md:270
 msgid "Orb system based on Abu Ma'shar"
 msgstr "Système d'orbes basé sur Abu Ma'shar"
 
-#: ../../source/changelog.md:170
+#: ../../source/changelog.md:271
 msgid "LRU cache to improve performance"
 msgstr "Cache LRU pour améliorer les performances"
 
-#: ../../source/changelog.md:172
+#: ../../source/changelog.md:273
 msgid "Technical 0.1.0"
 msgstr "Technique 0.1.0"
 
-#: ../../source/changelog.md:174
+#: ../../source/changelog.md:275
 msgid "Requires Python 3.9+"
 msgstr "Nécessite Python 3.9+"
 
-#: ../../source/changelog.md:175
+#: ../../source/changelog.md:276
 msgid "Dependencies: numpy, pyswisseph"
 msgstr "Dépendances : numpy, pyswisseph"
 
-#: ../../source/changelog.md:176
+#: ../../source/changelog.md:277
 msgid "Modular architecture"
 msgstr "Architecture modulaire"
 
-#: ../../source/changelog.md:177
+#: ../../source/changelog.md:278
 msgid "Documented, typed code"
 msgstr "Code documenté et typé"
 
-#: ../../source/changelog.md:179
+#: ../../source/changelog.md:280
 msgid "[0.0.1] - 2023-01-XX"
 msgstr "[0.0.1] - 2023-01-XX"
 
-#: ../../source/changelog.md:181
+#: ../../source/changelog.md:282
 msgid "Initial"
 msgstr "Initial"
 
-#: ../../source/changelog.md:183
+#: ../../source/changelog.md:284
 msgid "Prototype"
 msgstr "Prototype"
 
-#: ../../source/changelog.md:184
+#: ../../source/changelog.md:285
 msgid "Basic position calculations"
 msgstr "Calculs de positions basiques"
 
-#: ../../source/changelog.md:185
+#: ../../source/changelog.md:286
 msgid "Command-line interface"
 msgstr "Interface en ligne de commande"
 
-#: ../../source/changelog.md:189
+#: ../../source/changelog.md:290
 msgid "Versioning Convention"
 msgstr "Convention de versioning"
 
-#: ../../source/changelog.md:191
+#: ../../source/changelog.md:292
 msgid "**MAJOR**: Incompatible API changes"
 msgstr "**MAJOR** : Changements incompatibles de l'API"
 
-#: ../../source/changelog.md:192
+#: ../../source/changelog.md:293
 msgid "**MINOR**: Backward-compatible feature additions"
 msgstr "**MINOR** : Ajouts de fonctionnalités rétrocompatibles"
 
-#: ../../source/changelog.md:193
+#: ../../source/changelog.md:294
 msgid "**PATCH**: Backward-compatible bug fixes"
 msgstr "**PATCH** : Corrections de bugs rétrocompatibles"
 
-#: ../../source/changelog.md:195
+#: ../../source/changelog.md:296
 msgid "Links"
 msgstr "Liens"
 
-#: ../../source/changelog.md:197
+#: ../../source/changelog.md:298
 msgid "[Version comparison](https://github.com/alkimya/ketu/compare/)"
 msgstr "[Comparaison de versions](https://github.com/alkimya/ketu/compare/)"
 
-#: ../../source/changelog.md:198
+#: ../../source/changelog.md:299
 msgid "[All releases](https://github.com/alkimya/ketu/releases)"
 msgstr "[Toutes les versions](https://github.com/alkimya/ketu/releases)"
 
@@ -853,4 +1110,7 @@ msgstr "[Toutes les versions](https://github.com/alkimya/ketu/releases)"
 
 #~ msgid "Changed"
 #~ msgstr "Modifications"
+
+#~ msgid "[1.5.0] - Unreleased"
+#~ msgstr "[1.5.0] - Non publié"
 
