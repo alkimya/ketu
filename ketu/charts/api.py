@@ -392,6 +392,22 @@ def compute_chart(
     x_eq, y_eq, z_eq = ecliptic_to_equatorial(x_ecl, y_ecl, z_ecl, eps_bc)
     _, decl, _ = rectangular_to_spherical(x_eq, y_eq, z_eq)
     out["body_decl"] = decl
+    # DSPD-02: forward FD at Δt=0.01 d for body_decl_speed (dδ/dt in deg/day).
+    # Reuses `decl` as δ₀ (already computed above — no second evaluation at jd_b).
+    # Mirrors scalar declination_velocity(jdate, body) = (δ(jd+0.01) - δ(jd)) / 0.01
+    # but vectorised over all 14 bodies × leading shape S in one pass.
+    # Numerical agreement with the scalar is exact (Δ == 0) because both paths use
+    # the identical δ-chain at Δt=0.01 (DSPD-02 success criterion).
+    _jd_b1 = jd_b + 0.01
+    _lons1, _lats1, _ = _vectorised_body_properties(_jd_b1)
+    _eps_b1: np.ndarray = np.asarray(
+        true_obliquity(float(_jd_b1) if _jd_b1.ndim == 0 else _jd_b1)  # type: ignore[arg-type]
+    )
+    _eps_bc1 = _eps_b1[..., np.newaxis]
+    _x1, _y1, _z1 = spherical_to_rectangular(_lons1, _lats1, 1.0)
+    _xe1, _ye1, _ze1 = ecliptic_to_equatorial(_x1, _y1, _z1, _eps_bc1)
+    _, _decl1, _ = rectangular_to_spherical(_xe1, _ye1, _ze1)
+    out["body_decl_speed"] = (_decl1 - decl) / 0.01
     out["cusps"] = houses["cusps"]
     out["asc"] = houses["asc"]
     out["mc"] = houses["mc"]
