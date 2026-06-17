@@ -139,6 +139,8 @@ v1.7 gave the three fictitious points — Rahu (10), Ketu (11), Lilith (12) — 
 
 **Goal:** Expose declination velocity dδ/dt as a `body_decl_speed` field in `CHART_DTYPE` — the one real gap that blocks the Rahu UI from showing montant/descendant in declination without computing astronomy in the front-end.
 
+**Progress:** Phase 40 (Declination Speed Field & Chart API) **complete** 2026-06-17 — DSPD-01..06 all validated (verifier 6/6, 1691 tests green, 100% coverage). `CHART_DTYPE` now carries `body_decl_speed` at index 8 (16 fields), populated by `compute_chart` (Δ=0 vs the v1.5 scalar), inherited by synastry/composite/returns (composite derived from its own frozen λ,β, never the parent midpoint), with the public `DECL_STANDSTILL_EPS = 0.001` contract and the chart-level `is_ascending_declination_chart` helper. Remaining: Phase 41 (docs en+fr + MINOR 1.8.0 release).
+
 **Key insight:** Ketu *already computes* dδ/dt — `declination_velocity(jd, body)` and `is_ascending_declination(jd, body)` have existed since v1.5 (finite-difference step 0.01 d). The gap is NOT the calculation; it is that dδ/dt is **not in the structured chart** that Rahu consumes. `body_decl` (δ) is there; `body_decl_speed` (dδ/dt) is not. This milestone exposes the field, it does not reinvent the math.
 
 **Target features:**
@@ -297,4 +299,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-Last updated: 2026-06-17 — milestone v1.8 (Declination Speed) started via `/gsd-new-milestone`. Scope: expose dδ/dt as a `body_decl_speed` field in `CHART_DTYPE` (the calc already exists since v1.5 as `declination_velocity`; the gap is that it is not in the structured chart Rahu consumes), Δt = 0.01 d reused verbatim, a `DECL_STANDSTILL_EPS` public-contract threshold defined IN Ketu, and a chart-level `is_ascending_declination` helper. MINOR-not-patch (1.8.0) because the dtype layout grows (Kala re-pins). Triggered by the Rahu declination panel gap ([KETU-GAPS-declination.md], decisions of 2026-06-16). Rahu computes no astronomy — the boundary is non-negotiable. Next: requirements → roadmap (phases continue from 40).
+Last updated: 2026-06-17 — Phase 40 (Declination Speed Field & Chart API) complete: body_decl_speed in CHART_DTYPE, DECL_STANDSTILL_EPS, is_ascending_declination_chart helper; DSPD-01..06 validated. Remaining v1.8 work: Phase 41 (docs en+fr + MINOR 1.8.0 release).
