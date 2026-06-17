@@ -492,6 +492,23 @@ def declination(jdate: Union[float, np.ndarray], body: int) -> Union[float, np.n
         return decl
 
 
+#: Standstill threshold for equatorial declination velocity (deg/day).
+#:
+#: ``|dδ/dt| ≤ DECL_STANDSTILL_EPS`` classifies a body as at a declination
+#: standstill (δ turning point — "montant" status undefined). Determined
+#: empirically against the live ketu 1.7.0 ephemeris:
+#:
+#: - Sun at exact solstice:       ~0.000020 deg/day → correctly neutral
+#: - Moon at exact δ-standstill:  ~0.000041 deg/day → correctly neutral
+#: - Jupiter typical in motion:    0.005    deg/day → correctly ascending/descending
+#: - Jupiter at own δ-node:       ~0.000081 deg/day → correctly neutral
+#: - Uranus typical in motion:     0.003    deg/day → correctly ascending/descending
+#:
+#: Value 0.001 deg/day is well above the FD truncation floor (~0.000002 deg/day
+#: for outer planets) and below any real in-motion reading for all 14 bodies.
+DECL_STANDSTILL_EPS: float = 0.001
+
+
 def declination_velocity(jdate: float, body: int) -> float:
     """
     Get rate of change of equatorial declination (dδ/dt) for a body.
@@ -672,6 +689,7 @@ __all__ = [
     "is_retrograde",
     "is_ascending",
     "declination",
+    "DECL_STANDSTILL_EPS",
     "declination_velocity",
     "is_ascending_declination",
     "is_out_of_bounds",
