@@ -36,6 +36,7 @@ import numpy as np
 
 from ketu.aspects.calculator import calculate_aspects_vectorized
 from ketu.aspects.presets import AspectSetSpec
+from ketu.calculations import DECL_STANDSTILL_EPS
 from ketu.core import bodies as _CANONICAL_BODIES
 from ketu.ephemeris.coordinates import (
     ecliptic_to_equatorial,
@@ -566,3 +567,53 @@ def is_day_chart(
     #    vectorised call sites.
     delta = (asc - sun_lon) % 360.0
     return np.asarray(delta < 180.0)
+
+
+def is_ascending_declination_chart(chart: np.ndarray) -> np.ndarray:
+    """
+    Classify each body's declination direction as ascending, descending, or neutral.
+
+    Chart-level companion to the scalar
+    :func:`ketu.calculations.is_ascending_declination`. Reads the
+    ``body_decl_speed`` field of a :data:`CHART_DTYPE` structured array
+    and classifies each body using :data:`ketu.calculations.DECL_STANDSTILL_EPS`.
+    Returns ``+1`` (northward), ``-1`` (southward), or ``0`` (standstill).
+
+    Use the DISTINCT name ``is_ascending_declination_chart`` — do NOT confuse
+    with the scalar :func:`ketu.calculations.is_ascending_declination` which
+    takes ``(jdate, body)`` and returns ``bool``.
+
+    Parameters
+    ----------
+    chart : np.ndarray
+        Structured array of :data:`CHART_DTYPE`, leading shape ``S`` (any
+        broadcast-compatible shape — 0-d for scalar, ``(N,)`` for vectorised).
+
+    Returns
+    -------
+    np.ndarray
+        Integer array of dtype ``int8``, shape ``S + (14,)``.
+
+        * ``+1`` — ascending (dδ/dt > :data:`~ketu.calculations.DECL_STANDSTILL_EPS`,
+          northward).
+        * ``-1`` — descending (dδ/dt < −:data:`~ketu.calculations.DECL_STANDSTILL_EPS`,
+          southward).
+        * ``0``  — neutral / standstill
+          (|dδ/dt| ≤ :data:`~ketu.calculations.DECL_STANDSTILL_EPS`).
+
+    See Also
+    --------
+    ketu.calculations.is_ascending_declination : Scalar bool variant
+        ``(jdate: float, body: int) -> bool``.
+    ketu.calculations.DECL_STANDSTILL_EPS : Standstill threshold constant
+        (0.001 deg/day, empirically determined; bodies slower than this at a
+        δ turning point are classified neutral).
+    ketu.charts.compute_chart : Populates the ``body_decl_speed`` field
+        consumed by this helper.
+    """
+    speeds = np.asarray(chart["body_decl_speed"], dtype=np.float64)
+    return np.where(
+        speeds > DECL_STANDSTILL_EPS,
+        np.int8(1),
+        np.where(speeds < -DECL_STANDSTILL_EPS, np.int8(-1), np.int8(0)),
+    ).astype(np.int8)
