@@ -1,17 +1,17 @@
 ---
 gsd_state_version: 1.0
-milestone: v1.8
-milestone_name: Declination Speed
-status: executing
-stopped_at: Phase 41 context gathered
-last_updated: "2026-06-17T18:33:27.935Z"
-last_activity: 2026-06-17 -- Phase 41 execution started
+milestone: v1.8.0
+milestone_name: "**Goal**: The `body_decl_speed` field, the 0.01 d FD step, `DECL_STANDSTILL_EPS`, the chart-level helper, and the Ketu/Rahu boundary are fully documented in English and French, the version is bumped to 1.8.0, and `ketu==1.8.0` is live on PyPI"
+status: Milestone v1.8 SHIPPED — ketu==1.8.0 live on PyPI
+stopped_at: Completed 41-03-PLAN.md — ketu==1.8.0 live on PyPI
+last_updated: "2026-06-19T10:38:26.353Z"
+last_activity: "2026-06-19 -- Phase 41 Plan 03 complete: ketu==1.8.0 live on PyPI, smoke SMOKE_OK"
 progress:
   total_phases: 2
-  completed_phases: 1
+  completed_phases: 2
   total_plans: 6
-  completed_plans: 3
-  percent: 50
+  completed_plans: 6
+  percent: 100
 ---
 
 # Project State
@@ -25,16 +25,16 @@ See: `.planning/PROJECT.md` (updated 2026-06-17 — milestone v1.8 started)
 
 ## Current Position
 
-Phase: 41 (documentation-release-v1-8-0) — EXECUTING
-Plan: 1 of 3
-Status: Executing Phase 41
-Last activity: 2026-06-17 -- Phase 41 execution started
+Phase: 41 (documentation-release-v1-8-0) — COMPLETE
+Plan: 3 of 3 (all complete)
+Status: Milestone v1.8 SHIPPED — ketu==1.8.0 live on PyPI
+Last activity: 2026-06-19 -- Phase 41 Plan 03 complete: ketu==1.8.0 live on PyPI, smoke SMOKE_OK
 
-Progress: [░░░░░░░░░░] 0%
+Progress: [██████████] 100%
 
 ## Next Step
 
-`/gsd-plan-phase 40`
+`/gsd-complete-milestone` — archive v1.8, update PROJECT.md, clean up .planning/
 
 ## Accumulated Context
 
@@ -85,6 +85,6 @@ Note: Non-blocker. Out of v1.8 scope.
 
 ## Session Continuity
 
-Last session: 2026-06-17T17:23:24.141Z
-Stopped at: Phase 41 context gathered
-Resume file: .planning/phases/41-documentation-release-v1-8-0/41-CONTEXT.md
+Last session: 2026-06-19T10:38:26.339Z
+Stopped at: Completed 41-03-PLAN.md — ketu==1.8.0 live on PyPI
+Resume file: None

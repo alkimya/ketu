@@ -10,7 +10,7 @@
 - ✅ **v1.5 Lunar Declination & Harmonics Debt** — Phases 33-35 (shipped 2026-06-04; `ketu==1.5.0` on PyPI via OIDC — additive minor: equatorial declination δ as a first-class vectorizable quantity (`declination` / `declination_velocity` / `is_ascending_declination` / `is_out_of_bounds` + `body_decl` in `CHART_DTYPE`), dynamic-harmonics debt paydown (ASP-F2 `H{h}-{k}` naming contract, ASP-F3 `find_aspect_timing` `dyn_coef` orb derivation, ASP-F1 CLI `--harmonics h7`). No breaking changes; `is_ascending` (β) and the frozen `core.aspects` table stay byte-identical. Archived to `.planning/milestones/v1.5-ROADMAP.md`.)
 - ✅ **v1.6 Declination Aspects** — Phases 36-37 (shipped 2026-06-04; `ketu==1.6.0` on PyPI via OIDC — additive `ketu.declination` subpackage: parallel + contra-parallel detection on the δ axis (`find_declination_aspects` scalar + `declination_aspect_masks` batch + `DECLA_ASPECT_DTYPE`), body-derived δ orbs (`DECLA_COEF=1/12`, `MIN_DECL_ORB=0.5°`), docs en + fr. No breaking changes; `CHART_DTYPE` byte-identical, `core.aspects` unchanged. Archived to `.planning/milestones/v1.6-ROADMAP.md`.)
 - ✅ **v1.7 Fictitious-Point Orbs** — Phases 38-39 (shipped 2026-06-15; `ketu==1.7.0` on PyPI via OIDC — orb 0°→2° on Rahu/Ketu/Lilith so the three fictitious points enter aspect detection, surgical Rahu↔Ketu Opposition filter (tautological 180°), synastry oracle rewrite + full regression sweep, MINOR-not-patch for Kala, docs en+fr. Archived to `.planning/milestones/v1.7-ROADMAP.md`.)
-- 🚧 **v1.8 Declination Speed** — Phases 40-41 (in progress — Phase 40 planned: 3 plans, 3 waves; expose dδ/dt as `body_decl_speed` in `CHART_DTYPE`, `DECL_STANDSTILL_EPS` public constant, chart-level helper, docs en+fr, release 1.8.0)
+- ✅ **v1.8 Declination Speed** — Phases 40-41 (shipped 2026-06-19; `ketu==1.8.0` on PyPI via OIDC — `body_decl_speed` field in `CHART_DTYPE` (dδ/dt deg/day, FD Δt=0.01d), `DECL_STANDSTILL_EPS=0.001`, chart-level `is_ascending_declination_chart` helper (int8 {+1,0,-1}), docs en+fr, MINOR bump, smoke SMOKE_OK)
 
 ## Phases
 
@@ -119,12 +119,12 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
 
 </details>
 
-### 🚧 v1.8 Declination Speed (In Progress)
+### ✅ v1.8 Declination Speed — SHIPPED 2026-06-19
 
 **Milestone Goal:** Expose dδ/dt as `body_decl_speed` in `CHART_DTYPE` — the gap that blocks the Rahu UI from showing montant/descendant in declination without computing astronomy in the front-end. The calculation already exists since v1.5 (`declination_velocity`); this milestone exposes the field, defines the `DECL_STANDSTILL_EPS` public contract, and ships the chart-level helper.
 
 - [x] **Phase 40: Declination Speed Field & Chart API** — Add `body_decl_speed` to `CHART_DTYPE`, populate via `compute_chart`, inherit by synastry/composite/returns, re-pin dtype ratchet, define `DECL_STANDSTILL_EPS`, expose chart-level helper (completed 2026-06-17)
-- [ ] **Phase 41: Documentation + Release v1.8.0** — Docs en+fr for the field, step, threshold, and helper; MINOR bump + UPGRADING Kala re-pin guidance; human go/no-go; PyPI publish
+- [x] **Phase 41: Documentation + Release v1.8.0** — Docs en+fr for the field, step, threshold, and helper; MINOR bump + UPGRADING Kala re-pin guidance; human go/no-go; PyPI publish (completed 2026-06-19)
 
 ## Phase Details
 
@@ -164,7 +164,7 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
 
 - [x] 41-01-PLAN.md — EN docs for the v1.8 surface (body_decl_speed / DECL_STANDSTILL_EPS / is_ascending_declination_chart) + full name-clean sweep of source docstrings + EN changelogs/UPGRADING + re-run all quality gates (Wave 1) — DSPD-07
 - [x] 41-02-PLAN.md — FR translations of the v1.8 strings + name-clean of FR catalogs + recompile .mo + EN/FR docs build at the 1-warning baseline (Wave 2) — DSPD-07
-- [ ] 41-03-PLAN.md — Bump 1.8.0 (three files) + human go/no-go gate + push main+tag (OIDC publish) + post-publish fresh-venv smoke (Wave 3) — REL-01
+- [x] 41-03-PLAN.md — Bump 1.8.0 (three files) + human go/no-go gate + push main+tag (OIDC publish) + post-publish fresh-venv smoke (Wave 3) — REL-01
 
 ## Progress
 
@@ -207,7 +207,7 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
 | 38. Fictitious-Point Orbs Engine                  | v1.7      | 2/2            | ✓ Complete  | 2026-06-15 |
 | 39. Documentation + Release v1.7.0                | v1.7      | 3/3            | ✓ Complete  | 2026-06-15 |
 | 40. Declination Speed Field & Chart API           | v1.8      | 3/3 | Complete    | 2026-06-17 |
-| 41. Documentation + Release v1.8.0               | v1.8      | 2/3 | In Progress|  |
+| 41. Documentation + Release v1.8.0               | v1.8      | 3/3 | Complete   | 2026-06-19 |
 
 ---
 
@@ -219,4 +219,4 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
 *v1.5 phase details archived to `.planning/milestones/v1.5-ROADMAP.md`*
 *v1.6 phase details archived to `.planning/milestones/v1.6-ROADMAP.md`*
 *v1.7 phase details archived to `.planning/milestones/v1.7-ROADMAP.md`*
-*Roadmap last updated: 2026-06-17 — Phase 41 planned (3 plans, 3 waves).*
+*Roadmap last updated: 2026-06-19 — Phase 41 complete: ketu==1.8.0 shipped to PyPI.*

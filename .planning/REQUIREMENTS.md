@@ -32,7 +32,7 @@ Requirements for the v1.8 release. Each maps to roadmap phases (numbering contin
 ### Documentation & Release
 
 - [ ] **DSPD-07**: documentation en + fr of the `body_decl_speed` field, the Δt 0.01 d step, the `DECL_STANDSTILL_EPS` threshold, the chart-level helper, and the Ketu/Rahu boundary (Rahu computes nothing); FR `.po` translated + `.mo` recompiled (no English fallback).
-- [ ] **REL-01**: `ketu==1.8.0` shipped to PyPI via OIDC (push main + tag); MINOR-not-patch bump in all three source-of-truth files; dated `[1.8.0]` changelog (EN+FR) + UPGRADING v1.7→v1.8 with explicit Kala re-pin guidance (dtype layout grows); human go/no-go honoured; post-publish fresh-venv smoke FROM PyPI confirms `body_decl_speed` is present in `CHART_DTYPE`, populated non-trivially, no `pyswisseph` at runtime.
+- [x] **REL-01**: `ketu==1.8.0` shipped to PyPI via OIDC (push main + tag); MINOR-not-patch bump in all three source-of-truth files; dated `[1.8.0]` changelog (EN+FR) + UPGRADING v1.7→v1.8 with explicit Kala re-pin guidance (dtype layout grows); human go/no-go honoured; post-publish fresh-venv smoke FROM PyPI confirms `body_decl_speed` is present in `CHART_DTYPE`, populated non-trivially, no `pyswisseph` at runtime.
 
 ## Future Requirements
 
@@ -73,7 +73,7 @@ Which phases cover which requirements. Updated during roadmap creation.
 | DSPD-05 | Phase 40 | Complete |
 | DSPD-06 | Phase 40 | Complete |
 | DSPD-07 | Phase 41 | Pending |
-| REL-01 | Phase 41 | Pending |
+| REL-01 | Phase 41 | Complete |
 
 **Coverage:**
 
