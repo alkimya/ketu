@@ -207,7 +207,7 @@ Full detail archived to `.planning/milestones/v1.7-ROADMAP.md`. Orb 0°→2° on
 | 38. Fictitious-Point Orbs Engine                  | v1.7      | 2/2            | ✓ Complete  | 2026-06-15 |
 | 39. Documentation + Release v1.7.0                | v1.7      | 3/3            | ✓ Complete  | 2026-06-15 |
 | 40. Declination Speed Field & Chart API           | v1.8      | 3/3 | Complete    | 2026-06-17 |
-| 41. Documentation + Release v1.8.0               | v1.8      | 3/3 | Complete   | 2026-06-19 |
+| 41. Documentation + Release v1.8.0               | v1.8      | 3/3 | Complete    | 2026-06-19 |
 
 ---
 

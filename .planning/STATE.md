@@ -4,8 +4,8 @@ milestone: v1.8.0
 milestone_name: "**Goal**: The `body_decl_speed` field, the 0.01 d FD step, `DECL_STANDSTILL_EPS`, the chart-level helper, and the Ketu/Rahu boundary are fully documented in English and French, the version is bumped to 1.8.0, and `ketu==1.8.0` is live on PyPI"
 status: Milestone v1.8 SHIPPED — ketu==1.8.0 live on PyPI
 stopped_at: Completed 41-03-PLAN.md — ketu==1.8.0 live on PyPI
-last_updated: "2026-06-19T10:38:26.353Z"
-last_activity: "2026-06-19 -- Phase 41 Plan 03 complete: ketu==1.8.0 live on PyPI, smoke SMOKE_OK"
+last_updated: "2026-06-19T10:55:09.155Z"
+last_activity: 2026-06-19
 progress:
   total_phases: 2
   completed_phases: 2
@@ -25,10 +25,10 @@ See: `.planning/PROJECT.md` (updated 2026-06-17 — milestone v1.8 started)
 
 ## Current Position
 
-Phase: 41 (documentation-release-v1-8-0) — COMPLETE
-Plan: 3 of 3 (all complete)
+Phase: 41
+Plan: Not started
 Status: Milestone v1.8 SHIPPED — ketu==1.8.0 live on PyPI
-Last activity: 2026-06-19 -- Phase 41 Plan 03 complete: ketu==1.8.0 live on PyPI, smoke SMOKE_OK
+Last activity: 2026-06-19
 
 Progress: [██████████] 100%
 
