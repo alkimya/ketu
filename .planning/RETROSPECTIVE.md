@@ -83,6 +83,48 @@
 
 ---
 
+## Milestone: v1.8 — Declination Speed
+
+**Shipped:** 2026-06-19
+**Phases:** 2 | **Plans:** 6 | **Sessions:** 1 (execute) + 1 (audit/close)
+
+### What Was Built
+- `body_decl_speed` (dδ/dt, deg/day) appended to `CHART_DTYPE` at index 8 (15→16 fields), populated by `compute_chart` via vectorised forward FD at Δt=0.01 d (exact Δ=0 vs the v1.5 scalar `declination_velocity`) (DSPD-01, DSPD-02).
+- `body_decl_speed` inherited by synastry/composite/returns; composite derived from its own frozen (λ,β), never the parent midpoint (anti-averaging ratchet); dtype ratchet re-pinned at 16 fields, body count frozen at 14 (DSPD-03, DSPD-04).
+- Public `DECL_STANDSTILL_EPS = 0.001` constant in `ketu.calculations.__all__` + chart-level `is_ascending_declination_chart(chart)→int8 {+1,0,−1}` helper, distinct from (and consistent with) the v1.5 scalar (DSPD-05, DSPD-06).
+- Docs en+fr for the field, Δt step, threshold, helper, and the Ketu/Rahu boundary; FR `.po`/`.mo` recompiled (no English fallback); full private-name sweep (DSPD-07).
+- `ketu==1.8.0` shipped to PyPI via OIDC after human go/no-go; tag + origin/main pushed, post-publish fresh-venv smoke from PyPI green (REL-01).
+
+### What Worked
+- **The v1.5 `body_decl` precedent was a near-exact template.** Index-8 additive field, ratchet re-pin, composite-from-own-chart (not parent midpoint), Kala re-pin note — the v1.5 milestone had already solved every structural question, so Phase 40 was mostly mechanical replay. Reusing a known-good pattern collapsed the design risk.
+- **"Expose, don't reinvent" kept the scope tiny and correct.** The calculation existed since v1.5; the whole milestone was wiring an existing scalar into the structured chart. Naming that framing up front (in REQUIREMENTS Intent) stopped any temptation to re-derive the FD and gave the exact Δ=0 agreement test for free.
+- **The composite anti-averaging ratchet caught the exact v1.5 trap by design.** Pinning `comp ≠ naïve parent-midpoint` (Moon −5.58 vs −3.23) means a future refactor that accidentally midpoints the parents' δ-speed fails loudly.
+- **Verifier ran the FR-rendering human item to ground.** Phase 41 left one human-verification item (does the FR HTML actually render French, not fall back to EN); the orchestrator rebuilt the FR docs and inspected `concepts.html` directly rather than trusting the `.mo` mtime — confirmed, then user-confirmed.
+- **The milestone audit was a clean pass with zero surprises.** 3-source cross-reference (VERIFICATION + SUMMARY + traceability) + an integration-checker E2E "Rahu consumer" run all agreed 8/8; the only finding was a transient measurement artifact the checker self-corrected (DSPD-02 is Δ=0 exact).
+
+### What Was Inefficient
+- **No milestone audit existed at close time.** Unlike v1.6 (which archived a `v1.6-MILESTONE-AUDIT.md`), v1.8 reached `/gsd-complete-milestone` with no audit file — it had to be run inline first. The audit should be a standing pre-close step, not an ad-hoc catch.
+- **The CLI auto-extracted noisy "accomplishments" into MILESTONES.md** (`CHANGELOG.md` as a bullet, a raw `make gettext` command line) because it grabs the first non-frontmatter lines of each SUMMARY. Had to hand-rewrite the entry. SUMMARY one-liners aren't reliably the first prose line.
+- **REQUIREMENTS.md traceability went stale post-execution** — it still showed DSPD-07 as "Pending"/`[ ]` while the code was fully shipped (the 41 verifier flagged this explicitly). The traceability table isn't updated when a phase completes, so the audit's 3-source cross-check is what actually catches the truth.
+
+### Patterns Established
+- **"Expose an existing scalar as a structured-chart field" is now a repeatable shape** (v1.5 `body_decl`, v1.8 `body_decl_speed`): additive field at an adjacent index, re-pin the ratchet, derive composite from the composite's own chart, document the MINOR-not-patch re-pin for Kala. Future field additions follow this without re-deciding.
+- **Define the downstream contract IN the engine** (`DECL_STANDSTILL_EPS`), so the consumer (Rahu) invents no astronomy — even a threshold is an astronomy decision and belongs in Ketu.
+- **Run `/gsd-audit-milestone` before `/gsd-complete-milestone`, always.** The 3-source cross-reference + integration E2E is the real gate; phase-level verification alone leaves the traceability table stale.
+
+### Key Lessons
+1. **A milestone that "exposes" rather than "computes" is the cheapest kind — name that framing in the requirements Intent and the scope polices itself.** The exact Δ=0 agreement test falls out of reusing the FD verbatim.
+2. **The requirements traceability table is not self-updating; trust the 3-source cross-reference at audit, not the checkboxes.** DSPD-07 read "Pending" in REQUIREMENTS.md while shipped and live on PyPI.
+3. **Don't trust auto-extracted SUMMARY one-liners for the milestone record** — they grab the first prose line, which is often a table header or a raw command. Curate the MILESTONES.md accomplishments by hand.
+4. **A human-verification item left by a phase verifier should be resolved by inspecting the actual artifact** (rebuilt FR HTML), not by re-asserting the proxy (`.mo` mtime) — the orchestrator did this and it was the right call.
+
+### Cost Observations
+- Model mix: orchestration on Opus 4.8; executors + verifier + integration-checker on Sonnet.
+- Sessions: execute same-day 2026-06-17 (engine + EN docs + FR), release + close 2026-06-19.
+- Notable: smallest code delta of any recent feature milestone (17 code files, +711/−58) for a fully additive chart field; the doc/translation surface (66 files incl. docs) dwarfed the engine change.
+
+---
+
 ## Cross-Milestone Trends
 
 ### Process Evolution
@@ -91,6 +133,7 @@
 |-----------|----------|--------|------------|
 | v1.6 | 1 | 2 | First milestone where the release pre-flight caught prior-phase CI-gate debt; human go/no-go checkpoint exercised end-to-end |
 | v1.7 | 1 | 2 | First behaviour-changing (non-additive) minor since v1.3; surgical artefact filter + single-source orb edit; pre-flight again caught stale docs (xref + docstrings) |
+| v1.8 | 2 | 2 | "Expose existing scalar as chart field" replay of the v1.5 `body_decl` pattern; milestone audit run inline at close (no pre-existing audit file); 3-source cross-reference caught stale traceability |
 
 ### Cumulative Quality
 
@@ -99,11 +142,13 @@
 | v1.5 | 1627 | 100% | declination δ functions + body_decl field |
 | v1.6 | 1654 | 100% | ketu.declination subpackage (parallels/contra-parallels) |
 | v1.7 | 1668 | 100% | fictitious-point 2° orbs (behaviour change, not zero-dep additions) |
+| v1.8 | 1691 | 100% | body_decl_speed field + DECL_STANDSTILL_EPS + is_ascending_declination_chart helper |
 
 ### Top Lessons (Verified Across Milestones)
 
-1. **The user go/no-go relecture-validation gate before any irreversible PyPI publish is non-negotiable** — held in v1.5 and again in v1.6.
-2. **Additive-only minors keep the frozen contracts intact** (`CHART_DTYPE`, `core.aspects` fingerprints) — verified across v1.4, v1.5, v1.6.
-3. **Push BOTH the tag AND origin/main on release** — RTD follows main, PyPI follows the tag (v1.5 lesson, re-applied in v1.6 and v1.7).
+1. **The user go/no-go relecture-validation gate before any irreversible PyPI publish is non-negotiable** — held in v1.5, v1.6, v1.7, and v1.8.
+2. **Additive-only minors keep the frozen contracts intact** (`CHART_DTYPE` named access, `core.aspects` fingerprints) — verified across v1.4, v1.5, v1.6, v1.8 (v1.8 grows the dtype but only positional/`.view()` consumers must adapt; named access stays safe).
+3. **Push BOTH the tag AND origin/main on release** — RTD follows main, PyPI follows the tag (v1.5 lesson, re-applied in v1.6, v1.7, v1.8).
 4. **The release pre-flight is the de-facto final doc audit** — caught CI-gate debt in v1.6 (numpydoc/doctest) and stale-constant docs in v1.7 (`orb=0` docstrings + broken xref). Phase verification alone doesn't run those gates against earlier code.
-5. **MINOR-not-patch when downstream results change** — even a one-value orb tweak is a minor with an UPGRADING note (v1.7), so consumers opt in deliberately rather than assuming `pip install -U` is neutral.
+5. **MINOR-not-patch when downstream results OR layout change** — a one-value orb tweak (v1.7, results change) and a grown dtype layout (v1.8, positional layout change) are both minors with UPGRADING notes, so consumers opt in deliberately rather than assuming `pip install -U` is neutral.
+6. **Run `/gsd-audit-milestone` before close; the 3-source cross-reference is the real gate** — v1.8 reached close with stale traceability (`DSPD-07` "Pending" while shipped) and no audit file; the inline audit's VERIFICATION+SUMMARY+traceability cross-check + integration E2E is what confirmed truth.
