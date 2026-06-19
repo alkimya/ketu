@@ -135,27 +135,22 @@ v1.7 gave the three fictitious points — Rahu (10), Ketu (11), Lilith (12) — 
 - ✓ Docs en + fr for the 2° orb, the Rahu↔Ketu Opposition filter rationale, and the MINOR-not-patch reasoning for Kala; FR `.po` translated + `.mo` recompiled (no English fallback) — v1.7.0 (ORB-04)
 - ✓ `ketu==1.7.0` shipped to PyPI via OIDC (push main + tag); dated `[1.7.0]` changelog (EN+FR) + UPGRADING v1.6→v1.7 Kala guidance; human go/no-go honoured; post-publish fresh-venv smoke FROM PyPI confirms ≥1 node/Lilith aspect, the Rahu↔Ketu Opposition absent, no `pyswisseph` at runtime — v1.7.0 (REL-01)
 
+**v1.8 Declination Speed** (full requirements archived in `.planning/milestones/v1.8-REQUIREMENTS.md`):
+
+- ✓ `CHART_DTYPE` gains additive `("body_decl_speed", "f8", (14,))` at index 8 (15→16 fields), populated by `compute_chart` (scalar + array `jd`) via vectorised forward finite difference at Δt=0.01 d; raw deg/day value (↗/↘ sense reads off the sign) — v1.8.0 (DSPD-01)
+- ✓ Δt = 0.01 d reused verbatim from `declination_velocity` (no new API surface, not configurable); chart vs scalar agreement exact (Δ = 0) — v1.8.0 (DSPD-02)
+- ✓ `body_decl_speed` inherited by synastry / composite / returns; composite δ-speed derived from the composite's own frozen (λ,β), never the parent midpoint (anti-averaging ratchet) — v1.8.0 (DSPD-03)
+- ✓ `CHART_DTYPE` layout ratchet test re-pinned at 16 fields (intentional break, body-count frozen at 14); Kala positional / `.view()` re-pin documented — v1.8.0 (DSPD-04)
+- ✓ Public tested constant `DECL_STANDSTILL_EPS = 0.001` (deg/day) in `ketu.calculations.__all__`, documented as a contract — Rahu invents no astronomical threshold — v1.8.0 (DSPD-05)
+- ✓ Chart-level `is_ascending_declination_chart(chart) → np.int8 {+1, 0, −1}` reading sign of `body_decl_speed` + the standstill threshold; distinct from and consistent with the v1.5 scalar — v1.8.0 (DSPD-06)
+- ✓ Documentation en + fr of the field, the Δt 0.01 d step, `DECL_STANDSTILL_EPS`, the chart-level helper, and the Ketu/Rahu boundary; FR `.po` translated + `.mo` recompiled (no English fallback); full private-name sweep — v1.8.0 (DSPD-07)
+- ✓ `ketu==1.8.0` shipped to PyPI via OIDC (push main + tag); MINOR-not-patch bump in all three source-of-truth files; dated `[1.8.0]` changelog (EN+FR) + UPGRADING v1.7→v1.8 with explicit Kala re-pin guidance; human go/no-go honoured; post-publish fresh-venv smoke FROM PyPI confirms `body_decl_speed` present + populated, no `pyswisseph` at runtime — v1.8.0 (REL-01)
+
 ### Active
 
 <!-- Current milestone scope. Building toward these. -->
 
-## Current Milestone: v1.8 Declination Speed
-
-**Goal:** Expose declination velocity dδ/dt as a `body_decl_speed` field in `CHART_DTYPE` — the one real gap that blocks the Rahu UI from showing montant/descendant in declination without computing astronomy in the front-end.
-
-**Progress:** Phase 40 (Declination Speed Field & Chart API) **complete** 2026-06-17 — DSPD-01..06 all validated (verifier 6/6, 1691 tests green, 100% coverage). `CHART_DTYPE` now carries `body_decl_speed` at index 8 (16 fields), populated by `compute_chart` (Δ=0 vs the v1.5 scalar), inherited by synastry/composite/returns (composite derived from its own frozen λ,β, never the parent midpoint), with the public `DECL_STANDSTILL_EPS = 0.001` contract and the chart-level `is_ascending_declination_chart` helper. Remaining: Phase 41 (docs en+fr + MINOR 1.8.0 release).
-
-**Key insight:** Ketu *already computes* dδ/dt — `declination_velocity(jd, body)` and `is_ascending_declination(jd, body)` have existed since v1.5 (finite-difference step 0.01 d). The gap is NOT the calculation; it is that dδ/dt is **not in the structured chart** that Rahu consumes. `body_decl` (δ) is there; `body_decl_speed` (dδ/dt) is not. This milestone exposes the field, it does not reinvent the math.
-
-**Target features:**
-
-- **`body_decl_speed` field** — add `("body_decl_speed", "f8", (14,))` to `CHART_DTYPE`, populated by `compute_chart` via the vectorized `declination_velocity` path; inherited by synastry / composite / returns. Composite δ-speed **derived from the chart**, never midpoint of parents (same trap as `body_decl` in v1.5). Raw deg/day value (mirrors `body_speeds` for longitude); the ↗/↘ sense reads off the sign.
-- **Δt = 0.01 day** — reuse the existing FD step of `declination_velocity` verbatim (package-wide idiom, consistent with `lat_velocity`). Not configurable — no new API surface.
-- **Standstill threshold IN Ketu** — a tested constant (e.g. `DECL_STANDSTILL_EPS`) documented as a public contract, so Rahu invents NO astronomical threshold of its own (≈0 → neutral "—").
-- **Chart-level `is_ascending_declination` helper** — expose the montant/descendant check at the chart level (reads the field sign + standstill threshold), not only the v1.5 scalar version.
-- **MINOR-not-patch bump (1.8.0)** — the dtype layout grows (like `body_decl` in v1.5) → Kala must re-pin PyPI; dtype ratchet test updated. It is a derivative of an existing field (δ), not a new body/house/part — in the spirit of "Ketu ~complete".
-
-**Out of milestone scope (Rahu-side display decisions):** whether the panel shows the dδ/dt value or only the ↗/↘ sense, and the visual language (arrow/tint consistency with longitudinal ℞) are Rahu choices — the Ketu field gives both. Rahu never computes the derivative itself; the Ketu/Rahu boundary is non-negotiable.
+**No milestone in progress.** v1.8 (Declination Speed) shipped 2026-06-19. The Ketu engine is considered ~feature-complete; the next direction is the **Rahu** UI project (separate repo), which consumes `ketu` from PyPI. A future Ketu milestone (if any) starts via `/gsd-new-milestone` — likely lightweight, drawing from the deferred candidates below.
 
 **Deferred (future candidates, not committed):**
 
@@ -191,9 +186,11 @@ v1.7 gave the three fictitious points — Rahu (10), Ketu (11), Lilith (12) — 
 
 ## Context
 
-**v1.7.0 shipped on PyPI on 2026-06-15** — Rahu/Ketu/Lilith orb `0°→2°` in the single-source `core.bodies` table so the three fictitious points enter aspect detection; surgical `_is_tautological_node_opposition` filter suppresses ONLY the permanent `(Rahu, Ketu)` + `Opposition` artefact; synastry `orb=0` oracles rewritten + full ~40-file regression sweep green (two new CLI Rahu detections pinned). Documented en+fr (2° orb, filter rationale, MINOR-not-patch Kala note). A MINOR-not-patch bump because aspect RESULTS change for consumers. 30 commits over `ce48b17..fae8eea`, 53 files, +4730/−1211. Verifier PASSED 4/4; runtime stays pure NumPy.
+**v1.8.0 shipped on PyPI on 2026-06-19** — declination speed `body_decl_speed` (dδ/dt, deg/day) added as a first-class chart field: `CHART_DTYPE` grows to 16 fields (new field at index 8, all 14 bodies), populated by `compute_chart` via vectorised forward FD at Δt=0.01 d (exact Δ=0 vs the v1.5 scalar), inherited across synastry/composite/returns (composite derived from its own frozen λ,β, never the parent midpoint). Public `DECL_STANDSTILL_EPS = 0.001` contract + chart-level `is_ascending_declination_chart(chart)→int8 {+1,0,−1}` helper (distinct from the v1.5 scalar). Library-design boundary explicit: Ketu computes all astronomy (incl. the FD + threshold); downstream consumers read a field, computing nothing. Engine = Phase 40 (DSPD-01..06, verifier 6/6); docs en+fr + the MINOR-1.8.0 release = Phase 41 (DSPD-07, REL-01, verifier 4/4). Full name-clean sweep removed every private-project reference from shipped/rendered EN+FR artifacts; FR `.mo` recompiled (no English fallback). MINOR-not-patch because the dtype byte layout grows (named access safe; positional/`.view()` must re-pin). 56 commits over `ea0ab28..b0e3d8c`, 17 code files +711/−58 (66 files incl. docs +7862/−1372). Milestone audit PASSED 8/8 (2/2 phases, 5/5 integration links WIRED, E2E flow complete, 1691 tests / 100% coverage).
 
-**Tag `v1.7.0`** points at commit `77a64eb`. PyPI: <https://pypi.org/project/ketu/1.7.0/>. Published via OIDC trusted publishing (`publish.yml` run 27578609150); both `origin/main` and the tag pushed (RTD follows main, PyPI follows tag); the user go/no-go relecture-validation gate was honoured before publish; pre-flight caught two stale ORB-04 defects (leftover `orb=0` docstrings, a broken `concepts.md#orbs` Sphinx xref) before publish; post-publish fresh-venv smoke FROM PyPI confirmed the v1.7 surface (≥1 node/Lilith aspect detected, the Rahu↔Ketu Opposition absent, no `pyswisseph` at runtime).
+**Tag `v1.8.0`** points at commit `0c20d4c`. PyPI: <https://pypi.org/project/ketu/1.8.0/>. Published via OIDC trusted publishing (`publish.yml` run 27820463468); both `origin/main` and the tag pushed (RTD follows main, PyPI follows tag); the human go/no-go relecture-validation gate was honoured before publish; post-publish fresh-venv smoke FROM PyPI confirmed `body_decl_speed` present in `CHART_DTYPE`, populated non-trivially, `DECL_STANDSTILL_EPS` importable, no `pyswisseph` at runtime. Known non-blocking tech debt carried to backlog: WR-01 (0.01 d FD step magic-number ×3 sites), WR-02 (NaN→neutral silent in the helper), WR-03 (pre-existing composite Rahu↔Ketu opposition suppression), WR-04 (stale "13-body" docstrings since v1.3).
+
+**Prior — v1.7.0 (2026-06-15, commit `77a64eb`):** Rahu/Ketu/Lilith orb `0°→2°` in the single-source `core.bodies` table so the three fictitious points enter aspect detection; surgical `_is_tautological_node_opposition` filter suppresses ONLY the permanent `(Rahu, Ketu)` + `Opposition` artefact; synastry `orb=0` oracles rewritten + full ~40-file regression sweep green (two new CLI Rahu detections pinned). Documented en+fr. A MINOR-not-patch bump because aspect RESULTS change for consumers. PyPI: <https://pypi.org/project/ketu/1.7.0/>. Verifier PASSED 4/4; runtime stays pure NumPy.
 
 **Prior — v1.6.0 (2026-06-04, commit `455cb36`):** the additive `ketu.declination` subpackage: parallel + contra-parallel detection on the δ axis (`find_declination_aspects` + `declination_aspect_masks` + `DECLA_ASPECT_DTYPE` + `DECLA_COEF=1/12` + `MIN_DECL_ORB=0.5°`), consuming the v1.5 `body_decl` field. Non-breaking additive minor: `CHART_DTYPE` byte-identical, `core.aspects` + fingerprints unchanged. PyPI: <https://pypi.org/project/ketu/1.6.0/>. Milestone audit PASSED 5/5.
 
@@ -281,6 +278,12 @@ v1.7 gave the three fictitious points — Rahu (10), Ketu (11), Lilith (12) — 
 | Surgical `(Rahu, Ketu)` + `Opposition` filter, not body suppression | Only that one pair+aspect is tautological (Ketu = South Node, fixed 180° from Rahu); the bodies must stay active for every other aspect/pair | ✓ Good (v1.7) — `_is_tautological_node_opposition` wired into all four emit paths; Rahu/Ketu fully active elsewhere |
 | MINOR bump (1.7.0), not patch (1.6.1) | Aspect RESULTS change for consumers — new detections appear; `orb=0` was an intentional modelling choice, not a bug; a patch would imply `pip install -U` is neutral for Kala | ✓ Good (v1.7) — UPGRADING v1.6→v1.7 documents the behaviour change; Kala opts in deliberately |
 | Synastry IN scope (oracles rewritten), not deferred | The points inherit the new orb everywhere; leaving `orb=0` oracles would ship inconsistent results; ~40 files reference the points | ✓ Good (v1.7) — full regression sweep green; new detections deliberately pinned, none silently absorbed |
+| Expose dδ/dt as a `CHART_DTYPE` field, not recompute it in Rahu | The calculation already existed since v1.5 (`declination_velocity`); the only gap was that it wasn't in the structured chart Rahu consumes. The Ketu/Rahu boundary is non-negotiable: Rahu does no astronomy | ✓ Good (v1.8) — `body_decl_speed` added at index 8; Rahu reads a field, computes nothing |
+| `body_decl_speed` additive at index 8 + ratchet re-pin (mirrors v1.5 `body_decl`) | Same precedent as `body_decl`: additive growth, named access stays safe, only positional / `.view()` consumers must re-pin; MINOR-not-patch because the byte layout grows | ✓ Good (v1.8) — 16 fields, body count frozen at 14; ratchet broke intentionally and was re-pinned |
+| Δt = 0.01 d reused verbatim, not a configurable per-call step | Package-wide idiom (matches `declination_velocity` / `lat_velocity`); a tunable step is a new API surface with no demand, and verbatim reuse gives exact Δ = 0 agreement with the scalar | ✓ Good (v1.8) — chart vs scalar exact; no new parameter |
+| Composite `body_decl_speed` from the composite's own frozen (λ,β), not parent midpoint | Midpointing parents' δ-speed is the same zero-fill/averaging trap as `body_decl` in v1.5 — physically wrong | ✓ Good (v1.8) — anti-averaging ratchet test pins comp ≠ naïve midpoint (Moon −5.58 vs −3.23) |
+| `DECL_STANDSTILL_EPS = 0.001` defined IN Ketu as a public contract | Rahu must invent no astronomical threshold; the standstill cutoff is an astronomy decision and belongs in the engine | ✓ Good (v1.8) — exported from `ketu.calculations.__all__`, tested, documented |
+| Chart-level helper named `is_ascending_declination_chart` (distinct from v1.5 scalar) | Avoids shadowing the v1.5 scalar `is_ascending_declination(jdate, body)` (the `ketu.aspects` shadowing pitfall pattern); the two stay consistent but separately callable | ✓ Good (v1.8) — distinctness documented with a comparison table; both ship |
 
 ## Evolution
 
@@ -303,4 +306,4 @@ This document evolves at phase transitions and milestone boundaries.
 
 ---
 
-Last updated: 2026-06-19 — Phase 41 (Documentation + Release v1.8.0) complete: docs en+fr for body_decl_speed / Δt 0.01 d / DECL_STANDSTILL_EPS / is_ascending_declination_chart + the downstream boundary, full name-clean sweep, MINOR 1.8.0 bump, human go/no-go, ketu==1.8.0 live on PyPI via OIDC, post-publish smoke green. DSPD-07 + REL-01 validated; verifier passed 4/4. **Milestone v1.8 (Declination Speed) SHIPPED** — ready for /gsd-complete-milestone.
+Last updated: 2026-06-19 after v1.8 milestone — **Milestone v1.8 (Declination Speed) SHIPPED & ARCHIVED.** ketu==1.8.0 live on PyPI (tag v1.8.0 @ 0c20d4c). Full review done: DSPD-01..07 + REL-01 moved to Validated; the Active section now holds no in-progress milestone (engine ~feature-complete, next direction = Rahu UI in its own repo); 6 v1.8 Key Decisions logged; Context + Out of Scope audited. Milestone audit PASSED 8/8. Roadmap + requirements archived to `.planning/milestones/v1.8-*`.

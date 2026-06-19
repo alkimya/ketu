@@ -2,10 +2,10 @@
 gsd_state_version: 1.0
 milestone: v1.8.0
 milestone_name: "**Goal**: The `body_decl_speed` field, the 0.01 d FD step, `DECL_STANDSTILL_EPS`, the chart-level helper, and the Ketu/Rahu boundary are fully documented in English and French, the version is bumped to 1.8.0, and `ketu==1.8.0` is live on PyPI"
-status: Milestone v1.8 SHIPPED — ketu==1.8.0 live on PyPI
+status: Awaiting next milestone
 stopped_at: Completed 41-03-PLAN.md — ketu==1.8.0 live on PyPI
-last_updated: "2026-06-19T10:55:09.155Z"
-last_activity: 2026-06-19
+last_updated: "2026-06-19T11:07:49.259Z"
+last_activity: 2026-06-19 — Milestone v1.8 completed and archived
 progress:
   total_phases: 2
   completed_phases: 2
@@ -25,12 +25,10 @@ See: `.planning/PROJECT.md` (updated 2026-06-17 — milestone v1.8 started)
 
 ## Current Position
 
-Phase: 41
-Plan: Not started
-Status: Milestone v1.8 SHIPPED — ketu==1.8.0 live on PyPI
-Last activity: 2026-06-19
-
-Progress: [██████████] 100%
+Phase: Milestone v1.8 complete
+Plan: —
+Status: Awaiting next milestone
+Last activity: 2026-06-19 — Milestone v1.8 completed and archived
 
 ## Next Step
 
@@ -88,3 +86,7 @@ Note: Non-blocker. Out of v1.8 scope.
 Last session: 2026-06-19T10:38:26.339Z
 Stopped at: Completed 41-03-PLAN.md — ketu==1.8.0 live on PyPI
 Resume file: None
+
+## Operator Next Steps
+
+- Start the next milestone with /gsd-new-milestone

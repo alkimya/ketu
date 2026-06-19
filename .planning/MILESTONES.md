@@ -1,5 +1,27 @@
 # Milestones
 
+## v1.8 Declination Speed (Shipped: 2026-06-19)
+
+**Phases completed:** 2 phases, 6 plans, 12 tasks
+**Git range:** ea0ab28..b0e3d8c (56 commits) — 17 code files +711/−58 (66 files incl. docs +7862/−1372)
+**Timeline:** ~2 days (2026-06-17 → 2026-06-19)
+**Requirements:** DSPD-01..07, REL-01 (8/8 satisfied)
+**PyPI:** ketu==1.8.0 live (OIDC run 27820463468, tag v1.8.0 @ 0c20d4c)
+**Audit:** passed — 8/8 requirements, 2/2 phases, 5/5 integration links WIRED, E2E flow complete (1691 tests, 100% coverage)
+
+**Key accomplishments:**
+
+- `body_decl_speed` field (dδ/dt, deg/day) appended to `CHART_DTYPE` at index 8 (15→16 fields), populated by `compute_chart` via vectorised forward finite difference at Δt=0.01 d (matching `declination_velocity` exactly, Δ==0).
+- `DECL_STANDSTILL_EPS = 0.001` public tested constant in `ketu.calculations` — standstill threshold as a contract so the Rahu UI invents no astronomical threshold (Ketu/Rahu boundary).
+- `is_ascending_declination_chart(chart) → np.int8 {-1,0,+1}` chart-level montant/descendant classifier exported from `ketu.charts`, distinct from the v1.5 scalar.
+- `body_decl_speed` inherited by composite/synastry/returns; composite derived from its own frozen (λ,β), never the parent midpoint (anti-averaging ratchet); dtype ratchet re-pinned at 16 fields.
+- Documentation EN+FR (api.md, concepts.md, changelog, UPGRADING v1.7→v1.8 with explicit Kala re-pin guidance) + FR `.po`/`.mo` recompiled (no English fallback) + full private-name sweep.
+- ketu==1.8.0 shipped to PyPI via OIDC; fresh-venv post-publish smoke confirms `body_decl_speed` present + populated, `DECL_STANDSTILL_EPS` importable, no `pyswisseph` at runtime.
+
+**Known tech debt (deferred to backlog):** WR-01 (0.01 d FD step magic-number ×3 sites), WR-02 (NaN→neutral silent in helper), WR-03 (pre-existing composite Rahu↔Ketu opposition suppression), WR-04 (stale "13-body" docstrings since v1.3). None a v1.8 regression.
+
+---
+
 Historical record of shipped versions. Most recent first.
 
 ---
