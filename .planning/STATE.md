@@ -18,39 +18,31 @@ progress:
 
 ## Project Reference
 
-See: `.planning/PROJECT.md` (updated 2026-06-17 — milestone v1.8 started)
+See: `.planning/PROJECT.md` (updated 2026-06-19 — after v1.8 milestone)
 
 **Core value:** Cycle calculations must be correct, tested, and performant.
-**Current focus:** Phase 41 — documentation-release-v1-8-0
+**Current focus:** Planning next milestone (engine ~feature-complete; next direction = Rahu UI in its own repo)
 
 ## Current Position
 
-Phase: Milestone v1.8 complete
+Phase: Milestone v1.8 complete & archived
 Plan: —
 Status: Awaiting next milestone
 Last activity: 2026-06-19 — Milestone v1.8 completed and archived
 
 ## Next Step
 
-`/gsd-complete-milestone` — archive v1.8, update PROJECT.md, clean up .planning/
+`/gsd-new-milestone` — start the next milestone (questioning → research → requirements → roadmap)
 
 ## Accumulated Context
 
 ### Decisions
 
-Full log in `.planning/PROJECT.md` Key Decisions table.
-
-Key constraints for this milestone:
-
-- Δt = 0.01 day reused verbatim from `declination_velocity` — not configurable, no new API surface
-- Composite `body_decl_speed` derived from the composite chart, never midpoint of parents
-- `DECL_STANDSTILL_EPS` defined IN Ketu as a public contract (Rahu invents no threshold)
-- MINOR bump (1.8.0) — dtype layout grows; UPGRADING v1.7→v1.8 must give Kala explicit re-pin guidance
-- Human go/no-go before irreversible PyPI publish
+Full log in `.planning/PROJECT.md` Key Decisions table (v1.8 decisions added at close).
 
 ### Blockers/Concerns
 
-None. v1.7 shipped on a green base (1668 tests, 100% coverage, mypy `--strict` clean).
+None. v1.8 shipped on a green base (1691 tests, 100% coverage). Non-blocking tech debt carried to backlog: WR-01 (0.01 d FD step magic-number ×3 sites), WR-02 (NaN→neutral silent in helper), WR-03 (pre-existing composite Rahu↔Ketu opposition suppression), WR-04 (stale "13-body" docstrings since v1.3).
 
 ### Pending Todos
 
@@ -78,6 +70,7 @@ Note: Non-blocker. Out of v1.8 scope.
 | v1.5      | 3      | 9     | ~1d         |
 | v1.6      | 2      | 5     | <1d         |
 | v1.7      | 2      | 5     | ~3h         |
+| v1.8      | 2      | 6     | ~2d elapsed |
 
 *Updated after each plan completion*
 
